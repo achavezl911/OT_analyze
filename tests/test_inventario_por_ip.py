@@ -15,6 +15,7 @@ sys.path.insert(0, str(RAIZ))
 from ot_assess import i18n
 from ot_assess import inventario_normalizado as inv
 from ot_assess import inventario_presentado as ip
+from ot_assess import zonas as zo
 from ot_assess.consolidate import build_conduits, merge_assets
 from ot_assess.model import Assessment, Capture
 from ot_assess.report import csvout, html, md, word
@@ -172,6 +173,70 @@ class UnaSolaIpTest(unittest.TestCase):
         i = {c: k for k, c in enumerate(cab)}
         self.assertEqual([(f[i["equipo"]], f[i["ips"]], f[i["mac"]], f[i["paquetes"]]) for f in filas], _viejo(res))
         self.assertEqual(ip.contar(res), len(res.assets))
+
+
+PERFIL = {"zonas": [{"nombre": "Bajo", "redes": ["198.51.100.8/29"]},
+                    {"nombre": "Campo", "redes": ["198.51.100.16/29"]},
+                    {"nombre": "Vacia", "redes": ["10.9.0.0/24"]}]}
+
+
+def _con_zonas(cap, perfil=None):
+    res = _res(cap)
+    res.zonas = zo.asignar(res.assets, perfil)
+    return res
+
+
+class ZonasPorIpTest(unittest.TestCase):
+    """Z-I3 (D107): la tabla de zonas que se presenta cuenta las filas del inventario presentado."""
+
+    def setUp(self):
+        self.res = _con_zonas(_cap_enrutada(), PERFIL)
+        self.cab, self.filas = _tabla(self.res)
+        self.zcol = self.cab.index("zona_asignada")
+
+    def _zonas_csv(self):
+        for archivo, _h, cab, filas in csvout.tablas(self.res):
+            if archivo == "zonas.csv":
+                return cab, filas
+        raise AssertionError("sin zonas.csv")
+
+    def test_zonas_csv_suma_las_filas_del_inventario(self):
+        cab, filas = self._zonas_csv()
+        n = cab.index("activos")
+        self.assertEqual(sum(f[n] for f in filas), len(self.filas))
+        por_zona = {f[0]: f[n] for f in filas}
+        for z in {f[self.zcol] for f in self.filas}:
+            self.assertEqual(por_zona[z], sum(1 for f in self.filas if f[self.zcol] == z), z)
+        self.assertEqual((por_zona["Bajo"], por_zona["Campo"], por_zona["Vacia"]), (5, 7, 0))
+
+    def test_zona_declarada_con_ip_partidas_no_avisa_vacia(self):
+        zon = zo.presentada(self.res.zonas, ip.filas(self.res))
+        texto = " ".join(zon["avisos"])
+        self.assertNotIn("'Bajo'", texto)
+        self.assertNotIn("'Campo'", texto)
+        self.assertIn("'Vacia'", texto)
+
+    def test_res_zonas_no_cambia(self):
+        antes = [dict(f) for f in self.res.zonas["filas"]]
+        zo.presentada(self.res.zonas, ip.filas(self.res))
+        self.assertEqual(self.res.zonas["filas"], antes)
+        self.assertEqual(sum(f["activos"] for f in antes), len(self.res.assets))
+
+    def test_sin_filas_partidas_es_la_misma_tabla(self):
+        res = _con_zonas(_cap_plana(), PERFIL)
+        self.assertIs(zo.presentada(res.zonas, ip.filas(res)), res.zonas)
+        self.assertEqual(zo.nota_partidas(res.zonas), "")
+
+    def test_nota_en_html_y_md_y_traducida(self):
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, tmp, ignore_errors=True)
+        self.assertIn("cuenta las filas del inventario", html.write_html(self.res, tmp).read_text(encoding="utf-8"))
+        self.assertIn("cuenta las filas del inventario", md.write_md(self.res, tmp).read_text(encoding="utf-8"))
+        i18n.usar("en")
+        self.addCleanup(i18n.usar, "es")
+        nota = zo.nota_partidas(zo.presentada(self.res.zonas, ip.filas(self.res)))
+        self.assertIn("inventory rows", nota)
+        self.assertNotIn("inventario", nota)
 
 
 if __name__ == "__main__":

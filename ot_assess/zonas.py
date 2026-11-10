@@ -160,6 +160,14 @@ def asignar(assets: dict, perfil: dict | None = None, rutas: dict | None = None,
     for a in sorted(assets.values(), key=lambda x: (sorted(x["ips"]), x["mac"])):
         a["zona_asignada"], a["origen_zona"] = _zona_activo(a, declaradas, tablas_fw)
         grupos.setdefault(a["zona_asignada"], []).append(a)
+    filas = _armar(grupos, decl, sl_obj, avisos)
+    return {"filas": filas, "avisos": avisos, "declaradas": len(decl), "tablas": (declaradas, tablas_fw),
+            "perfil_zonas": (decl, sl_obj)}
+
+
+def _armar(grupos: dict, decl: list, sl_obj: dict, avisos: list) -> list:
+    """Filas de la tabla de zonas a partir de {zona: [miembros]} (los declarados primero); agrega a `avisos`
+    las zonas declaradas sin miembros. Consume `grupos`."""
     filas = []
     for z in decl:
         miembros = grupos.pop(z["nombre"], [])
@@ -174,7 +182,29 @@ def asignar(assets: dict, perfil: dict | None = None, rutas: dict | None = None,
             redes = redes[:MAX_REDES] + [f"+{len(redes) - MAX_REDES}"]
         filas.append(_fila(nombre, origen, ";".join(redes), sl_obj.get(nombre, ""), "si", miembros, ""))
     filas.sort(key=lambda f: (ORIGENES.index(f["origen"]), f["zona"]))
-    return {"filas": filas, "avisos": avisos, "declaradas": len(decl), "tablas": (declaradas, tablas_fw)}
+    return filas
+
+
+def presentada(zon: dict, filas_inv: list) -> dict:
+    """Tabla de zonas que se presenta (Z-I3, D107). Sin filas partidas del inventario (MAC de enrutamiento)
+    es `zon` tal cual; con ellas cuenta las filas del inventario presentado (una por IP). `zon` no cambia."""
+    if not zon or not any("mac_salto" in f for f in filas_inv):
+        return zon
+    decl, sl_obj = zon["perfil_zonas"]
+    grupos: dict = collections.OrderedDict()
+    for f in filas_inv:
+        grupos.setdefault(f["zona_asignada"], []).append(f)
+    avisos = avisos_perfil(decl)
+    filas = _armar(grupos, decl, sl_obj, avisos)
+    return {**zon, "filas": filas, "avisos": avisos, "partidas": True}
+
+
+def nota_partidas(zon: dict) -> str:
+    """Nota de la tabla presentada con filas partidas; "" si no aplica."""
+    if not (zon or {}).get("partidas"):
+        return ""
+    return t("Con MAC de enrutamiento la tabla de zonas cuenta las filas del inventario (una por IP); "
+             "la linea base y los conductos usan la zona de cada activo.")
 
 
 def _red24(ip: str) -> str:

@@ -207,8 +207,11 @@ def write_html(res: Assessment, outdir: Path) -> Path:
     if _zo.hay(res.zonas):
         a("<h3>" + esc(t(_zo.TITULO)) + "</h3>")
         a(f'<div class="nota">{esc(t(_zo.NOTA))}</div>')
-        a(f'<p>{esc(_zo.resumen_texto(res.zonas))}</p>')
-        cab, filas = _zo.tabla_reporte(res.zonas)
+        zon = _zo.presentada(res.zonas, filas_inv)
+        if _zo.nota_partidas(zon):
+            a(f'<div class="nota">{esc(_zo.nota_partidas(zon))}</div>')
+        a(f'<p>{esc(_zo.resumen_texto(zon))}</p>')
+        cab, filas = _zo.tabla_reporte(zon)
         a('<div class="tbl"><table><thead><tr>' + "".join(f"<th>{esc(c)}</th>" for c in cab)
           + "</tr></thead><tbody>")
         for fila in filas[: args.max_rows]:

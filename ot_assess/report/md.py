@@ -299,8 +299,11 @@ def write_md(res: Assessment, outdir: Path) -> Path:
     if _zo.hay(res.zonas):
         out.append("### " + t(_zo.TITULO) + "\n")
         out.append("> " + t(_zo.NOTA) + "\n")
-        out.append(_zo.resumen_texto(res.zonas) + "\n")
-        cab, filas = _zo.tabla_reporte(res.zonas)
+        zon = _zo.presentada(res.zonas, filas_inv)
+        if _zo.nota_partidas(zon):
+            out.append("> " + _zo.nota_partidas(zon) + "\n")
+        out.append(_zo.resumen_texto(zon) + "\n")
+        cab, filas = _zo.tabla_reporte(zon)
         out.append("| " + " | ".join(cab) + " |")
         out.append("|" + "---|" * len(cab))
         for fila in filas[: args.max_rows]:

@@ -169,8 +169,12 @@ def construir_bloques(res: Assessment) -> list:
     b.append(("h1", t("Inventario de activos")))
     _recortada(cabecera_t(res, cab), filas, args.max_rows, b)
     if _zo.hay(res.zonas):
-        b += [("h1", t(_zo.TITULO)), ("nota", t(_zo.NOTA)), ("p", _zo.resumen_texto(res.zonas))]
-        _recortada(*_zo.tabla_reporte(res.zonas), args.max_rows, b)
+        zon = _zo.presentada(res.zonas, _ip.filas(res))
+        b += [("h1", t(_zo.TITULO)), ("nota", t(_zo.NOTA))]
+        if _zo.nota_partidas(zon):
+            b.append(("nota", _zo.nota_partidas(zon)))
+        b.append(("p", _zo.resumen_texto(zon)))
+        _recortada(*_zo.tabla_reporte(zon), args.max_rows, b)
     if _in.hay(res.inventario_normalizado):
         s = _in.seccion(res.inventario_normalizado)
         b += [("h1", s["titulo"]), ("nota", s["nota"]), ("p", s["resumen"]), ("tabla", *s["tabla"])]
