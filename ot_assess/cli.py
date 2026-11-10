@@ -507,7 +507,7 @@ def main(argv: list[str] | None = None) -> int:
               f"{r['brechas']} brechas")
     from . import zonas as _zo
     res.zonas = _zo.asignar(assets, perfil, res.rutas, res.firewall, zonas)
-    for adv in res.zonas["avisos"]:
+    for adv in _zo.presentada(res.zonas, _ip.filas(res))["avisos"]:   # Z-I3 (D107): las zonas vacias de la tabla
         print(f"[!] {adv}")
     from . import conductos_zcr as _zc
     res.zcr = _zc.construir(assets, conduits, res.zonas, res.firewall)
