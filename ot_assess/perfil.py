@@ -48,7 +48,7 @@ def cargar(path) -> dict:
     except (OSError, ValueError) as e:
         raise SystemExit(f"[!] No pude leer el perfil '{nombre}': {e}")
     d = objeto(d, "perfil", ("version", "cliente", *TEXTOS, "idioma", "marcos", "regulacion",
-                             "captura", "engagement", "sl_objetivo", "ml_objetivo", "linea_base_nist", "criticidad_activos", "dominios_internos", "zonas",
+                             "captura", "engagement", "sl_objetivo", "ml_objetivo", "linea_base_nist", "cis_ig", "criticidad_activos", "dominios_internos", "zonas",
                              "equipos_propios", "vlans_esperadas", "ajustes_riesgo", "madurez_objetivo"))
     if d.get("version") != 1 or isinstance(d.get("version"), bool):
         fallo("'version' es requerida y solo se admite 1.")
@@ -116,6 +116,10 @@ def cargar(path) -> dict:
         if texto(d["linea_base_nist"], "linea_base_nist") not in ("baja", "moderada", "alta"):
             fallo(f"'linea_base_nist': '{d['linea_base_nist']}' no es baja, moderada ni alta.")
         out["linea_base_nist"] = d["linea_base_nist"]
+    if "cis_ig" in d:
+        if texto(d["cis_ig"], "cis_ig") not in ("IG1", "IG2", "IG3"):
+            fallo(f"'cis_ig': '{d['cis_ig']}' no es IG1, IG2 ni IG3.")
+        out["cis_ig"] = d["cis_ig"]
     if "zonas" in d:
         out["zonas"] = _zonas(d["zonas"], out.get("sl_objetivo", {}), fallo, texto, objeto)
     if "criticidad_activos" in d:

@@ -13,6 +13,7 @@ import json
 import re
 from pathlib import Path
 
+from . import cis_controles as _cis
 from . import linea_base as _lb
 from . import niveles62443 as _n
 from . import playbooks
@@ -32,6 +33,10 @@ ORIGEN_BASE_PERFIL = "declarado en el perfil"
 ORIGEN_BASE_PROPUESTA = "propuesto por la herramienta; lo fija el cliente"
 M_62443, M_NIST = "ISA/IEC 62443", "NIST SP 800-82r3"
 M_62443_21 = "ISA/IEC 62443-2-1:2024"
+M_CIS = "CIS Controls v8.1"
+GRUPOS_CIS = _cis.GRUPOS
+GRUPO_CIS_DEFECTO = "IG2"
+RUTA_CSF = Path(__file__).parent / "marcos" / "csf2_referencias.json"
 ALC_ORG, ALC_SITIO = "organizacion", "sitio"
 FUERA = "fuera de las lineas base OT"
 FUENTES_VALIDACION = ("entrevista", "documento", "observacion en sitio", "evidencia tecnica")
@@ -52,6 +57,10 @@ NOTA = ("La matriz junta los requisitos ISA/IEC 62443 de la linea base por zona 
         "requisito de ISA/IEC 62443-2-1:2024 (catalogo propio del propietario) con el estado agregado de los SR de "
         "3-3 que cita; una correspondencia no es equivalencia ni prueba de cumplimiento. Esto es evidencia tecnica, "
         "no una determinacion de cumplimiento. Detalle en " + ARCHIVO + ".")
+
+NOTA_CIS = ("Con --cis incluye las salvaguardas de CIS Controls v8.1 del grupo elegido, leidas del archivo del "
+            "analista, con estado agregado de las filas NIST por las referencias informativas de CSF 2.0 de NIST; "
+            "una correspondencia no es equivalencia ni prueba de cumplimiento; referencia " + _cis.REFERENCIA)
 
 _CTL = re.compile(r"(?<![A-Za-z])([A-Z]{2}-\d+)(?:\((\d+)\))?")
 _NUM = re.compile(r"\d+")
@@ -146,8 +155,66 @@ def _controles_observados(assets: dict, zcr: dict, firewall: dict, findings: lis
     return out
 
 
-def construir(assets: dict, zcr: dict, firewall: dict, findings: list, perfil: dict | None = None) -> dict:
-    """Parte NIST de la matriz (las filas 62443 salen de la linea base al escribir). Siempre devuelve datos."""
+def grupo_cis(perfil: dict | None) -> tuple:
+    """(grupo IG, origen): el de `cis_ig` en el perfil o 'IG2' propuesto por la herramienta."""
+    v = (perfil or {}).get("cis_ig")
+    if v in GRUPOS_CIS:
+        return v, ORIGEN_BASE_PERFIL
+    return GRUPO_CIS_DEFECTO, ORIGEN_BASE_PROPUESTA
+
+
+def _csf() -> dict:
+    if "csf" not in _cache:
+        _cache["csf"] = json.loads(RUTA_CSF.read_text(encoding="utf-8"))["subcategorias"]
+    return _cache["csf"]
+
+
+def _construir_cis(filas_nist: list, cis: list, perfil: dict | None) -> dict:
+    """Filas CIS del grupo elegido: estado agregado de las filas NIST por las referencias de CSF 2.0 (D108)."""
+    ig, origen = grupo_cis(perfil)
+    clave = ig.lower()
+    por_base: dict = {}
+    for r in filas_nist:
+        por_base.setdefault(base_de(r["id"]), []).append(r)
+    citan: dict = {}
+    for sub, d in _csf().items():
+        for sal in d["cis_v8_1"]:
+            citan.setdefault(sal, []).append(sub)
+    filas = []
+    for pos, sal in enumerate(x for x in cis if x[clave]):
+        subs = sorted(citan.get(sal["id"], ()))
+        ctl = {base_de(c) for sub in subs for c in _csf()[sub]["sp800_53"]}
+        usadas = {}
+        for c in sorted(ctl, key=lambda c: _orden(c)):
+            for r in por_base.get(c, ()):
+                usadas[r["id"]] = r
+        rows = sorted(usadas.values(), key=lambda r: r["prioridad"])
+        if rows:
+            estados = {r["estado"] for r in rows}
+            estado = next(e for e in _lb.ESTADOS if e in estados)
+        elif subs or not (sal["clase"] == "Documentation" or sal["funcion"] == "Govern"):
+            estado = _lb.E_SIN
+        else:
+            estado = _lb.E_NOEVAL
+        cuenta = collections.Counter(r["estado"] for r in rows)
+        filas.append({
+            "id": sal["id"], "control": sal["control"], "titulo": sal["titulo"], "estado": estado,
+            "subcategorias": subs, "controles": sorted({base_de(r["id"]) for r in rows}, key=_orden),
+            "brecha": cuenta[_lb.E_BRECHA], "observado": cuenta[_lb.E_CONTROL], "sin_evidencia": cuenta[_lb.E_SIN],
+            "no_evaluable": cuenta[_lb.E_NOEVAL],
+            "hallazgos": list(dict.fromkeys(h for r in rows for h in r["hallazgos"])),
+            "playbooks": list(dict.fromkeys(p for r in rows for p in r["playbooks"])), "_pos": pos})
+    filas.sort(key=lambda r: (_lb.ESTADOS.index(r["estado"]), -r["brecha"], r["_pos"]))
+    for i, r in enumerate(filas, 1):
+        r["prioridad"] = i
+        del r["_pos"]
+    return {"grupo": ig, "origen": origen, "filas": filas}
+
+
+def construir(assets: dict, zcr: dict, firewall: dict, findings: list, perfil: dict | None = None,
+              cis: list | None = None) -> dict:
+    """Parte NIST de la matriz (las filas 62443 salen de la linea base al escribir). Siempre devuelve datos.
+    Con `cis` (cis_controles.cargar) agrega la parte CIS (D108)."""
     nivel, origen = linea_base_nist(perfil)
     cat = cargar()["controles"]
     hall = _hallazgos(findings)
@@ -180,7 +247,10 @@ def construir(assets: dict, zcr: dict, firewall: dict, findings: list, perfil: d
     for i, r in enumerate(filas, 1):
         r["prioridad"] = i
     n_c, n_m = conteo(nivel)
-    return {"nist": {"linea_base": nivel, "origen": origen, "controles": n_c, "mejoras": n_m, "filas": filas}}
+    out = {"nist": {"linea_base": nivel, "origen": origen, "controles": n_c, "mejoras": n_m, "filas": filas}}
+    if cis:
+        out["cis"] = _construir_cis(filas, cis, perfil)
+    return out
 
 
 # --------------------------------------------------------------------------- #
@@ -282,8 +352,32 @@ def _filas_2_1(lb: dict) -> list:
     return out
 
 
+def _filas_cis(mc: dict) -> list:
+    """Una fila por salvaguarda del grupo IG elegido (D108); titulo tal cual del archivo del analista."""
+    c = mc.get("cis")
+    if not c:
+        return []
+    out = []
+    for r in c["filas"]:
+        s = "; ".join(r["subcategorias"])
+        if r["controles"]:
+            evid = t("CSF 2.0: {s}; SP 800-53 en la linea base: {c}. Filas NIST: {b} con brecha, {o} con control "
+                     "observado, {e} sin evidencia, {n} no evaluables", s=s, c="; ".join(r["controles"]),
+                     b=r["brecha"], o=r["observado"], e=r["sin_evidencia"], n=r["no_evaluable"])
+        elif r["subcategorias"]:
+            evid = t("CSF 2.0: {s}; ningun control SP 800-53 correspondiente esta en la linea base NIST elegida",
+                     s=s)
+        else:
+            evid = t("Sin correspondencia publicada con CSF 2.0 en las referencias informativas de NIST: revisar "
+                     "a mano")
+        out.append([M_CIS, t(ALC_ORG), "", r["id"], r["titulo"], c["grupo"], t(c["origen"]), t(r["estado"]), evid,
+                    "; ".join(t(h) for h in r["hallazgos"]), "; ".join(r["playbooks"]), r["prioridad"],
+                    *_vacias()])
+    return out
+
+
 def filas_matriz(mc: dict, lb: dict) -> list:
-    return _filas_62443(lb) + _filas_2_1(lb) + _filas_nist(mc)
+    return _filas_62443(lb) + _filas_2_1(lb) + _filas_nist(mc) + _filas_cis(mc)
 
 
 def _nombre_familia(fam: str) -> str:
@@ -355,7 +449,14 @@ def seccion(mc: dict, lb: dict) -> dict:
     n = mc["nist"]
     for fam, c in _cuentas_nist(mc).items():
         filas.append([M_NIST, _nombre_familia(fam), *[c[e] for e in estados], sum(c.values())])
+    if mc.get("cis"):
+        por_control: dict = {}
+        for r in mc["cis"]["filas"]:
+            por_control.setdefault(r["control"], collections.Counter())[r["estado"]] += 1
+        for ctl, c in sorted(por_control.items(), key=lambda kv: int(kv[0])):
+            filas.append([M_CIS, f"CIS {ctl}", *[c[e] for e in estados], sum(c.values())])
     resumen = t("Linea base NIST {nivel} ({origen}): {c} controles y {m} mejoras. Detalle y columnas de validacion "
                 "del analista en {a}.", nivel=t(n["linea_base"]), origen=t(n["origen"]), c=n["controles"],
                 m=n["mejoras"], a=ARCHIVO)
-    return {"titulo": t(TITULO), "nota": t(NOTA), "resumen": resumen, "tabla": (cab, filas)}
+    nota = t(NOTA) + (" " + t(NOTA_CIS) if mc.get("cis") else "")
+    return {"titulo": t(TITULO), "nota": nota, "resumen": resumen, "tabla": (cab, filas)}

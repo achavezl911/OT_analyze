@@ -10,6 +10,7 @@ from . import __version__
 from . import acceso_remoto as _ar
 from . import alertas as _al
 from . import avisos_cisa as _ac
+from . import cis_controles as _cis
 from . import conductos_zcr as _zc
 from . import direccionamiento as _dr
 from . import evasion as _ev
@@ -106,6 +107,9 @@ def crear_parser() -> argparse.ArgumentParser:
     ap.add_argument("--kev", metavar="ARCHIVO",
                     help="Catalogo KEV de CISA en JSON o CSV (como en el analisis de capturas); requiere "
                          "--vulnerabilidades.")
+    ap.add_argument("--cis", metavar="ARCHIVO",
+                    help="CIS Controls v8.1 (XLSX oficial o CSV; como en el analisis de capturas): filas del "
+                         "grupo IG del perfil (cis_ig; por defecto IG2) en matriz_controles.csv.")
     ap.add_argument("--avisos-ics", metavar="RUTA", dest="avisos_ics",
                     help="Avisos ICS de CISA en CSAF 2.0: un JSON o una carpeta (como en el analisis de capturas).")
     ap.add_argument("--catalogo-vulnerabilidades", metavar="ARCHIVO", dest="catalogo_vulnerabilidades",
@@ -535,7 +539,8 @@ def main(argv: list | None = None) -> int:
     res.linea_base = _lb.construir(imp.assets, zon, zcr, reglas_fw, switches, hallazgos, perfil)
     if not res.linea_base:
         print("[!] linea base ISA/IEC 62443: no hay zonas, no se genera")
-    res.matriz_controles = _mc.construir(imp.assets, zcr, reglas_fw, hallazgos, perfil)
+    res.matriz_controles = _mc.construir(imp.assets, zcr, reglas_fw, hallazgos, perfil,
+                                         _cis.cargar(args.cis) if args.cis else None)
     res.tobe = _tb.construir(imp.assets, imp.conduits, zon, zcr, reglas_fw, hallazgos, perfil)    # T1a (D85)
     if _tb.aviso(res.tobe):
         print(_tb.aviso(res.tobe))

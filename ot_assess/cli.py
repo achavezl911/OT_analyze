@@ -199,6 +199,11 @@ def crear_parser() -> argparse.ArgumentParser:
                     help="Catalogo KEV de CISA (known_exploited_vulnerabilities.json o su CSV), descargado por "
                          "usted; marca las vulnerabilidades importadas que estan en el catalogo. Requiere "
                          "--vulnerabilidades. La herramienta no descarga nada.")
+    ap.add_argument("--cis", metavar="ARCHIVO",
+                    help="CIS Controls v8.1 (XLSX oficial de CIS o CSV con sus columnas), descargado por usted: "
+                         "agrega a matriz_controles.csv una fila por salvaguarda del grupo IG1, IG2 o IG3 "
+                         "(perfil cis_ig; por defecto IG2). Los titulos se leen del archivo; la herramienta no "
+                         "los distribuye (licencia CC BY-NC-ND 4.0).")
     ap.add_argument("--avisos-ics", metavar="RUTA", dest="avisos_ics",
                     help="Un aviso ICS de CISA en CSAF 2.0 (JSON) o una carpeta con muchos (recursiva); "
                          "se cruzan por CVE exacto con --vulnerabilidades y generan avisos_ics.csv; ademas se "
@@ -597,9 +602,11 @@ def main(argv: list[str] | None = None) -> int:
                                    [f for c in [*res.caps, *res.extras] for f in c.findings], perfil)
     if not res.linea_base:
         print("[!] linea base ISA/IEC 62443: no hay zonas, no se genera")
+    from . import cis_controles as _cis
     from . import matriz_controles as _mc
     res.matriz_controles = _mc.construir(assets, res.zcr, res.firewall,
-                                         [f for c in [*res.caps, *res.extras] for f in c.findings], perfil)
+                                         [f for c in [*res.caps, *res.extras] for f in c.findings], perfil,
+                                         _cis.cargar(args.cis) if args.cis else None)
     from . import tobe as _tb
     res.tobe = _tb.construir(assets, conduits, res.zonas, res.zcr, res.firewall,      # T1a (D85)
                              [f for c in [*res.caps, *res.extras] for f in c.findings], perfil)
