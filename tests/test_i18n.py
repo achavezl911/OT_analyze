@@ -200,9 +200,9 @@ class HtmlIdiomaTest(unittest.TestCase):
 
     def test_csv_cabeceras(self):
         self.assertTrue(self.csv_cab("es", "inventario.csv").startswith(
-            "equipo,ips,mac,fabricante,modelo_descripcion,firmware,rol_inferido,zona_purdue,"))
+            "equipo,ips,mac,mac_salto,fabricante,modelo_descripcion,firmware,rol_inferido,zona_purdue,"))
         self.assertTrue(self.csv_cab("en", "inventario.csv").startswith(
-            "device,ips,mac,manufacturer,model_description,firmware,inferred_role,purdue_zone,"))
+            "device,ips,mac,hop_mac,manufacturer,model_description,firmware,inferred_role,purdue_zone,"))
         self.assertTrue(self.csv_cab("en", "hallazgos.csv").startswith(
             "id,capture,severity,category,title,evidence,why_it_matters,recommendation,mitre_ics,iec62443"))
 
