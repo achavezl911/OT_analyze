@@ -210,13 +210,13 @@ class HtmlIdiomaTest(unittest.TestCase):
         self.assertEqual(self.hojas("en"), [
             "Inventory", "Capture coverage", "Network health", "Top devices", "Top conduits", "Protocol mix",
             "Traffic baseline", "Sensors", "Sensor gaps", "Normalized inventory", "Inventory provenance", "Obsolescence", "Communications", "Zones", "Hardening by type", "Hardening by asset", "Log sources", "IP addressing", "Specific baseline", "Conduit baseline", "General baseline",
-            "Controls matrix", "Identity", "Findings", "Remediation plan", "Risk register", "Maturity by domain",
+            "Baseline 2-1", "Controls matrix", "Identity", "Findings", "Remediation plan", "Risk register", "Maturity by domain",
             "Maturity questionnaire", "DNS records",
             "DNS resolutions", "DNS servers", "Control", "Coverage iec62443", "Risk heat map"])
-        self.assertEqual(self.hojas("es")[:24], [
+        self.assertEqual(self.hojas("es")[:25], [
             "Inventario", "Cobertura de captura", "Salud de la red", "Top equipos", "Top conductos", "Mezcla de protocolos",
             "Linea base de trafico", "Sensores", "Brechas de sensores", "Inventario normalizado", "Inventario procedencia", "Obsolescencia", "Comunicaciones", "Zonas", "Hardening por tipo", "Hardening por activo", "Fuentes de log", "Direccionamiento IP", "Linea base especifica", "Linea base conductos",
-            "Linea base general", "Matriz de controles", "Identidad", "Hallazgos"])
+            "Linea base general", "Linea base 2-1", "Matriz de controles", "Identidad", "Hallazgos"])
 
     def test_titulo_por_defecto_se_traduce_y_el_del_usuario_no(self):
         self.assertIn("<title>OT cybersecurity assessment</title>", self.html("en"))
