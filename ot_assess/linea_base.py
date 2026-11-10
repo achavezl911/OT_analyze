@@ -58,7 +58,8 @@ FRS_CONDUCTO = ("FR3", "FR4", "FR5")
 NOTA_COTA = "cota superior segun la evidencia; no demuestra que el nivel se alcance"
 NOTA_SPE = ("La linea base por elementos del programa (SPE, sub-SPE y requisitos de ISA/IEC 62443-2-1:2024) esta "
             "en linea_base_2_1.csv, con identificadores de la norma, titulos propios y las correspondencias "
-            "publicadas con 3-3, 4-2 y 2-4; una correspondencia no es equivalencia ni prueba de cumplimiento.")
+            "publicadas con 3-3, 4-2 y 2-4; una correspondencia no es equivalencia ni prueba de cumplimiento. Un "
+            "mismo SR puede contar en varios SPE: los totales por SPE no se suman.")
 NOTA_DOC = "Documental: se evalua por entrevista"
 NOTA_SIN_SR = "Sin requisito de 3-3 asociado: esta corrida no lo evalua; revisar a mano"
 NOTA = ("Linea base construida con ISA/IEC 62443-3-3:2013 y 4-2:2018 (vigentes anteriores a 2020), 3-2:2020 y "
