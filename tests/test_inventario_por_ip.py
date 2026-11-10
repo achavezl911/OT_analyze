@@ -157,5 +157,22 @@ class SinEnrutadorTest(unittest.TestCase):
         self.assertEqual(ip.contar(res), len(res.assets))
 
 
+
+class UnaSolaIpTest(unittest.TestCase):
+    def test_una_mac_con_una_sola_ip_publica_no_se_parte(self):
+        """Redes con direccionamiento publico: la MAC con una sola IP ya es una fila y conserva MAC y fabricante."""
+        cap = Capture(Path("u.pcap"))
+        _host(cap, M_A, ["93.184.216.34"], 9)
+        _host(cap, M_B, ["198.51.100.6"], 4)
+        _flujo(cap, "198.51.100.6", "93.184.216.34", 44818, 4, 40, proto="ENIP")
+        res = _res(cap)
+        self.assertTrue(inv._enrutamiento(["93.184.216.34"]))
+        cab, filas = _tabla(res)
+        self.assertNotIn("mac_salto", cab)
+        i = {c: k for k, c in enumerate(cab)}
+        self.assertEqual([(f[i["equipo"]], f[i["ips"]], f[i["mac"]], f[i["paquetes"]]) for f in filas], _viejo(res))
+        self.assertEqual(ip.contar(res), len(res.assets))
+
+
 if __name__ == "__main__":
     unittest.main()

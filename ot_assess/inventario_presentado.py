@@ -22,7 +22,8 @@ def _caps(res) -> list:
 
 def _ips_partidas(a: dict, caps) -> list:
     """IP unicast que presenta una MAC de enrutamiento; [] si el activo no se parte (misma condicion que
-    inventario_normalizado.registros_activos y mismas IP omitidas que _dividir_enrutada)."""
+    inventario_normalizado.registros_activos y mismas IP omitidas que _dividir_enrutada). Con una sola IP
+    unicast no se parte."""
     ips = sorted(a["ips"])
     if not (caps and _in._enrutamiento(ips) and _in._mac(a["mac"])):
         return []
@@ -31,7 +32,9 @@ def _ips_partidas(a: dict, caps) -> list:
         d = _in._ipv4_unicast(ip)
         if d is not None and not d.is_link_local and not d.is_loopback:
             out.append(ip)
-    return out
+    # Una sola IP ya es una fila: partirla solo quitaria la MAC y el fabricante (redes OT con direccionamiento
+    # publico, donde cada PLC tiene una IP publica y su propia MAC).
+    return out if len(out) > 1 else []
 
 
 def contar(res) -> int:

@@ -141,7 +141,7 @@ class PipelineTest(unittest.TestCase):
         self.assertIn("SR 2.1", fila["iec62443"])
 
     def test_inventario_une_los_dos_puntos_de_captura(self):
-        macs = [r["mac"] for r in _csv(self.out / "inventario.csv")]
+        macs = [r["mac"] for r in _csv(self.out / "inventario.csv") if r["mac"]]  # I3: las filas por IP no llevan MAC
         self.assertEqual(len(macs), len(set(macs)))
         rtu = next(r for r in _csv(self.out / "inventario.csv") if r["ips"] == "10.10.2.6")
         self.assertEqual(set(rtu["visto_en_capturas"].split(";")), {"punto_a.pcap", "punto_b.pcap"})
