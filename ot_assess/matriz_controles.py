@@ -16,6 +16,7 @@ from pathlib import Path
 from . import linea_base as _lb
 from . import niveles62443 as _n
 from . import playbooks
+from . import spe62443 as _spe
 from .catalog import SEV_ORDER
 from .i18n import idioma, t
 from .standards import ESTANDARES
@@ -30,6 +31,7 @@ BASE_DEFECTO = "moderada"
 ORIGEN_BASE_PERFIL = "declarado en el perfil"
 ORIGEN_BASE_PROPUESTA = "propuesto por la herramienta; lo fija el cliente"
 M_62443, M_NIST = "ISA/IEC 62443", "NIST SP 800-82r3"
+M_62443_21 = "ISA/IEC 62443-2-1:2024"
 ALC_ORG, ALC_SITIO = "organizacion", "sitio"
 FUERA = "fuera de las lineas base OT"
 FUENTES_VALIDACION = ("entrevista", "documento", "observacion en sitio", "evidencia tecnica")
@@ -46,7 +48,9 @@ NOTA = ("La matriz junta los requisitos ISA/IEC 62443 de la linea base por zona 
         "de la linea base OT elegida de NIST SP 800-82 Rev. 3 (Apendice F.3, Tabla 22, sobre NIST SP 800-53 Rev. 5). "
         "El estado (as-is) sale solo de la evidencia de esta corrida; las columnas de validacion las llena el "
         "analista con entrevista, documento, observacion en sitio o evidencia tecnica. La linea base NIST no "
-        "declarada en el perfil es una propuesta de la herramienta que fija el cliente. Esto es evidencia tecnica, "
+        "declarada en el perfil es una propuesta de la herramienta que fija el cliente. Incluye una fila por "
+        "requisito de ISA/IEC 62443-2-1:2024 (catalogo propio del propietario) con el estado agregado de los SR de "
+        "3-3 que cita; una correspondencia no es equivalencia ni prueba de cumplimiento. Esto es evidencia tecnica, "
         "no una determinacion de cumplimiento. Detalle en " + ARCHIVO + ".")
 
 _CTL = re.compile(r"(?<![A-Za-z])([A-Z]{2}-\d+)(?:\((\d+)\))?")
@@ -229,8 +233,57 @@ def _filas_nist(mc: dict) -> list:
     return out
 
 
+def _estados_2_1(lb: dict) -> list:
+    """[(requisito de la 2-1, estado agregado, filas de zona usadas, ids SR)] en el orden del catalogo."""
+    filas = [r for z in lb["zonas"] for r in z["filas"]]
+    conj = _spe.conjuntos()
+    out = []
+    for e in _spe.cargar()["elementos"]:
+        if e["tipo"] != _spe.T_REQ:
+            continue
+        ids = conj[e["id"]]
+        rows = [r for r in filas if r["requisito"] in ids]
+        estados = {r["estado"] for r in rows}
+        if rows:
+            est = next(x for x in _lb.ESTADOS if x in estados)
+        elif ids:
+            est = _lb.E_SIN
+        else:
+            est = _lb.E_NOEVAL if e["evidencia_propuesta"] == "documental" else _lb.E_SIN
+        out.append((e, est, rows, sorted(ids, key=_lb._orden_id)))
+    return out
+
+
+def _filas_2_1(lb: dict) -> list:
+    """Una fila por requisito de la 2-1 (D106), ordenadas por prioridad; sin linea base no hay filas."""
+    if not _lb.hay(lb):
+        return []
+    datos = []
+    for pos, (e, est, rows, ids) in enumerate(_estados_2_1(lb)):
+        n_b = sum(1 for r in rows if r["estado"] == _lb.E_BRECHA)
+        datos.append(((_lb.ESTADOS.index(est), -n_b, pos), e, est, rows, ids))
+    datos.sort(key=lambda d: d[0])
+    out = []
+    for prio, (_k, e, est, rows, ids) in enumerate(datos, 1):
+        sr = "; ".join(ids)
+        if rows:
+            c = collections.Counter(r["estado"] for r in rows)
+            evid = t("SR citados: {sr}. Filas por zona: {b} con brecha, {c} con control observado, {s} sin "
+                     "evidencia, {n} no evaluables", sr=sr, b=c[_lb.E_BRECHA], c=c[_lb.E_CONTROL],
+                     s=c[_lb.E_SIN], n=c[_lb.E_NOEVAL])
+        elif ids:
+            evid = t("SR citados: {sr}; ninguno esta en la linea base de las zonas (SL-T)", sr=sr)
+        else:
+            evid = t(_lb.NOTA_DOC if e["evidencia_propuesta"] == "documental" else _lb.NOTA_SIN_SR)
+        hall = list(dict.fromkeys(t(h) for r in rows for h, _n in r["hallazgos"]))
+        pb = list(dict.fromkeys(p for r in rows for p in r["playbooks"]))
+        out.append([M_62443_21, t("programa"), "", e["id"], e["titulo"][idioma()], "", "", t(est), evid,
+                    "; ".join(hall), "; ".join(pb), prio, *_vacias()])
+    return out
+
+
 def filas_matriz(mc: dict, lb: dict) -> list:
-    return _filas_62443(lb) + _filas_nist(mc)
+    return _filas_62443(lb) + _filas_2_1(lb) + _filas_nist(mc)
 
 
 def _nombre_familia(fam: str) -> str:
@@ -290,6 +343,14 @@ def seccion(mc: dict, lb: dict) -> dict:
                     cuenta[r["fr"]][r["estado"]] += 1
         for fr, c in cuenta.items():
             filas.append([M_62443, f"{fr} - {frs[fr]['titulo'][idioma()]}", *[c[e] for e in estados],
+                          sum(c.values())])
+        hijos: dict = {}
+        for e in _spe.cargar()["elementos"]:
+            hijos.setdefault(e["pertenece_a"], []).append(e)
+        estado_de = {e["id"]: est for e, est, _r, _i in _estados_2_1(lb)}
+        for spe in hijos.get("", ()):
+            c = collections.Counter(estado_de[r["id"]] for r in _lb._requisitos_de(spe, hijos))
+            filas.append([M_62443_21, f"{spe['id']} - {spe['titulo'][idioma()]}", *[c[e] for e in estados],
                           sum(c.values())])
     n = mc["nist"]
     for fam, c in _cuentas_nist(mc).items():

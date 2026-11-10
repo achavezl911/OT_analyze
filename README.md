@@ -751,7 +751,8 @@ correspondencias publicadas con 3-3, 4-2 y 2-4; una correspondencia no es equiva
 
 **Matriz de controles (B7c).** Con o sin zonas, escribe `matriz_controles.csv` (hoja «Matriz de controles», la clave
 `matriz_controles` de `resultado.json` y una sección breve por marco y familia). Junta las filas de la línea base
-62443 (zona y conducto) y los controles y mejoras de la línea base OT de NIST SP 800-82 Rev. 3 (Tabla 22 del Apéndice
+62443 (zona y conducto), una fila por cada uno de los 87 requisitos de ISA/IEC 62443-2-1:2024 (solo con zonas; alcance
+«programa», estado agregado de los SR de 3-3 que cita, sin objetivo; D106) y los controles y mejoras de la línea base OT de NIST SP 800-82 Rev. 3 (Tabla 22 del Apéndice
 F.3, sobre SP 800-53 Rev. 5), elegida con `linea_base_nist` en el perfil (`"baja"`, `"moderada"` o `"alta"`; por
 defecto moderada, propuesta por la herramienta). Estados as-is como en la línea base; nunca «cumple». Las seis últimas
 columnas (`estado_validado`, `fuente_validacion`, `validado_por`, `revisado_por`, `fecha_validacion`, `comentario`)

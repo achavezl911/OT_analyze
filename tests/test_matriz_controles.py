@@ -205,8 +205,80 @@ class MatrizTest(unittest.TestCase):
         r, m = self._datos()
         cab, filas = mc.seccion(m, r)["tabla"]
         self.assertEqual(len(cab), 2 + 4 + 1)
-        self.assertEqual({f[0] for f in filas}, {mc.M_62443, mc.M_NIST})
+        self.assertEqual({f[0] for f in filas}, {mc.M_62443, mc.M_62443_21, mc.M_NIST})
         self.assertEqual(sum(f[-1] for f in filas if f[0] == mc.M_NIST), 215 + 123)
+
+
+class Filas21Test(unittest.TestCase):
+    """MC21 (D106): una fila por requisito de ISA/IEC 62443-2-1:2024 con el estado agregado de los SR que cita."""
+
+    def tearDown(self):
+        i18n.usar("es")
+
+    def _r(self):
+        h = {"titulo": "Texto claro de ejemplo", "severidad": "Media",
+             "referencias": {"iec62443": "SR 5.1 Segmentacion"}, "activos": ["192.0.2.5"]}
+        return _lb(findings=[h])
+
+    def _f21(self, r):
+        return [f for f in mc.filas_matriz(_nist(), r) if f[0] == mc.M_62443_21]
+
+    def test_87_filas_entre_3_3_y_nist_con_prioridad(self):
+        r = self._r()
+        filas = mc.filas_matriz(_nist(), r)
+        marcos = [f[0] for f in filas]
+        i, j = marcos.index(mc.M_62443_21), marcos.index(mc.M_NIST)
+        self.assertEqual(marcos[i:j], [mc.M_62443_21] * 87)
+        self.assertNotIn(mc.M_62443_21, marcos[j:])
+        f21 = filas[i:j]
+        self.assertEqual([f[11] for f in f21], list(range(1, 88)))
+        for f in f21:
+            self.assertEqual(len(f), len(mc.COLUMNAS))
+            self.assertEqual(f[-6:], [""] * 6)
+            self.assertEqual((f[1], f[2], f[5], f[6]), ("programa", "", "", ""))
+
+    def test_estados_agregados(self):
+        f = {x[3]: x for x in self._f21(self._r())}
+        net = f["NET 1.1"]
+        self.assertEqual(net[7], lb.E_BRECHA)
+        self.assertIn("SR citados: SR 5.1", net[8])
+        self.assertIn("con brecha", net[8])
+        self.assertIn("Texto claro de ejemplo", net[9])
+        self.assertEqual(f["ORG 1.1"][7], lb.E_NOEVAL)
+        self.assertEqual(f["ORG 1.1"][8], lb.NOTA_DOC)
+        self.assertEqual(f["USER 1.7"][7], lb.E_SIN)
+        self.assertEqual(f["USER 1.7"][8], lb.NOTA_SIN_SR)
+        self.assertEqual(self._f21(self._r())[0][3], "NET 1.1")       # brecha primero
+
+    def test_solo_control_observado(self):
+        r = self._r()
+        solo = [x for x in self._f21(r) if x[7] == lb.E_CONTROL]
+        self.assertTrue(all("0 con brecha" in x[8] and "0 sin evidencia" in x[8] for x in solo))
+
+    def test_sin_zonas_no_hay_filas_ni_spe(self):
+        m = _nist()
+        self.assertEqual([f for f in mc.filas_matriz(m, {}) if f[0] == mc.M_62443_21], [])
+        self.assertNotIn(mc.M_62443_21, [f[0] for f in mc.seccion(m, {})["tabla"][1]])
+
+    def test_seccion_una_fila_por_spe(self):
+        r = self._r()
+        filas = [f for f in mc.seccion(_nist(), r)["tabla"][1] if f[0] == mc.M_62443_21]
+        self.assertEqual(len(filas), 8)
+        self.assertEqual(sum(f[-1] for f in filas), 87)
+        for f in filas:
+            self.assertEqual(sum(f[2:-1]), f[-1])
+
+    def test_ingles(self):
+        r = self._r()
+        i18n.FALTANTES.clear()
+        i18n.usar("en")
+        f = {x[3]: x for x in self._f21(r)}
+        self.assertEqual(f["NET 1.1"][1], "program")
+        self.assertIn("Cited SRs", f["NET 1.1"][8])
+        self.assertEqual(f["ORG 1.1"][8], "Documentary: assessed by interview")
+        mc.seccion(_nist(), r)
+        self.assertEqual(i18n.FALTANTES - {"Texto claro de ejemplo"}, set())
+        i18n.FALTANTES.clear()
 
 
 class CliTest(unittest.TestCase):
