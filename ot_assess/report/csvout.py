@@ -16,6 +16,7 @@ from .. import fuentes_log as _fl
 from .. import hardening as _hd
 from .. import ingenieria as _ing
 from .. import inventario_normalizado as _in
+from .. import inventario_presentado as _ip
 from .. import linea_base_aprobada as _lba
 from .. import madurez as _ma
 from .. import matriz_controles as _mc
@@ -73,26 +74,29 @@ def tablas(res: Assessment) -> list:
     nombres = _rd.nombre_de_ip(res)
     out = []
 
-    con_nat = any(a.get("nat_nota") for a in assets.values())     # D70: columna solo si hay activos marcados
+    filas_inv = _ip.filas(res, nombres)          # I3 (D105): una fila por IP para las MAC de enrutamiento
+    con_nat = any(a.get("nat_nota") for a in filas_inv)     # D70: columna solo si hay activos marcados
+    con_salto = _ip.hay_partidas(filas_inv)
     # Inventario consolidado: un renglon por equipo, no por equipo y captura.
     out.append(("inventario.csv", "Inventario",
-                ["equipo", "ips", "mac", "fabricante", "modelo_descripcion",
+                ["equipo", "ips", "mac", *(["mac_salto"] if con_salto else []), "fabricante", "modelo_descripcion",
                  "firmware", "rol_inferido", "zona_purdue", "vlans",
                  "base_inferencia", "puertos_servidos", "protocolos",
                  "paquetes", "bytes", "visto_en_capturas", "nombre_dns", "interfaz_firewall",
                  "zona_asignada", "origen_asignacion", *(["switch_puerto", "vlan"] if res.switches else []),
                  *(["nota_nat"] if con_nat else [])],
-                [[a["nombre"], ";".join(sorted(a["ips"])), a["mac"], a["vendor"],
+                [[a["nombre"], ";".join(sorted(a["ips"])), a["mac"], *([a.get("mac_salto", "")] if con_salto else []),
+                  a["vendor"],
                   a.get("modelo", ""), a.get("firmware", ""), mostrar_rol(a["role"]), mostrar_rol(a["purdue"]),
                   ";".join(sorted(a["vlans"])), a["role_why"],
                   ";".join(f"{p}/{l4}" for (p, l4) in a["ports_served"]),
                   ";".join(f"{p}={n}" for p, n in a["protos"].most_common(12)),
                   a["pkts"], a["bytes"], ";".join(sorted(a["capturas"])),
-                  next((nombres[i] for i in sorted(a["ips"]) if i in nombres), ""),
+                  _ip.nombre_dns(a, nombres),
                   _rf.mostrar_iface(a.get("interfaz_firewall", "")), *_zo.columnas_activo(a),
                   *([a.get("switch_puerto", ""), a.get("vlan", "")] if res.switches else []),
                   *([a.get("nat_nota", "")] if con_nat else [])]
-                 for a in sorted(assets.values(), key=lambda x: (-x["pkts"], x["mac"]))]))
+                 for a in filas_inv]))
 
     out.extend(_cc.tablas(res.cobertura_captura))
     out.extend(_sr.tablas(res.salud_red))

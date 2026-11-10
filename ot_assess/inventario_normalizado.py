@@ -222,14 +222,19 @@ def _flujos_por_ip(caps) -> dict:
     for c in caps:
         for f in c.flows.values():
             for ip in {f["src"], f["dst"]}:
-                d = out.setdefault(ip, {}).setdefault(c.name, {"pkts": 0, "ultima": 0, "serv": collections.Counter(),
+                d = out.setdefault(ip, {}).setdefault(c.name, {"pkts": 0, "bytes": 0, "ultima": 0,
+                                                                  "serv": collections.Counter(),
+                                                                  "usa": collections.Counter(),
                                                                   "protos": collections.Counter()})
                 d["pkts"] += f.get("pkts", 0)
+                d["bytes"] += f.get("bytes", 0)
                 d["ultima"] = max(d["ultima"], f.get("last") or 0)
                 if f.get("proto"):
                     d["protos"][f["proto"]] += f.get("pkts", 0)
                 if ip == f["dst"] and f.get("dport") and f.get("l4"):
                     d["serv"][f"{f['dport']}/{f['l4']}"] += f.get("pkts", 0)
+                if ip == f["src"] and f.get("dport") and f.get("l4"):
+                    d["usa"][f"{f['dport']}/{f['l4']}"] += f.get("pkts", 0)
     return out
 
 

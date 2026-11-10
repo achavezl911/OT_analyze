@@ -17,6 +17,7 @@ from .. import fuentes as _fu
 from .. import fuentes_log as _fl
 from .. import hardening as _hd
 from .. import inventario_normalizado as _in
+from .. import inventario_presentado as _ip
 from .. import linea_base as _lb
 from .. import linea_base_aprobada as _lba
 from .. import madurez as _ma
@@ -78,7 +79,8 @@ def _flujos_fw(res: Assessment) -> list:
 
 
 def construir_bloques(res: Assessment) -> list:
-    caps, assets, conduits, args = res.caps, res.assets, res.conduits, res.args
+    caps, conduits, args = res.caps, res.conduits, res.args
+    n_activos = _ip.contar(res)      # I3 (D105): las mismas filas que inventario.csv
     estandares = res.estandares or [ESTANDARES["iec62443"]]
     b = [("titulo", args.titulo),
          ("subtitulo", f"{args.cliente} - {datetime.now().astimezone().strftime('%Y-%m-%d')}")]
@@ -98,7 +100,7 @@ def construir_bloques(res: Assessment) -> list:
           ("tabla", [t("Concepto"), t("Valor")],
            ([[t("Capturas"), len(caps)], [t("Paquetes"), sum(c.flow_packets for c in caps)]] if caps
             else [list(x) for x in filas_fuentes(res)])
-           + [[t("Activos"), len(assets)],
+           + [[t("Activos"), n_activos],
             [t("Conductos"), len(conduits)],
             [t("Conductos que cruzan zonas"), sum(1 for c in conduits if c["cruza_zona"])]]
            + [[f"{t('Hallazgos')} {t(s).lower()}", by_sev.get(s, 0)]

@@ -18,6 +18,7 @@ from .. import fuentes as _fu
 from .. import fuentes_log as _fl
 from .. import hardening as _hd
 from .. import inventario_normalizado as _in
+from .. import inventario_presentado as _ip
 from .. import linea_base as _lb
 from .. import linea_base_aprobada as _lba
 from .. import madurez as _ma
@@ -101,7 +102,8 @@ def _nada(_texto) -> None:
 
 
 def write_html(res: Assessment, outdir: Path) -> Path:
-    caps, assets, conduits, args = res.caps, res.assets, res.conduits, res.args
+    caps, conduits, args = res.caps, res.conduits, res.args
+    filas_inv = _ip.filas(res)      # I3 (D105): una fila por IP para las MAC de enrutamiento
     estandares = res.estandares or [ESTANDARES["iec62443"]]
     principal = estandares[0]
     now = datetime.now().astimezone().strftime("%d/%m/%Y %H:%M")
@@ -135,7 +137,7 @@ def write_html(res: Assessment, outdir: Path) -> Path:
     a("<h2>" + esc(t("Resumen")) + "</h2>")
     a('<div class="kpis">')
     for n, l in (
-        (len(assets), "Activos"),
+        (len(filas_inv), "Activos"),
         (len(conduits), "Conductos"),
         (len(ot_conduits), "Conductos OT"),
         (len(ctl_conduits), "Con escritura"),
@@ -176,13 +178,13 @@ def write_html(res: Assessment, outdir: Path) -> Path:
     a('<div class="tbl"><table><thead><tr><th>#</th>' + _ths(
         ("Equipo", "Direccion IP", "MAC", "Fabricante", "Modelo / descripcion", "Firmware",
          "Rol inferido", "Zona", "VLAN")) + _ths(("Paquetes",), True) + "</tr></thead><tbody>")
-    rows = sorted(assets.values(), key=lambda x: (-x["pkts"], x["mac"]))
+    rows = filas_inv
     for i, ast in enumerate(rows, 1):
         a("<tr>"
           f"<td class=\"num\">{i}</td>"
           f"<td><strong>{esc(ast['nombre'])}</strong></td>"
           f"<td class=\"mono\">{esc(', '.join(sorted(ast['ips'])[:3]) or '—')}</td>"
-          f"<td class=\"mono\">{esc(ast['mac'])}</td>"
+          f"<td class=\"mono\">{esc(_ip.mac_mostrada(ast))}</td>"
           f"<td>{esc(ast['vendor'] or '—')}</td>"
           f"<td>{esc(ast.get('modelo') or '—')}</td>"
           f"<td class=\"mono\">{esc(ast.get('firmware') or '—')}</td>"
@@ -191,6 +193,8 @@ def write_html(res: Assessment, outdir: Path) -> Path:
           f"<td>{esc(', '.join(sorted(ast['vlans'])) or '—')}</td>"
           f"<td class=\"num\">{ast['pkts']:,}</td></tr>")
     a("</tbody></table></div>")
+    if _ip.hay_partidas(rows):
+        a(f'<div class="nota">{esc(_ip.nota())}</div>')
 
     con_fw = [x for x in rows if x.get("firmware")]
     a('<div class="nota">' + t(

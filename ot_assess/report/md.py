@@ -17,6 +17,7 @@ from .. import fuentes as _fu
 from .. import fuentes_log as _fl
 from .. import hardening as _hd
 from .. import inventario_normalizado as _in
+from .. import inventario_presentado as _ip
 from .. import linea_base as _lb
 from .. import linea_base_aprobada as _lba
 from .. import madurez as _ma
@@ -90,7 +91,8 @@ def _flujos_fw(out: list, res: Assessment) -> None:
 
 
 def write_md(res: Assessment, outdir: Path) -> Path:
-    caps, assets, conduits, args = res.caps, res.assets, res.conduits, res.args
+    caps, conduits, args = res.caps, res.conduits, res.args
+    filas_inv = _ip.filas(res)      # I3 (D105): una fila por IP para las MAC de enrutamiento
     estandares = res.estandares or [ESTANDARES["iec62443"]]
     principal = estandares[0]
     out = []
@@ -141,7 +143,7 @@ def write_md(res: Assessment, outdir: Path) -> Path:
         out.append("- " + t("Paquetes procesados: **{n}**", n=f"{total_pkts:,}"))
         out.append("- " + t("Equipos distintos (por MAC): **{n}**", n=len(all_hosts)))
     else:
-        out.append("- " + t("Equipos del inventario: **{n}**", n=len(assets)))
+        out.append("- " + t("Equipos del inventario: **{n}**", n=len(filas_inv)))
         out.append("- " + t("Conductos: **{n}**", n=len(conduits)))
     out.append("- " + t("Hallazgos:") + " " + ", ".join(
         f"**{by_sev.get(s, 0)}** {t(s).lower()}" for s in ("Alta", "Media", "Baja", "Informativa")
@@ -271,18 +273,20 @@ def write_md(res: Assessment, outdir: Path) -> Path:
     out.append(_cab("#", "Equipo", "IP", "MAC", "Fabricante", "Modelo / descripcion",
                     "Firmware", "Rol inferido", "Zona", "VLAN", "Paquetes"))
     out.append("|---|---|---|---|---|---|---|---|---|---|---|")
-    rows = sorted(assets.values(), key=lambda x: (-x["pkts"], x["mac"]))
+    rows = filas_inv
     for i, ast in enumerate(rows[: args.max_rows], 1):
         out.append(
             f"| {i} | {md_escape(ast['nombre'])} "
             f"| {md_escape(', '.join(sorted(ast['ips'])[:3]) or '-')} "
-            f"| `{ast['mac']}` | {md_escape(ast['vendor'] or '-')} "
+            f"| `{_ip.mac_mostrada(ast)}` | {md_escape(ast['vendor'] or '-')} "
             f"| {md_escape(ast.get('modelo') or '-')} "
             f"| {md_escape(ast.get('firmware') or '-')} "
             f"| {md_escape(mostrar_rol(ast['role']) if ast['role'] else t('Indeterminado'))} "
             f"| {mostrar_rol(ast['purdue']) or '-'} "
             f"| {', '.join(sorted(ast['vlans'])) or '-'} | {ast['pkts']:,} |"
         )
+    if _ip.hay_partidas(rows):
+        out.append("\n> " + _ip.nota())
     if len(rows) > args.max_rows:
         out.append("\n_(" + t("{n} equipos mas en `inventario.csv`.",
                               n=len(rows) - args.max_rows) + ")_")

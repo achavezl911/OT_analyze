@@ -7,6 +7,7 @@ from pathlib import Path
 
 from . import __version__
 from . import inventario_normalizado as _in
+from . import inventario_presentado as _ip
 from . import obsolescencia as _ob
 from .cache_capturas import CacheCapturas
 from .consolidate import build_conduits, merge_assets
@@ -437,9 +438,9 @@ def main(argv: list[str] | None = None) -> int:
     print("\n[*] Consolidando inventario y matriz de comunicaciones...")
     assets, ip_index = merge_assets(caps)
     conduits = build_conduits(caps, ip_index)
-    print(f"    => {len(assets)} activos unicos, {len(conduits)} conductos "
-          f"({sum(1 for k in conduits if k['cruza_zona'])} cruzan zonas)")
     res = Assessment(caps, assets, conduits, args, estandares=estandares)
+    print(f"    => {_ip.contar(res)} activos unicos, {len(conduits)} conductos "
+          f"({sum(1 for k in conduits if k['cruza_zona'])} cruzan zonas)")
     res.tor_relays = tor_relays
     res.perfil = perfil
     if args.reglas_firewall:
