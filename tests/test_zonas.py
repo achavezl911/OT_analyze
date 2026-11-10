@@ -275,7 +275,8 @@ class CapturasTest(unittest.TestCase):
         self.assertTrue(all(f["origen_asignacion"] in zo.ORIGENES for f in inv))
         act = list(csv.DictReader(open(o / "activos.csv", encoding="utf-8-sig")))
         self.assertTrue(all(f["zona_asignada"] for f in act))
-        self.assertEqual(sum(int(f["activos"]) for f in z), len(inv))
+        macs = {f["mac"] or f.get("mac_salto", "") for f in inv}  # zonas cuenta por MAC; inventario.csv va por IP (D105)
+        self.assertEqual(sum(int(f["activos"]) for f in z), len(macs))
         for n, marca in (("reporte_ot.html", "<h3>Zonas</h3>"), ("reporte_ot.md", "### Zonas")):
             texto = (o / n).read_text(encoding="utf-8")
             self.assertIn(marca, texto, n)
