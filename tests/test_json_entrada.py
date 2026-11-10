@@ -36,7 +36,7 @@ INTERNOS = {
     "standards.py": 1,                  # marcos incluidos en el paquete (_incluido)
     "cobertura.py": 1,                  # catalogos de cobertura del paquete
     "vuln_firmware.py": 1,              # fabricantes_alias.json del paquete
-    "matriz_controles.py": 2,           # catalogo de controles y referencias CSF 2.0 del paquete
+    "matriz_controles.py": 3,           # catalogo de controles, referencias CSF 2.0 y marco TSA del paquete
     "sitios.py": 1,                     # dominios de madurez del paquete
     "niveles62443.py": 1,               # niveles del paquete
     "spe62443.py": 1,                   # catalogo de la 2-1 del paquete
