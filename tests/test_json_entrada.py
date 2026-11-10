@@ -39,6 +39,7 @@ INTERNOS = {
     "matriz_controles.py": 1,           # catalogo de controles del paquete
     "sitios.py": 1,                     # dominios de madurez del paquete
     "niveles62443.py": 1,               # niveles del paquete
+    "spe62443.py": 1,                   # catalogo de la 2-1 del paquete
     "acceso_remoto.py": 1,              # herramientas de acceso remoto del paquete
     "fuentes_log.py": 1,                # catalogo de fuentes de log del paquete
     "detail/identity.py": 1,            # tabla de identidades del paquete
