@@ -383,8 +383,8 @@ NO_USADOS = [
     {"documento": "ISA-TR62443-2-3:2015", "motivo": {"es": "Gestion de parches; ya cubierto por el flujo de vulnerabilidades",
                                                       "en": "Patch management; already covered by the vulnerability flow"}},
     {"documento": "ISA-TR99.00.01:2007", "motivo": {"es": "Obsoleto", "en": "Obsolete"}},
-    {"documento": "ISA/IEC 62443-2-1:2024", "motivo": {"es": "No entregado: sin el no se nombran los elementos del programa (SPE)",
-                                                        "en": "Not supplied: program elements (SPE) are not named without it"}},
+    {"documento": "ISA/IEC 62443-2-1:2024", "motivo": {"es": "Solo identificadores, titulos propios y correspondencias publicadas (iec62443_2_1.json); su texto no se usa",
+                                                        "en": "Identifiers, own titles and published mappings only (iec62443_2_1.json); its text is not used"}},
 ]
 
 
@@ -469,8 +469,6 @@ def construir(carpeta):
         },
         "documentos": docs,
         "documentos_no_usados": NO_USADOS,
-        "pendiente": {"es": "Nombres de los elementos del programa (SPE): requieren ISA/IEC 62443-2-1:2024",
-                      "en": "Security program element (SPE) names: require ISA/IEC 62443-2-1:2024"},
         "tipos_sl": {k: {"nombre": tt(v["nombre"]), "fuente": v["fuente"]} for k, v in SL_TIPOS.items()},
         "niveles_sl": {k: tt(v) for k, v in NIVELES_SL.items()},
         "fr": fr,

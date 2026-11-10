@@ -745,7 +745,9 @@ exige al SL-T de la zona (`sl_t`, `sl_objetivo` o SL2 propuesto por la herramien
 «brecha con evidencia», «control observado», «sin evidencia en los datos (verificar en sitio)» o «no evaluable con datos
 de red»: nunca «cumple». La cota por FR es un techo según la evidencia, no un nivel medido. `ml_objetivo` (`"ML1"` a
 `"ML4"`) en el perfil fija el nivel de madurez objetivo (por defecto ML 2 propuesto); el nivel logrado se evalúa con
-entrevista (2 preguntas por FR en el CSV general). Reglas completas en D76.
+entrevista (2 preguntas por FR en el CSV general). Reglas completas en D76. `linea_base_2_1.csv` (hoja «Linea base 2-1»)
+agrupa el as-is por elementos del programa de ISA/IEC 62443-2-1:2024 (SPE, sub-SPE y requisito), con las
+correspondencias publicadas con 3-3, 4-2 y 2-4; una correspondencia no es equivalencia ni prueba de cumplimiento (D104).
 
 **Matriz de controles (B7c).** Con o sin zonas, escribe `matriz_controles.csv` (hoja «Matriz de controles», la clave
 `matriz_controles` de `resultado.json` y una sección breve por marco y familia). Junta las filas de la línea base

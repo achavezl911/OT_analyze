@@ -14,6 +14,7 @@ from . import cobertura as _cob
 from . import conductos_zcr as _zc
 from . import niveles62443 as _n
 from . import playbooks
+from . import spe62443 as _spe
 from .catalog import SEV_ORDER
 from .firewalls.higiene import M_ANY, M_CONFIA
 from .i18n import idioma, t
@@ -23,6 +24,10 @@ TITULO = "Linea base ISA/IEC 62443 (as-is / to-be)"
 ARCHIVO_ESP, HOJA_ESP = "linea_base_especifica.csv", "Linea base especifica"
 ARCHIVO_CON, HOJA_CON = "linea_base_conductos.csv", "Linea base conductos"
 ARCHIVO_GEN, HOJA_GEN = "linea_base_general.csv", "Linea base general"
+ARCHIVO_21, HOJA_21 = "linea_base_2_1.csv", "Linea base 2-1"
+COL_21 = ["tipo", "id", "pertenece_a", "nombre", "evidencia_propuesta", "sr_referenciados", "con_brecha",
+          "control_observado", "sin_evidencia", "no_evaluable", "sr_con_brecha", "cr_referenciados",
+          "sp_referenciados", "nota"]
 COL_ESP = ["zona", "sl_t", "origen_sl_t", "zona_inferida", "fr", "requisito", "to_be", "cobertura",
            "estado_as_is", "evidencia", "playbooks", "prioridad"]
 COL_CON = ["conducto", "zonas", "sl_t", "origen_sl_t", "fr", "requisito", "to_be", "cobertura", "estado_as_is",
@@ -51,8 +56,11 @@ _IPV4 = re.compile(r"(?<![\d.])\d{1,3}(?:\.\d{1,3}){3}(?!\d)")
 FRS_CONDUCTO = ("FR3", "FR4", "FR5")
 
 NOTA_COTA = "cota superior segun la evidencia; no demuestra que el nivel se alcance"
-NOTA_SPE = ("La agrupacion por elementos del programa de seguridad (SPE) requiere ISA/IEC 62443-2-1:2024 "
-            "(pendiente).")
+NOTA_SPE = ("La linea base por elementos del programa (SPE, sub-SPE y requisitos de ISA/IEC 62443-2-1:2024) esta "
+            "en linea_base_2_1.csv, con identificadores de la norma, titulos propios y las correspondencias "
+            "publicadas con 3-3, 4-2 y 2-4; una correspondencia no es equivalencia ni prueba de cumplimiento.")
+NOTA_DOC = "Documental: se evalua por entrevista"
+NOTA_SIN_SR = "Sin requisito de 3-3 asociado: esta corrida no lo evalua; revisar a mano"
 NOTA = ("Linea base construida con ISA/IEC 62443-3-3:2013 y 4-2:2018 (vigentes anteriores a 2020), 3-2:2020 y "
         "el informe tecnico TR 2-2:2025. El objetivo (to-be) es lo que el catalogo de requisitos exige al nivel "
         "SL-T de cada zona y conducto; el estado (as-is) sale solo de la evidencia de esta corrida. La cota por "
@@ -436,13 +444,53 @@ def filas_general(lb: dict) -> list:
     return out
 
 
+def _requisitos_de(e: dict, hijos: dict) -> list:
+    """Requisitos de la 2-1 que cuelgan de un SPE, sub-SPE o requisito (el propio requisito)."""
+    if e["tipo"] == _spe.T_REQ:
+        return [e]
+    return [r for h in hijos.get(e["id"], ()) for r in _requisitos_de(h, hijos)]
+
+
+def _unicos(piezas) -> list:
+    return list(dict.fromkeys(piezas))
+
+
+def filas_2_1(lb: dict) -> list:
+    """Una fila por SPE, sub-SPE y requisito de la 2-1 con el as-is de los SR de 3-3 que evalua la herramienta."""
+    filas = [r for z in lb["zonas"] for r in z["filas"]]
+    conj = _spe.conjuntos()
+    hijos: dict = {}
+    for e in _spe.cargar()["elementos"]:
+        hijos.setdefault(e["pertenece_a"], []).append(e)
+    out = []
+    for e in _spe.jerarquia():
+        reqs = _requisitos_de(e, hijos)
+        ids = conj[e["id"]]
+        es_req = e["tipo"] == _spe.T_REQ
+        cuenta = [""] * 5
+        nota = ""
+        if ids:
+            rows = [r for r in filas if r["requisito"] in ids]
+            c = collections.Counter(r["estado"] for r in rows)
+            cuenta = [c[E_BRECHA], c[E_CONTROL], c[E_SIN], c[E_NOEVAL],
+                      "; ".join(sorted({r["requisito"] for r in rows if r["estado"] == E_BRECHA}, key=_orden_id))]
+        elif es_req:
+            nota = t(NOTA_DOC if e["evidencia_propuesta"] == "documental" else NOTA_SIN_SR)
+        out.append([e["tipo"], e["id"], e["pertenece_a"], e["titulo"][idioma()],
+                    t(e["evidencia_propuesta"]) if es_req else "", "; ".join(sorted(ids, key=_orden_id)),
+                    *cuenta, "; ".join(sorted({x for r in reqs for x in _spe.cr(r)}, key=_orden_id)),
+                    "; ".join(_unicos(x for r in reqs for x in _spe.sp(r))), nota])
+    return out
+
+
 def tablas(lb: dict) -> list:
     """[(archivo, hoja, cabecera, filas)] para el CSV y el XLSX."""
     if not hay(lb):
         return []
     return [(ARCHIVO_ESP, HOJA_ESP, COL_ESP, filas_especifica(lb)),
             (ARCHIVO_CON, HOJA_CON, COL_CON, filas_conductos(lb)),
-            (ARCHIVO_GEN, HOJA_GEN, COL_GEN, filas_general(lb))]
+            (ARCHIVO_GEN, HOJA_GEN, COL_GEN, filas_general(lb)),
+            (ARCHIVO_21, HOJA_21, COL_21, filas_2_1(lb))]
 
 
 def seccion(lb: dict) -> dict:
@@ -459,7 +507,7 @@ def seccion(lb: dict) -> dict:
     n_b = sum(1 for r in _ordenadas(lb, "zonas") if r["estado"] == E_BRECHA)
     n_c = sum(1 for r in _ordenadas(lb, "conductos") if r["estado"] == E_BRECHA)
     resumen = t("{z} zonas y {c} conductos; {b} requisitos con brecha con evidencia en zonas y {bc} en conductos. "
-                "Detalle en {a1}, {a2} y {a3}.", z=len(lb["zonas"]), c=len(lb["conductos"]), b=n_b, bc=n_c,
-                a1=ARCHIVO_ESP, a2=ARCHIVO_CON, a3=ARCHIVO_GEN)
+                "Detalle en {a1}, {a2}, {a3} y {a4}.", z=len(lb["zonas"]), c=len(lb["conductos"]), b=n_b, bc=n_c,
+                a1=ARCHIVO_ESP, a2=ARCHIVO_CON, a3=ARCHIVO_GEN, a4=ARCHIVO_21)
     return {"titulo": t(TITULO), "nota": t(NOTA), "resumen": resumen, "pivote": (cab_pivote, pivote),
             "top": (cab_top, top), "nota_cota": t(NOTA_COTA)}
