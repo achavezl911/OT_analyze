@@ -771,6 +771,13 @@ evidencia», o «no evaluable» si es de documentación o de gobierno; la eviden
 correspondencia no es equivalencia ni cumplimiento. Sin `--cis` la matriz no cambia. **Licencia:** CIS Controls es
 CC BY-NC-ND 4.0 (no se distribuyen materiales derivados), por eso el repo no contiene ningún título ni texto de CIS,
 solo identificadores; los títulos salen del archivo del analista en cada corrida. Referencia: www.cisecurity.org/controls/.
+**Filas de la TSA SD 1580/82-2022-01E (TSA1, D109).** Con `tsa_sd: "01E"` en el perfil (única edición conocida; otra
+falla), la matriz suma al final 38 filas, una por medida de la sección III («Cybersecurity Measures») de la directiva,
+en su orden, con alcance `organizacion` y las columnas de validación vacías. Las medidas documentales salen «no
+evaluable»; las técnicas, el agregado de las filas NIST de la corrida por un mapeo propio a SP 800-53 Rev. 5 sin revisar
+(`ot_assess/marcos/tsa_sd_1580_82.json`: solo ids y títulos cortos propios). La sección del reporte suma una fila por
+letra (III.A a III.F). Una correspondencia no es equivalencia ni cumplimiento; el Plan de Implementación del cliente
+(CIP) es SSI, se contrasta a mano y nunca va al repo. Sin `tsa_sd` la matriz no cambia.
 En `importacion.json`, `perfil_proyecto` es este perfil y `perfil` sigue siendo el de columnas de la plataforma.
 
 **Inventario normalizado (I1a, D78).** `inventario_normalizado.csv` (una fila por activo, id estable `A-` + 8 hex del

@@ -37,6 +37,10 @@ M_CIS = "CIS Controls v8.1"
 GRUPOS_CIS = _cis.GRUPOS
 GRUPO_CIS_DEFECTO = "IG2"
 RUTA_CSF = Path(__file__).parent / "marcos" / "csf2_referencias.json"
+RUTA_TSA = Path(__file__).parent / "marcos" / "tsa_sd_1580_82.json"
+M_TSA = "TSA SD 1580/82-2022-01E"
+EDICION_TSA = "01E"
+EDICIONES_TSA = (EDICION_TSA,)
 ALC_ORG, ALC_SITIO = "organizacion", "sitio"
 FUERA = "fuera de las lineas base OT"
 FUENTES_VALIDACION = ("entrevista", "documento", "observacion en sitio", "evidencia tecnica")
@@ -61,6 +65,10 @@ NOTA = ("La matriz junta los requisitos ISA/IEC 62443 de la linea base por zona 
 NOTA_CIS = ("Con --cis incluye las salvaguardas de CIS Controls v8.1 del grupo elegido, leidas del archivo del "
             "analista, con estado agregado de las filas NIST por las referencias informativas de CSF 2.0 de NIST; "
             "una correspondencia no es equivalencia ni prueba de cumplimiento; referencia " + _cis.REFERENCIA)
+
+NOTA_TSA = ("Con tsa_sd en el perfil incluye las medidas de la seccion III de la directiva TSA SD 1580/82-2022-01E "
+            "con un mapeo propio a SP 800-53 sin revisar por el propietario; una correspondencia no es equivalencia "
+            "ni prueba de cumplimiento; el plan de implementacion del cliente (CIP) se contrasta a mano y es SSI.")
 
 _CTL = re.compile(r"(?<![A-Za-z])([A-Z]{2}-\d+)(?:\((\d+)\))?")
 _NUM = re.compile(r"\d+")
@@ -169,13 +177,65 @@ def _csf() -> dict:
     return _cache["csf"]
 
 
+def _por_base(filas_nist: list) -> dict:
+    por_base: dict = {}
+    for r in filas_nist:
+        por_base.setdefault(base_de(r["id"]), []).append(r)
+    return por_base
+
+
+def _agregar_nist(por_base: dict, controles_base) -> dict:
+    """Agrega las filas NIST de los controles base dados (D108, D109): el primero de ESTADOS presente
+    (None si no hay filas), conteos por estado, hallazgos y playbooks sin repetir."""
+    usadas = {}
+    for c in sorted(controles_base, key=_orden):
+        for r in por_base.get(c, ()):
+            usadas[r["id"]] = r
+    rows = sorted(usadas.values(), key=lambda r: r["prioridad"])
+    estados = {r["estado"] for r in rows}
+    cuenta = collections.Counter(r["estado"] for r in rows)
+    return {
+        "estado": next((e for e in _lb.ESTADOS if e in estados), None),
+        "controles": sorted({base_de(r["id"]) for r in rows}, key=_orden),
+        "brecha": cuenta[_lb.E_BRECHA], "observado": cuenta[_lb.E_CONTROL], "sin_evidencia": cuenta[_lb.E_SIN],
+        "no_evaluable": cuenta[_lb.E_NOEVAL],
+        "hallazgos": list(dict.fromkeys(h for r in rows for h in r["hallazgos"])),
+        "playbooks": list(dict.fromkeys(p for r in rows for p in r["playbooks"]))}
+
+
+def tsa() -> dict:
+    """Marco TSA SD 1580/82 (marcos/tsa_sd_1580_82.json), leido una vez."""
+    if "tsa" not in _cache:
+        _cache["tsa"] = json.loads(RUTA_TSA.read_text(encoding="utf-8"))
+    return _cache["tsa"]
+
+
+def _construir_tsa(filas_nist: list, perfil: dict | None) -> dict:
+    """Filas TSA SD 1580/82 seccion III: estado agregado de las filas NIST por un mapeo propio (D109)."""
+    por_base = _por_base(filas_nist)
+    filas = []
+    for pos, req in enumerate(tsa()["requisitos"]):
+        doc = req["tipo"] == "documental"
+        ag = _agregar_nist({} if doc else por_base, req["sp800_53"])
+        if doc:
+            estado = _lb.E_NOEVAL
+        else:
+            estado = ag["estado"] or _lb.E_SIN
+        filas.append({"id": req["id"], "titulo": req["titulo"], "tipo": req["tipo"], "estado": estado,
+                      **{k: v for k, v in ag.items() if k != "estado"}, "_pos": pos})
+    # las filas quedan en el orden de la directiva; la prioridad usa la regla de CIS1
+    for i, r in enumerate(sorted(filas, key=lambda r: (_lb.ESTADOS.index(r["estado"]), -r["brecha"], r["_pos"])), 1):
+        r["prioridad"] = i
+    for r in filas:
+        del r["_pos"]
+    return {"edicion": (perfil or {}).get("tsa_sd", EDICION_TSA), "filas": filas}
+
+
 def _construir_cis(filas_nist: list, cis: list, perfil: dict | None) -> dict:
     """Filas CIS del grupo elegido: estado agregado de las filas NIST por las referencias de CSF 2.0 (D108)."""
     ig, origen = grupo_cis(perfil)
     clave = ig.lower()
-    por_base: dict = {}
-    for r in filas_nist:
-        por_base.setdefault(base_de(r["id"]), []).append(r)
+    por_base = _por_base(filas_nist)
     citan: dict = {}
     for sub, d in _csf().items():
         for sal in d["cis_v8_1"]:
@@ -184,26 +244,16 @@ def _construir_cis(filas_nist: list, cis: list, perfil: dict | None) -> dict:
     for pos, sal in enumerate(x for x in cis if x[clave]):
         subs = sorted(citan.get(sal["id"], ()))
         ctl = {base_de(c) for sub in subs for c in _csf()[sub]["sp800_53"]}
-        usadas = {}
-        for c in sorted(ctl, key=lambda c: _orden(c)):
-            for r in por_base.get(c, ()):
-                usadas[r["id"]] = r
-        rows = sorted(usadas.values(), key=lambda r: r["prioridad"])
-        if rows:
-            estados = {r["estado"] for r in rows}
-            estado = next(e for e in _lb.ESTADOS if e in estados)
+        ag = _agregar_nist(por_base, ctl)
+        if ag["estado"]:
+            estado = ag["estado"]
         elif subs or not (sal["clase"] == "Documentation" or sal["funcion"] == "Govern"):
             estado = _lb.E_SIN
         else:
             estado = _lb.E_NOEVAL
-        cuenta = collections.Counter(r["estado"] for r in rows)
         filas.append({
             "id": sal["id"], "control": sal["control"], "titulo": sal["titulo"], "estado": estado,
-            "subcategorias": subs, "controles": sorted({base_de(r["id"]) for r in rows}, key=_orden),
-            "brecha": cuenta[_lb.E_BRECHA], "observado": cuenta[_lb.E_CONTROL], "sin_evidencia": cuenta[_lb.E_SIN],
-            "no_evaluable": cuenta[_lb.E_NOEVAL],
-            "hallazgos": list(dict.fromkeys(h for r in rows for h in r["hallazgos"])),
-            "playbooks": list(dict.fromkeys(p for r in rows for p in r["playbooks"])), "_pos": pos})
+            "subcategorias": subs, **{k: v for k, v in ag.items() if k != "estado"}, "_pos": pos})
     filas.sort(key=lambda r: (_lb.ESTADOS.index(r["estado"]), -r["brecha"], r["_pos"]))
     for i, r in enumerate(filas, 1):
         r["prioridad"] = i
@@ -250,6 +300,8 @@ def construir(assets: dict, zcr: dict, firewall: dict, findings: list, perfil: d
     out = {"nist": {"linea_base": nivel, "origen": origen, "controles": n_c, "mejoras": n_m, "filas": filas}}
     if cis:
         out["cis"] = _construir_cis(filas, cis, perfil)
+    if (perfil or {}).get("tsa_sd"):
+        out["tsa"] = _construir_tsa(filas, perfil)
     return out
 
 
@@ -376,8 +428,29 @@ def _filas_cis(mc: dict) -> list:
     return out
 
 
+def _filas_tsa(mc: dict) -> list:
+    """Una fila por medida de la seccion III de la directiva (D109), en el orden de la directiva."""
+    x = mc.get("tsa")
+    if not x:
+        return []
+    out = []
+    for r in x["filas"]:
+        if r["tipo"] == "documental":
+            evid = t("Documental: se evalua por entrevista o documentos")
+        elif r["controles"]:
+            evid = t("SP 800-53 en la linea base: {c}. Filas NIST: {b} con brecha, {o} con control observado, "
+                     "{e} sin evidencia, {n} no evaluables", c="; ".join(r["controles"]), b=r["brecha"],
+                     o=r["observado"], e=r["sin_evidencia"], n=r["no_evaluable"])
+        else:
+            evid = t("ningun control SP 800-53 correspondiente esta en la linea base NIST elegida")
+        out.append([M_TSA, t(ALC_ORG), "", r["id"], t(r["titulo"]), "", "", t(r["estado"]), evid,
+                    "; ".join(t(h) for h in r["hallazgos"]), "; ".join(r["playbooks"]), r["prioridad"],
+                    *_vacias()])
+    return out
+
+
 def filas_matriz(mc: dict, lb: dict) -> list:
-    return _filas_62443(lb) + _filas_2_1(lb) + _filas_nist(mc) + _filas_cis(mc)
+    return _filas_62443(lb) + _filas_2_1(lb) + _filas_nist(mc) + _filas_cis(mc) + _filas_tsa(mc)
 
 
 def _nombre_familia(fam: str) -> str:
@@ -455,8 +528,15 @@ def seccion(mc: dict, lb: dict) -> dict:
             por_control.setdefault(r["control"], collections.Counter())[r["estado"]] += 1
         for ctl, c in sorted(por_control.items(), key=lambda kv: int(kv[0])):
             filas.append([M_CIS, f"CIS {ctl}", *[c[e] for e in estados], sum(c.values())])
+    if mc.get("tsa"):
+        por_letra: dict = {}
+        for r in mc["tsa"]["filas"]:
+            por_letra.setdefault(".".join(r["id"].split(".")[:2]), collections.Counter())[r["estado"]] += 1
+        for letra, c in sorted(por_letra.items()):
+            filas.append([M_TSA, f"TSA {letra}", *[c[e] for e in estados], sum(c.values())])
     resumen = t("Linea base NIST {nivel} ({origen}): {c} controles y {m} mejoras. Detalle y columnas de validacion "
                 "del analista en {a}.", nivel=t(n["linea_base"]), origen=t(n["origen"]), c=n["controles"],
                 m=n["mejoras"], a=ARCHIVO)
     nota = t(NOTA) + (" " + t(NOTA_CIS) if mc.get("cis") else "")
+    nota += " " + t(NOTA_TSA) if mc.get("tsa") else ""
     return {"titulo": t(TITULO), "nota": nota, "resumen": resumen, "tabla": (cab, filas)}
