@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Read", "Edit", "Write", "Glob", "Grep",
+      "Bash(scripts/verificar.sh)", "Bash(scripts/verificar.sh:*)", "Bash(scripts/setup.sh)",
+      "Bash(python3 scripts/generar_catalogo.py:*)", "Bash(python3 ot_pcap_assess.py:*)",
+      "Bash(python3 -m ot_assess:*)", "Bash(python3 -m unittest:*)", "Bash(python3 -c:*)", "Bash(python3 tests/:*)",
+      "Bash(git status:*)", "Bash(git diff:*)", "Bash(git log:*)", "Bash(git show:*)", "Bash(git add:*)",
+      "Bash(git commit:*)", "Bash(git switch:*)", "Bash(git branch:*)", "Bash(git restore:*)", "Bash(git stash:*)",
+      "Bash(git grep:*)", "Bash(git rev-parse:*)",
+      "Bash(ls:*)", "Bash(wc:*)", "Bash(head:*)", "Bash(tail:*)", "Bash(sed -n:*)", "Bash(rg:*)", "Bash(grep:*)",
+      "Bash(cat:*)", "Bash(diff:*)", "Bash(mkdir:*)", "Bash(tshark:*)", "Bash(capinfos:*)", "Bash(editcap:*)"
+    ],
+    "deny": [
+      "Agent", "WebSearch", "WebFetch",
+      "Bash(git push:*)", "Bash(git merge:*)", "Bash(git rebase:*)", "Bash(git reset:*)", "Bash(git tag:*)",
+      "Bash(git config:*)", "Bash(git remote:*)", "Bash(gh:*)",
+      "Bash(curl:*)", "Bash(wget:*)", "Bash(sudo:*)", "Bash(su:*)", "Bash(rm -rf:*)", "Bash(pip:*)",
+      "Read(~/.ssh/**)", "Read(~/.claude/**)", "Read(~/.claude-api/**)", "Read(~/.config/**)", "Read(~/.claude.json)"
+    ]
+  }
+}

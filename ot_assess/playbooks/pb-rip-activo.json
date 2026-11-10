@@ -1,0 +1,43 @@
+{
+  "id": "pb-rip-activo",
+  "hallazgo": "RIP activo en la red de control",
+  "objetivo": "Retirar o proteger el enrutamiento RIP en la red de control, donde un anuncio falso puede desviar el trafico.",
+  "prioridad_ot": "Desactivar RIP sin saber que rutas aprende cada equipo puede dejar subredes sin camino y cortar la comunicacion entre niveles.",
+  "pasos": [
+    "Identificar los equipos que anuncian y reciben RIP, la version y las rutas que anuncian, con el registro de la captura.",
+    "Confirmar con el dueno del proceso si RIP es parte del diseno o un resto de configuracion.",
+    "Sustituir las rutas aprendidas por rutas estaticas documentadas o por un protocolo con autenticacion, en una prueba de laboratorio.",
+    "Desactivar RIP en las interfaces que no lo necesiten, de un equipo a la vez y dentro de la ventana acordada.",
+    "Limitar con reglas el puerto UDP 520 en los limites de zona, con registro antes de bloquear."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar la tabla de rutas para ver cuales vienen de RIP antes de retirarlo.",
+      "Evaluar interfaces pasivas o autenticacion en vez de retirar el protocolo, si el diseno lo requiere (verificar la sintaxis en la documentacion del fabricante para la version instalada)."
+    ],
+    "Cisco FTD (FMC)": [
+      "Activar el registro de conexiones en la regla antes de cambiar su accion a bloqueo.",
+      "Desplegar los cambios en la ventana acordada y conservar la version anterior de la politica."
+    ],
+    "FortiGate": [
+      "Revisar la tabla de rutas y las rutas dinamicas aprendidas antes de cambiar nada.",
+      "Deshabilitar la politica antes de borrarla, para poder reactivarla."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que ya no hay anuncios RIP donde no deben estar.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Reactivar RIP en la interfaz si se corto una ruta necesaria, y registrar el motivo.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Mantener acceso por consola o fuera de banda para recuperar el equipo si el cambio corta la gestion."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0830", "IEC 62443 SR 3.1", "IEC 62443 SR 7.7", "NERC CIP-007 R1", "NERC CIP-010 R1", "NIST 800-82 IA-3", "NIST 800-82 CM-7", "NIST CSF PR.PS-01", "NIST CSF PR.AA-03"]
+}

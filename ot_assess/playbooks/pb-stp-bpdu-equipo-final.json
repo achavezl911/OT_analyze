@@ -1,0 +1,43 @@
+{
+  "id": "pb-stp-bpdu-equipo-final",
+  "hallazgo": "BPDU enviadas por un equipo que no es switch",
+  "objetivo": "Determinar que equipo envia BPDU y por que, y evitar que un puerto de borde pueda influir en el arbol de expansion.",
+  "prioridad_ot": "Apagar el puerto de un equipo que resulta ser un puente legitimo (un anillo, una pasarela o un switch industrial no reconocido) puede cortar un segmento; se identifica primero y se actua en ventana.",
+  "pasos": [
+    "Localizar el equipo por su MAC y su IP en el inventario y confirmar con el dueno del proceso si es un switch, un puente de software o un equipo con dos interfaces.",
+    "Si es un switch industrial no reconocido, anotarlo como equipo de red en el inventario y retirarlo de los hallazgos de equipos finales.",
+    "Si es un equipo final o un puente de software, revisar su configuracion de puente y apagar el protocolo del arbol en el equipo si no se necesita.",
+    "Revisar en el switch si el puerto tiene proteccion contra BPDU y filtro, y activarlos en los puertos de borde, primero en laboratorio y luego en la ventana acordada.",
+    "Buscar si el equipo anuncio una raiz mejor que la actual y revisar el hallazgo de cambio de raiz de la misma captura."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar el puerto donde aparece la MAC y si ya tiene la proteccion de BPDU en modo de puerto de borde (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Activar la proteccion en un puerto de prueba y confirmar que el puerto pasa a error si recibe una BPDU, con el registro del evento."
+    ],
+    "Linux": [
+      "Revisar si el equipo tiene un puente de red configurado y si el protocolo del arbol esta activo en el.",
+      "Desactivarlo en el puente si no se necesita, en la ventana acordada y con respaldo de la configuracion de red."
+    ],
+    "Claroty xDome": [
+      "Revisar el tipo y la funcion que la plataforma asigna al activo y corregir la clasificacion si es un equipo de red.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura en la misma ventana y confirmar que el equipo ya no envia BPDU, o que esta clasificado como equipo de red.",
+    "Confirmar con el dueno del proceso que el equipo mantiene su comunicacion despues del cambio."
+  ],
+  "reversion": [
+    "Deshabilitar la proteccion nueva del puerto (sin borrarla) si un equipo legitimo queda sin comunicacion.",
+    "Restaurar el respaldo de la configuracion del switch o del equipo en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No apagar el puerto antes de confirmar con el dueno del proceso que el equipo no es parte de un anillo o de un enlace redundante."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0814", "MITRE ICS T0830", "IEC 62443 SR 7.1", "IEC 62443 SR 3.1", "NERC CIP-007 R4", "NIST 800-82 SC-5", "NIST CSF DE.CM-01", "NIST CSF PR.IR-01"]
+}

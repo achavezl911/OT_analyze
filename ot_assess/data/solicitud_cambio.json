@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "titulo": "Solicitud de Cambio (RFC)",
+  "secciones": [
+    {"clave": "datos_generales", "titulo": "1. Datos generales"},
+    {"clave": "descripcion", "titulo": "2. Descripcion y justificacion"},
+    {"clave": "alcance", "titulo": "3. Alcance"},
+    {"clave": "impacto", "titulo": "4. Impacto y riesgo OT"},
+    {"clave": "plan", "titulo": "5. Plan por fases"},
+    {"clave": "pruebas", "titulo": "6. Pruebas y validacion"},
+    {"clave": "reversion", "titulo": "7. Reversion"},
+    {"clave": "aprobaciones", "titulo": "8. Aprobaciones"},
+    {"clave": "anexos", "titulo": "9. Anexos"}
+  ],
+  "columnas_csv": ["id", "fase", "tipo", "accion", "elemento", "detalle", "justificacion", "riesgo", "validacion",
+                   "reversion"],
+  "columnas_alcance": ["id", "tipo", "accion", "elemento", "detalle", "justificacion", "riesgo"],
+  "encabezados": {
+    "id": "ID", "fase": "Fase", "tipo": "Tipo", "accion": "Accion", "elemento": "Elemento", "detalle": "Detalle",
+    "justificacion": "Justificacion / evidencia", "riesgo": "Riesgo", "validacion": "Validacion",
+    "reversion": "Reversion"
+  },
+  "datos_generales": {
+    "tipo_cambio": "Normal",
+    "campos": [
+      {"clave": "folio", "etiqueta": "Folio (lo asigna el cliente)"},
+      {"clave": "fecha", "etiqueta": "Fecha de la solicitud"},
+      {"clave": "solicitante", "etiqueta": "Solicitante"},
+      {"clave": "cliente_sitio", "etiqueta": "Cliente / sitio"},
+      {"clave": "equipo", "etiqueta": "Equipo afectado"},
+      {"clave": "tipo_cambio", "etiqueta": "Tipo de cambio"},
+      {"clave": "ventana", "etiqueta": "Ventana propuesta"},
+      {"clave": "duracion", "etiqueta": "Duracion estimada"}
+    ],
+    "pendiente": "(por completar)"
+  },
+  "textos": {
+    "descripcion_intro": "Se propone sustituir la politica de acceso vigente por una politica nueva construida a partir del trafico observado, y depurar las rutas estaticas. Cifras de esta solicitud:",
+    "descripcion_por_que": "Por que: la politica propuesta permite solo los conductos que la herramienta observo entre zonas; lo demas se bloquea con registro. Cada cambio lleva su evidencia en la tabla de alcance.",
+    "alcance_intro": "Cambios agrupados por fase. El mismo contenido esta en solicitud_cambio_cambios.csv.",
+    "alcance_vacio": "No hay cambios en esta fase.",
+    "impacto_bloqueados_titulo": "Conductos observados que dejarian de pasar",
+    "impacto_bloqueados_sin_archivo": "No se proporciono politica_bloqueados.csv: no se evaluo cuanto trafico observado dejaria de pasar con la propuesta. Esta evaluacion debe hacerse antes de la ventana.",
+    "impacto_bloqueados_vacio": "politica_bloqueados.csv no trae renglones: la propuesta no deja sin paso ningun conducto observado.",
+    "impacto_reglas_titulo": "Reglas actuales con aciertos que se retiran o acotan",
+    "impacto_reglas_sin_archivo": "No se proporciono politica_comparacion.csv: no se evaluaron las reglas actuales.",
+    "impacto_reglas_vacio": "Ninguna regla actual con aciertos se retira o acota.",
+    "impacto_rutas_titulo": "Rutas con conductos observados",
+    "impacto_rutas_sin_archivo": "No se proporcionaron rutas propuestas: no se evaluaron las rutas.",
+    "impacto_rutas_vacio": "Ninguna ruta a eliminar o revisar tiene conductos observados.",
+    "impacto_riesgo": "Riesgo: cortar comunicaciones de control (SCADA, PLC, HMI) por un conducto que no se observo en la ventana de captura. La evaluacion de riesgo es una propuesta a validar por el comite de cambios; este documento es evidencia tecnica y no afirma el estado frente a ninguna norma.",
+    "pruebas_intro": "Para cada regla nueva, el conducto que debe verse permitido y donde confirmarlo.",
+    "pruebas_donde": "Contadores de la regla en el firewall; registro de conexiones del firewall; plataforma OT (el conducto sigue visible).",
+    "pruebas_vacio": "No hay reglas nuevas que probar.",
+    "pruebas_criterio_titulo": "Criterio de exito por fase",
+    "reversion_intro": "Pasos para volver al estado anterior, por fase.",
+    "aprobaciones_intro": "Firmas del comite. Tabla para llenar.",
+    "anexos_entrada": "Archivos de entrada usados",
+    "anexos_carga": "Archivos de carga (politica-fmc)",
+    "anexos_carga_nota": "Generar con: politica-fmc --formato {formato} y revisar el LEEME antes de aplicar.",
+    "no_aplica": "No aplica."
+  },
+  "fases": [
+    {"id": 1, "titulo": "Fase 1 - Crear objetos y la politica nueva con registro",
+     "descripcion": "Crear los objetos y la politica de acceso NUEVA ({politica}) con registro, sin asignarla ni tocar la politica vigente. Archivos de carga ({formato}): {archivos}.",
+     "criterio": "Objetos y politica creados; la politica vigente sigue sin cambios y el trafico no se afecta.",
+     "reversion": "Desasignar y eliminar la politica nueva ({politica}). Los objetos creados se listan abajo."},
+    {"id": 2, "titulo": "Fase 2 - Observar y habilitar las reglas por revisar",
+     "descripcion": "Con la politica nueva asignada y registrando, observar contadores y registros durante {dias} dias (acordar con operacion) y habilitar solo las reglas 'revisar' que se confirmen.",
+     "criterio": "Las reglas habilitadas tienen aciertos y el trafico esperado sigue pasando; sin alarmas de operacion.",
+     "reversion": "Volver a deshabilitar las reglas habilitadas en esta fase."},
+    {"id": 3, "titulo": "Fase 3 - Retirar o acotar reglas actuales",
+     "descripcion": "Retirar o acotar las reglas de la politica vigente segun la comparacion. Las 'validar antes de eliminar' solo entran con evidencia de cero aciertos.",
+     "criterio": "Sin perdida de comunicaciones de control tras el retiro; los contadores de las reglas nuevas suben.",
+     "reversion": "Volver a habilitar o restaurar las reglas retiradas, que se listan abajo."},
+    {"id": 4, "titulo": "Fase 4 - Rutas estaticas",
+     "descripcion": "Eliminar las rutas redundantes o sin salto, y revisar con el responsable las que tienen conductos observados.",
+     "criterio": "Tabla de rutas sin entradas muertas y conectividad de los conductos observados intacta.",
+     "reversion": "Re-agregar las rutas eliminadas (red, salto e interfaz abajo)."}
+  ],
+  "dias_observacion": "N",
+  "acciones": {
+    "crear politica": {"riesgo": "Bajo: no se asigna al equipo.", "validacion": "La politica existe sin asignar.", "reversion": "Eliminar la politica."},
+    "crear objeto": {"riesgo": "Bajo: un objeto sin uso no afecta trafico.", "validacion": "El objeto existe con el valor indicado.", "reversion": "Eliminar el objeto."},
+    "crear regla": {"riesgo": "Bajo: permite lo observado; la politica vigente no cambia.", "validacion": "La regla acumula aciertos para el conducto indicado.", "reversion": "Eliminar la regla."},
+    "crear regla deshabilitada": {"riesgo": "Bajo: sin efecto hasta habilitarla.", "validacion": "La regla existe deshabilitada y con comentario.", "reversion": "Eliminar la regla."},
+    "habilitar regla": {"riesgo": "Medio: empieza a permitir trafico; confirmar la razon de revision.", "validacion": "Aciertos del conducto en contadores y registro.", "reversion": "Deshabilitar la regla."},
+    "deshabilitar regla actual": {"riesgo": "Medio: la sustituyen reglas nuevas; verificar que ya tienen aciertos.", "validacion": "Sin cortes tras deshabilitar.", "reversion": "Volver a habilitar la regla."},
+    "eliminar regla actual": {"riesgo": "Medio: solo con evidencia de cero aciertos.", "validacion": "Sin cortes tras el retiro.", "reversion": "Restaurar la regla desde la copia de la politica."},
+    "acotar regla actual": {"riesgo": "Alto: puede cortar trafico no observado.", "validacion": "Contadores y registro tras acotar.", "reversion": "Restaurar la regla original."},
+    "eliminar ruta": {"riesgo": "Medio: confirmar que ningun conducto usa la ruta.", "validacion": "Conectividad de los conductos tras el cambio.", "reversion": "Re-agregar la ruta."},
+    "revisar ruta": {"riesgo": "Medio: definir el salto correcto con el responsable.", "validacion": "Decision documentada del responsable de la red.", "reversion": "Sin cambio hasta decidir."}
+  },
+  "aprobaciones": {
+    "columnas": ["Rol", "Nombre", "Firma", "Fecha"],
+    "roles": ["Operacion OT / dueno del proceso", "TI", "Ciberseguridad", "Comite de cambios"]
+  }
+}

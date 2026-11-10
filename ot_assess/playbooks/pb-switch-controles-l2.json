@@ -1,0 +1,39 @@
+{
+  "id": "pb-switch-controles-l2",
+  "hallazgo": "Controles de capa 2 ausentes en puertos de acceso",
+  "objetivo": "Agregar al switch los controles de capa 2 que faltan (BPDU guard, control de tormentas, port-security, DHCP snooping e inspeccion ARP) sin cortar equipos que hoy funcionan.",
+  "prioridad_ot": "Varios de estos controles apagan o bloquean puertos: BPDU guard deja en err-disable el puerto que recibe una BPDU, port-security bloquea un equipo reemplazado y la inspeccion ARP descarta los equipos con IP fija que no estan en una ACL ARP; un control mal calibrado puede aislar un PLC o una HMI.",
+  "pasos": [
+    "Tomar de la evidencia los puertos de acceso sin cada control y confirmar con operacion que equipo hay en cada uno y si es un puerto de uso eventual.",
+    "Respaldar la configuracion y elegir un puerto de prueba o un switch no critico para validar cada control en laboratorio antes de la planta.",
+    "Habilitar primero lo que no corta trafico: BPDU guard en los puertos portfast (global o por puerto) y control de tormentas con un umbral basado en el trafico de difusion medido.",
+    "Para DHCP snooping y la inspeccion ARP, empezar en modo monitor o con las VLAN de menor criticidad, declarar los puertos de confianza hacia el servidor DHCP y los troncales, y registrar las IP fijas en una ACL ARP.",
+    "Habilitar port-security con un maximo de direcciones y una accion que no apague el puerto al inicio, y endurecerla solo cuando operacion confirme el reemplazo de equipos.",
+    "Aplicar en la ventana acordada, un switch y un control a la vez, y dejar registro de cada cambio."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Activar BPDU guard con spanning-tree portfast bpduguard default o spanning-tree bpduguard enable en el puerto, y el control de tormentas con storm-control broadcast level (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Activar DHCP snooping con ip dhcp snooping y ip dhcp snooping vlan, marcar los puertos hacia el servidor con ip dhcp snooping trust, y la inspeccion ARP con ip arp inspection vlan (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Activar port-security con switchport port-security y su maximo de direcciones, y confirmar con show port-security y show spanning-tree summary (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Conservar el acceso por consola mientras se hace el cambio."
+    ]
+  },
+  "verificacion": [
+    "Volver a leer la configuracion con la herramienta y confirmar que los controles aparecen en los puertos y las VLAN esperados.",
+    "Confirmar con el dueno del proceso que ningun equipo perdio comunicacion y revisar el registro del switch por puertos en err-disable."
+  ],
+  "reversion": [
+    "Quitar el control que dejo un puerto en err-disable y reactivar el puerto (shutdown y no shutdown) en la ventana, con la causa identificada.",
+    "Restaurar el respaldo de la configuracion del switch con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un puerto de prueba y respaldar la configuracion antes de cambiarla.",
+    "No habilitar la inspeccion ARP en una VLAN con IP fijas sin registrar antes esas IP; el dueno del proceso debe saber que puertos pueden apagarse.",
+    "Calibrar el control de tormentas con el trafico normal medido: un umbral bajo descarta difusion legitima de los protocolos industriales."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Administracion de redes y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0830", "MITRE ICS T0814", "IEC 62443 SR 7.1", "IEC 62443 SR 5.1", "IEC 62443 SR 7.6", "NIST 800-82 SC-7", "NIST 800-82 SC-5", "NIST 800-82 CM-7", "NIST CSF PR.IR-01", "NIST CSF PR.IR-04", "NIST CSF PR.PS-01"]
+}

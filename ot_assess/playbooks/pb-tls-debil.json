@@ -1,0 +1,51 @@
+{
+  "id": "pb-tls-debil",
+  "hallazgo": "TLS obsoleto o con suite debil",
+  "objetivo": "Subir los servidores a TLS 1.2 o 1.3 con suites vigentes y retirar las versiones y suites debiles.",
+  "prioridad_ot": "Quitar versiones antiguas de TLS corta a los clientes antiguos (HMI, historiadores, equipos embebidos) que no soportan las nuevas.",
+  "pasos": [
+    "Identificar los servidores que negocian TLS obsoleto o suites debiles y quien los administra.",
+    "Inventariar los clientes que se conectan a cada uno y su soporte de TLS 1.2 o 1.3.",
+    "Respaldar la configuracion y los certificados, y probar en laboratorio o en un equipo no critico.",
+    "Actualizar el servidor o su configuracion para ofrecer TLS 1.2 o 1.3 con suites vigentes, manteniendo temporalmente la anterior.",
+    "Migrar o actualizar los clientes que no soportan lo nuevo, o aislarlos con un proxy o limite de acceso.",
+    "Retirar las versiones y suites debiles en la ventana acordada, con registro (log) del cambio.",
+    "Documentar los equipos que no se pueden actualizar y limitar el acceso a ellos."
+  ],
+  "por_plataforma": {
+    "Windows / Active Directory": [
+      "Ajustar las versiones de protocolo y las suites de cifrado con directivas de grupo (GPO) o la configuracion del servicio, y probar en un equipo piloto.",
+      "Revisar que el servicio y los clientes que dependen del sistema operativo soportan TLS 1.2 o superior."
+    ],
+    "Linux": [
+      "Revisar la configuracion TLS del servicio (versiones y suites) y la version de la biblioteca de criptografia.",
+      "Verificar con una prueba de conexion desde un cliente representativo antes de retirar lo antiguo."
+    ],
+    "FortiGate": [
+      "Revisar la version minima de TLS del acceso de gestion y de los portales o VPN, y subirla tras probar a los clientes.",
+      "Revisar el perfil de inspeccion SSL si el equipo inspecciona este trafico."
+    ],
+    "PLC / RTU (generico)": [
+      "Revisar con el fabricante si el firmware soporta TLS 1.2 o 1.3 y como activarlo; actualizar el firmware solo en ventana.",
+      "Si no es posible, limitar el acceso por origen y planificar la sustitucion."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que el servidor negocia TLS 1.2 o 1.3 con suites vigentes.",
+    "Confirmar con el dueno del proceso que todos los clientes dependientes conectan.",
+    "Revisar la lista de equipos que no se pueden actualizar y sus controles compensatorios."
+  ],
+  "reversion": [
+    "Volver a habilitar temporalmente la version anterior, limitada por origen, si un cliente critico pierde la conexion.",
+    "Restaurar el respaldo de la configuracion y de los certificados."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No reiniciar controladores ni equipos de control en produccion sin una ventana acordada."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de sistemas y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0830", "MITRE ICS T0842", "IEC 62443 SR 3.1", "IEC 62443 SR 4.1", "IEC 62443 SR 4.3", "NERC CIP-005 R2", "NERC CIP-011 R1", "NIST 800-82 SC-8", "NIST 800-82 SC-13", "NIST CSF PR.DS-02"]
+}

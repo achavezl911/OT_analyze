@@ -1,0 +1,193 @@
+{
+  "nota": "Catalogo de canales que evaden la inspeccion (T9, D71): DNS cifrado (DoH, DoQ), Tor, VPN, tuneles y proxies hacia Internet. 'verificado' = puerto o nombre publicado por IANA, un RFC o el proveedor segun el encargo T9 (el implementador no repitio la consulta); 'sin verificar' = convencion, fuente secundaria o dominio publicado sin revision uno por uno. Un nombre, un puerto o una IP indican que alguien intenta usar el canal; no prueban una sesion ni que no este autorizada.",
+  "canario": {
+    "dominio": "use-application-dns.net",
+    "fuente": "Mozilla, 'Canary domain use-application-dns.net': si la red no lo bloquea, Firefox puede activar DoH por defecto; es indicio, no uso"
+  },
+  "entradas": [
+    {
+      "herramienta": "Google Public DNS (DoH)",
+      "tipo": "doh",
+      "dominios": ["dns.google"],
+      "ips": ["8.8.8.8", "8.8.4.4", "2001:4860:4860::8888", "2001:4860:4860::8844"],
+      "puertos": [],
+      "fuente": "developers.google.com/speed/public-dns/docs/doh (dns.google); IP publicadas por Google",
+      "estado": "verificado"
+    },
+    {
+      "herramienta": "Cloudflare 1.1.1.1 (DoH)",
+      "tipo": "doh",
+      "dominios": ["cloudflare-dns.com"],
+      "ips": ["1.1.1.1", "1.0.0.1", "2606:4700:4700::1111", "2606:4700:4700::1001"],
+      "puertos": [],
+      "fuente": "developers.cloudflare.com/1.1.1.1/encryption/dns-over-https/ (cloudflare-dns.com, incluye mozilla.cloudflare-dns.com); IP publicadas por Cloudflare",
+      "estado": "verificado"
+    },
+    {
+      "herramienta": "Quad9 (DoH)",
+      "tipo": "doh",
+      "dominios": ["dns.quad9.net"],
+      "ips": ["9.9.9.9", "149.112.112.112", "2620:fe::fe", "2620:fe::9"],
+      "puertos": [],
+      "fuente": "quad9.net/service/service-addresses-and-features (dns.quad9.net); IP publicadas por Quad9",
+      "estado": "verificado"
+    },
+    {
+      "herramienta": "OpenDNS (DoH)",
+      "tipo": "doh",
+      "dominios": ["doh.opendns.com"],
+      "ips": [],
+      "puertos": [],
+      "fuente": "dominio publicado como resolvedor DoH, sin revision uno por uno",
+      "estado": "sin verificar"
+    },
+    {
+      "herramienta": "NextDNS (DoH)",
+      "tipo": "doh",
+      "dominios": ["dns.nextdns.io"],
+      "ips": [],
+      "puertos": [],
+      "fuente": "dominio publicado como resolvedor DoH, sin revision uno por uno",
+      "estado": "sin verificar"
+    },
+    {
+      "herramienta": "CleanBrowsing (DoH)",
+      "tipo": "doh",
+      "dominios": ["doh.cleanbrowsing.org"],
+      "ips": [],
+      "puertos": [],
+      "fuente": "dominio publicado como resolvedor DoH, sin revision uno por uno",
+      "estado": "sin verificar"
+    },
+    {
+      "herramienta": "AdGuard DNS (DoH)",
+      "tipo": "doh",
+      "dominios": ["dns.adguard-dns.com"],
+      "ips": [],
+      "puertos": [],
+      "fuente": "dominio publicado como resolvedor DoH, sin revision uno por uno",
+      "estado": "sin verificar"
+    },
+    {
+      "herramienta": "DNS sobre QUIC (DoQ)",
+      "tipo": "doq",
+      "dominios": [],
+      "ips": [],
+      "puertos": [{"puerto": 853, "l4": "udp"}],
+      "fuente": "RFC 9250 (DNS over Dedicated QUIC Connections): UDP/853. DoT en TCP/853 lo cubre la regla dns_dot",
+      "estado": "verificado"
+    },
+    {
+      "herramienta": "Tor (puerto por defecto de relays)",
+      "tipo": "tor",
+      "dominios": [],
+      "ips": [],
+      "puertos": [{"puerto": 9001, "l4": "tcp"}, {"puerto": 9030, "l4": "tcp"}],
+      "solo_sin_lista": true,
+      "fuente": "puerto por defecto de relays Tor (ORPort 9001, DirPort 9030), sin verificar; con --tor-relays no se usa",
+      "estado": "sin verificar"
+    },
+    {
+      "herramienta": "OpenVPN",
+      "tipo": "vpn",
+      "dominios": [],
+      "ips": [],
+      "puertos": [{"puerto": 1194, "l4": "tcp"}, {"puerto": 1194, "l4": "udp"}],
+      "fuente": "IANA service-names-port-numbers: openvpn 1194 tcp/udp",
+      "estado": "verificado"
+    },
+    {
+      "herramienta": "IPsec IKE",
+      "tipo": "vpn",
+      "dominios": [],
+      "ips": [],
+      "puertos": [{"puerto": 500, "l4": "udp"}],
+      "fuente": "IANA service-names-port-numbers: isakmp 500 udp",
+      "estado": "verificado"
+    },
+    {
+      "herramienta": "IPsec NAT-T",
+      "tipo": "vpn",
+      "dominios": [],
+      "ips": [],
+      "puertos": [{"puerto": 4500, "l4": "udp"}],
+      "fuente": "IANA service-names-port-numbers: ipsec-nat-t 4500 udp",
+      "estado": "verificado"
+    },
+    {
+      "herramienta": "L2TP",
+      "tipo": "vpn",
+      "dominios": [],
+      "ips": [],
+      "puertos": [{"puerto": 1701, "l4": "udp"}],
+      "fuente": "IANA service-names-port-numbers: l2tp 1701 udp",
+      "estado": "verificado"
+    },
+    {
+      "herramienta": "PPTP",
+      "tipo": "vpn",
+      "dominios": [],
+      "ips": [],
+      "puertos": [{"puerto": 1723, "l4": "tcp"}],
+      "fuente": "IANA service-names-port-numbers: pptp 1723 tcp",
+      "estado": "verificado"
+    },
+    {
+      "herramienta": "WireGuard",
+      "tipo": "vpn",
+      "dominios": [],
+      "ips": [],
+      "puertos": [{"puerto": 51820, "l4": "udp"}],
+      "fuente": "puerto de ejemplo de la documentacion de WireGuard; no es un puerto asignado ni fijo, sin verificar",
+      "estado": "sin verificar"
+    },
+    {
+      "herramienta": "GRE",
+      "tipo": "tunel",
+      "dominios": [],
+      "ips": [],
+      "puertos": [],
+      "protocolos": ["gre"],
+      "fuente": "IP protocolo 47 (IANA protocol-numbers); flujo sin puerto",
+      "estado": "verificado"
+    },
+    {
+      "herramienta": "IPsec ESP",
+      "tipo": "tunel",
+      "dominios": [],
+      "ips": [],
+      "puertos": [],
+      "protocolos": ["esp"],
+      "fuente": "IP protocolo 50 (IANA protocol-numbers); flujo sin puerto",
+      "estado": "verificado"
+    },
+    {
+      "herramienta": "Proxy SOCKS",
+      "tipo": "proxy",
+      "dominios": [],
+      "ips": [],
+      "puertos": [{"puerto": 1080, "l4": "tcp"}],
+      "fuente": "IANA service-names-port-numbers: socks 1080 tcp",
+      "estado": "verificado"
+    },
+    {
+      "herramienta": "Proxy Squid (puerto por defecto)",
+      "tipo": "proxy",
+      "dominios": [],
+      "ips": [],
+      "puertos": [{"puerto": 3128, "l4": "tcp"}],
+      "fuente": "puerto por defecto de Squid (http_port 3128), sin verificar; 8080 no se usa por ser demasiado comun",
+      "estado": "sin verificar"
+    },
+    {
+      "herramienta": "VPN comercial",
+      "tipo": "vpn",
+      "dominios": ["nordvpn.com", "expressvpn.com", "surfshark.com", "privateinternetaccess.com", "mullvad.net",
+                   "windscribe.com", "protonvpn.com", "tunnelbear.com", "cyberghostvpn.com", "hotspotshield.com"],
+      "ips": [],
+      "puertos": [],
+      "fuente": "dominios de proveedores de VPN comerciales, sin revision uno por uno",
+      "estado": "sin verificar"
+    }
+  ]
+}

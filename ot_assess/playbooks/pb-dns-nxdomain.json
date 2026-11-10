@@ -1,0 +1,39 @@
+{
+  "id": "pb-dns-nxdomain",
+  "hallazgo": "Cliente con muchas respuestas NXDOMAIN",
+  "objetivo": "Determinar si un cliente con muchas respuestas de nombre inexistente tiene una aplicacion mal configurada o un programa malicioso que genera dominios.",
+  "prioridad_ot": "Aislar o limpiar un equipo de control sin confirmar la causa puede detener la operacion; no investigarlo puede dejar pasar una infeccion.",
+  "pasos": [
+    "Identificar el cliente y una muestra de los nombres consultados, con el registro de la captura.",
+    "Revisar si los nombres siguen un patron legible (aplicacion) o aleatorio (posible malware).",
+    "Revisar con el dueno del proceso que aplicaciones corren en el equipo y si hubo cambios recientes.",
+    "Si parece malicioso, tratarlo como incidente con el procedimiento del cliente y decidir con operacion si aislarlo y cuando.",
+    "Si es una aplicacion mal configurada, corregir el nombre o el servidor en la ventana acordada."
+  ],
+  "por_plataforma": {
+    "Windows / Active Directory": [
+      "Revisar el registro de consultas del servidor DNS para ver el volumen por cliente.",
+      "Revisar en el equipo implicado los procesos y servicios que generan las consultas."
+    ],
+    "Claroty xDome": [
+      "Revisar las alertas del activo y su historial de comunicaciones DNS.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que el volumen de respuestas NXDOMAIN del cliente bajo a lo esperado.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Restaurar la configuracion anterior de la aplicacion si el cambio afecto su funcionamiento.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No aislar un equipo de control que el dueno del proceso no haya identificado."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Equipo de monitoreo y respuesta a incidentes OT",
+  "referencias": ["IEC 62443 SR 6.2", "NERC CIP-007 R4", "NIST 800-82 SI-4", "NIST CSF DE.CM-01", "NIST CSF DE.AE-02"]
+}

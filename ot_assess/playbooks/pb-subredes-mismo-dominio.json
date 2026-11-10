@@ -1,0 +1,43 @@
+{
+  "id": "pb-subredes-mismo-dominio",
+  "hallazgo": "Multiples subredes conviviendo en el mismo dominio de difusion",
+  "objetivo": "Separar en VLAN distintas las subredes que comparten un dominio de difusion, para poder controlar el trafico entre ellas.",
+  "prioridad_ot": "Mover equipos de VLAN o subred sin un plan puede cortar la comunicacion entre controladores y supervision que hoy funciona porque comparten el dominio.",
+  "pasos": [
+    "Listar las subredes que comparten el dominio de difusion y los equipos de cada una, con el registro de la captura.",
+    "Definir con el dueno del proceso y la arquitectura aprobada que subredes deben estar separadas y que comunicaciones deben permitirse entre ellas.",
+    "Disenar una VLAN por subred y el punto de capa 3 o el firewall que controlara el trafico entre ellas.",
+    "Probar la separacion en laboratorio o en un segmento no critico antes de aplicarla.",
+    "Migrar por grupos pequenos en la ventana acordada, con registro de las comunicaciones bloqueadas, y con respaldo de la configuracion de cada switch."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Crear las VLAN y asignar los puertos por etapas, con acceso por consola (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Aplicar los cambios de VLAN o de ACL en ventana y con acceso por consola."
+    ],
+    "Cisco FTD (FMC)": [
+      "Activar el registro de conexiones en la regla antes de cambiar su accion a bloqueo.",
+      "Desplegar los cambios en la ventana acordada y conservar la version anterior de la politica."
+    ],
+    "FortiGate": [
+      "Crear politicas con objetos de direccion y servicios concretos entre las subredes nuevas.",
+      "Deshabilitar la politica antes de borrarla, para poder reactivarla."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que cada subred queda en su propia VLAN y que solo se ve el trafico acordado entre ellas.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Devolver los puertos a la VLAN anterior si un equipo pierde comunicacion, y registrar el motivo.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "alto",
+  "responsable": "Arquitectura de red OT y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 5.1", "NERC CIP-005 R1", "NIST 800-82 SC-7", "NIST 800-82 SC-32", "NIST CSF PR.IR-01", "NIST CSF ID.AM-03"]
+}

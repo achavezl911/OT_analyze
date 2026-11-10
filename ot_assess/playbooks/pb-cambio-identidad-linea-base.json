@@ -1,0 +1,38 @@
+{
+  "id": "pb-cambio-identidad-linea-base",
+  "hallazgo": "Cambio de firmware, modelo o MAC respecto de la linea base aprobada",
+  "objetivo": "Confirmar si el cambio de firmware, modelo o MAC de una direccion IP corresponde a una actualizacion o reemplazo autorizado, o a un equipo distinto que tomo la direccion.",
+  "prioridad_ot": "Un firmware o un equipo cambiado en un controlador puede alterar el comportamiento del proceso; se verifica antes de aceptarlo como nueva referencia.",
+  "pasos": [
+    "Anotar la IP, el valor aprobado y el valor actual de firmware, modelo o MAC, y la hora desde la que se ve.",
+    "Cotejar con la bitacora de cambios y con el contrato de mantenimiento del fabricante.",
+    "Si no hay registro, verificar fisicamente el equipo (etiqueta, numero de serie, puerto de switch).",
+    "Si cambio la MAC con la misma IP, revisar si se reemplazo el equipo o si otro equipo uso la direccion.",
+    "Si es un firmware nuevo no autorizado, revisar el equipo contra la copia de respaldo del programa y los parametros.",
+    "Aprobar una linea base nueva en otra carpeta cuando el cambio quede explicado."
+  ],
+  "por_plataforma": {
+    "PLC / RTU (generico)": [
+      "Leer en el equipo la version de firmware, el modelo y el numero de serie, segun la documentacion del fabricante.",
+      "Comparar el programa y los parametros actuales con la copia de respaldo aprobada."
+    ]
+  },
+  "verificacion": [
+    "Confirmar que el valor actual de firmware, modelo y MAC queda documentado en el inventario con su autorizacion.",
+    "Repetir la captura y confirmar que el equipo mantiene el mismo comportamiento de comunicacion."
+  ],
+  "reversion": [
+    "Si el cambio no fue autorizado, volver al firmware o al equipo anterior en la ventana con el procedimiento del fabricante.",
+    "Restaurar el respaldo del programa y de los parametros del equipo si el cambio degrada el proceso."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No cargar un firmware sin la aprobacion del fabricante y del dueno del proceso.",
+    "Probar primero en laboratorio y respaldar el programa y la configuracion del equipo antes de cambiarlos.",
+    "El firmware y el modelo salen del trafico o de una exportacion y pueden ser inferencias: confirmar en el equipo.",
+    "Dejar registro de cada cambio y de la decision tomada."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de control y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 7.8", "IEC 62443 SR 7.6", "NIST 800-82 CM-8", "NIST 800-82 CM-3", "NIST CSF ID.AM-01", "NIST CSF PR.PS-01"]
+}

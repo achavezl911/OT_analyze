@@ -1,0 +1,39 @@
+{
+  "id": "pb-inundacion-mac",
+  "hallazgo": "Posible inundacion de la tabla MAC del switch",
+  "objetivo": "Confirmar si hay un equipo inundando de direcciones MAC falsas, localizar su puerto y limitar la cantidad de direcciones que cada puerto de acceso puede aprender.",
+  "prioridad_ot": "Limitar direcciones por puerto con una accion de apagado puede dejar sin comunicacion a un equipo legitimo con muchas MAC (por ejemplo un servidor con maquinas virtuales); el limite se calcula con el inventario y el cambio se hace en ventana.",
+  "pasos": [
+    "Revisar en el switch el contador de direcciones aprendidas por puerto y localizar el puerto que concentra las MAC nuevas de la ventana indicada.",
+    "Confirmar con el dueno del proceso si ese puerto tiene un equipo virtualizado, un puente o un balanceador que use muchas MAC a proposito.",
+    "Si no hay explicacion legitima, aislar el puerto en la ventana acordada y tratarlo como incidente.",
+    "Definir el maximo de direcciones por puerto de acceso segun el inventario y aplicar la seguridad de puerto con accion de restriccion y registro, primero en laboratorio.",
+    "Activar el control de tormentas en los puertos de acceso para limitar la difusion y el trafico desconocido."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar la tabla de direcciones y los contadores de seguridad de puerto (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Aplicar el maximo de direcciones y la accion de restriccion en un puerto de prueba antes de extenderlo."
+    ],
+    "Claroty xDome": [
+      "Buscar el aumento brusco de activos nuevos en la ventana y su origen por segmento.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura en la misma ventana y confirmar que no vuelve el aumento de direcciones nuevas.",
+    "Confirmar con el dueno del proceso que los equipos legitimos del puerto mantienen su comunicacion."
+  ],
+  "reversion": [
+    "Subir el maximo o quitar la accion de apagado del puerto (sin borrar la regla) si un equipo legitimo queda sin comunicacion.",
+    "Restaurar el respaldo de la configuracion del switch en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Mantener acceso por consola o fuera de banda para recuperar el equipo si el cambio corta la gestion."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0842", "MITRE ICS T0814", "IEC 62443 SR 7.1", "IEC 62443 SR 6.2", "NERC CIP-007 R4", "NIST 800-82 SC-5", "NIST 800-82 SI-4", "NIST CSF PR.IR-04", "NIST CSF DE.CM-01"]
+}

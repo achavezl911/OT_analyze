@@ -1,0 +1,39 @@
+{
+  "id": "pb-salto-vlan",
+  "hallazgo": "Indicios de salto de VLAN (doble etiqueta o DTP)",
+  "objetivo": "Confirmar si un puerto de acceso negocia troncal o envia tramas con doble etiqueta, y fijar los puertos de borde para que no puedan hacerlo.",
+  "prioridad_ot": "Cambiar el modo de un puerto que en realidad es un troncal legitimo hacia otro switch o un equipo con varias VLAN corta esas VLAN; se confirma el uso del puerto antes de fijarlo y el cambio se hace en ventana.",
+  "pasos": [
+    "Localizar por MAC el puerto de cada origen de DTP o de tramas con doble etiqueta y revisar si es un enlace entre switches; conservar el registro.",
+    "Preguntar al dueno del proceso si existe una red de proveedor o un servicio con doble etiqueta a proposito (802.1ad); si es asi, documentarlo y excluir ese enlace.",
+    "Fijar en modo acceso los puertos de borde y desactivar la negociacion de troncal en todos los puertos, primero en laboratorio y luego en la ventana acordada.",
+    "En los troncales, permitir solo las VLAN necesarias y cambiar la VLAN nativa por una sin uso, distinta de la 1.",
+    "Revisar en el firewall o el router las VLAN que hoy se alcanzan desde el puerto y confirmar que la segmentacion se mantiene."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar el modo administrativo y operativo de cada puerto con el resumen de troncales (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Aplicar el modo acceso y la opcion que desactiva la negociacion de troncal en un puerto de prueba antes de extenderlo a los demas."
+    ],
+    "Claroty xDome": [
+      "Revisar las VLAN que el activo origen aparece usando y si cruza segmentos que no deberia.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura en la misma ventana y confirmar que no hay tramas DTP ni doble etiqueta fuera de los enlaces documentados.",
+    "Confirmar con el dueno del proceso que las VLAN de los equipos de control siguen comunicando despues del cambio."
+  ],
+  "reversion": [
+    "Deshabilitar el cambio nuevo del puerto (sin borrarlo) si una VLAN legitima deja de pasar.",
+    "Restaurar el respaldo de la configuracion del switch en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Mantener acceso por consola o fuera de banda para recuperar el equipo si el cambio corta la gestion."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de redes",
+  "referencias": ["MITRE ICS T0830", "IEC 62443 SR 5.1", "IEC 62443 SR 3.1", "NERC CIP-005 R1", "NIST 800-82 SC-7", "NIST CSF PR.IR-01"]
+}

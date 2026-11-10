@@ -1,0 +1,39 @@
+{
+  "id": "pb-arp-conflicto-ip",
+  "hallazgo": "Conflicto de direcciones: una misma IP anunciada por varias MAC",
+  "objetivo": "Aclarar por que una misma IP la anuncian varias direcciones MAC y corregir la duplicidad o cerrar la posible suplantacion.",
+  "prioridad_ot": "Cambiar la IP del equipo equivocado, o activar protecciones de capa 2 sin probarlas, puede dejar sin comunicacion a un controlador o a su pareja redundante.",
+  "pasos": [
+    "Identificar la IP en conflicto y las direcciones MAC que la anuncian, con el registro de la captura.",
+    "Descartar primero una conmutacion por falla legitima (equipos redundantes o protocolos de primer salto) que cambie de MAC.",
+    "Determinar con el dueno del proceso cual MAC es el equipo legitimo (inventario, etiqueta, fabricante de la MAC).",
+    "Si alguna MAC no se reconoce, tratarlo como posible suplantacion con el procedimiento de incidentes del cliente.",
+    "Si son dos equipos con la misma IP, corregir una direccion en la ventana acordada y actualizar el inventario."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Buscar cada MAC en la tabla de direcciones del switch para ubicar el puerto de cada equipo.",
+      "Evaluar la inspeccion dinamica de ARP y la seguridad de puerto en un segmento de prueba antes de generalizar (verificar la sintaxis en la documentacion del fabricante para la version instalada)."
+    ],
+    "Claroty xDome": [
+      "Revisar el activo y sus direcciones MAC asociadas para ver cual corresponde al inventario.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que la IP la anuncia una sola MAC.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Restaurar la direccion IP anterior del equipo si el cambio corto su comunicacion.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0830", "IEC 62443 SR 3.1", "NERC CIP-007 R4", "NIST 800-82 SI-4", "NIST CSF DE.CM-01"]
+}

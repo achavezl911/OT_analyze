@@ -1,0 +1,38 @@
+{
+  "id": "pb-switch-hora",
+  "hallazgo": "Hora del switch sin sincronizar",
+  "objetivo": "Dejar el reloj del switch sincronizado con una fuente de hora confiable, para correlacionar sus registros con los de otros equipos.",
+  "prioridad_ot": "Corregir la hora no interrumpe el reenvio, pero un salto grande de hora puede confundir a los sistemas que correlacionan eventos; se avisa a operacion y a quien revisa los registros.",
+  "pasos": [
+    "Confirmar el estado de la sincronizacion y a que servidor NTP apunta el switch (o si no tiene ninguno).",
+    "Verificar que el switch alcanza al servidor NTP: ruta, firewall y VLAN de gestion.",
+    "Revisar la autenticacion NTP si se usa: que la llave coincida con la del servidor.",
+    "Usar una fuente de hora interna de la red OT y, si hay varias, al menos dos servidores.",
+    "Esperar a que el reloj converja y confirmar que los registros nuevos ya no llevan la marca de hora no sincronizada.",
+    "Dejar registro del servidor NTP y de la zona horaria usados."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar show ntp status y show ntp associations (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Configurar o corregir ntp server y, si se usa, la autenticacion con ntp authenticate y ntp trusted-key (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Confirmar el cambio con show logging: las lineas con fecha ya no empiezan con asterisco (verificar la sintaxis en la documentacion del fabricante para la version instalada)."
+    ]
+  },
+  "verificacion": [
+    "Volver a leer show logging con la herramienta y confirmar que el hallazgo desaparece.",
+    "Comparar la hora del switch con la de un equipo de referencia."
+  ],
+  "reversion": [
+    "Volver al servidor NTP anterior si el nuevo no responde, para no dejar el reloj a la deriva.",
+    "Restaurar el respaldo de la configuracion del switch si el cambio afecta la gestion, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un switch no critico y respaldar la configuracion antes de cambiarla.",
+    "Avisar al dueno del proceso y a quien revisa los registros antes de corregir la hora.",
+    "Un cambio de hora altera las marcas de los registros: anotar la hora anterior y la nueva."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes",
+  "referencias": ["IEC 62443 SR 2.11", "NIST 800-82 AU-8", "NIST CSF PR.PS-04"]
+}

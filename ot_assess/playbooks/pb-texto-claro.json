@@ -1,0 +1,47 @@
+{
+  "id": "pb-texto-claro",
+  "hallazgo": "Credenciales o administracion en texto claro",
+  "objetivo": "Sustituir los protocolos de gestion y autenticacion sin cifrar por alternativas cifradas y renovar las credenciales que pudieron quedar expuestas.",
+  "prioridad_ot": "Apagar un servicio sin cifrar antes de probar el reemplazo puede dejar sin acceso de gestion a equipos de control; no renovar las credenciales deja valida una clave ya visible en la red.",
+  "pasos": [
+    "Listar los equipos y protocolos sin cifrar (Telnet, FTP, HTTP con login, SNMP v1/v2c) y quien se conecta, con el registro de la captura.",
+    "Ordenar por criticidad y por si la credencial es privilegiada, y validarlo con el dueno del proceso.",
+    "Habilitar la alternativa cifrada en cada equipo y probar el acceso antes de deshabilitar la antigua.",
+    "Cambiar las credenciales que viajaron en claro, una vez migrado el acceso.",
+    "Limitar el acceso de gestion a estaciones autorizadas y deshabilitar el servicio sin cifrar en la ventana acordada."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Habilitar SSH con claves adecuadas y probar el acceso antes de deshabilitar Telnet (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Cambiar SNMP v1/v2c por v3 con autenticacion y cifrado (verificar la sintaxis en la documentacion del fabricante para la version instalada)."
+    ],
+    "Linux": [
+      "Sustituir telnet y ftp por ssh y sftp, y deshabilitar los servicios sin cifrar tras verificar el acceso.",
+      "Verificar con una prueba de conexion desde un cliente representativo antes de retirar lo antiguo."
+    ],
+    "Windows / Active Directory": [
+      "Desactivar con directivas de grupo (GPO) los clientes y servicios de Telnet y FTP que no se necesiten.",
+      "Respaldar la directiva antes de cambiarla."
+    ],
+    "PLC / RTU (generico)": [
+      "Revisar si el equipo ofrece una version cifrada de su servicio web o de gestion, y activarla solo en ventana.",
+      "Si no la ofrece, limitar el acceso por IP y documentar la excepcion."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que ya no hay credenciales ni gestion en texto claro.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Rehabilitar temporalmente el servicio antiguo si el reemplazo falla, solo desde la estacion autorizada, y registrar el motivo.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Mantener acceso por consola o fuera de banda para recuperar el equipo si el cambio corta la gestion."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0842", "MITRE ICS T0859", "IEC 62443 SR 1.1", "IEC 62443 SR 4.1", "NERC CIP-007 R5", "NERC CIP-005 R2", "NIST 800-82 IA-5", "NIST 800-82 SC-8", "NIST CSF PR.AA-01", "NIST CSF PR.DS-02"]
+}

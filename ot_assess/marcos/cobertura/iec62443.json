@@ -1,0 +1,275 @@
+{
+ "marco": "iec62443",
+ "idioma_textos": "es",
+ "fuente": "IEC 62443-3-3:2013, requisitos de sistema (SR) base. Identificadores y parafrasis breves en espanol (la norma tiene derechos de autor, D20); los 51 ids y nombres fueron cotejados contra el texto de la norma en normas/ (D75); el catalogo de niveles SL esta en iec62443_niveles.json",
+ "categorias": {
+  "FR1": "Identificacion y autenticacion (IAC)",
+  "FR2": "Control de uso (UC)",
+  "FR3": "Integridad del sistema (SI)",
+  "FR4": "Confidencialidad de los datos (DC)",
+  "FR5": "Flujo de datos restringido (RDF)",
+  "FR6": "Respuesta oportuna a eventos (TRE)",
+  "FR7": "Disponibilidad de recursos (RA)"
+ },
+ "apoyo": {
+  "SR 7.8": "Inventario de activos observados en el trafico (inventario.csv)"
+ },
+ "requisitos": [
+  {
+   "id": "SR 1.1",
+   "texto": "Identificacion y autenticacion de usuarios humanos",
+   "grupo": "FR1"
+  },
+  {
+   "id": "SR 1.2",
+   "texto": "Identificacion y autenticacion de software, procesos y dispositivos",
+   "grupo": "FR1"
+  },
+  {
+   "id": "SR 1.3",
+   "texto": "Gestion de cuentas",
+   "grupo": "FR1"
+  },
+  {
+   "id": "SR 1.4",
+   "texto": "Gestion de identificadores",
+   "grupo": "FR1"
+  },
+  {
+   "id": "SR 1.5",
+   "texto": "Gestion de autenticadores",
+   "grupo": "FR1"
+  },
+  {
+   "id": "SR 1.6",
+   "texto": "Gestion de acceso inalambrico",
+   "grupo": "FR1"
+  },
+  {
+   "id": "SR 1.7",
+   "texto": "Robustez de la autenticacion por contrasena",
+   "grupo": "FR1"
+  },
+  {
+   "id": "SR 1.8",
+   "texto": "Certificados de infraestructura de clave publica",
+   "grupo": "FR1"
+  },
+  {
+   "id": "SR 1.9",
+   "texto": "Robustez de la autenticacion por clave publica",
+   "grupo": "FR1"
+  },
+  {
+   "id": "SR 1.10",
+   "texto": "Retroalimentacion del autenticador",
+   "grupo": "FR1"
+  },
+  {
+   "id": "SR 1.11",
+   "texto": "Intentos de inicio de sesion fallidos",
+   "grupo": "FR1"
+  },
+  {
+   "id": "SR 1.12",
+   "texto": "Aviso de uso del sistema",
+   "grupo": "FR1"
+  },
+  {
+   "id": "SR 1.13",
+   "texto": "Acceso desde redes no confiables",
+   "grupo": "FR1"
+  },
+  {
+   "id": "SR 2.1",
+   "texto": "Aplicacion de autorizacion",
+   "grupo": "FR2"
+  },
+  {
+   "id": "SR 2.2",
+   "texto": "Control de uso inalambrico",
+   "grupo": "FR2"
+  },
+  {
+   "id": "SR 2.3",
+   "texto": "Control de uso de dispositivos portatiles y moviles",
+   "grupo": "FR2"
+  },
+  {
+   "id": "SR 2.4",
+   "texto": "Codigo movil",
+   "grupo": "FR2"
+  },
+  {
+   "id": "SR 2.5",
+   "texto": "Bloqueo de sesion",
+   "grupo": "FR2"
+  },
+  {
+   "id": "SR 2.6",
+   "texto": "Terminacion de sesion remota",
+   "grupo": "FR2"
+  },
+  {
+   "id": "SR 2.7",
+   "texto": "Control de sesiones concurrentes",
+   "grupo": "FR2"
+  },
+  {
+   "id": "SR 2.8",
+   "texto": "Eventos auditables",
+   "grupo": "FR2"
+  },
+  {
+   "id": "SR 2.9",
+   "texto": "Capacidad de almacenamiento de auditoria",
+   "grupo": "FR2"
+  },
+  {
+   "id": "SR 2.10",
+   "texto": "Respuesta a fallas del procesamiento de auditoria",
+   "grupo": "FR2"
+  },
+  {
+   "id": "SR 2.11",
+   "texto": "Marcas de tiempo",
+   "grupo": "FR2"
+  },
+  {
+   "id": "SR 2.12",
+   "texto": "No repudio",
+   "grupo": "FR2"
+  },
+  {
+   "id": "SR 3.1",
+   "texto": "Integridad de las comunicaciones",
+   "grupo": "FR3"
+  },
+  {
+   "id": "SR 3.2",
+   "texto": "Proteccion contra codigo malicioso",
+   "grupo": "FR3"
+  },
+  {
+   "id": "SR 3.3",
+   "texto": "Verificacion de la funcionalidad de seguridad",
+   "grupo": "FR3"
+  },
+  {
+   "id": "SR 3.4",
+   "texto": "Integridad del software y la informacion",
+   "grupo": "FR3"
+  },
+  {
+   "id": "SR 3.5",
+   "texto": "Validacion de entradas",
+   "grupo": "FR3"
+  },
+  {
+   "id": "SR 3.6",
+   "texto": "Salida determinista",
+   "grupo": "FR3"
+  },
+  {
+   "id": "SR 3.7",
+   "texto": "Manejo de errores",
+   "grupo": "FR3"
+  },
+  {
+   "id": "SR 3.8",
+   "texto": "Integridad de sesion",
+   "grupo": "FR3"
+  },
+  {
+   "id": "SR 3.9",
+   "texto": "Proteccion de la informacion de auditoria",
+   "grupo": "FR3"
+  },
+  {
+   "id": "SR 4.1",
+   "texto": "Confidencialidad de la informacion",
+   "grupo": "FR4"
+  },
+  {
+   "id": "SR 4.2",
+   "texto": "Persistencia de la informacion",
+   "grupo": "FR4"
+  },
+  {
+   "id": "SR 4.3",
+   "texto": "Uso de criptografia",
+   "grupo": "FR4"
+  },
+  {
+   "id": "SR 5.1",
+   "texto": "Segmentacion de red",
+   "grupo": "FR5"
+  },
+  {
+   "id": "SR 5.2",
+   "texto": "Proteccion del limite de zona",
+   "grupo": "FR5"
+  },
+  {
+   "id": "SR 5.3",
+   "texto": "Restricciones de comunicacion persona a persona de proposito general",
+   "grupo": "FR5"
+  },
+  {
+   "id": "SR 5.4",
+   "texto": "Particion de aplicaciones",
+   "grupo": "FR5"
+  },
+  {
+   "id": "SR 6.1",
+   "texto": "Accesibilidad del registro de auditoria",
+   "grupo": "FR6"
+  },
+  {
+   "id": "SR 6.2",
+   "texto": "Monitoreo continuo",
+   "grupo": "FR6"
+  },
+  {
+   "id": "SR 7.1",
+   "texto": "Proteccion contra denegacion de servicio",
+   "grupo": "FR7"
+  },
+  {
+   "id": "SR 7.2",
+   "texto": "Gestion de recursos",
+   "grupo": "FR7"
+  },
+  {
+   "id": "SR 7.3",
+   "texto": "Respaldo del sistema de control",
+   "grupo": "FR7"
+  },
+  {
+   "id": "SR 7.4",
+   "texto": "Recuperacion y reconstitucion del sistema de control",
+   "grupo": "FR7"
+  },
+  {
+   "id": "SR 7.5",
+   "texto": "Energia de emergencia",
+   "grupo": "FR7"
+  },
+  {
+   "id": "SR 7.6",
+   "texto": "Ajustes de configuracion de red y seguridad",
+   "grupo": "FR7"
+  },
+  {
+   "id": "SR 7.7",
+   "texto": "Funcionalidad minima",
+   "grupo": "FR7"
+  },
+  {
+   "id": "SR 7.8",
+   "texto": "Inventario de componentes del sistema de control",
+   "grupo": "FR7"
+  }
+ ],
+ "patron": "SR \\d+\\.\\d+"
+}

@@ -1,0 +1,39 @@
+{
+  "id": "pb-captura-ilegible",
+  "hallazgo": "Captura ilegible o sin paquetes",
+  "objetivo": "Obtener una captura legible, porque un archivo que no se puede leer deja ese punto de la red sin analizar.",
+  "prioridad_ot": "Repetir la captura sin cuidado en un equipo de control puede cargarlo; un archivo danado no debe tomarse como prueba de que no hay trafico.",
+  "pasos": [
+    "Verificar el tamano y la integridad del archivo y si se copio completo desde el equipo de captura, y dejar el registro.",
+    "Confirmar el formato (pcap o pcapng), la compresion y que la version de las herramientas del analista lo soporta.",
+    "Repetir la copia del archivo desde el equipo de captura y comparar su suma de verificacion.",
+    "Si el archivo esta vacio, revisar que la captura se tomo en la interfaz correcta y que el espejo o el TAP estaba activo.",
+    "Repetir la captura en la ventana acordada y conservar el archivo original danado como evidencia."
+  ],
+  "por_plataforma": {
+    "Linux": [
+      "Revisar el archivo con la herramienta de informacion de capturas del analista y comparar la suma de verificacion de origen y destino (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Revisar el espacio en disco y los permisos del equipo de captura."
+    ],
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar que el puerto espejo (SPAN) este activo y apunte al puerto de captura (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Conservar el acceso por consola mientras se hace el cambio."
+    ]
+  },
+  "verificacion": [
+    "Abrir la nueva captura con las herramientas del analista y confirmar que tiene paquetes y que cubre el periodo acordado.",
+    "Registrar en el informe la captura reemplazada y el motivo."
+  ],
+  "reversion": [
+    "Quitar el puerto espejo temporal al terminar y restaurar el respaldo de la configuracion del switch si afecto la gestion.",
+    "Conservar la configuracion anterior del switch para volver a ella en la ventana de mantenimiento."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Confirmar con el dueno del proceso que el puerto espejo no sobrecarga el enlace."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": []
+}

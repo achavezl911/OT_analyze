@@ -1,0 +1,38 @@
+{
+  "id": "pb-switch-estabilidad-stp",
+  "hallazgo": "Inestabilidad de STP o MAC flapping registrada en el switch",
+  "objetivo": "Encontrar el puerto, el enlace o el equipo que origina los cambios de topologia, el movimiento de MAC o las tormentas, y corregirlo sin cortar el trafico de control.",
+  "prioridad_ot": "Apagar un puerto o quitar un cable para frenar un bucle puede aislar un segmento o dejar sin su enlace de respaldo a un anillo; se ubica el origen con los registros y la intervencion se hace en ventana o, si hay incidente, con el dueno del proceso presente.",
+  "pasos": [
+    "Registrar la hora de los eventos y el puerto de origen de cada cambio de topologia, y confirmar si siguen ocurriendo con un segundo show spanning-tree detail unos minutos despues.",
+    "Para una MAC que salta entre dos puertos, ubicar el equipo con la tabla de direcciones y revisar si tiene dos conexiones, un adaptador en puente o un cable que une dos puertos.",
+    "Revisar el enlace del puerto de origen: contadores de errores, estado del cable o la fibra y el equipo conectado.",
+    "Si un puerto quedo en err-disable por BPDU guard o por control de tormentas, tratarlo como evidencia de bucle o de equipo mal conectado antes de reactivarlo.",
+    "Corregir la causa en la ventana acordada y de un cambio a la vez, y respaldar la configuracion antes de tocar los puertos.",
+    "Confirmar BPDU guard y control de tormentas en los puertos de acceso y dejar registro de la causa."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar show spanning-tree detail, show logging y show interfaces counters errors del switch y de su vecino (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Reactivar un puerto en err-disable solo con la causa corregida, con shutdown y no shutdown o con errdisable recovery (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Conservar el acceso por consola mientras se hace el cambio."
+    ]
+  },
+  "verificacion": [
+    "Volver a leer el estado con la herramienta y confirmar que el numero de cambios de topologia ya no crece y que el log no trae MAC flapping nuevo.",
+    "Confirmar con el dueno del proceso que no hay microcortes ni perdida de comunicacion con los controladores."
+  ],
+  "reversion": [
+    "Reponer el enlace retirado si el cambio dejo un segmento aislado y esperar a que el arbol reconverja antes de otro cambio.",
+    "Restaurar el respaldo de la configuracion del switch en la ventana, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un switch no critico y respaldar la configuracion antes de cambiarla.",
+    "No quitar un enlace de un anillo sin confirmar con el dueno del proceso que existe otro camino.",
+    "Los contadores y el numero de cambios son acumulados desde el arranque o el ultimo clear: comparar dos lecturas antes de concluir que el problema sigue."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de redes",
+  "referencias": ["MITRE ICS T0814", "MITRE ICS T0826", "IEC 62443 SR 7.1", "IEC 62443 SR 6.2", "NIST 800-82 SC-5", "NIST 800-82 SI-4", "NIST CSF PR.IR-03", "NIST CSF DE.CM-01"]
+}

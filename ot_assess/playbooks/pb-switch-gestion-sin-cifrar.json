@@ -1,0 +1,40 @@
+{
+  "id": "pb-switch-gestion-sin-cifrar",
+  "hallazgo": "Gestion del switch por protocolos sin cifrar",
+  "objetivo": "Dejar la gestion del switch solo por SSH y HTTPS, desde la red de gestion, sin HTTP ni Telnet.",
+  "prioridad_ot": "Si se desactiva Telnet o HTTP antes de probar SSH o HTTPS, se pierde el acceso remoto al switch; recuperarlo exige ir al sitio con cable de consola, y el switch puede dar servicio a equipos de campo.",
+  "pasos": [
+    "Confirmar con operacion quien administra el switch y con que herramientas (Telnet, navegador, scripts), para no cortar una integracion.",
+    "Verificar que el switch tiene imagen con criptografia, nombre de dominio y claves RSA para SSH.",
+    "Habilitar SSH y HTTPS y probar el acceso desde la estacion de gestion sin cerrar la sesion actual.",
+    "Restringir el acceso de gestion con una lista de acceso a las estaciones autorizadas.",
+    "Desactivar el servidor HTTP y quitar Telnet de las lineas vty, de una en una, con una sesion abierta de respaldo.",
+    "Guardar la configuracion y dejar registro del cambio."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Limitar las lineas vty a SSH con transport input ssh y aplicar la lista con access-class (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Desactivar el servidor web sin cifrar con no ip http server y dejar solo ip http secure-server si se necesita la interfaz web (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Usar SSH version 2 y un tiempo de inactividad en las lineas (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Conservar el acceso por consola mientras se hace el cambio."
+    ]
+  },
+  "verificacion": [
+    "Volver a leer la configuracion con la herramienta y confirmar que el hallazgo ya no aparece.",
+    "Comprobar desde la estacion de gestion que SSH funciona y que Telnet y HTTP ya no responden.",
+    "Revisar en el registro del switch que no hay intentos fallidos de herramientas que seguian usando el acceso retirado."
+  ],
+  "reversion": [
+    "Volver a habilitar transport input para telnet solo de forma temporal, en la ventana, si una herramienta de operacion dependia de el.",
+    "Restaurar el respaldo de la configuracion del switch con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Mantener una sesion abierta y el acceso por consola hasta confirmar el acceso nuevo: un error deja al switch inaccesible.",
+    "Probar primero en laboratorio o en un switch no critico y respaldar la configuracion antes de cambiarla.",
+    "Confirmar con el dueno del proceso que ningun sistema de supervision gestiona el switch por HTTP o Telnet."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de redes y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0842", "MITRE ICS T0886", "IEC 62443 SR 4.1", "IEC 62443 SR 4.3", "NERC CIP-005 R2", "NIST 800-82 SC-8", "NIST 800-82 AC-17", "NIST CSF PR.DS-02"]
+}

@@ -1,0 +1,39 @@
+{
+  "id": "pb-barrido-arp",
+  "hallazgo": "Barrido ARP: un equipo pregunta por muchas direcciones",
+  "objetivo": "Determinar si un equipo que pregunta por muchas direcciones por ARP es una herramienta autorizada (inventario, mantenimiento) o un reconocimiento no autorizado.",
+  "prioridad_ot": "Aislar o apagar el equipo que barre sin saber su funcion puede detener una estacion de ingenieria o un servidor de monitoreo legitimos.",
+  "pasos": [
+    "Identificar el equipo origen, su MAC y el rango de direcciones consultado, con el registro de la captura.",
+    "Confirmar con el dueno del proceso si hay una herramienta de inventario, monitoreo o mantenimiento autorizada en ese equipo.",
+    "Si no esta autorizado, tratarlo como incidente con el procedimiento del cliente y conservar la captura.",
+    "Si esta autorizado, documentar la herramienta, su horario y el rango, y acordar su alcance con operacion.",
+    "Limitar donde pueden conectarse las estaciones con herramientas de descubrimiento, tras probarlo en laboratorio o en un equipo no critico."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Ubicar el puerto del equipo origen en la tabla de direcciones y revisar quien lo conecta.",
+      "Evaluar limites de seguridad de puerto en un segmento de prueba antes de aplicarlos (verificar la sintaxis en la documentacion del fabricante para la version instalada)."
+    ],
+    "Claroty xDome": [
+      "Revisar en la plataforma si el equipo origen ya figura como estacion de ingenieria o herramienta de descubrimiento autorizada.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que el barrido solo aparece en los horarios y desde los equipos autorizados.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Rehabilitar el puerto o la herramienta si se detuvo una funcion legitima, registrando el motivo.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No aislar un equipo que el dueno del proceso no haya identificado: puede ser una estacion de ingenieria en uso."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Equipo de monitoreo y respuesta a incidentes OT",
+  "referencias": ["MITRE ICS T0846", "IEC 62443 SR 6.2", "NERC CIP-007 R4", "NIST 800-82 SI-4", "NIST CSF DE.CM-01"]
+}

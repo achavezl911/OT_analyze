@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# ot-claude: lanza Claude Code para OT_analisis con la cuenta pedida, y la comprueba antes.
+# Uso: ot-claude max|api [argumentos de claude...]
+#      ot-claude max|api --cuenta     solo muestra y verifica la cuenta (no gasta tokens)
+# max: suscripcion MAX (por defecto del proyecto). api: perfil de Console (prepago), solo
+# cuando lo indique el propietario. Si la cuenta activa no es la pedida, no se lanza nada:
+# un MAX caducado no puede caer en silencio al perfil de API.
+set -u
+CUENTA=${1:-}
+shift || true
+CLAUDE=/home/analista/.local/bin/claude
+REPO=${OT_REPO:-/home/analista/OT_analisis}
+export PATH=/home/analista/.venv-ot/bin:/home/analista/.local/bin:$PATH
+unset ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN CLAUDE_CODE_OAUTH_TOKEN ANTHROPIC_PROFILE
+
+case "$CUENTA" in
+  max)
+    # MAX vive en la configuracion por defecto (~/.claude y ~/.claude.json)
+    if [ -n "${OT_CLAUDE_CONFIG_MAX:-}" ]; then export CLAUDE_CONFIG_DIR=$OT_CLAUDE_CONFIG_MAX; else unset CLAUDE_CONFIG_DIR; fi
+    espera="Login method: Claude Max account" ;;
+  api)
+    export CLAUDE_CONFIG_DIR=/home/analista/.claude-api
+    espera="user_oauth" ;;
+  *)
+    echo "uso: ot-claude max|api [argumentos de claude]" >&2; exit 2 ;;
+esac
+
+estado=$("$CLAUDE" auth status --text 2>&1)
+if ! printf '%s\n' "$estado" | grep -qF "$espera"; then
+  echo "[!] la cuenta activa no es '$CUENTA'; no se lanza Claude. Estado:" >&2
+  printf '%s\n' "$estado" | head -3 >&2
+  echo "    Inicia sesion en esa cuenta (ot-claude $CUENTA, luego /login) y repite." >&2
+  exit 3
+fi
+if [ "${1:-}" = "--cuenta" ]; then
+  echo "cuenta $CUENTA: $(printf '%s\n' "$estado" | head -1)"
+  exit 0
+fi
+cd "$REPO" || exit 2
+exec "$CLAUDE" "$@"

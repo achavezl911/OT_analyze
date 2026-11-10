@@ -1,0 +1,7 @@
+# Dependencias de desarrollo (SEG-07). La ejecucion del proyecto no tiene dependencias.
+# pyflakes y coverage recientes ya no soportan Python 3.9: de ahi los marcadores de entorno.
+scapy==2.8.0
+pyflakes==3.4.0; python_version < "3.10"
+pyflakes==4.1.0; python_version >= "3.10"
+coverage==7.10.7; python_version < "3.10"
+coverage==7.17.0; python_version >= "3.10"

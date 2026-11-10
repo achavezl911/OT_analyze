@@ -1,0 +1,51 @@
+{
+  "id": "pb-dnp3-reinicio",
+  "hallazgo": "DNP3 con reinicio o paro de aplicacion",
+  "objetivo": "Evitar que los comandos DNP3 de reinicio o paro de aplicacion lleguen a las outstations desde origenes no autorizados.",
+  "prioridad_ot": "Un filtro mal hecho sobre DNP3 puede cortar el polling de datos; emitir un comando de reinicio o paro contra una outstation en produccion puede detener la supervision o el control.",
+  "pasos": [
+    "Identificar origen, destino y comando (Cold Restart, Warm Restart o Stop Application) de cada peticion.",
+    "Confirmar con operacion si fue una maniobra de mantenimiento planeada; si no, tratarlo con el procedimiento de incidentes del cliente.",
+    "Limitar los origenes que pueden hablar DNP3 (puerto 20000) con la outstation a los maestros identificados.",
+    "Si el firewall o el sensor inspecciona DNP3, limitar los codigos de funcion de reinicio y paro a las estaciones de ingenieria autorizadas, tras probar que no afecta el polling.",
+    "Evaluar con el fabricante la autenticacion segura de DNP3, si el equipo la soporta.",
+    "Respaldar la configuracion y aplicar en la ventana acordada, con registro (log) antes de bloquear.",
+    "No emitir comandos de reinicio o paro contra una outstation en produccion sin una ventana acordada."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Limitar con reglas el puerto 20000 a los maestros identificados (Policies > Access Control) y activar el registro de conexiones (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Si se usa inspeccion de aplicaciones industriales, probar primero en modo deteccion el filtro de codigos de funcion."
+    ],
+    "FortiGate": [
+      "Limitar con politicas el puerto 20000 al origen y destino concretos, con registro de trafico.",
+      "Si el perfil de inspeccion industrial lo permite, probar la restriccion de codigos de funcion en modo registro."
+    ],
+    "PLC / RTU (generico)": [
+      "Revisar si la outstation permite una lista de maestros autorizados y la autenticacion segura de DNP3.",
+      "Aplicar los cambios solo en ventana y sin reiniciar el equipo en produccion sin ventana acordada."
+    ],
+    "Claroty xDome": [
+      "Crear o ajustar una alerta para comandos DNP3 de reinicio o paro hacia las outstations.",
+      "Revisar el historial de comunicaciones de la outstation para ver otros origenes que usen DNP3."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura o importar de nuevo y confirmar que no hay comandos de reinicio o paro desde origenes no autorizados.",
+    "Confirmar con el dueno del proceso que el polling y los controles legitimos siguen funcionando.",
+    "Revisar el registro de bloqueos para detectar intentos nuevos."
+  ],
+  "reversion": [
+    "Deshabilitar la regla o el filtro de codigo de funcion nuevo (sin borrarlo) si bloquea trafico legitimo.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No reiniciar controladores ni equipos de control en produccion sin una ventana acordada."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de control y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0816", "MITRE ICS T0814", "IEC 62443 SR 2.1", "IEC 62443 SR 7.1", "NERC CIP-007 R1", "NERC CIP-005 R1", "NIST 800-82 AC-3", "NIST 800-82 SC-5", "NIST CSF PR.AA-05", "NIST CSF PR.IR-04"]
+}

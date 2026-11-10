@@ -1,0 +1,36 @@
+{
+  "id": "pb-switch-raiz-prioridad",
+  "hallazgo": "Puente raiz de STP sin prioridad fijada",
+  "objetivo": "Fijar a proposito cual switch es la raiz de STP en cada VLAN, para que un switch nuevo o un equipo mal conectado no la tome.",
+  "prioridad_ot": "Un cambio de raiz hace que el arbol reconverja y puede cortar un instante el trafico; se hace en ventana y con el dueno del proceso presente.",
+  "pasos": [
+    "Decidir con ingenieria de redes que switch debe ser la raiz de cada VLAN (normalmente el de nucleo o distribucion) y cual su respaldo.",
+    "Fijar la prioridad de la raiz y la del respaldo en las VLAN que corresponda.",
+    "Activar root guard en los puertos hacia los switches de acceso, para que no puedan volverse raiz.",
+    "Aplicar el cambio de una VLAN a la vez y esperar a que el arbol reconverja.",
+    "Dejar registro de la raiz, el respaldo y las prioridades."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Fijar la prioridad con spanning-tree vlan N priority 24576 o spanning-tree vlan N root primary en la raiz, y un valor mayor en el respaldo (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Activar spanning-tree guard root en los puertos hacia el acceso (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Confirmar con show spanning-tree vlan N que el switch es la raiz y con la prioridad nueva (verificar la sintaxis en la documentacion del fabricante para la version instalada)."
+    ]
+  },
+  "verificacion": [
+    "Volver a leer show spanning-tree detail con la herramienta y confirmar que la raiz es el switch previsto y que su prioridad ya no es la de fabrica.",
+    "Confirmar con el dueno del proceso que no hubo cortes con la reconvergencia."
+  ],
+  "reversion": [
+    "Volver a la prioridad anterior (no spanning-tree vlan N priority) y quitar root guard si aisla un segmento.",
+    "Restaurar el respaldo de la configuracion del switch en la ventana, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Root guard deja en bloqueo el puerto que recibe una BPDU superior: confirmar antes que ningun switch legitimo de acceso debe ser raiz.",
+    "Probar primero en laboratorio o en un switch no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes",
+  "referencias": ["MITRE ICS T0814", "MITRE ICS T0830", "IEC 62443 SR 7.1", "IEC 62443 SR 3.1", "NIST 800-82 SC-5", "NIST 800-82 SI-4", "NIST CSF PR.IR-03", "NIST CSF DE.CM-01"]
+}

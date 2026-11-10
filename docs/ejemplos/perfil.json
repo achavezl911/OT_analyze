@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "cliente": "Cliente Ejemplo",
+  "sitio": "Planta Norte",
+  "pais": "Mexico",
+  "sector": "Energia",
+  "responsable": "Analista Ejemplo",
+  "clasificacion": "Confidencial",
+  "titulo": "Assessment de ciberseguridad OT - Planta Norte",
+  "idioma": "es",
+  "marcos": [
+    {"clave": "iec62443", "edicion": "2018", "partes": ["3-3", "2-1"]},
+    {"clave": "nist-800-82", "edicion": "Rev. 3"}
+  ],
+  "regulacion": ["Regulacion sectorial declarada por el cliente"],
+  "captura": {"ventana": "24 h", "punto": "SPAN en el switch de planta"},
+  "engagement": {"tipo": "Analisis pasivo", "exclusiones": ["pasivo", "sin pentesting"]},
+  "sl_objetivo": {"Zona de control": "SL2", "Zona de supervision": "SL2"},
+  "criticidad_activos": {"10.10.1.20": "Critica"},
+  "dominios_internos": ["planta.local", "corp.example"]
+}

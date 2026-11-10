@@ -1,0 +1,43 @@
+{
+  "id": "pb-dns-dot",
+  "hallazgo": "DNS cifrado sin visibilidad (DoT)",
+  "objetivo": "Mantener la visibilidad del DNS en la red de control: que los equipos consulten por el resolvedor interno y no por DNS cifrado directo a Internet.",
+  "prioridad_ot": "Bloquear el DNS cifrado sin revisar que equipos lo usan puede dejar sin nombres a aplicaciones que lo traen configurado.",
+  "pasos": [
+    "Identificar los equipos que usan DNS cifrado (puerto TCP 853) y los destinos, con el registro de la captura.",
+    "Confirmar con el dueno del proceso si algun servicio del proveedor lo necesita.",
+    "Desactivar el DNS cifrado directo en los clientes y fijar el resolvedor interno.",
+    "Bloquear el puerto TCP 853 hacia Internet desde la zona de control, con registro antes de bloquear.",
+    "Mantener los registros del resolvedor interno como fuente de visibilidad del DNS."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Activar el registro de conexiones en la regla antes de cambiar su accion a bloqueo.",
+      "Desplegar los cambios en la ventana acordada y conservar la version anterior de la politica."
+    ],
+    "FortiGate": [
+      "Activar el registro de trafico DNS hacia Internet y revisar que equipos lo usan.",
+      "Deshabilitar la politica antes de borrarla, para poder reactivarla."
+    ],
+    "Windows / Active Directory": [
+      "Fijar el servidor DNS interno en los equipos con directivas de grupo (GPO) o por DHCP.",
+      "Respaldar la configuracion DNS antes de cambiarla."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que ya no hay DNS cifrado directo hacia Internet.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de firewall y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 6.2", "NERC CIP-005 R1", "NIST 800-82 SC-7", "NIST 800-82 SI-4", "NIST CSF DE.CM-01"]
+}

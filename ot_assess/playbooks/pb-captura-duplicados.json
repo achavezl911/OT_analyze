@@ -1,0 +1,39 @@
+{
+  "id": "pb-captura-duplicados",
+  "hallazgo": "Paquetes duplicados en la captura",
+  "objetivo": "Eliminar la causa de los paquetes duplicados en la captura, que inflan los volumenes y pueden dar falsas retransmisiones.",
+  "prioridad_ot": "Analizar una captura con duplicados como si fuera real distorsiona volumenes y conversaciones; cambiar el espejo sin plan puede afectar el switch.",
+  "pasos": [
+    "Identificar si los duplicados vienen de un espejo que copia entrada y salida de varios puertos, o de dos puntos de captura unidos, y dejarlo en el registro.",
+    "Ajustar el espejo para copiar un solo sentido por puerto, o usar un unico punto de captura.",
+    "Probar el cambio en laboratorio o en un equipo no critico y aplicarlo en la ventana acordada.",
+    "Si no se puede repetir la captura, eliminar los duplicados en una copia de trabajo y conservar el original.",
+    "Anotar en el informe que los volumenes de la captura original pueden estar inflados."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar los puertos y la direccion de la sesion de espejo para evitar copiar el mismo paquete dos veces (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Conservar el acceso por consola mientras se hace el cambio."
+    ],
+    "Linux": [
+      "Eliminar duplicados con la herramienta de edicion de capturas del analista sobre una copia (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Conservar la captura original como evidencia."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que ya no hay paquetes duplicados, o que la copia de trabajo no los tiene.",
+    "Registrar en el informe la captura reemplazada y el motivo."
+  ],
+  "reversion": [
+    "Restaurar la sesion de espejo anterior si el cambio afecto el switch.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Confirmar con el dueno del proceso que el puerto espejo no sobrecarga el enlace."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": []
+}

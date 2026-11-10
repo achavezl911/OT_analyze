@@ -1,0 +1,39 @@
+{
+  "id": "pb-sin-escrituras",
+  "hallazgo": "No se observaron escrituras ni comandos de control",
+  "objetivo": "Evitar que la ausencia de escrituras en la captura se lea como ausencia de control remoto: confirmar que la captura vio el trafico que importa.",
+  "prioridad_ot": "Concluir que no hay comandos de control porque la captura no los vio puede dar una falsa tranquilidad; ampliar la captura con un puerto espejo mal configurado puede afectar el switch.",
+  "pasos": [
+    "Confirmar que el punto de captura ve el trafico entre los maestros y los controladores, y dejar el registro de donde se capturo.",
+    "Verificar que la duracion cubra un ciclo completo de operacion, incluidos arranques, cambios de turno y mantenimientos periodicos.",
+    "Repetir la captura en otro punto o en otro turno si el segmento esperado no aparece.",
+    "Acordar con el dueno del proceso en que momentos suele haber escrituras (ajustes de consigna, descargas) y capturar en esos momentos.",
+    "Anotar la limitacion en el informe: la captura no muestra escrituras, pero no prueba que no existan."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar que el puerto espejo (SPAN) incluya las VLAN y los puertos de los controladores (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Probar el puerto espejo en laboratorio o en un equipo no critico antes de usarlo en produccion."
+    ],
+    "Claroty xDome": [
+      "Comparar con las comunicaciones del sensor para ver si hay escrituras en otros periodos.",
+      "Anotar la cobertura de los sensores por segmento."
+    ]
+  },
+  "verificacion": [
+    "Confirmar que la nueva captura incluye los segmentos y periodos acordados con el dueno del proceso.",
+    "Registrar en el informe la cobertura real de la captura."
+  ],
+  "reversion": [
+    "Quitar el puerto espejo temporal al terminar y restaurar el respaldo de la configuracion si el cambio afecto la gestion.",
+    "Conservar la configuracion anterior del switch para volver a ella en la ventana de mantenimiento."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Confirmar con el dueno del proceso que el puerto espejo no sobrecarga el enlace."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": []
+}

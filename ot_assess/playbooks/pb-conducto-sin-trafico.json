@@ -1,0 +1,38 @@
+{
+  "id": "pb-conducto-sin-trafico",
+  "hallazgo": "Conductos aprobados sin trafico",
+  "objetivo": "Determinar si un conducto de la linea base que no se vio en esta corrida indica una falla de comunicacion, un cambio de proceso o un punto de captura que no lo ve.",
+  "prioridad_ot": "Un conducto de control que dejo de comunicar puede ser una falla que afecta el proceso; se confirma pronto con operacion, sin cambiar nada en la red hasta entenderlo.",
+  "pasos": [
+    "Anotar los conductos aprobados que no se vieron y la ventana y los puntos de la captura actual.",
+    "Revisar la validacion de la captura: si el punto de captura o la VLAN de esos equipos estaban cubiertos.",
+    "Confirmar con operacion si los equipos de cada extremo estaban en servicio en el periodo.",
+    "Si el conducto debia estar activo, revisar el estado del enlace y de los equipos de los dos extremos.",
+    "Si el conducto se retiro a proposito, documentarlo y quitarlo de la matriz de comunicaciones.",
+    "Aprobar una linea base nueva en otra carpeta cuando la diferencia quede explicada."
+  ],
+  "por_plataforma": {
+    "PLC / RTU (generico)": [
+      "Revisar en el equipo el estado de la conexion y los diagnosticos de comunicaciones, segun la documentacion del fabricante.",
+      "Confirmar si el equipo esta en modo de paro o con la comunicacion deshabilitada."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura en el punto correcto y confirmar que el conducto vuelve a verse, o que su ausencia queda explicada.",
+    "Confirmar con operacion que la funcion del conducto esta cubierta."
+  ],
+  "reversion": [
+    "Reponer el cambio de red o de configuracion que corto el conducto, si se encuentra, en la ventana acordada.",
+    "Restaurar el respaldo de la configuracion del equipo o del switch involucrado, con acceso fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Un conducto ausente puede ser solo un punto de captura o una ventana distintos: no concluir con una sola captura.",
+    "Probar primero en laboratorio cualquier correccion y respaldar la configuracion antes de cambiarla.",
+    "Los conductos esporadicos pueden no aparecer en una ventana corta sin que haya una falla.",
+    "Dejar registro de cada cambio y confirmar con el dueno del proceso antes de aplicarlo."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Operacion OT y administracion de redes",
+  "referencias": ["IEC 62443 SR 6.2", "NIST 800-82 SI-4", "NIST CSF DE.CM-01"]
+}

@@ -1,0 +1,70 @@
+#!/bin/bash
+# ot-publicar <rama> [--solo-subir]
+# Sube la rama a GitHub, espera la CI "verificar" de su commit y, si termina en verde, avanza main
+# (sin forzar) y crea la etiqueta v<__version__>. Corre como root: el token vive en
+# /root/.config/ot-publicar/token y el implementador (usuario analista) no lo puede leer. D29.
+set -euo pipefail
+
+REPO=/home/analista/OT_analisis
+URL=https://x-access-token@github.com/achavezl911/OT_analyze.git
+API=https://api.github.com/repos/achavezl911/OT_analyze
+TOKEN_FILE=/root/.config/ot-publicar/token
+ESPERA_MAX=${OT_ESPERA_MAX:-2400}   # segundos esperando la CI
+
+die() { echo "[!] $*" >&2; exit 1; }
+[ "$(id -u)" -eq 0 ] || die "corre como root (ssh ot-analisis-root ot-publicar ...)"
+[ $# -ge 1 ] || die "uso: ot-publicar <rama> [--solo-subir]"
+RAMA=$1; SOLO=${2:-}
+[[ $RAMA =~ ^[A-Za-z0-9._/-]+$ ]] || die "nombre de rama no valido"
+[ -r "$TOKEN_FILE" ] || die "falta $TOKEN_FILE"
+
+TOKEN=$(tr -d '\r\n' < "$TOKEN_FILE")
+ASK=$(mktemp); chmod 700 "$ASK"
+trap 'rm -f "$ASK"; find "$REPO/.git" -user root -exec chown analista:analista {} + 2>/dev/null || true' EXIT
+printf '#!/bin/sh\ncat %s | tr -d "\\r\\n"\n' "$TOKEN_FILE" > "$ASK"
+export GIT_ASKPASS=$ASK GIT_TERMINAL_PROMPT=0
+g() { git -c safe.directory="$REPO" -C "$REPO" "$@"; }
+api() { curl -fsS -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github+json" "$API$1"; }
+
+SHA=$(g rev-parse --verify "refs/heads/$RAMA^{commit}") || die "no existe la rama local $RAMA"
+echo "[*] $RAMA = $SHA"
+g push "$URL" "$SHA:refs/heads/$RAMA"
+[ "$SOLO" = "--solo-subir" ] && { echo "[OK] rama subida"; exit 0; }
+
+echo "[*] esperando la CI 'verificar' de $SHA (maximo ${ESPERA_MAX}s)"
+FIN=$((SECONDS + ESPERA_MAX)); EST=""
+while [ $SECONDS -lt $FIN ]; do
+    EST=$(api "/actions/runs?head_sha=$SHA&per_page=20" | python3 -c '
+import json, sys
+runs = [r for r in json.load(sys.stdin)["workflow_runs"] if r["name"] == "verificar"]
+if not runs:
+    print("sin_ejecucion")
+else:
+    r = max(runs, key=lambda r: r["run_number"])
+    print(r["conclusion"] if r["status"] == "completed" else r["status"])
+')
+    case $EST in
+        success) break ;;
+        failure|cancelled|timed_out|action_required|startup_failure|stale|neutral|skipped)
+            die "CI 'verificar' termino en '$EST': main no se toca" ;;
+    esac
+    sleep 30
+done
+[ "$EST" = success ] || die "la CI no termino a tiempo (ultimo estado: ${EST:-desconocido}): main no se toca"
+echo "[*] CI en verde"
+
+MAIN=$(g ls-remote "$URL" refs/heads/main | cut -f1)
+[ -n "$MAIN" ] || { echo "[*] main remoto vacio: primera publicacion"; MAIN=$SHA; }
+g cat-file -e "$MAIN^{commit}" 2>/dev/null || die "main remoto ($MAIN) no esta en el repositorio local: haz fetch como analista"
+g merge-base --is-ancestor "$MAIN" "$SHA" || die "$RAMA no desciende de main remoto: no es avance rapido"
+g push "$URL" "$SHA:refs/heads/main"
+echo "[OK] main = $SHA"
+
+VER=$(g show "$SHA:ot_assess/__init__.py" | sed -n 's/^__version__ = "\(.*\)"/\1/p')
+[ -n "$VER" ] || die "no encontre __version__"
+if [ -n "$(g ls-remote "$URL" "refs/tags/v$VER")" ]; then
+    echo "[*] la etiqueta v$VER ya existe: no se crea"
+else
+    g push "$URL" "$SHA:refs/tags/v$VER"
+    echo "[OK] etiqueta v$VER"
+fi

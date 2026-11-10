@@ -1,0 +1,43 @@
+{
+  "id": "pb-escrituras-observadas",
+  "hallazgo": "Operaciones de escritura o control observadas en la captura",
+  "objetivo": "Confirmar que cada escritura o comando de control observado viene de un origen autorizado y limitar quien puede enviarlos.",
+  "prioridad_ot": "Bloquear escrituras sin saber cuales son legitimas puede impedir que el SCADA, el operador o el mantenimiento actuen sobre el proceso.",
+  "pasos": [
+    "Listar origen, destino, funcion y hora de cada escritura, y conservar el registro como evidencia.",
+    "Validar con el dueno del proceso cuales vienen de sistemas autorizados (SCADA, IHM, estacion de ingenieria) y en que horarios.",
+    "Tratar como incidente toda escritura de un origen no reconocido, con el procedimiento del cliente.",
+    "Limitar por origen, destino y servicio quien puede escribir a cada controlador, con registro antes de bloquear.",
+    "Donde el equipo lo permita, exigir autenticacion o roles para las escrituras y registrar quien las hace."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Activar el registro de conexiones en la regla antes de cambiar su accion a bloqueo.",
+      "Desplegar los cambios en la ventana acordada y conservar la version anterior de la politica."
+    ],
+    "Claroty xDome": [
+      "Crear una alerta para escrituras desde origenes que no sean los maestros identificados.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ],
+    "PLC / RTU (generico)": [
+      "Revisar si el equipo permite restringir por IP o por usuario quien puede escribir.",
+      "Aplicar los cambios solo en ventana y sin reiniciar el controlador en produccion sin ventana acordada."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que las escrituras solo vienen de los origenes autorizados.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de control y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0855", "MITRE ICS T0836", "IEC 62443 SR 2.1", "IEC 62443 SR 3.1", "IEC 62443 SR 5.2", "NERC CIP-005 R1", "NERC CIP-007 R5", "NIST 800-82 AC-3", "NIST 800-82 AC-4", "NIST CSF PR.AA-05", "NIST CSF PR.IR-01", "NIST CSF DE.CM-01"]
+}

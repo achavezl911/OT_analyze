@@ -1,0 +1,39 @@
+{
+  "id": "pb-switch-puertos-sin-uso",
+  "hallazgo": "Puertos de acceso habilitados sin uso",
+  "objetivo": "Apagar los puertos de acceso que no se usan para que nadie pueda conectar un equipo no autorizado a la red.",
+  "prioridad_ot": "Apagar el puerto equivocado corta la comunicacion de un equipo de campo; un puerto en estado down puede ser un equipo apagado, de uso eventual o de respaldo.",
+  "pasos": [
+    "Listar los puertos del hallazgo y revisar su descripcion y el historial de uso (ultimo cambio de estado) en el switch.",
+    "Confirmar con el dueno del proceso cuales son equipos apagados, de respaldo o de uso eventual, para dejarlos fuera.",
+    "Respaldar la configuracion y apagar primero los puertos confirmados como libres, en la ventana acordada.",
+    "Mover los puertos apagados a una VLAN sin uso y poner una descripcion que indique el estado.",
+    "Guardar la configuracion y dejar registro de los puertos apagados.",
+    "Revisar a la semana que nadie reporto un equipo sin conexion."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Apagar el puerto con shutdown dentro de la interfaz, y para varios usar interface range (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Asignar una VLAN sin uso con switchport access vlan (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Confirmar el estado con show interfaces status antes y despues del cambio (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Conservar el acceso por consola mientras se hace el cambio."
+    ]
+  },
+  "verificacion": [
+    "Volver a leer la configuracion con la herramienta y confirmar que los puertos ya figuran apagados.",
+    "Confirmar con operacion que ningun equipo de campo perdio su comunicacion."
+  ],
+  "reversion": [
+    "Reactivar el puerto con no shutdown y devolverlo a su VLAN anterior en cuanto un equipo legitimo lo necesite.",
+    "Restaurar el respaldo de la configuracion del switch con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No apagar un puerto cuyo uso no haya confirmado el dueno del proceso: un shutdown mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un switch no critico y respaldar la configuracion antes de cambiarla.",
+    "No apagar el puerto de destino de una sesion SPAN ni los enlaces entre switches."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de redes y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 7.7", "NERC CIP-007 R1", "NIST 800-82 CM-7", "NIST CSF PR.PS-01"]
+}

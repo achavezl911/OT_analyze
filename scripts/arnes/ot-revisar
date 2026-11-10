@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+# ot-revisar: compuerta de revision del codigo que entrega el implementador en OT_analisis.
+# Uso: ot-revisar [rama] [base]      (por defecto rama=HEAD, base=main)
+# Exporta base y rama a directorios temporales: no toca el arbol de trabajo.
+# Falla solo por lo que la rama EMPEORA frente a la base (bandit nuevo, menos pruebas,
+# verificar.sh rojo, datos de cliente); lo heredado no bloquea. No sustituye leer el diff.
+set -u
+REPO=${OT_REPO:-/home/analista/OT_analisis}
+RAMA=${1:-HEAD}
+BASE=${2:-main}
+export PATH=/home/analista/.venv-ot/bin:$PATH
+
+cd "$REPO" || exit 2
+git rev-parse --verify --quiet "$RAMA^{commit}" >/dev/null || { echo "[!] rama o commit $RAMA no existe"; exit 2; }
+git rev-parse --verify --quiet "$BASE^{commit}" >/dev/null || { echo "[!] base $BASE no existe"; exit 2; }
+
+T=$(mktemp -d /tmp/ot-revisar.XXXXXX)
+trap 'rm -rf "$T"' EXIT
+mkdir "$T/rama" "$T/base"
+git archive "$RAMA" | tar -x -C "$T/rama" || exit 2
+git archive "$BASE" | tar -x -C "$T/base" || exit 2
+LOG=$T/log
+
+fallos=0
+avisos=0
+seccion() { printf '\n== %s\n' "$1"; }
+falla() { echo "[FALLO] $1"; fallos=$((fallos+1)); }
+avisa() { echo "[AVISO] $1"; avisos=$((avisos+1)); }
+
+seccion "Cambios de $BASE a $RAMA ($(git rev-parse --short "$BASE")..$(git rev-parse --short "$RAMA"))"
+git log --oneline "$BASE..$RAMA" | head -10
+git diff --stat "$BASE...$RAMA" | tail -n 15
+ARCH=$(git diff --name-only --diff-filter=ACMR "$BASE...$RAMA")
+PY=$(printf '%s\n' "$ARCH" | grep -E '\.py$' || true)
+SH=$(printf '%s\n' "$ARCH" | grep -E '\.sh$' || true)
+
+seccion "Datos de cliente o binarios anadidos (D9)"
+bin=$(git diff --name-only --diff-filter=A "$BASE...$RAMA" | grep -iE '\.(pcap|pcapng|xlsx|xls|docx|pptx|pdf|zip|tar|gz)$' || true)
+if [ -n "$bin" ]; then falla "archivos que no deben ir al repo:"; echo "$bin"; else echo "ok"; fi
+
+seccion "Posibles secretos en lineas anadidas"
+sec=$(git diff "$BASE...$RAMA" | grep -E '^\+[^+]' | grep -iE 'password|passwd|secret|api[_-]?key|token|BEGIN .*PRIVATE KEY' || true)
+if [ -n "$sec" ]; then avisa "revisar a mano:"; echo "$sec" | head -20; else echo "ok"; fi
+
+seccion "Verificacion tocada (el implementador no debe ablandarla)"
+prot=$(git diff --name-status "$BASE...$RAMA" -- scripts/verificar.sh scripts/setup.sh scripts/generar_catalogo.py scripts/arnes .github tests/test_docs.py || true)
+borr=$(git diff --name-status --diff-filter=D "$BASE...$RAMA" -- tests || true)
+[ -n "$prot" ] && { avisa "leer el diff de estos archivos:"; echo "$prot"; }
+[ -n "$borr" ] && { falla "pruebas borradas:"; echo "$borr"; }
+nb=$(grep -rhoE '^\s+def test_' "$T/base/tests" | wc -l)
+nr=$(grep -rhoE '^\s+def test_' "$T/rama/tests" | wc -l)
+echo "pruebas declaradas: base $nb, rama $nr"
+[ "$nr" -lt "$nb" ] && falla "la rama tiene menos pruebas que la base"
+[ -z "$prot$borr" ] && [ "$nr" -ge "$nb" ] && echo "ok"
+
+seccion "scripts/verificar.sh sobre $RAMA"
+(cd "$T/rama" && scripts/verificar.sh) > "$LOG" 2>&1
+rc=$?
+grep -E '^(\[|Ran |OK|FAILED)' "$LOG" | head -12
+if [ $rc -eq 0 ]; then echo "verificar.sh: OK"; else falla "verificar.sh rc=$rc"; grep -E -A8 '^(FAIL|ERROR):' "$LOG" | head -40; fi
+
+seccion "Seguridad estatica (bandit media y alta): solo lo nuevo frente a $BASE"
+for d in base rama; do (cd "$T/$d" && bandit -q -r ot_assess ot_pcap_assess.py -ll -f json -o "$T/bandit-$d.json") >/dev/null 2>&1; done
+nuevos=$(python3 - "$T/bandit-base.json" "$T/bandit-rama.json" <<'PY'
+import json, re, sys
+from collections import Counter
+def claves(ruta):
+    try:
+        datos = json.load(open(ruta, encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    c = Counter()
+    for r in datos.get("results", []):
+        codigo = "".join(re.sub(r"^\d+\s?", "", l).strip() for l in r.get("code", "").splitlines())
+        c[(r["test_id"], r["filename"], codigo)] += 1
+    return c
+base, rama = claves(sys.argv[1]), claves(sys.argv[2])
+if rama is None:
+    print("ERROR bandit no produjo salida en la rama")
+    sys.exit()
+for (tid, archivo, codigo), n in (rama - (base or Counter())).items():
+    print(f"{tid} {archivo}: {codigo[:90]}" + (f" (x{n})" if n > 1 else ""))
+PY
+)
+heredados=$(python3 -c "import json,sys; print(len(json.load(open(sys.argv[1]))['results']))" "$T/bandit-base.json" 2>/dev/null || echo "?")
+if [ -n "$nuevos" ]; then falla "hallazgos nuevos:"; echo "$nuevos"; else echo "ok (heredados en $BASE: $heredados, no bloquean)"; fi
+
+seccion "Lint (ruff) en Python cambiado"
+if [ -n "$PY" ]; then
+  # shellcheck disable=SC2086
+  (cd "$T/rama" && ruff check --quiet $PY) > "$LOG" 2>&1
+  if [ -s "$LOG" ]; then avisa "ruff:"; head -30 "$LOG"; else echo "ok"; fi
+else
+  echo "sin archivos Python cambiados"
+fi
+
+seccion "shellcheck en scripts .sh cambiados"
+if [ -n "$SH" ]; then
+  # shellcheck disable=SC2086
+  (cd "$T/rama" && shellcheck -S warning $SH) > "$LOG" 2>&1
+  if [ -s "$LOG" ]; then avisa "shellcheck:"; head -30 "$LOG"; else echo "ok"; fi
+else
+  echo "sin scripts .sh cambiados"
+fi
+
+seccion "Resultado"
+echo "fallos: $fallos   avisos: $avisos"
+if [ "$fallos" -eq 0 ]; then
+  echo "APROBADO para lectura del diff (los avisos se revisan a mano)"
+  exit 0
+fi
+echo "NO APROBADO"
+exit 1

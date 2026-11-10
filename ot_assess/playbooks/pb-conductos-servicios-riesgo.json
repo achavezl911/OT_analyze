@@ -1,0 +1,52 @@
+{
+  "id": "pb-conductos-servicios-riesgo",
+  "hallazgo": "Conductos entre zonas con servicios de riesgo",
+  "objetivo": "Restringir o proteger los servicios de riesgo (gestion remota, escritura, protocolos sin autenticacion) que cruzan conductos entre zonas.",
+  "prioridad_ot": "Bloquear un servicio de gestion o de escritura que usa operacion o un integrador puede dejar sin control o sin mantenimiento a una zona.",
+  "pasos": [
+    "Listar por conducto los servicios de riesgo observados, con origen, destino y puerto.",
+    "Confirmar con operacion e ingenieria cual servicio es necesario, quien lo usa y con que frecuencia.",
+    "Limitar los servicios necesarios a origenes y destinos concretos (listas de permitidos) y, si aplica, a horarios.",
+    "Reemplazar, donde sea posible, los protocolos sin cifrar por equivalentes seguros, tras probar la compatibilidad.",
+    "Respaldar la configuracion, probar en laboratorio o en un equipo no critico y activar el registro (log) antes de bloquear.",
+    "Bloquear en la ventana acordada los servicios que nadie justifica.",
+    "Anotar en la matriz de comunicaciones el servicio permitido, su proposito y su responsable."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Crear reglas por conducto y servicio en la politica de control de acceso (Policies > Access Control) (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Activar el registro de conexiones en la regla antes de cambiar su accion a bloqueo."
+    ],
+    "FortiGate": [
+      "Crear politicas por conducto con servicios concretos y activar el registro de trafico antes de denegar.",
+      "Deshabilitar la politica antes de borrarla, para poder reactivarla."
+    ],
+    "Switch Cisco IOS/IOS-XE": [
+      "Si el conducto cruza un switch de capa 3, limitar el servicio con una ACL con registro y aplicarla primero en una interfaz de prueba.",
+      "Confirmar el sentido (entrada o salida) en que se aplica la ACL."
+    ],
+    "PLC / RTU (generico)": [
+      "Desactivar en el equipo los servicios que no se usan (servidor web, FTP, Telnet), si el fabricante lo permite.",
+      "Confirmar con el fabricante que desactivar el servicio no afecta la funcion de control; hacerlo solo en ventana."
+    ]
+  },
+  "verificacion": [
+    "Reimportar o repetir la captura y confirmar que los servicios no justificados ya no cruzan el conducto.",
+    "Probar con operacion los servicios permitidos.",
+    "Revisar el registro en busca de bloqueos de trafico necesario."
+  ],
+  "reversion": [
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda.",
+    "Reactivar el servicio en el equipo, restringido a la estacion de ingenieria, si se pierde una funcion de control."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No reiniciar controladores ni equipos de control en produccion sin una ventana acordada."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0886", "IEC 62443 3-2 ZCR 3", "IEC 62443 SR 5.1", "IEC 62443 SR 5.2", "NERC CIP-005 R1", "NIST 800-82 SC-7", "NIST 800-82 AC-4", "NIST CSF PR.IR-01"]
+}

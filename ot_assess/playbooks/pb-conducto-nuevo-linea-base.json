@@ -1,0 +1,42 @@
+{
+  "id": "pb-conducto-nuevo-linea-base",
+  "hallazgo": "Conducto nuevo fuera de la linea base aprobada",
+  "objetivo": "Establecer si la comunicacion nueva esta justificada y, si no lo esta, cerrarla en el firewall o el switch sin afectar la operacion.",
+  "prioridad_ot": "Cerrar un conducto que si usa el proceso puede cortar una funcion de control; primero se confirma su motivo con operacion y se cierra en ventana.",
+  "pasos": [
+    "Anotar los extremos, el puerto, el protocolo, la zona de destino y desde cuando se ve el conducto.",
+    "Confirmar con el dueno del proceso y con el responsable de cada extremo el motivo del conducto.",
+    "Revisar si hubo un cambio autorizado reciente (equipo nuevo, migracion, proyecto) que lo explique.",
+    "Si no esta justificado, bloquearlo en el firewall o en las listas de acceso del switch y registrar la regla.",
+    "Si esta justificado, limitarlo a los extremos y puertos necesarios y documentarlo en la matriz de comunicaciones.",
+    "Aprobar una linea base nueva en otra carpeta cuando el conducto quede decidido."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Ubicar el puerto y la VLAN de cada extremo con la tabla de direcciones MAC del switch (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Si se bloquea en el switch, aplicar una lista de acceso en la VLAN o el puerto con el cambio respaldado (verificar la sintaxis en la documentacion del fabricante para la version instalada)."
+    ],
+    "PLC / RTU (generico)": [
+      "Si el extremo es un controlador, revisar en el equipo la lista de clientes permitidos y las conexiones activas, segun la documentacion del fabricante.",
+      "Confirmar que cerrar el conducto no afecta una conexion que el controlador necesita."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que el conducto ya no aparece o que solo aparece entre los extremos aprobados.",
+    "Confirmar con operacion que las funciones del proceso siguen sin cambios."
+  ],
+  "reversion": [
+    "Retirar la regla de bloqueo si corta una funcion legitima y registrar el motivo.",
+    "Restaurar el respaldo de la configuracion del firewall o del switch en la ventana, con acceso fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Un conducto nuevo hacia el nivel 0-2 o desde Internet se atiende primero.",
+    "Probar primero en laboratorio o en un firewall no critico y respaldar la configuracion antes de cambiarla.",
+    "Una captura mas larga o en otro punto puede mostrar conductos que ya existian: confirmar antes de concluir.",
+    "Dejar registro de cada cambio y confirmar con el dueno del proceso antes de aplicarlo."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Administracion de redes y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 5.1", "IEC 62443 SR 5.2", "NIST 800-82 SC-7", "NIST 800-82 AC-4", "NIST CSF PR.IR-01", "NIST CSF ID.AM-03"]
+}

@@ -1,0 +1,6 @@
+ip,cve,severidad,cvss,estado,producto,version,fuente
+10.10.1.20,CVE-2099-0001,Critical,9.8,open,Firmware PLC ficticio,1.0,Escaner ficticio
+10.10.1.20,CVE-2099-0002,Medium,5.3,open,Firmware PLC ficticio,1.0,Escaner ficticio
+10.10.1.10,CVE-2099-0003,High,7.5,open,HMI ficticia,2.1,Escaner ficticio
+10.10.1.40,CVE-2099-0004,Low,3.1,mitigated,Firmware PLC S7 ficticio,3.0,Escaner ficticio
+10.99.99.99,CVE-2099-0005,High,8.1,open,Equipo no visto,1.0,Escaner ficticio

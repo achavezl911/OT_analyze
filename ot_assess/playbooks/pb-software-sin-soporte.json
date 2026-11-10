@@ -1,0 +1,43 @@
+{
+  "id": "pb-software-sin-soporte",
+  "hallazgo": "Software o sistema operativo fuera de soporte",
+  "objetivo": "Reducir la exposicion de los equipos con software o sistema operativo sin soporte mediante controles compensatorios y un plan de reemplazo acordado.",
+  "prioridad_ot": "Actualizar o reemplazar un sistema de control sin validacion del proveedor puede dejarlo sin funcionar; dejarlo sin controles lo mantiene expuesto a fallas ya conocidas.",
+  "pasos": [
+    "Listar los activos con software o sistema operativo sin soporte, su funcion y su criticidad, con el registro del inventario.",
+    "Consultar al proveedor del sistema de control la ruta de actualizacion o reemplazo y las versiones compatibles.",
+    "Aplicar controles compensatorios: aislar el equipo en su zona, limitar quien se conecta a el, y vigilarlo con alertas.",
+    "Probar en laboratorio o en un equipo no critico cualquier actualizacion antes de aplicarla, con respaldo previo.",
+    "Planear el reemplazo con operacion para una ventana de parada y dejar por escrito la aceptacion del riesgo por el dueno del proceso mientras tanto."
+  ],
+  "por_plataforma": {
+    "Windows / Active Directory": [
+      "Limitar con grupos de seguridad y directivas de grupo (GPO) quien puede iniciar sesion remota en el equipo.",
+      "Probar las actualizaciones en un equipo no critico o en una imagen de laboratorio antes de desplegarlas."
+    ],
+    "Claroty xDome": [
+      "Filtrar los activos con sistema operativo sin soporte y exportar la lista para validarla con operacion.",
+      "Crear una alerta para comunicaciones nuevas hacia esos activos desde fuera de su zona."
+    ],
+    "Cisco FTD (FMC)": [
+      "Activar el registro de conexiones en la regla antes de cambiar su accion a bloqueo.",
+      "Desplegar los cambios en la ventana acordada y conservar la version anterior de la politica."
+    ]
+  },
+  "verificacion": [
+    "Reimportar el inventario y confirmar la nueva version, o que el equipo solo es alcanzable desde los origenes autorizados.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Volver al respaldo del sistema anterior si una actualizacion afecta el control, en la ventana de mantenimiento.",
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No actualizar un sistema de control sin la validacion del proveedor."
+  ],
+  "esfuerzo_estimado": "alto",
+  "responsable": "Ingenieria de control y ciberseguridad OT, con el proveedor del equipo",
+  "referencias": ["MITRE ICS T0866", "NERC CIP-007 R2", "NERC CIP-010 R1", "NIST 800-82 SA-22", "NIST 800-82 SI-2", "NIST CSF PR.PS-02", "NIST CSF PR.PS-03", "NIST CSF ID.RA-01"]
+}

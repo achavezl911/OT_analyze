@@ -1,0 +1,38 @@
+{
+  "id": "pb-escritor-nuevo-linea-base",
+  "hallazgo": "Escritor nuevo hacia equipos de control fuera de la linea base aprobada",
+  "objetivo": "Determinar si el origen nuevo estaba autorizado a enviar operaciones de control a ese equipo y, si no lo estaba, cortarlo sin afectar el proceso.",
+  "prioridad_ot": "Bloquear un origen que si es legitimo (una HMI de respaldo o un mantenimiento en curso) puede dejar al operador sin mando sobre el proceso; primero se confirma con operacion y luego se actua.",
+  "pasos": [
+    "Anotar el origen, el equipo destino, el protocolo, las operaciones vistas y la hora, y compararlos con la bitacora de cambios y de mantenimiento.",
+    "Confirmar con el dueno del proceso si el origen debia mandar esas operaciones al equipo destino.",
+    "Identificar el origen: equipo, responsable, ubicacion fisica y por que habla con el controlador.",
+    "Si no estaba autorizado, limitar el conducto en el firewall o en el switch para que solo los orquestadores aprobados escriban al equipo.",
+    "Revisar el estado y la configuracion del equipo destino por si recibio una escritura no esperada.",
+    "Si el origen es legitimo, documentarlo y aprobar una linea base nueva en otra carpeta."
+  ],
+  "por_plataforma": {
+    "PLC / RTU (generico)": [
+      "Revisar en el equipo el registro de eventos y las ultimas escrituras o cargas de programa, segun la documentacion del fabricante.",
+      "Comparar el programa y los parametros actuales con la copia de respaldo aprobada."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que solo los orquestadores aprobados envian operaciones de control a ese equipo.",
+    "Confirmar con operacion que el mando del proceso funciona con normalidad despues del cambio."
+  ],
+  "reversion": [
+    "Volver a permitir el conducto si el bloqueo corta una operacion legitima, y registrar el motivo.",
+    "Restaurar el respaldo de la configuracion del firewall o del switch en la ventana, con acceso fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear un origen sin confirmar con el dueno del proceso que no esta en uso.",
+    "Probar primero en laboratorio o en un entorno de pruebas y respaldar la configuracion antes de cambiarla.",
+    "Esta desviacion es evidencia tecnica de un cambio respecto de la linea base, no un diagnostico de intrusion.",
+    "Dejar registro de cada cambio y de la decision tomada sobre el origen."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ciberseguridad OT y operacion del proceso",
+  "referencias": ["IEC 62443 SR 2.1", "IEC 62443 SR 5.2", "NIST 800-82 AC-3", "NIST CSF PR.AA-05", "MITRE ICS T0855"]
+}

@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "cliente": "Cliente Ejemplo",
+  "sitio": "Planta Norte",
+  "marcos": [{"clave": "iec62443", "edicion": "2018", "partes": ["3-2", "3-3"]}],
+  "sl_objetivo": {"Control de proceso": "SL2"},
+  "zonas": [
+    {"nombre": "Control de proceso", "redes": ["10.10.2.0/24", "10.10.3.0/24"],
+     "descripcion": "PLC y E/S de la linea 1 (ficticio)", "sl_t": "SL2"},
+    {"nombre": "Supervision", "redes": ["10.10.1.0/24"], "sl_t": "SL2", "inferida": true,
+     "descripcion": "HMI e historiador; zona deducida por el analista, sin confirmar"},
+    {"nombre": "DMZ industrial", "redes": ["192.0.2.0/24"], "dmz": true},
+    {"nombre": "Equipos especiales", "redes": ["10.10.2.128/25"],
+     "descripcion": "Contenida en Control de proceso: gana la mas especifica"}
+  ]
+}

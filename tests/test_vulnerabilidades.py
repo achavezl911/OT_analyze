@@ -1,0 +1,217 @@
+"""E1a: vulnerabilidades por activo y cruce con el inventario."""
+import os
+import sys
+import tempfile
+import unittest
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from ot_assess import vulnerabilidades as vu  # noqa: E402
+
+
+def _csv(texto, sep=","):
+    return vu.vulns_de_filas(vu.leer_csv(texto.replace(",", sep).encode()), "v.csv")
+
+
+def _error(texto, sep=","):
+    with unittest.TestCase().assertRaises(SystemExit) as cm:
+        _csv(texto, sep)
+    return str(cm.exception)
+
+
+class TestNormalizacion(unittest.TestCase):
+    def test_alias_y_acentos(self):
+        v = _csv("Host,IP Address,Vulnerability,Criticidad,Estado,Product,Source\n"
+                 "plc1,10.0.0.1,cve-2020-12345,Crítica,Nueva,Siemens,scan\n")[0]
+        self.assertEqual((v["activo"], v["ip"], v["cve"], v["severidad"], v["estado"]),
+                         ("plc1", "10.0.0.1", "CVE-2020-12345", "Critica", "abierta"))
+        self.assertEqual((v["producto"], v["fuente"]), ("Siemens", "scan"))
+
+    def test_severidad_texto(self):
+        casos = {"critical": "Critica", "High": "Alta", "alta": "Alta", "moderate": "Media",
+                 "media": "Media", "low": "Baja", "info": "Baja", "informativa": "Baja"}
+        for txt, esperado in casos.items():
+            v = _csv(f"ip,cve,severity\n1.1.1.1,CVE-2021-0001,{txt}\n")[0]
+            self.assertEqual(v["severidad"], esperado, txt)
+
+    def test_severidad_por_cvss_bordes(self):
+        casos = {"9.0": "Critica", "8.9": "Alta", "7.0": "Alta", "6.9": "Media", "4.0": "Media",
+                 "3.9": "Baja", "0.1": "Baja", "10": "Critica"}
+        for cvss, esperado in casos.items():
+            v = _csv(f"ip,cve,cvss\n1.1.1.1,CVE-2021-0001,{cvss}\n")[0]
+            self.assertEqual(v["severidad"], esperado, cvss)
+
+    def test_texto_no_reconocido_usa_cvss(self):
+        v = _csv("ip,cve,severidad,cvss\n1.1.1.1,CVE-2021-0001,rara,7.5\n")[0]
+        self.assertEqual(v["severidad"], "Alta")
+
+    def test_texto_manda_sobre_cvss(self):
+        v = _csv("ip,cve,severidad,cvss\n1.1.1.1,CVE-2021-0001,baja,9.8\n")[0]
+        self.assertEqual(v["severidad"], "Baja")
+
+    def test_estados(self):
+        casos = {"": "abierta", "open": "abierta", "NEW": "abierta", "fixed": "mitigada",
+                 "Resuelta": "mitigada", "mitigated": "mitigada", "accepted": "aceptada",
+                 "Riesgo aceptado": "aceptada"}
+        for txt, esperado in casos.items():
+            v = _csv(f"ip,cve,cvss,estado\n1.1.1.1,CVE-2021-0001,5,{txt}\n")[0]
+            self.assertEqual(v["estado"], esperado, txt)
+
+    def test_sin_columna_estado_es_abierta(self):
+        self.assertEqual(_csv("ip,cve,cvss\n1.1.1.1,CVE-2021-0001,5\n")[0]["estado"], "abierta")
+
+    def test_delimitador_punto_y_coma(self):
+        v = _csv("ip,cve,cvss\n1.1.1.1,CVE-2021-0001,5\n", sep=";")
+        self.assertEqual((v[0]["ip"], v[0]["cve"]), ("1.1.1.1", "CVE-2021-0001"))
+
+
+class TestErrores(unittest.TestCase):
+    def test_cve_invalido_con_fila(self):
+        m = _error("ip,cve,cvss\n1.1.1.1,CVE-2021-0001,5\n1.1.1.2,MS17-010,5\n")
+        self.assertIn("fila 2", m)
+        self.assertIn("'v.csv'", m)
+
+    def test_cve_corto(self):
+        self.assertIn("fila 1", _error("ip,cve,cvss\n1.1.1.1,CVE-2021-123,5\n"))
+
+    def test_cvss_fuera_de_rango(self):
+        self.assertIn("fila 1", _error("ip,cve,cvss\n1.1.1.1,CVE-2021-0001,11\n"))
+        self.assertIn("fila 1", _error("ip,cve,cvss\n1.1.1.1,CVE-2021-0001,-1\n"))
+        self.assertIn("fila 1", _error("ip,cve,cvss\n1.1.1.1,CVE-2021-0001,abc\n"))
+
+    def test_estado_raro(self):
+        self.assertIn("fila 1", _error("ip,cve,cvss,estado\n1.1.1.1,CVE-2021-0001,5,quizas\n"))
+
+    def test_severidad_indeterminable(self):
+        self.assertIn("fila 1", _error("ip,cve,severidad\n1.1.1.1,CVE-2021-0001,rara\n"))
+
+    def test_columnas_faltantes(self):
+        self.assertIn("cve", _error("ip,cvss\n1.1.1.1,5\n"))
+        self.assertIn("identificacion", _error("cve,cvss\nCVE-2021-0001,5\n"))
+        self.assertIn("severidad o cvss", _error("ip,cve\n1.1.1.1,CVE-2021-0001\n"))
+
+    def test_vacio(self):
+        with self.assertRaises(SystemExit):
+            vu.vulns_de_filas([], "v.csv")
+
+    def test_tope_de_filas(self):
+        with self.assertRaises(SystemExit):
+            vu.vulns_de_filas([{"ip": "1.1.1.1"}] * (vu.MAX_FILAS + 1), "v.csv")
+
+    def test_cargar_solo_nombre_de_archivo(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = os.path.join(d, "x.csv")
+            with open(p, "w") as f:
+                f.write("ip,cve,cvss\n1.1.1.1,nada,5\n")
+            with self.assertRaises(SystemExit) as cm:
+                vu.cargar(p)
+            self.assertIn("'x.csv'", str(cm.exception))
+            self.assertNotIn(d, str(cm.exception))
+
+
+ACTIVOS = {
+    "aa:bb:cc:00:00:01": {"mac": "aa:bb:cc:00:00:01", "ips": {"10.0.0.1"}, "alias": set(), "nombre": "PLC-1"},
+    "aa:bb:cc:00:00:02": {"mac": "aa:bb:cc:00:00:02", "ips": {"10.0.0.2"}, "alias": {"hmi-norte"}, "nombre": "HMI"},
+    "aa:bb:cc:00:00:03": {"mac": "aa:bb:cc:00:00:03", "ips": set(), "nombre": "RTU-3"},   # sin alias
+}
+
+
+def _v(**kw):
+    base = {"cve": "CVE-2021-0001", "severidad": "Alta", "cvss": None, "estado": "abierta",
+            "activo": "", "ip": "", "mac": "", "producto": "", "version": "", "fuente": ""}
+    base.update(kw)
+    return base
+
+
+class TestCruce(unittest.TestCase):
+    def test_por_ip(self):
+        r = vu.cruzar([_v(ip="10.0.0.2")], ACTIVOS)[0]
+        self.assertEqual((r["activo"], r["por"]), ("aa:bb:cc:00:00:02", "ip"))
+
+    def test_por_mac_normalizada(self):
+        for mac in ("AA-BB-CC-00-00-01", "AABBCC000001", "Aa:Bb:Cc:00:00:01"):
+            r = vu.cruzar([_v(mac=mac)], ACTIVOS)[0]
+            self.assertEqual((r["activo"], r["por"]), ("aa:bb:cc:00:00:01", "mac"), mac)
+
+    def test_por_nombre_y_alias(self):
+        r = vu.cruzar([_v(activo="plc-1")], ACTIVOS)[0]
+        self.assertEqual((r["activo"], r["por"]), ("aa:bb:cc:00:00:01", "nombre"))
+        r = vu.cruzar([_v(activo="HMI-NORTE")], ACTIVOS)[0]
+        self.assertEqual((r["activo"], r["por"]), ("aa:bb:cc:00:00:02", "nombre"))
+        r = vu.cruzar([_v(activo="rtu-3")], ACTIVOS)[0]
+        self.assertEqual(r["activo"], "aa:bb:cc:00:00:03")
+
+    def test_sin_coincidencia(self):
+        r = vu.cruzar([_v(ip="9.9.9.9", activo="nadie")], ACTIVOS)[0]
+        self.assertEqual((r["activo"], r["por"]), (None, ""))
+
+    def test_prioridad_ip_sobre_mac_y_nombre(self):
+        r = vu.cruzar([_v(ip="10.0.0.1", mac="aa:bb:cc:00:00:02", activo="HMI")], ACTIVOS)[0]
+        self.assertEqual((r["activo"], r["por"]), ("aa:bb:cc:00:00:01", "ip"))
+        r = vu.cruzar([_v(ip="9.9.9.9", mac="aa:bb:cc:00:00:02", activo="PLC-1")], ACTIVOS)[0]
+        self.assertEqual((r["activo"], r["por"]), ("aa:bb:cc:00:00:02", "mac"))
+
+    def test_lista_de_activos_y_vuln_conservada(self):
+        v = _v(ip="10.0.0.1")
+        r = vu.cruzar([v], list(ACTIVOS.values()))[0]
+        self.assertEqual(r["activo"], "aa:bb:cc:00:00:01")
+        self.assertIs(r["vuln"], v)
+
+    def test_extremo_a_extremo(self):
+        v = _csv("Asset,IP,CVE,Severity\nx,10.0.0.1,CVE-2022-1111,High\n")
+        self.assertEqual(vu.cruzar(v, ACTIVOS)[0]["por"], "ip")
+
+
+def _cruce(clave, cpes):
+    return {"vuln": {"producto": cpes}, "activo": clave, "por": "ip"}
+
+
+XC208 = "cpe:/h:siemens:scalance_xc208:-, cpe:/o:siemens:scalance_xc208_firmware:04.04.00"
+OTROS = ("cpe:/h:siemens:scalance_xc200:-, cpe:/h:siemens:scalance_xc208:-, cpe:/h:siemens:6gk52080ba002ac2:-, "
+         "cpe:/o:siemens:scalance_xc208_firmware:04.04.00")
+
+
+class TestCpeN2(unittest.TestCase):
+    def test_lector_formatos(self):
+        self.assertEqual(vu.leer_cpes("cpe:/h:siemens:scalance_xc208:-"),
+                         [("h", "siemens", "scalance_xc208", "")])
+        self.assertEqual(vu.leer_cpes("cpe:/o:siemens:scalance_xc208_firmware:04.04.00"),
+                         [("o", "siemens", "scalance_xc208_firmware", "04.04.00")])
+        self.assertEqual(vu.leer_cpes("cpe:/o:cisco:ios:15.4%283%29m3"), [("o", "cisco", "ios", "15.4(3)m3")])
+        self.assertEqual(vu.leer_cpes("cpe:2.3:h:siemens:scalance_xc208:-:*:*:*:*:*:*:*"),
+                         [("h", "siemens", "scalance_xc208", "")])
+        self.assertEqual(vu.leer_cpes(r"cpe:2.3:o:acme:r\:x:1.0\(2\):*:*:*:*:*:*:*, "
+                                      "cpe:2.3:a:acme:app:*:*:*:*:*:*:*:*"),
+                         [("o", "acme", "r:x", "1.0(2)"), ("a", "acme", "app", "")])
+
+    def test_interseccion_da_modelo_y_firmware(self):
+        cruces = [_cruce("k", XC208)] * 28 + [_cruce("k", OTROS)] * 2
+        inf, amb = vu.inferir_equipos(cruces)
+        self.assertEqual(inf, {"k": {"fabricante": "siemens", "modelo": "scalance xc208",
+                                     "firmware": "04.04.00"}})
+        self.assertEqual(amb, 0)
+
+    def test_mayoria_si_la_interseccion_queda_vacia(self):
+        cruces = ([_cruce("k", XC208)] * 14 + [_cruce("k", "cpe:/h:siemens:scalance_xc200:-, "
+                                                  "cpe:/o:siemens:scalance_xc200_firmware:04.04.00"),
+                                       _cruce("k", "cpe:/h:siemens:6gk52080ba002ac2:-")])
+        self.assertEqual(vu.inferir_equipos(cruces), ({"k": {"fabricante": "siemens", "modelo": "scalance xc208",
+                                                            "firmware": "04.04.00"}}, 0))
+        mitad = [_cruce("k", "cpe:/h:a:uno:-")] * 2 + [_cruce("k", "cpe:/h:a:dos:-")] * 2
+        self.assertEqual(vu.inferir_equipos(mitad), ({}, 1))
+
+    def test_solo_so(self):
+        inf, amb = vu.inferir_equipos([_cruce("k", "cpe:/o:cisco:ios:15.4(3)m3")] * 2
+                                      + [_cruce("k", ""), _cruce("k", "cpe:/a:openbsd:openssh:7.4")])
+        self.assertEqual(inf, {"k": {"fabricante": "cisco", "sistema_operativo": "ios 15.4(3)m3"}})
+        self.assertEqual(amb, 0)
+
+    def test_ambiguo_y_sin_union(self):
+        cruces = [_cruce("k", "cpe:/h:a:uno:-"), _cruce("k", "cpe:/h:a:dos:-"),
+                  {"vuln": {"producto": XC208}, "activo": None, "por": ""}]
+        self.assertEqual(vu.inferir_equipos(cruces), ({}, 1))
+        self.assertIn("1 activos con CPE ambiguo", vu.aviso_cpe_ambiguo(1))
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "nota": "V1b (D90): ID de fabricante que un equipo reporta en su propio protocolo OT (CIP Vendor ID en ListIdentity y objeto Identity; PROFINET DCP Vendor ID) -> nombre. Tabla minima y ampliable a mano: solo IDs confirmados; un ID que no esta sale como 'CIP vendor <n>' o 'PROFINET vendor <n>'. No es un registro oficial.",
+  "cip": {
+    "1": "Rockwell Automation"
+  },
+  "profinet": {
+    "42": "Siemens"
+  }
+}

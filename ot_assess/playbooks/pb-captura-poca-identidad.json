@@ -1,0 +1,39 @@
+{
+  "id": "pb-captura-poca-identidad",
+  "hallazgo": "Muy pocos paquetes de identidad en la captura",
+  "objetivo": "Reforzar el inventario con otras fuentes cuando la captura trae pocos paquetes que identifiquen los equipos, y no tomar ese inventario como completo.",
+  "prioridad_ot": "Un inventario basado en pocos paquetes puede omitir equipos silenciosos; consultar los equipos con escaneos activos para identificarlos puede afectarlos.",
+  "pasos": [
+    "Anotar en el registro del informe que la identificacion de equipos es parcial y cuantos equipos quedaron sin identificar.",
+    "Ampliar la captura a un periodo mas largo que incluya arranques, cambios de turno y mantenimientos.",
+    "Importar exportaciones de plataformas o de los switches como fuente complementaria.",
+    "Pedir al dueno del proceso la lista de activos documentados para compararla con lo visto.",
+    "No consultar activamente los equipos de control sin una ventana acordada y un perfil suave."
+  ],
+  "por_plataforma": {
+    "Claroty xDome": [
+      "Exportar el inventario de activos con fabricante, modelo y version para importarlo como fuente.",
+      "Anotar la cobertura de los sensores por segmento."
+    ],
+    "Linux": [
+      "Programar una captura mas larga con la herramienta del analista y archivos rotativos para no llenar el disco (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Conservar la captura original como evidencia."
+    ]
+  },
+  "verificacion": [
+    "Comparar el inventario resultante con la lista de activos del dueno del proceso.",
+    "Registrar en el informe que equipos siguen sin identificar."
+  ],
+  "reversion": [
+    "Detener la captura prolongada si afecta el equipo de captura, y conservar lo ya capturado.",
+    "Restaurar la configuracion anterior de la herramienta de captura."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Confirmar con el dueno del proceso que la captura prolongada no sobrecarga el enlace ni el disco."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": []
+}

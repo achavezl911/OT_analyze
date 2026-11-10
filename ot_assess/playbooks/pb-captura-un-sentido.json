@@ -1,0 +1,39 @@
+{
+  "id": "pb-captura-un-sentido",
+  "hallazgo": "La mayoria de las conversaciones aparece en un solo sentido",
+  "objetivo": "Lograr que la captura vea los dos sentidos de cada conversacion, para no concluir que hay trafico sin respuesta cuando es una limitacion del punto de captura.",
+  "prioridad_ot": "Concluir que un equipo no responde por una captura de un solo sentido lleva a diagnosticos falsos; cambiar el espejo sin plan puede afectar el switch.",
+  "pasos": [
+    "Revisar si el espejo copia la entrada, la salida o ambas, y anotarlo en el registro de la captura.",
+    "Revisar si hay enrutamiento asimetrico: la ida y la vuelta pasan por caminos distintos.",
+    "Ajustar el espejo para copiar ambos sentidos, o capturar en un punto por donde pasen los dos.",
+    "Probar el cambio en laboratorio o en un equipo no critico y aplicarlo en la ventana acordada.",
+    "Repetir la captura y comparar la proporcion de conversaciones de un solo sentido."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar la direccion (entrada, salida o ambas) configurada en la sesion de espejo (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Conservar el acceso por consola mientras se hace el cambio."
+    ],
+    "Linux": [
+      "Si se usa un TAP, revisar que las dos interfaces de captura reciban trafico y se unan en la misma captura.",
+      "Conservar la captura original como evidencia."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que la mayoria de las conversaciones ya aparecen en ambos sentidos.",
+    "Registrar en el informe el punto de captura y su cobertura."
+  ],
+  "reversion": [
+    "Restaurar la sesion de espejo anterior si el cambio afecto el switch.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Confirmar con el dueno del proceso que el puerto espejo no sobrecarga el enlace."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": []
+}

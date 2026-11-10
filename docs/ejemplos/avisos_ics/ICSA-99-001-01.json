@@ -1,0 +1,30 @@
+{
+  "document": {
+    "category": "csaf_security_advisory",
+    "csaf_version": "2.0",
+    "title": "Fabricante ficticio Firmware PLC ficticio (aviso de ejemplo)",
+    "tracking": {
+      "id": "ICSA-99-001-01",
+      "initial_release_date": "2099-01-12T00:00:00.000000Z",
+      "current_release_date": "2099-01-18T00:00:00.000000Z"
+    },
+    "references": [
+      {"category": "self", "summary": "ICSA-99-001-01", "url": "https://ejemplo.invalid/avisos/ICSA-99-001-01"}
+    ]
+  },
+  "vulnerabilities": [
+    {
+      "cve": "CVE-2099-0001",
+      "scores": [{"cvss_v3": {"baseScore": 9.8}}],
+      "remediations": [
+        {"category": "vendor_fix", "details": "Actualizar el firmware a la version 1.1 (texto ficticio).", "url": "https://ejemplo.invalid/fw"},
+        {"category": "mitigation", "details": "Restringir el acceso al puerto de servicio (texto ficticio)."}
+      ]
+    },
+    {
+      "cve": "CVE-2099-0003",
+      "scores": [{"cvss_v3": {"baseScore": 8.1}}],
+      "remediations": [{"category": "none_available", "details": "Sin correccion disponible (texto ficticio)."}]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "pb-switch-aaa",
+  "hallazgo": "Autenticacion local del switch sin AAA centralizado",
+  "objetivo": "Autenticar a los administradores del switch contra un servidor TACACS+ o RADIUS central, dejando un usuario local solo como acceso de emergencia.",
+  "prioridad_ot": "Activar AAA con un servidor mal configurado o inalcanzable puede dejar a todos fuera del switch; en un switch de planta, recuperarlo exige ir al sitio con consola.",
+  "pasos": [
+    "Confirmar con ciberseguridad y TI el servidor de autenticacion disponible y que sea alcanzable desde la red de gestion del switch.",
+    "Definir quien puede entrar y con que privilegios, y crear esos grupos en el servidor central.",
+    "Probar la configuracion AAA en laboratorio o en un switch no critico, incluido el caso de servidor caido.",
+    "Configurar el servidor y el metodo de autenticacion con respaldo local, sin cerrar la sesion actual.",
+    "Probar el acceso con una cuenta central en otra sesion y solo entonces retirar los usuarios locales innecesarios.",
+    "Conservar un usuario local de emergencia con secreto fuerte, custodiado, y dejar registro del cambio."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Activar el modelo nuevo de AAA y declarar los servidores con aaa new-model y tacacs server o radius server (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Definir la lista de metodos con servidor primero y local como respaldo, y aplicarla a las lineas vty (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Activar el registro de comandos y de acceso hacia el servidor central.",
+      "Conservar el acceso por consola mientras se hace el cambio."
+    ]
+  },
+  "verificacion": [
+    "Volver a leer la configuracion con la herramienta y confirmar que hay aaa new-model y servidores AAA declarados.",
+    "Probar un acceso con cuenta central y otro con el usuario de emergencia con el servidor inalcanzable.",
+    "Revisar en el servidor central que los accesos al switch quedan en el registro."
+  ],
+  "reversion": [
+    "Volver a la lista de metodos solo local en la ventana si el servidor no responde, usando la consola.",
+    "Restaurar el respaldo de la configuracion del switch con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No cerrar la sesion de trabajo hasta probar el acceso central en otra: un error deja al switch inaccesible.",
+    "Probar primero en laboratorio o en un switch no critico y respaldar la configuracion antes de cambiarla.",
+    "Si el servidor central vive en TI, acordar con el dueno del proceso que su caida no deja la planta sin acceso de emergencia."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Administracion de redes y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 1.1", "IEC 62443 SR 1.2", "NERC CIP-004 R4", "NERC CIP-007 R5", "NIST 800-82 IA-2", "NIST 800-82 AC-2", "NIST CSF PR.AA-01"]
+}

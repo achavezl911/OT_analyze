@@ -1,0 +1,43 @@
+{
+  "id": "pb-segmentos-sin-cobertura",
+  "hallazgo": "Segmentos sin cobertura de las fuentes de trafico (segun las fuentes importadas)",
+  "objetivo": "Dar visibilidad a los segmentos que ninguna fuente de trafico importada cubre, o dejar constancia de que el analisis no los vio.",
+  "prioridad_ot": "Agregar un sensor o un espejo sin plan puede cargar un enlace o un switch de control; no hacerlo deja segmentos sin vigilancia.",
+  "pasos": [
+    "Listar los segmentos sin cobertura y su criticidad segun el inventario, con el registro de las fuentes importadas.",
+    "Decidir con el dueno del proceso cuales necesitan visibilidad primero, segun su criticidad.",
+    "Para cada uno, elegir la fuente: sensor de la plataforma, puerto espejo, TAP o registros de un firewall que lo cruce.",
+    "Instalar o activar la fuente en la ventana acordada, tras probarla en laboratorio o en un equipo no critico.",
+    "Importar la nueva fuente, repetir el analisis y dejar escrito en el informe lo que sigue sin cobertura."
+  ],
+  "por_plataforma": {
+    "Claroty xDome": [
+      "Revisar que segmentos tienen sensor y cuales no, y exportar las comunicaciones de los que si.",
+      "Anotar la cobertura de los sensores por segmento."
+    ],
+    "Switch Cisco IOS/IOS-XE": [
+      "Preparar un puerto espejo (SPAN) hacia el equipo de captura, con acceso por consola (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Confirmar con el dueno del proceso que el espejo no sobrecarga el enlace."
+    ],
+    "Cisco FTD (FMC)": [
+      "Activar el registro de conexiones en la regla antes de cambiar su accion a bloqueo.",
+      "Desplegar los cambios en la ventana acordada y conservar la version anterior de la politica."
+    ]
+  },
+  "verificacion": [
+    "Importar la nueva fuente y confirmar que el segmento ya no aparece sin cobertura.",
+    "Registrar en el informe la cobertura real por segmento."
+  ],
+  "reversion": [
+    "Quitar el espejo o el sensor temporal si afecta el enlace, y restaurar el respaldo de la configuracion del switch.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Confirmar con el dueno del proceso que el puerto espejo no sobrecarga el enlace."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 6.2", "NERC CIP-015", "NIST 800-82 SI-4", "NIST CSF DE.CM-01"]
+}

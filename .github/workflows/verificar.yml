@@ -1,0 +1,28 @@
+# Misma verificacion que se corre a mano (scripts/verificar.sh); D21.
+# Ajuste del 2026-11-07 (D21): corre al subir una rama de trabajo, no en main ni en etiquetas (ot-publicar sube a main
+# y etiqueta el mismo commit que ya paso aqui), con tope de tiempo por job y sin corridas duplicadas de la misma rama.
+name: verificar
+on:
+  push:
+    branches-ignore: [main]
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: verificar-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verificar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.9", "3.13"]     # 3.9 es el minimo declarado (D11)
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: scripts/setup.sh
+      - run: scripts/verificar.sh

@@ -1,0 +1,38 @@
+{
+  "id": "pb-switch-bucle-stp",
+  "hallazgo": "Bucle fisico entre puertos del switch contenido por STP",
+  "objetivo": "Encontrar el equipo que une dos puertos del mismo switch y eliminar el doble enlace, para que la red no dependa de STP para evitar una tormenta.",
+  "prioridad_ot": "Desconectar uno de los dos cables puede cortar la comunicacion del equipo que los une (por ejemplo un servidor o un conversor de medios); se ubica el equipo con operacion y la intervencion se hace en ventana.",
+  "pasos": [
+    "Anotar los dos puertos de la evidencia (el bloqueado y su par) y la VLAN.",
+    "Ubicar el equipo conectado a ambos puertos con la tabla de direcciones MAC de cada puerto y con CDP o LLDP.",
+    "Confirmar con el dueno del proceso si el equipo necesita dos conexiones (redundancia) y como las maneja: agregacion LACP, activo/pasivo o puenteo de tarjetas.",
+    "Corregir el doble enlace en la ventana acordada: configurar la agregacion o el modo activo/pasivo en el equipo, o retirar el hub o switch no administrado que une los puertos.",
+    "Activar BPDU guard en los puertos de acceso con portfast, sabiendo que apagara el puerto que reciba una BPDU.",
+    "Dejar registro del equipo, los puertos y la causa."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar show mac address-table interface de cada puerto y show cdp neighbors detail o show lldp neighbors detail (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Activar BPDU guard por puerto (spanning-tree bpduguard enable) o global para los puertos portfast (spanning-tree portfast bpduguard default) (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Conservar el acceso por consola mientras se hace el cambio."
+    ]
+  },
+  "verificacion": [
+    "Volver a leer show spanning-tree detail con la herramienta y confirmar que ya no hay puertos en rol backup ni bloqueados que reciban BPDU del propio switch.",
+    "Confirmar con el dueno del proceso que el equipo mantiene su comunicacion con los controladores."
+  ],
+  "reversion": [
+    "Reponer el cable retirado si el equipo pierde comunicacion y esperar a que el arbol reconverja antes de otro cambio.",
+    "Restaurar el respaldo de la configuracion del switch en la ventana, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No quitar un enlace sin confirmar con el dueno del proceso que el equipo conserva otro camino.",
+    "Probar primero en laboratorio o en un switch no critico y respaldar la configuracion antes de cambiarla.",
+    "Los contadores de BPDU son acumulados desde el arranque o el ultimo clear: comparar dos lecturas antes de concluir que el bucle sigue."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de redes",
+  "referencias": ["MITRE ICS T0814", "MITRE ICS T0826", "IEC 62443 SR 7.1", "IEC 62443 SR 6.2", "NIST 800-82 SC-5", "NIST 800-82 SI-4", "NIST CSF PR.IR-03", "NIST CSF PR.IR-04"]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "pb-switch-sin-espejo",
+  "hallazgo": "VLAN con equipos que el SPAN no espeja",
+  "objetivo": "Hacer que el trafico de las VLAN con equipos llegue al sensor, espejandolas en el switch o capturandolas por otro medio, para que el analisis y el monitoreo las vean.",
+  "prioridad_ot": "Un espejo mal configurado puede saturar el puerto destino, cargar el procesador del switch o, si se apunta a un puerto equivocado, dejar sin servicio a un equipo de campo.",
+  "pasos": [
+    "Listar las VLAN marcadas sin espejo y confirmar con el dueno del proceso cuales llevan trafico de control que debe vigilarse.",
+    "Revisar la capacidad: la suma del trafico de las VLAN a espejar no debe pasar la velocidad del puerto destino del sensor.",
+    "Decidir el medio: ampliar la sesion SPAN existente, usar RSPAN o ERSPAN si el sensor esta en otro switch, o instalar un TAP en el enlace.",
+    "Probar el cambio primero en laboratorio o en un switch no critico y respaldar la configuracion antes de aplicarlo.",
+    "Aplicar en la ventana acordada y dejar registro del cambio y de la VLAN agregada.",
+    "Revisar con el sensor que el trafico de la VLAN ya aparece en las capturas."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Agregar la VLAN a la sesion de monitoreo existente con monitor session N source vlan X (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Confirmar con show monitor session N que la VLAN figura como origen y que el destino sigue siendo el puerto del sensor (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Vigilar la ocupacion del puerto destino y la carga del procesador tras el cambio."
+    ],
+    "Claroty xDome": [
+      "Revisar en la plataforma que el sensor reciba la VLAN nueva y que los activos de esa VLAN empiecen a aparecer.",
+      "Revisar que la interfaz de monitoreo del sensor no reporte perdida de paquetes."
+    ]
+  },
+  "verificacion": [
+    "Volver a leer la configuracion del switch con la herramienta y confirmar que la VLAN ya no se marca sin espejo.",
+    "Confirmar en el sensor que llegan conversaciones de los equipos de esa VLAN."
+  ],
+  "reversion": [
+    "Quitar la VLAN de la sesion de monitoreo en la ventana de mantenimiento si el puerto destino se satura o sube la carga del switch.",
+    "Restaurar el respaldo de la configuracion del switch, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No apuntar el destino del espejo a un puerto que ya tenga un equipo conectado: se pierde su comunicacion.",
+    "Probar primero en laboratorio o en un switch no critico y respaldar la configuracion antes de cambiarla.",
+    "Un espejo por VLAN en un switch cargado puede afectar el reenvio: medir la carga antes y despues."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Administracion de redes y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 6.2", "NERC CIP-015", "NIST 800-82 SI-4", "NIST CSF DE.CM-01"]
+}

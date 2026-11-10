@@ -1,0 +1,51 @@
+{
+  "id": "pb-modbus-fc8",
+  "hallazgo": "Modbus FC8 que reinicia o silencia el equipo",
+  "objetivo": "Evitar que el diagnostico Modbus que reinicia las comunicaciones o pone el equipo en modo solo escucha llegue a los equipos desde origenes no autorizados.",
+  "prioridad_ot": "Bloquear el codigo de funcion 8 con un filtro mal hecho puede cortar tambien las lecturas; probar el comando de reinicio en un equipo en produccion puede silenciarlo.",
+  "pasos": [
+    "Identificar origen y destino de las peticiones FC8 y si fueron una prueba, un mantenimiento o actividad no autorizada.",
+    "Confirmar con el dueno del proceso si algun sistema legitimo usa el diagnostico Modbus.",
+    "Si no esta autorizado, tratarlo con el procedimiento de incidentes del cliente y revisar el origen.",
+    "Limitar que origenes pueden hablar Modbus con el equipo (solo el maestro identificado).",
+    "Si el firewall o el sensor inspecciona Modbus, limitar el codigo de funcion 8 y sus subfunciones 1 y 4, tras probar que no afecta las lecturas y escrituras legitimas.",
+    "Respaldar la configuracion y aplicar en la ventana acordada, con registro (log) antes de bloquear.",
+    "No probar el comando de reinicio contra un equipo en produccion sin una ventana acordada."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Limitar con reglas el puerto 502 a los maestros identificados (Policies > Access Control) y activar el registro de conexiones (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Si se usa inspeccion de aplicaciones industriales, probar primero en modo deteccion el filtro del codigo de funcion."
+    ],
+    "FortiGate": [
+      "Limitar con politicas el puerto 502 al origen y destino concretos, con registro de trafico.",
+      "Si el perfil de inspeccion industrial lo permite, probar la restriccion del codigo de funcion en modo registro."
+    ],
+    "PLC / RTU (generico)": [
+      "Revisar si el equipo permite restringir por IP quien puede conectarse al servidor Modbus.",
+      "Revisar si el fabricante permite desactivar la funcion de diagnostico; aplicarlo solo en ventana, sin reiniciar el controlador en produccion sin ventana acordada."
+    ],
+    "Claroty xDome": [
+      "Crear o ajustar una alerta para comandos de diagnostico Modbus hacia los controladores.",
+      "Revisar el historial de comunicaciones del equipo para ver otros origenes que usen Modbus."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura o importar de nuevo y confirmar que no hay peticiones FC8 con subfuncion 1 o 4 desde origenes no autorizados.",
+    "Confirmar con el dueno del proceso que las lecturas y escrituras Modbus legitimas siguen funcionando.",
+    "Revisar el registro de bloqueos para detectar intentos nuevos."
+  ],
+  "reversion": [
+    "Deshabilitar la regla o el filtro de codigo de funcion nuevo (sin borrarlo) si bloquea trafico legitimo.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No reiniciar controladores ni equipos de control en produccion sin una ventana acordada."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de control y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0816", "MITRE ICS T0814", "IEC 62443 SR 2.1", "IEC 62443 SR 7.1", "NERC CIP-007 R1", "NERC CIP-005 R1", "NIST 800-82 AC-3", "NIST 800-82 SC-5", "NIST CSF PR.AA-05", "NIST CSF PR.IR-04"]
+}

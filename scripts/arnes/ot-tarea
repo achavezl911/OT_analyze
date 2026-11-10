@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# ot-tarea: una tarea de implementacion = un brief = una sesion nueva de Claude Code.
+# Uso: ot-tarea max|api <brief.md> [argumentos extra de claude]
+# Variables: OT_MODELO (claude-sonnet-5-5), OT_ESFUERZO (medium), OT_PRESUPUESTO (USD, solo api: 5)
+# Deja en ~/tareas el brief, la salida JSON y el error, e imprime un resumen corto
+# (resultado, turnos, tokens, permisos denegados): el arquitecto lee eso, no la sesion entera.
+set -u
+CUENTA=${1:?uso: ot-tarea max|api brief.md}
+BRIEF=${2:?falta el brief}
+shift 2
+[ -r "$BRIEF" ] || { echo "[!] no se puede leer $BRIEF" >&2; exit 2; }
+DIR=/home/analista/tareas
+mkdir -p "$DIR"
+NOMBRE=$(date +%Y%m%d-%H%M%S)-$(basename "$BRIEF" .md)
+SALIDA=$DIR/$NOMBRE.json
+cp "$BRIEF" "$DIR/$NOMBRE.brief.md"
+extra=()
+[ "$CUENTA" = api ] && extra+=(--max-budget-usd "${OT_PRESUPUESTO:-5}")
+
+ot-claude "$CUENTA" -p "$(cat "$BRIEF")" \
+  --model "${OT_MODELO:-claude-sonnet-5-5}" --effort "${OT_ESFUERZO:-medium}" \
+  --settings /usr/local/share/ot-arnes/implementador.json \
+  --output-format json "${extra[@]}" "$@" > "$SALIDA" 2> "$DIR/$NOMBRE.err"
+rc=$?
+echo "rc=$rc cuenta=$CUENTA salida=$SALIDA"
+if ! jq -r '
+  "error=\(.is_error) turnos=\(.num_turns) costo_usd=\(.total_cost_usd) sesion=\(.session_id)",
+  "tokens: entrada=\(.usage.input_tokens) cache_escrita=\(.usage.cache_creation_input_tokens) cache_leida=\(.usage.cache_read_input_tokens) salida=\(.usage.output_tokens)",
+  "denegados: \([.permission_denials[]? | .tool_name] | join(", "))",
+  "--- resultado", (.result // "")' "$SALIDA" 2>/dev/null; then
+  echo "[!] la salida no es JSON:"; head -20 "$SALIDA" "$DIR/$NOMBRE.err"
+fi
+exit $rc

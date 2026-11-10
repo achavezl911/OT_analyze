@@ -1,0 +1,42 @@
+{
+  "id": "pb-regla-confia",
+  "hallazgo": "Reglas de firewall que confian trafico sin inspeccion",
+  "objetivo": "Cambiar las reglas que dejan pasar trafico sin inspeccion (confiar, omitir) por reglas que permitan con inspeccion y registro, cuando el equipo lo soporte.",
+  "prioridad_ot": "Activar inspeccion sobre trafico de control en tiempo real puede anadir latencia o bloquear tramas validas de protocolos industriales por falsos positivos.",
+  "pasos": [
+    "Listar las reglas que confian trafico y el proposito de cada una.",
+    "Identificar cuales llevan trafico industrial sensible a la latencia y cuales pueden inspeccionarse sin riesgo.",
+    "Cambiar primero a permitir con inspeccion en modo solo deteccion o con registro (log), sin bloquear.",
+    "Medir la latencia y revisar los falsos positivos durante un ciclo de operacion.",
+    "Pasar a prevencion solo las firmas que no afecten el proceso y mantener la confianza solo donde este justificada y documentada.",
+    "Respaldar la configuracion antes y aplicar en la ventana acordada."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Revisar en la politica de control de acceso (Policies > Access Control) las reglas con accion de confiar y cambiarlas a permitir con una politica de intrusiones en modo deteccion (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Revisar los eventos de intrusion antes de activar el bloqueo."
+    ],
+    "FortiGate": [
+      "Revisar las politicas sin perfil de seguridad y los perfiles de inspeccion aplicados.",
+      "Aplicar el perfil primero en modo de solo registro y revisar los eventos."
+    ]
+  },
+  "verificacion": [
+    "Reimportar la configuracion y confirmar que las reglas de confianza restantes estan justificadas.",
+    "Medir latencia y perdida de paquetes en los enlaces de control tras el cambio.",
+    "Revisar los eventos de inspeccion para confirmar que no hay falsos positivos sobre trafico de control."
+  ],
+  "reversion": [
+    "Volver la regla a su accion anterior en la ventana de mantenimiento si la latencia o los falsos positivos afectan el proceso.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Mantener la confianza en los enlaces donde la latencia de la inspeccion afecte el control, y documentarlo como excepcion."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de firewall y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 5.1", "IEC 62443 SR 5.2", "NERC CIP-005 R1", "NERC CIP-007 R1", "NIST 800-82 SC-7", "NIST 800-82 CM-7", "NIST CSF PR.IR-01"]
+}

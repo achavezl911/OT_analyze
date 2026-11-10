@@ -1,0 +1,38 @@
+{
+  "id": "pb-sondeo-irregular",
+  "hallazgo": "Sondeo irregular en conductos de control",
+  "objetivo": "Identificar por que un sondeo que deberia ser regular tiene intervalos irregulares y confirmar que el cliente es el esperado.",
+  "prioridad_ot": "Cambiar el periodo de sondeo o cortar a un cliente sin identificarlo puede dejar al operador sin datos del proceso; una red o un controlador saturados pueden degradarse mas con ajustes a ciegas.",
+  "pasos": [
+    "Identificar el cliente de cada conducto y confirmar con operacion que es el HMI, SCADA o historiador esperado.",
+    "Si el cliente no es el esperado, tratarlo como actividad no autorizada con el procedimiento del cliente.",
+    "Revisar la carga de CPU y de comunicaciones del controlador y la ocupacion del enlace y del switch.",
+    "Revisar si el cliente reparte varios sondeos con periodos distintos por el mismo conducto antes de atribuirlo a la red.",
+    "Repetir la captura en la misma ventana, guardar el registro de la captura y comparar con la corrida anterior."
+  ],
+  "por_plataforma": {
+    "Claroty xDome": [
+      "Revisar las alertas del activo y su historial de comunicaciones.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ],
+    "PLC / RTU (generico)": [
+      "Revisar el tiempo de ciclo y la carga de comunicaciones del controlador.",
+      "Aplicar los cambios solo en ventana y sin reiniciar el controlador en produccion sin ventana acordada."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que el periodo es regular o que la irregularidad esta explicada.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de control y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0801", "IEC 62443 SR 6.2", "NERC CIP-015", "NIST 800-82 SI-4", "NIST CSF DE.CM-01"]
+}

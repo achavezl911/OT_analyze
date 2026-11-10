@@ -1,0 +1,39 @@
+{
+  "id": "pb-stp-cambios",
+  "hallazgo": "Cambios de topologia STP frecuentes",
+  "objetivo": "Encontrar y corregir la causa de los cambios frecuentes de topologia STP, que borran tablas de direcciones y degradan o interrumpen la comunicacion.",
+  "prioridad_ot": "Tocar el protocolo de arbol de expansion o los puertos de un anillo sin plan puede dejar un segmento aislado o crear un lazo que sature la red.",
+  "pasos": [
+    "Identificar con la captura y los registros de los switches el puerto o el switch que origina los cambios, y conservar el registro.",
+    "Revisar enlaces inestables: cables, conectores, transceptores o equipos que se apagan y encienden.",
+    "Confirmar con el dueno del proceso que no hay un switch no autorizado ni un cambio reciente de la raiz del arbol.",
+    "Definir la raiz del arbol a proposito y proteger los puertos de borde contra BPDU inesperadas, probandolo primero en laboratorio.",
+    "Aplicar las correcciones en la ventana acordada, con acceso por consola, de un switch a la vez."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar en cada switch el puerto que recibio el ultimo cambio de topologia y el contador de cambios.",
+      "Evaluar la proteccion BPDU guard y el modo de puerto de borde en un puerto de prueba (verificar la sintaxis en la documentacion del fabricante para la version instalada)."
+    ],
+    "Claroty xDome": [
+      "Revisar si los equipos de red aparecen en el inventario y si hay switches desconocidos.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ]
+  },
+  "verificacion": [
+    "Revisar los contadores de cambios de topologia durante un ciclo de operacion completo.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Deshabilitar la proteccion o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Mantener acceso por consola o fuera de banda para recuperar el equipo si el cambio corta la gestion."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de redes",
+  "referencias": ["MITRE ICS T0814", "IEC 62443 SR 7.1", "NIST 800-82 SC-5", "NIST CSF PR.IR-03", "NIST CSF PR.IR-04"]
+}

@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "decision": "D84",
+  "validacion": {"estado": "sin revisar"},
+  "aviso": "Cuestionario y mapeos propios, en palabras propias, sin texto de normas. Los mapeos a NIST CSF 2.0 (categoria) y a IEC 62443 (FR o SR) estan sin revisar. El nivel es lo que el sitio declara en la entrevista; la herramienta solo agrega evidencia tecnica.",
+  "escala": {
+    "0": "No existe: no hay practica ni documento",
+    "1": "Inicial: se hace ad hoc, depende de personas concretas",
+    "2": "Gestionado: esta documentado y se repite en el sitio",
+    "3": "Definido: esta estandarizado, se practica y se verifica",
+    "4": "Mejora continua: se mide y se mejora de forma sistematica"
+  },
+  "dominios": [
+    {"clave": "activos", "nombre": "Gestion de activos", "preguntas": [
+      {"id": "ACT-01", "csf": "ID.AM", "iec62443": "SR 7.8",
+       "texto": "Existe un inventario de activos OT (controladores, HMI, servidores, equipos de red) con responsable y fecha de ultima actualizacion?"},
+      {"id": "ACT-02", "csf": "ID.AM", "iec62443": "SR 7.8",
+       "texto": "Cada activo del inventario registra fabricante, modelo, version de firmware o software y ubicacion?"},
+      {"id": "ACT-03", "csf": "ID.AM", "iec62443": "SR 7.6",
+       "texto": "Cuando se instala, cambia o retira un equipo, el inventario se actualiza como parte del procedimiento de cambios?"},
+      {"id": "ACT-04", "csf": "ID.AM", "iec62443": "FR7",
+       "texto": "Cada activo tiene una criticidad para el proceso y esa criticidad se usa para decidir prioridades de proteccion?"}
+    ]},
+    {"clave": "segmentacion", "nombre": "Segmentacion de red", "preguntas": [
+      {"id": "SEG-01", "csf": "PR.IR", "iec62443": "SR 5.2",
+       "texto": "La red OT esta separada de la red corporativa y de Internet mediante firewall u otro control, con las reglas documentadas?"},
+      {"id": "SEG-02", "csf": "PR.IR", "iec62443": "SR 5.1",
+       "texto": "La red OT esta dividida en zonas (por proceso, area o criticidad) y se conocen las comunicaciones permitidas entre ellas?"},
+      {"id": "SEG-03", "csf": "PR.IR", "iec62443": "SR 5.3",
+       "texto": "Las reglas de firewall entre zonas se revisan de forma periodica y se retiran las que ya no se usan?"},
+      {"id": "SEG-04", "csf": "PR.IR", "iec62443": "SR 5.2",
+       "texto": "Toda conexion nueva entre zonas pasa por una solicitud de cambio aprobada y queda registrada?"}
+    ]},
+    {"clave": "acceso", "nombre": "Control de acceso", "preguntas": [
+      {"id": "ACC-01", "csf": "PR.AA", "iec62443": "SR 1.1",
+       "texto": "Cada persona usa una cuenta propia (no compartida) para entrar a HMI, estaciones de ingenieria y equipos de red?"},
+      {"id": "ACC-02", "csf": "PR.AA", "iec62443": "SR 1.13",
+       "texto": "El acceso remoto (personal propio, integradores, proveedores) pasa por un punto controlado, con autenticacion reforzada y registro de sesiones?"},
+      {"id": "ACC-03", "csf": "PR.AA", "iec62443": "SR 2.1",
+       "texto": "Los permisos se asignan por rol y se revisan cuando alguien cambia de puesto o termina su contrato?"},
+      {"id": "ACC-04", "csf": "PR.AA", "iec62443": "SR 1.5",
+       "texto": "Se cambiaron las credenciales por defecto de controladores, switches y demas equipos, y las contrasenas se resguardan de forma controlada?"}
+    ]},
+    {"clave": "parches", "nombre": "Gestion de parches y vulnerabilidades", "preguntas": [
+      {"id": "PAR-01", "csf": "ID.RA", "iec62443": "SR 7.8",
+       "texto": "Se sabe que version de sistema operativo y de firmware tiene cada equipo y cuales ya no tienen soporte del fabricante?"},
+      {"id": "PAR-02", "csf": "ID.RA", "iec62443": "FR3",
+       "texto": "Existe un proceso para enterarse de las vulnerabilidades y los avisos de fabricantes que aplican a los equipos OT y para evaluarlos?"},
+      {"id": "PAR-03", "csf": "PR.PS", "iec62443": "SR 3.4",
+       "texto": "Los parches y actualizaciones se prueban y se programan en una ventana de mantenimiento, con plan de reversion?"},
+      {"id": "PAR-04", "csf": "PR.PS", "iec62443": "SR 7.7",
+       "texto": "Cuando un equipo no se puede parchear, se documenta la excepcion y se aplica un control compensatorio (aislamiento, lista blanca, monitoreo)?"}
+    ]},
+    {"clave": "monitoreo", "nombre": "Monitoreo y deteccion", "preguntas": [
+      {"id": "MON-01", "csf": "DE.CM", "iec62443": "SR 6.2",
+       "texto": "Hay visibilidad del trafico de la red OT (sensores, puertos espejo, capturas) en los puntos donde se cruzan las zonas?"},
+      {"id": "MON-02", "csf": "DE.CM", "iec62443": "SR 6.1",
+       "texto": "Los registros de los equipos criticos (firewall, switches, servidores, HMI) se guardan de forma centralizada y por un tiempo definido?"},
+      {"id": "MON-03", "csf": "DE.AE", "iec62443": "SR 6.2",
+       "texto": "Existe una referencia de la comunicacion normal y se detectan equipos o conexiones nuevos frente a ella?"},
+      {"id": "MON-04", "csf": "DE.AE", "iec62443": "SR 6.2",
+       "texto": "Las alertas de seguridad se revisan, con un responsable asignado y un tiempo de atencion definido?"}
+    ]},
+    {"clave": "incidentes", "nombre": "Respuesta a incidentes", "preguntas": [
+      {"id": "INC-01", "csf": "RS.MA", "iec62443": "FR6",
+       "texto": "Existe un plan de respuesta a incidentes que cubre la planta OT, con roles y contactos de operacion, TI y ciberseguridad?"},
+      {"id": "INC-02", "csf": "RS.MA", "iec62443": "FR6",
+       "texto": "El plan se ha ensayado (simulacro o ejercicio de mesa) en los ultimos doce meses?"},
+      {"id": "INC-03", "csf": "RC.RP", "iec62443": "SR 7.3",
+       "texto": "Hay respaldos de la configuracion y los programas de controladores y HMI, guardados fuera de linea y con restauracion probada?"},
+      {"id": "INC-04", "csf": "ID.IM", "iec62443": "FR6",
+       "texto": "Despues de un incidente o una falla se documentan las causas y las lecciones aprendidas, y se aplican mejoras?"}
+    ]},
+    {"clave": "suministro", "nombre": "Seguridad de la cadena de suministro", "preguntas": [
+      {"id": "SUM-01", "csf": "GV.SC", "iec62443": "FR2",
+       "texto": "Los contratos con integradores y proveedores incluyen requisitos de ciberseguridad (acceso, parches, aviso de incidentes)?"},
+      {"id": "SUM-02", "csf": "GV.SC", "iec62443": "SR 1.13",
+       "texto": "Se mantiene una lista de los proveedores y terceros con acceso o soporte a equipos OT, con el alcance de ese acceso?"},
+      {"id": "SUM-03", "csf": "GV.SC", "iec62443": "SR 3.2",
+       "texto": "Los equipos, el software y los medios de terceros se revisan (antimalware, configuracion) antes de conectarse a la red OT?"},
+      {"id": "SUM-04", "csf": "GV.SC", "iec62443": "FR3",
+       "texto": "Al comprar o contratar un sistema nuevo se evalua su seguridad (soporte de parches, ciclo de vida, funciones de seguridad) antes de aprobarlo?"}
+    ]},
+    {"clave": "riesgo", "nombre": "Gestion de riesgos", "preguntas": [
+      {"id": "RIE-01", "csf": "ID.RA", "iec62443": "FR7",
+       "texto": "Existe una evaluacion de riesgos de ciberseguridad de la planta OT, con escenarios y consecuencias para el proceso, actualizada en los ultimos dos anos?"},
+      {"id": "RIE-02", "csf": "GV.RM", "iec62443": "FR6",
+       "texto": "Hay un responsable de la ciberseguridad OT, con autoridad definida y presupuesto asignado?"},
+      {"id": "RIE-03", "csf": "GV.RM", "iec62443": "FR6",
+       "texto": "Cada riesgo identificado tiene responsable, plan de tratamiento y fecha, y la direccion los revisa?"},
+      {"id": "RIE-04", "csf": "GV.RM", "iec62443": "FR6",
+       "texto": "Las decisiones de aceptar un riesgo (por ejemplo, no parchear o no segmentar) quedan documentadas y aprobadas por quien corresponde?"}
+    ]}
+  ],
+  "asignacion_titulos": {
+    "activos": [
+      "activo nuevo no aprobado", "cambio de firmware, modelo o mac", "conflicto de direcciones",
+      "direccion apipa", "version de firmware expuesta", "deteccion de direccion duplicada en arp",
+      "licenciamiento sentinel hasp"
+    ],
+    "segmentacion": [
+      "conductos entre zonas", "conductos que saltan niveles purdue", "activos criticos alcanzables desde internet",
+      "reglas de firewall", "reglas de retorno", "rutas estaticas hacia saltos", "sin segmentacion por vlan",
+      "salto de vlan", "troncales que negocian con dtp", "vlan 1 en uso", "multiples subredes",
+      "dhcp activo en el segmento", "mas de un servidor dhcp", "direcciones ip publicas",
+      "trafico observado que el firewall denegaria", "canal anonimizador", "controles de capa 2 ausentes",
+      "rip activo", "anuncios de router ipv6", "bucle fisico entre puertos", "indicios de bucle de capa 2",
+      "cambios de topologia stp", "cambio del puente raiz", "puente raiz de stp sin prioridad", "bpdu enviadas",
+      "inestabilidad de stp", "consultas dns a servidores publicos", "resolucion de dominios de internet",
+      "dns cifrado", "busqueda de proxy wpad", "protocolos de descubrimiento de windows"
+    ],
+    "acceso": [
+      "autenticacion local del switch", "credenciales del switch", "credenciales o administracion en texto claro",
+      "gestion del switch por protocolos sin cifrar", "protocolos de gestion sin cifrar",
+      "redundancia de puerta de enlace", "puertos de acceso habilitados sin uso",
+      "actividad de ingenieria sobre controladores", "operaciones de escritura o control",
+      "no se observaron escrituras", "escritor de control que aparece", "dnp3 con reinicio", "modbus fc8",
+      "opc ua sin seguridad"
+    ],
+    "parches": [
+      "fuera de soporte", "fin de soporte", "vulnerabilidades conocidas", "vulnerabilidades explotadas",
+      "tls obsoleto"
+    ],
+    "monitoreo": [
+      "captura ilegible", "captura truncada", "ventana de captura corta", "paquetes duplicados",
+      "casi no ve trafico unicast", "casi todo i/o ciclico", "ningun paquete que revele identidad",
+      "muy pocos paquetes de identidad", "puerto destino del espejo", "span no espeja", "segmentos sin cobertura",
+      "hora del switch sin sincronizar", "alertas de seguridad registradas", "conducto nuevo fuera de la linea base",
+      "conductos aprobados sin trafico", "escritor nuevo hacia equipos", "trafico fuera de la linea base",
+      "tormenta de difusion", "proporcion alta de trafico de difusion", "inundacion de la tabla mac",
+      "interfaz de switch saturada", "retransmisiones tcp", "perdida de comunicacion", "sondeo irregular",
+      "un solo sentido", "tunel dns", "transferencia de zona dns", "nxdomain", "fallas de resolucion dns",
+      "escaneo de red", "barrido arp"
+    ],
+    "incidentes": [],
+    "suministro": ["herramienta de acceso remoto de terceros"],
+    "riesgo": []
+  }
+}

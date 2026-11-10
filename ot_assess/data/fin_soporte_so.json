@@ -1,0 +1,20 @@
+{
+  "fabricante": "Microsoft",
+  "fuente": "Microsoft Lifecycle",
+  "nota": "Fin del soporte extendido. Fechas aportadas por el propietario del proyecto (I1b); la herramienta no las verifica contra el fabricante. Los LTSC/IoT/Embedded de Windows 10, 7 y XP tienen otras fechas y no se asumen. Se actualiza a mano, sin red.",
+  "filas": [
+    {"producto": "\\bWindows XP\\b", "excluir": "Embedded|POSReady", "fecha_fin_soporte": "2014-04-08"},
+    {"producto": "\\bWindows Vista\\b", "excluir": "", "fecha_fin_soporte": "2017-04-11"},
+    {"producto": "\\bWindows 7\\b", "excluir": "Embedded|POSReady|IoT", "fecha_fin_soporte": "2020-01-14"},
+    {"producto": "\\bWindows 8\\.1\\b", "excluir": "Embedded|IoT", "fecha_fin_soporte": "2023-01-10"},
+    {"producto": "\\bWindows 10\\b", "excluir": "LTSC|LTSB|IoT|Embedded", "fecha_fin_soporte": "2025-10-14",
+     "nota": "22H2, ediciones Home/Pro/Enterprise"},
+    {"producto": "\\bWindows Server 2003\\b", "excluir": "", "fecha_fin_soporte": "2015-07-14"},
+    {"producto": "\\bWindows Server 2008\\b", "excluir": "", "fecha_fin_soporte": "2020-01-14"},
+    {"producto": "\\bWindows Server 2012\\b", "excluir": "", "fecha_fin_soporte": "2023-10-10"},
+    {"producto": "\\bWindows Server 2016\\b", "excluir": "", "fecha_fin_soporte": "2027-01-12"},
+    {"producto": "Windows Embedded Standard 7|\\bWES ?7\\b", "excluir": "", "fecha_fin_soporte": "2020-10-13"},
+    {"producto": "\\bWindows CE\\b|\\bWinCE\\b", "excluir": "", "fecha_fin_soporte": "",
+     "nota": "sin fecha unica de fin de soporte: depende de la version; consultar al fabricante"}
+  ]
+}

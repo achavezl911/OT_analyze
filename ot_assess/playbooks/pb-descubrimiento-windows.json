@@ -1,0 +1,39 @@
+{
+  "id": "pb-descubrimiento-windows",
+  "hallazgo": "Protocolos de descubrimiento de Windows activos en la red de control",
+  "objetivo": "Desactivar en la red de control los protocolos de descubrimiento de nombres de Windows que no se necesitan, porque pueden ser suplantados.",
+  "prioridad_ot": "Desactivar la resolucion por difusion en un equipo que depende de ella para encontrar a otro puede cortar su comunicacion.",
+  "pasos": [
+    "Identificar los protocolos activos (resolucion de nombres por difusion y descubrimiento de servicios) y los equipos que los usan, con el registro de la captura.",
+    "Confirmar con el dueno del proceso que ninguna aplicacion de control depende de ellos; si alguna lo hace, cambiarla a DNS o a direccion fija.",
+    "Desactivarlos con directivas de grupo en un equipo piloto o en un equipo no critico primero.",
+    "Extender el cambio por grupos pequenos dentro de la ventana acordada.",
+    "Limitar con reglas el trafico de descubrimiento entre zonas, con registro antes de bloquear."
+  ],
+  "por_plataforma": {
+    "Windows / Active Directory": [
+      "Desactivar con directivas de grupo (GPO) la resolucion de nombres por difusion y el descubrimiento de servicios que no se usen, y probar en un equipo piloto.",
+      "Respaldar la directiva antes de cambiarla."
+    ],
+    "Switch Cisco IOS/IOS-XE": [
+      "Si el control sera una ACL en el switch de capa 3, escribirla con registro en las entradas nuevas y aplicarla primero en una interfaz de prueba.",
+      "Conservar el acceso por consola mientras se hace el cambio."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que ya no hay trafico de descubrimiento de Windows en la zona.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Reactivar el protocolo en el equipo afectado si perdio comunicacion, y registrar el motivo.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de sistemas y redes OT",
+  "referencias": ["MITRE ICS T0846", "IEC 62443 SR 7.7", "NERC CIP-007 R1", "NIST 800-82 CM-7", "NIST CSF PR.PS-01"]
+}

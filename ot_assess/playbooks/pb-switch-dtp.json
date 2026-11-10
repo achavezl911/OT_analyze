@@ -1,0 +1,36 @@
+{
+  "id": "pb-switch-dtp",
+  "hallazgo": "Troncales que negocian con DTP",
+  "objetivo": "Fijar el modo de cada puerto y desactivar la negociacion DTP en los troncales, para que un equipo conectado no pueda convertir su puerto en trunk.",
+  "prioridad_ot": "Cambiar el modo de un puerto vuelve a negociar el enlace: un troncal que hoy se forma por negociacion puede caer si el otro extremo queda en modo dinamico, y un puerto que hoy se vuelve trunk con un equipo puede perder sus VLAN.",
+  "pasos": [
+    "Listar de la evidencia los troncales sin nonegotiate, los puertos en modo dinamico y los que no declaran modo, y confirmar con operacion que hay conectado en cada uno.",
+    "Definir el modo correcto de cada puerto (acceso con su VLAN o trunk con sus VLAN permitidas) y revisar que el otro extremo de cada troncal tendra el modo compatible.",
+    "Respaldar la configuracion y probar el cambio en laboratorio o en un switch no critico.",
+    "Aplicar en la ventana acordada, un puerto o un troncal a la vez, empezando por el extremo que no es el enlace de gestion, con el otro extremo preparado.",
+    "Limitar las VLAN permitidas en los troncales y dejar registro del cambio."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Fijar los puertos de equipos con switchport mode access y los troncales con switchport mode trunk y switchport nonegotiate (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Revisar el resultado con show interfaces trunk y show interfaces switchport (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Conservar el acceso por consola mientras se hace el cambio."
+    ]
+  },
+  "verificacion": [
+    "Volver a leer la configuracion con la herramienta y confirmar que no quedan troncales sin nonegotiate ni puertos en modo dinamico.",
+    "Confirmar con el dueno del proceso que los troncales siguen activos y que los equipos mantienen su comunicacion."
+  ],
+  "reversion": [
+    "Devolver el puerto a su modo anterior en la ventana, en los dos extremos del troncal.",
+    "Restaurar el respaldo de la configuracion del switch con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un switch no critico y respaldar la configuracion antes de cambiarla.",
+    "No cambiar un troncal de enlace hacia otro switch sin confirmar el modo del otro extremo; el dueno del proceso debe saber que segmento puede quedar aislado."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de redes y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0830", "IEC 62443 SR 5.1", "IEC 62443 SR 7.7", "NIST 800-82 SC-7", "NIST 800-82 CM-7", "NIST CSF PR.IR-01", "NIST CSF PR.PS-01"]
+}

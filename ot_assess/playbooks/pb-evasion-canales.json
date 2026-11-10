@@ -1,0 +1,44 @@
+{
+  "id": "pb-evasion-canales",
+  "hallazgo": "Canal anonimizador o tunel hacia Internet (Tor, VPN o proxy)",
+  "objetivo": "Saber quien usa cada canal anonimizador, VPN, tunel o proxy hacia Internet, con que autorizacion, y cerrar los que nadie respalda.",
+  "prioridad_ot": "Una VPN o un tunel hacia Internet puede ser el acceso que un proveedor usa para dar soporte a un equipo critico; cerrarlo de golpe puede dejar al operador sin asistencia, asi que primero se identifica el uso y se acuerda una via alternativa, y el bloqueo se hace en ventana.",
+  "pasos": [
+    "Identificar el equipo cliente de cada indicador y a su dueno, y preguntarle si usa o instalo el canal, para que y desde cuando.",
+    "Pedir al area duena o al proveedor la autorizacion de ese canal; si no existe, tratarlo como actividad no autorizada con el procedimiento del cliente.",
+    "Confirmar en el equipo (procesos, servicios, programas instalados) si hay un cliente Tor, VPN o proxy; los indicadores de la captura no prueban una sesion.",
+    "Para el acceso legitimo, definir una solucion centralizada en la DMZ con MFA, registro de sesiones y aprobacion por sesion, y migrar el uso a ella.",
+    "Bloquear Tor y las VPN por aplicacion o por lista en el firewall, y cerrar los puertos de VPN, tunel y proxy hacia Internet que no tengan dueno, en la ventana acordada.",
+    "Repetir la captura en la misma ventana, con la lista de relays Tor actualizada si se usa, y comparar con la anterior para confirmar que los indicadores desaparecieron."
+  ],
+  "por_plataforma": {
+    "Claroty xDome": [
+      "Buscar las comunicaciones del activo hacia los dominios y puertos del canal y revisar las alertas asociadas.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ],
+    "Windows / Active Directory": [
+      "Revisar los programas y servicios instalados en el equipo y las conexiones VPN configuradas.",
+      "Aplicar la restriccion de instalacion de software por directiva de grupo, probada primero en un equipo no critico."
+    ],
+    "Cisco FTD (FMC)": [
+      "Revisar en las reglas actuales que permiten la salida a Internet desde el equipo y acotarlas por destino.",
+      "Aplicar el cambio en ventana y con respaldo de la politica; verificar la sintaxis en la documentacion del fabricante para la version instalada."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que no hay conductos hacia relays Tor, puertos de VPN, tunel o proxy, ni nombres de VPN comerciales.",
+    "Confirmar con el proveedor y con el dueno del proceso que el acceso autorizado funciona por la via centralizada."
+  ],
+  "reversion": [
+    "Deshabilitar la regla de bloqueo nueva (sin borrarla) si el proveedor pierde un acceso autorizado.",
+    "Restaurar el respaldo de la configuracion del firewall en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el bloqueo solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Acordar con el proveedor una via de soporte alternativa antes de bloquear el acceso a un equipo critico.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ciberseguridad OT y TI, con el dueno del equipo y el proveedor",
+  "referencias": ["MITRE ICS T0884", "MITRE ICS T0885", "IEC 62443 SR 1.13", "IEC 62443 SR 5.1", "NERC CIP-005 R2", "NIST 800-82 AC-17", "NIST CSF PR.AA-05"]
+}

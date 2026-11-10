@@ -1,0 +1,39 @@
+{
+  "id": "pb-interfaz-saturada",
+  "hallazgo": "Interfaz de switch saturada o con descartes",
+  "objetivo": "Confirmar la saturacion o los descartes de la interfaz, identificar que trafico la llena y dimensionar o separar el enlace para que el trafico de control no se pierda.",
+  "prioridad_ot": "Cambiar la velocidad, agregar enlaces o mover VLAN en un troncal puede interrumpir todo lo que pasa por el; se hace en ventana y con un camino alterno.",
+  "pasos": [
+    "Anotar la interfaz, su rol (troncal, uplink o acceso), la utilizacion, los descartes y el CRC, y desde cuando se acumulan los contadores.",
+    "Repetir la lectura en horas de mayor trafico y en varios dias: la tasa de 5 minutos es una sola lectura.",
+    "Identificar con la captura que conductos y equipos mueven mas bytes por esa interfaz (top de conductos y de equipos).",
+    "Si hay errores CRC, revisar cableado, conectores, transceptores y duplex del enlace.",
+    "Reducir la carga (mover trafico de respaldo o de oficina, separar VLAN, calidad de servicio para el control) o ampliar el enlace (agregacion o mayor velocidad).",
+    "Dejar monitoreo continuo de utilizacion y descartes de la interfaz con umbrales acordados."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Leer show interfaces y show interfaces counters errors de la interfaz, y repetir despues de un clear counters (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Revisar la politica de colas con show policy-map interface si hay calidad de servicio (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Ajustar load-interval a 30 segundos en la interfaz para ver picos mas cortos (verificar la sintaxis en la documentacion del fabricante para la version instalada)."
+    ]
+  },
+  "verificacion": [
+    "Volver a leer los contadores y confirmar que los descartes ya no crecen y la utilizacion pico queda bajo el umbral.",
+    "Confirmar con operacion que el trafico de control no muestra huecos ni retransmisiones en el periodo."
+  ],
+  "reversion": [
+    "Volver a la velocidad, agregacion o politica de colas anteriores si el cambio degrada el enlace.",
+    "Restaurar el respaldo de la configuracion del switch en la ventana, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No retirar un enlace troncal sin confirmar el camino alterno: se puede aislar una zona de control.",
+    "Probar primero en laboratorio o en un switch no critico y respaldar la configuracion antes de cambiarla.",
+    "Los contadores son acumulados desde el arranque o el ultimo clear: no concluir con una sola lectura.",
+    "Dejar registro de cada cambio y confirmar con el dueno del proceso antes de aplicarlo."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Administracion de redes y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 7.1", "IEC 62443 SR 7.2", "NIST 800-82 SC-5", "NIST CSF PR.IR-04"]
+}

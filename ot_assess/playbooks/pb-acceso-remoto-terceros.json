@@ -1,0 +1,44 @@
+{
+  "id": "pb-acceso-remoto-terceros",
+  "hallazgo": "Herramienta de acceso remoto de terceros en la red",
+  "objetivo": "Saber quien usa cada herramienta de acceso remoto de terceros, con que autorizacion, y llevar el acceso de proveedores a un solo punto controlado.",
+  "prioridad_ot": "Cortar de golpe una herramienta que el proveedor usa para dar soporte a un equipo critico puede dejar al operador sin asistencia en una falla; primero se identifica el uso y se acuerda una via alternativa, y el bloqueo se hace en ventana.",
+  "pasos": [
+    "Identificar el equipo cliente de cada indicador y a su dueno, y preguntarle si usa o instalo la herramienta, para que y desde cuando.",
+    "Pedir al proveedor o al area duena el contrato o la autorizacion de ese acceso; si no existe, tratarlo como actividad no autorizada con el procedimiento del cliente.",
+    "Confirmar en el equipo (procesos, servicios, programas instalados) si la herramienta esta instalada y con acceso desatendido; los indicadores de la captura no prueban una sesion.",
+    "Para el acceso legitimo, definir una solucion centralizada en la DMZ con MFA, registro de sesiones y aprobacion por sesion, y migrar el uso a ella.",
+    "Bloquear en el firewall y en el DNS o proxy los dominios y puertos de las herramientas no autorizadas, en la ventana acordada, y retirar la herramienta del equipo.",
+    "Repetir la captura en la misma ventana y comparar con la anterior para confirmar que los indicadores desaparecieron."
+  ],
+  "por_plataforma": {
+    "Claroty xDome": [
+      "Buscar las comunicaciones del activo hacia los dominios de la herramienta y revisar las alertas asociadas.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ],
+    "Windows / Active Directory": [
+      "Revisar los programas y servicios instalados en el equipo y las cuentas locales creadas por la herramienta.",
+      "Aplicar la restriccion de instalacion de software por directiva de grupo, probada primero en un equipo no critico."
+    ],
+    "Cisco FTD (FMC)": [
+      "Revisar en las reglas actuales que permiten la salida a Internet desde el equipo y acotarlas por destino.",
+      "Aplicar el cambio en ventana y con respaldo de la politica; verificar la sintaxis en la documentacion del fabricante para la version instalada."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que no hay consultas DNS, SNI ni conductos hacia las herramientas no autorizadas.",
+    "Confirmar con el proveedor y con el dueno del proceso que el acceso autorizado funciona por la via centralizada."
+  ],
+  "reversion": [
+    "Deshabilitar la regla de bloqueo nueva (sin borrarla) si el proveedor pierde un acceso autorizado.",
+    "Restaurar el respaldo de la configuracion del firewall en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el bloqueo solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Acordar con el proveedor una via de soporte alternativa antes de bloquear el acceso a un equipo critico.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ciberseguridad OT y TI, con el dueno del equipo y el proveedor",
+  "referencias": ["MITRE ICS T0822", "IEC 62443 SR 1.13", "IEC 62443 SR 5.2", "NERC CIP-005 R2", "NIST 800-82 AC-17", "NIST CSF PR.AA-05"]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "pb-ha-sin-autenticacion",
+  "hallazgo": "Redundancia de puerta de enlace (HSRP/VRRP) sin autenticacion",
+  "objetivo": "Proteger los anuncios de HSRP o VRRP con autenticacion fuerte y limitar quien puede anunciarlos, y revisar si algun equipo no previsto participa en el grupo.",
+  "prioridad_ot": "Cambiar la autenticacion de un grupo de redundancia en uno solo de los routers hace que los demas lo ignoren y puede provocar dos activos a la vez o ninguno; el cambio se coordina en todos los miembros y en ventana.",
+  "pasos": [
+    "Listar los grupos observados, los equipos que anuncian en cada uno y su prioridad, y compararlos con el diseno de redundancia documentado; conservar el registro.",
+    "Si aparece un equipo que no esta en el diseno, o uno nuevo con la prioridad maxima, localizar su puerto por MAC y tratarlo como incidente hasta aclararlo.",
+    "Definir una clave de autenticacion por grupo, guardada en el gestor de secretos del cliente, y planear el cambio en todos los miembros a la vez.",
+    "Aplicar la autenticacion fuerte (MD5 o cadena de claves) donde la version del protocolo lo permita; en versiones que solo definen texto claro, migrar de version o proteger con filtros.",
+    "Filtrar HSRP y VRRP en los puertos de acceso para que solo los routers del grupo puedan anunciarlos, primero en laboratorio y luego en la ventana acordada."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar el estado de cada grupo y la autenticacion que cada miembro tiene configurada (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Aplicar la autenticacion con cadena de claves a un grupo de prueba y confirmar que los miembros siguen eligiendo activo y respaldo."
+    ],
+    "FortiGate": [
+      "Revisar la configuracion de VRRP de la interfaz y la clave de autenticacion en cada miembro del grupo.",
+      "Aplicar el cambio en todos los miembros en la misma ventana y con respaldo de la configuracion."
+    ],
+    "Claroty xDome": [
+      "Buscar las comunicaciones de HSRP o VRRP en la matriz y los equipos que participan en cada grupo.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura en la misma ventana y confirmar que los anuncios llevan autenticacion fuerte y que solo anuncian los routers previstos.",
+    "Probar con el dueno del proceso una conmutacion controlada entre activo y respaldo, sin perdida de comunicacion con los controladores."
+  ],
+  "reversion": [
+    "Volver en todos los miembros a la autenticacion anterior en la misma ventana, para que los grupos no se partan.",
+    "Restaurar el respaldo de la configuracion de cada equipo en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Cambiar todos los miembros del grupo juntos: con claves distintas cada router se cree el unico activo."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes",
+  "referencias": ["MITRE ICS T0830", "MITRE ICS T0814", "IEC 62443 SR 3.1", "IEC 62443 SR 7.1", "NIST 800-82 IA-3", "NIST 800-82 SC-5", "NIST CSF PR.IR-01", "NIST CSF PR.AA-03"]
+}

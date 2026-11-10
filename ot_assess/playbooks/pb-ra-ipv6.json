@@ -1,0 +1,43 @@
+{
+  "id": "pb-ra-ipv6",
+  "hallazgo": "Anuncios de router IPv6 no esperados",
+  "objetivo": "Saber que equipo anuncia como router de IPv6 y por que, y evitar que un equipo no autorizado pueda hacerlo; si la red no usa IPv6, dejar de aceptarlo.",
+  "prioridad_ot": "Desactivar IPv6 en equipos de control sin probarlo puede romper servicios que dependen de el, aunque sea poco comun; la desactivacion se prueba primero en un equipo no critico y se hace en ventana.",
+  "pasos": [
+    "Localizar por MAC al equipo que anuncia y revisar en el inventario si es un router o un equipo final; conservar el registro.",
+    "Si es un equipo final, revisar si tiene activa la comparticion de conexion a Internet o un puente de red que anuncie sin querer.",
+    "Confirmar con el dueno del proceso si algun sistema de la red usa IPv6 a proposito; de no ser asi, planear su desactivacion en los equipos o su bloqueo en el segmento.",
+    "Activar la proteccion contra anuncios falsos en los puertos de acceso del switch, primero en laboratorio y luego en la ventana acordada.",
+    "Bloquear el tipo de mensaje de anuncio de router en el segmento, salvo desde el router autorizado."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar si el switch soporta la proteccion contra anuncios de router en los puertos de acceso y aplicarla en un puerto de prueba (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Permitir anuncios solo en el puerto del router autorizado y registrar los descartes."
+    ],
+    "Windows / Active Directory": [
+      "Revisar la comparticion de conexion a Internet y los adaptadores de puente en el equipo que anuncia, y desactivarlos si no se necesitan.",
+      "Aplicar la desactivacion de IPv6 por directiva de grupo solo despues de probarla en un equipo no critico."
+    ],
+    "Linux": [
+      "Revisar si el equipo tiene el reenvio de IPv6 activo y un servicio de anuncios de router en ejecucion.",
+      "Desactivar el servicio si no se necesita, con respaldo de la configuracion de red."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura en la misma ventana y confirmar que solo el router autorizado anuncia, o que no hay anuncios si IPv6 no se usa.",
+    "Confirmar con el dueno del proceso que los equipos de control mantienen su comunicacion despues del cambio."
+  ],
+  "reversion": [
+    "Reactivar IPv6 o la comparticion de conexion en el equipo afectado si un servicio legitimo dejo de funcionar.",
+    "Restaurar el respaldo de la configuracion del switch o del equipo en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Confirmar con el dueno del proceso que ningun sistema usa IPv6 antes de desactivarlo."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y administracion de sistemas",
+  "referencias": ["MITRE ICS T0830", "IEC 62443 SR 3.1", "IEC 62443 SR 7.7", "NERC CIP-007 R4", "NIST 800-82 SI-4", "NIST 800-82 IA-3", "NIST CSF DE.CM-01", "NIST CSF PR.IR-01"]
+}

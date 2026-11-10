@@ -1,0 +1,56 @@
+{
+  "id": "pb-ip-publicas",
+  "hallazgo": "Trafico con direcciones IP publicas desde la red OT",
+  "objetivo": "Identificar y controlar el trafico de la red OT hacia o desde direcciones IP publicas, permitiendo solo lo justificado y mediado por una zona intermedia.",
+  "prioridad_ot": "Bloquear salidas a Internet sin identificarlas puede cortar licencias, sincronizacion de hora, actualizaciones o soporte de un proveedor del que depende el proceso.",
+  "pasos": [
+    "Listar los equipos OT que hablan con direcciones publicas, con destino, puerto y volumen.",
+    "Identificar el proposito de cada flujo (hora, licencias, soporte remoto, DNS, telemetria) con el dueno del proceso y con el proveedor.",
+    "Apartar lo que nadie justifica y revisar si el equipo esta mal configurado (puerta de enlace, DNS, hora).",
+    "Para lo justificado, mover la funcion a un servidor interno o a la zona intermedia (hora, DNS y actualizaciones internos).",
+    "Respaldar la configuracion y probar el cambio en laboratorio o en un equipo no critico.",
+    "Activar el registro (log) y, en la ventana acordada, bloquear la salida directa a Internet desde la zona OT.",
+    "Mantener una lista de excepciones con responsable y fecha de revision."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Crear en la politica de control de acceso una regla que niegue las salidas de la zona OT hacia Internet, precedida por excepciones con destino concreto (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Activar el registro de conexiones en la regla antes de cambiar su accion a bloqueo."
+    ],
+    "FortiGate": [
+      "Crear una politica de salida con destino concreto para cada excepcion y una de denegar al final, con registro de trafico.",
+      "Revisar la configuracion de DNS y de hora del equipo para ver si el trafico es solo configuracion mal puesta."
+    ],
+    "Windows / Active Directory": [
+      "Revisar que los equipos Windows de la zona OT usen el controlador de dominio interno para hora y DNS.",
+      "Desactivar con directivas de grupo (GPO) los servicios de actualizacion o telemetria que salgan a Internet si el cliente no los usa."
+    ],
+    "Claroty xDome": [
+      "Filtrar los activos con comunicaciones hacia Internet y exportar la lista para validarla con operacion.",
+      "Crear una alerta para comunicaciones nuevas hacia direcciones publicas desde la zona OT."
+    ],
+    "PLC / RTU (generico)": [
+      "Revisar que la puerta de enlace y el DNS del equipo apunten a la red interna.",
+      "Aplicar cambios de red en el equipo solo en ventana y sin reiniciar el controlador si no hay ventana acordada."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura o importar de nuevo la exportacion y confirmar que no hay trafico hacia IP publicas, salvo las excepciones documentadas.",
+    "Confirmar con el dueno del proceso que licencias, hora y soporte siguen funcionando.",
+    "Revisar en el registro del firewall los intentos de salida bloqueados."
+  ],
+  "reversion": [
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda.",
+    "Permitir temporalmente el destino afectado, con registro, mientras se documenta y se mueve a la zona intermedia."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Algunos equipos pierden funciones (licencia, hora, soporte) si no alcanzan a su proveedor: consultar antes de cortar."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0883", "IEC 62443 SR 5.2", "IEC 62443 SR 1.13", "NERC CIP-005 R1", "NIST 800-82 SC-7", "NIST 800-82 AC-4", "NIST CSF PR.IR-01"]
+}

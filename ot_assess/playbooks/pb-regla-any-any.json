@@ -1,0 +1,45 @@
+{
+  "id": "pb-regla-any-any",
+  "hallazgo": "Reglas de firewall que permiten cualquier origen hacia cualquier destino",
+  "objetivo": "Sustituir las reglas que permiten cualquier origen hacia cualquier destino por reglas con origen, destino y servicio concretos.",
+  "prioridad_ot": "Estrechar una regla amplia sin conocer el trafico que la usa puede cortar comunicaciones de control o de mantenimiento que nadie documento.",
+  "pasos": [
+    "Activar el registro (log) en la regla amplia y observarla durante un ciclo completo de operacion, incluidos arranques, respaldos y mantenimientos periodicos.",
+    "Con el registro, listar los origenes, destinos y servicios realmente usados.",
+    "Validar la lista con el dueno del proceso y apartar lo que nadie reconoce, sin bloquearlo todavia.",
+    "Escribir reglas especificas para el trafico legitimo y colocarlas por encima de la regla amplia.",
+    "Respaldar la configuracion y probar el orden de reglas en laboratorio o en un equipo no critico.",
+    "En la ventana acordada, deshabilitar la regla amplia (sin borrarla) y vigilar el registro.",
+    "Tras el periodo sin incidencias acordado con operacion, borrar la regla amplia y dejar constancia del cambio."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Ubicar la regla en la politica de control de acceso (Policies > Access Control) y activar el registro de conexiones (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Usar el contador de aciertos y los eventos de conexion para ver que trafico la usa.",
+      "Crear las reglas especificas con objetos de red y de puerto, y desplegar en la ventana acordada."
+    ],
+    "FortiGate": [
+      "Activar el registro de todo el trafico en la politica amplia y revisar la bitacora de trafico.",
+      "Crear politicas con objetos de direccion y servicios concretos, colocadas antes de la amplia.",
+      "Deshabilitar la politica antes de borrarla, para poder reactivarla."
+    ]
+  },
+  "verificacion": [
+    "Confirmar que ninguna regla activa tiene origen y destino abiertos a la vez.",
+    "Revisar el registro tras el cambio: sin denegaciones de trafico que operacion reconozca como necesario.",
+    "Reimportar la configuracion o repetir la captura y confirmar que el hallazgo ya no aparece."
+  ],
+  "reversion": [
+    "Reactivar la regla amplia deshabilitada (por eso no se borra en un primer momento) y registrar el motivo.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Un periodo de observacion corto puede no ver el trafico estacional (mantenimiento, respaldo anual): ampliarlo si hay duda."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de firewall e ingenieria de redes",
+  "referencias": ["IEC 62443 SR 5.1", "IEC 62443 SR 5.2", "NERC CIP-005 R1", "NERC CIP-007 R1", "NIST 800-82 SC-7", "NIST 800-82 CM-7", "NIST CSF PR.IR-01"]
+}

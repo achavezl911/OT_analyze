@@ -1,0 +1,39 @@
+{
+  "id": "pb-dhcp-segmento",
+  "hallazgo": "DHCP activo en el segmento de control",
+  "objetivo": "Controlar quien asigna direcciones en el segmento de control y que equipos dependen de DHCP, para que las direcciones de los equipos de control sean previsibles.",
+  "prioridad_ot": "Retirar DHCP de golpe puede dejar sin direccion a equipos que la renuevan; un servidor DHCP no autorizado puede dar direcciones o rutas falsas.",
+  "pasos": [
+    "Identificar los servidores y los clientes DHCP del segmento y el rango que reparten, con el registro de la captura.",
+    "Confirmar con el dueno del proceso que equipos de control deben tener direccion fija o reserva por MAC.",
+    "Documentar el alcance y las reservas del servidor DHCP autorizado y retirar cualquier servidor que no lo sea.",
+    "Pasar los equipos criticos a direccion fija o a reserva, de uno en uno y dentro de la ventana acordada.",
+    "Evaluar la proteccion contra servidores DHCP no autorizados en los switches, probandola antes en laboratorio."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Marcar como confiables solo los puertos del servidor DHCP autorizado.",
+      "Evaluar la inspeccion de DHCP en una VLAN de prueba antes de generalizarla (verificar la sintaxis en la documentacion del fabricante para la version instalada)."
+    ],
+    "Windows / Active Directory": [
+      "Revisar que el servidor DHCP este autorizado en el dominio y que sus reservas coincidan con el inventario.",
+      "Respaldar el ambito del servidor DHCP antes de cambiarlo."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que solo responde el servidor DHCP autorizado.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Devolver al equipo su direccion anterior o su modo DHCP si perdio comunicacion tras el cambio.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Mantener acceso por consola o fuera de banda para recuperar el equipo si el cambio corta la gestion."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 7.6", "NERC CIP-010 R1", "NIST 800-82 CM-6", "NIST CSF PR.PS-01"]
+}

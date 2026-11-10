@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "decision": "D87",
+  "aviso": "Puertos habituales de registro, sin verificar con cada fabricante; la tabla es ampliable. 'cifrado' null significa que depende de la configuracion.",
+  "protocolos": [
+    {"clave": "syslog", "nombre": "Syslog", "cifrado": false, "puertos": ["514/udp", "601/tcp"], "apps": ["syslog"]},
+    {"clave": "syslog_tls", "nombre": "Syslog sobre TLS", "cifrado": true, "puertos": ["6514/tcp"], "apps": []},
+    {"clave": "snmp_trap", "nombre": "Traps SNMP", "cifrado": false, "puertos": ["162/udp"], "apps": ["snmp trap"]},
+    {"clave": "snmp_trap_tls", "nombre": "Traps SNMP sobre TLS", "cifrado": true, "puertos": ["10162/tcp", "10162/udp"], "apps": []},
+    {"clave": "netflow", "nombre": "NetFlow, IPFIX o sFlow", "cifrado": false,
+     "puertos": ["2055/udp", "4739/udp", "4739/tcp", "6343/udp", "9995/udp", "9996/udp"], "apps": ["netflow", "ipfix", "sflow"]},
+    {"clave": "winrm", "nombre": "Reenvio de eventos de Windows (WinRM)", "cifrado": false, "puertos": ["5985/tcp"], "apps": []},
+    {"clave": "winrm_tls", "nombre": "Reenvio de eventos de Windows (WinRM sobre HTTPS)", "cifrado": true, "puertos": ["5986/tcp"], "apps": []},
+    {"clave": "splunk", "nombre": "Agente de SIEM (Splunk)", "cifrado": null, "puertos": ["9997/tcp"], "apps": []},
+    {"clave": "beats", "nombre": "Agente de SIEM (Beats o Logstash)", "cifrado": null, "puertos": ["5044/tcp"], "apps": []},
+    {"clave": "wazuh", "nombre": "Agente de SIEM (Wazuh)", "cifrado": null, "puertos": ["1514/tcp", "1515/tcp"], "apps": []}
+  ],
+  "tipos": {
+    "red": {"expectativa": "esperada",
+            "fuente_esperada": "Syslog y traps SNMP hacia un colector de registros"},
+    "seguridad": {"expectativa": "esperada",
+                  "fuente_esperada": "Syslog y traps SNMP hacia un colector de registros o el SIEM"},
+    "servidor": {"expectativa": "esperada",
+                 "fuente_esperada": "Eventos de Windows por agente o reenvio, o Syslog"},
+    "estacion": {"expectativa": "esperada",
+                 "fuente_esperada": "Eventos de Windows por agente o reenvio, o Syslog"},
+    "controlador": {"expectativa": "opcional",
+                    "fuente_esperada": "El registro suele estar en el software de ingenieria o en el historiador"},
+    "otro": {"expectativa": "opcional",
+             "fuente_esperada": "El registro suele estar en el software de ingenieria o en el historiador"}
+  }
+}

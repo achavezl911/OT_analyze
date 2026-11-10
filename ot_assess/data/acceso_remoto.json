@@ -1,0 +1,79 @@
+{
+  "nota": "Catalogo de herramientas de acceso remoto de terceros (T8, D68). Los puertos 80 y 443 nunca son indicador por si solos y no se listan. 'verificado' = confirmado en documentacion oficial del fabricante el 2026-11-05; 'sin verificar' = fuente secundaria o dominio publicado sin revision uno por uno.",
+  "herramientas": [
+    {
+      "herramienta": "TeamViewer",
+      "dominios": ["teamviewer.com"],
+      "puertos": [{"puerto": 5938, "l4": "tcp"}, {"puerto": 5938, "l4": "udp"}],
+      "fuente": "teamviewer.com, KB 'Ports used by TeamViewer' (5938 TCP/UDP principal; 443 y 80 de respaldo)",
+      "estado": "verificado"
+    },
+    {
+      "herramienta": "AnyDesk",
+      "dominios": ["net.anydesk.com", "anydesk.com"],
+      "puertos": [{"puerto": 6568, "l4": "tcp"}],
+      "fuente": "support.anydesk.com/Firewall (6568 TCP; ademas 80 y 443; UDP 50001-50003 es solo descubrimiento en la red local)",
+      "estado": "verificado"
+    },
+    {
+      "herramienta": "RustDesk",
+      "dominios": ["rustdesk.com"],
+      "puertos": [
+        {"puerto": 21114, "l4": "tcp"}, {"puerto": 21115, "l4": "tcp"}, {"puerto": 21116, "l4": "tcp"},
+        {"puerto": 21117, "l4": "tcp"}, {"puerto": 21118, "l4": "tcp"}, {"puerto": 21119, "l4": "tcp"},
+        {"puerto": 21116, "l4": "udp"}
+      ],
+      "fuente": "rustdesk.com/docs/en/self-host/rustdesk-server-oss/install/ (servidor propio; 21118 y 21119 solo cliente web); el dominio corresponde a los servidores publicos",
+      "estado": "verificado"
+    },
+    {
+      "herramienta": "ScreenConnect (ConnectWise Control)",
+      "dominios": ["screenconnect.com"],
+      "puertos": [{"puerto": 8040, "l4": "tcp"}, {"puerto": 8041, "l4": "tcp"}],
+      "fuente": "FortiGuard Application Control (fuente secundaria); 8040 web y 8041 relay por defecto, configurables",
+      "estado": "sin verificar"
+    },
+    {
+      "herramienta": "Splashtop",
+      "dominios": ["splashtop.com"],
+      "puertos": [],
+      "fuente": "dominio publicado por el fabricante; sin revisar uno por uno",
+      "estado": "sin verificar"
+    },
+    {
+      "herramienta": "LogMeIn / GoTo",
+      "dominios": ["logmein.com", "logme.in"],
+      "puertos": [],
+      "fuente": "dominio publicado por el fabricante; sin revisar uno por uno",
+      "estado": "sin verificar"
+    },
+    {
+      "herramienta": "BeyondTrust / Bomgar",
+      "dominios": ["beyondtrustcloud.com", "bomgarcloud.com"],
+      "puertos": [],
+      "fuente": "dominio publicado por el fabricante; sin revisar uno por uno",
+      "estado": "sin verificar"
+    },
+    {
+      "herramienta": "Chrome Remote Desktop",
+      "dominios": ["remotedesktop.google.com"],
+      "puertos": [],
+      "fuente": "dominio publicado por el fabricante; sin revisar uno por uno",
+      "estado": "sin verificar"
+    },
+    {
+      "herramienta": "Zoho Assist",
+      "dominios": ["assist.zoho.com"],
+      "puertos": [],
+      "fuente": "dominio publicado por el fabricante; sin revisar uno por uno",
+      "estado": "sin verificar"
+    },
+    {
+      "herramienta": "DWService",
+      "dominios": ["dwservice.net"],
+      "puertos": [],
+      "fuente": "dominio publicado por el fabricante; sin revisar uno por uno",
+      "estado": "sin verificar"
+    }
+  ]
+}

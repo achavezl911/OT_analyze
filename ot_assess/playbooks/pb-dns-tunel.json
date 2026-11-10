@@ -1,0 +1,43 @@
+{
+  "id": "pb-dns-tunel",
+  "hallazgo": "Posible tunel DNS",
+  "objetivo": "Determinar si el patron de consultas DNS es un tunel que saca o mete datos, y cerrar la salida de DNS que no sea del resolvedor autorizado.",
+  "prioridad_ot": "Cortar el DNS de un equipo sin saber que depende de el puede detener sus aplicaciones; no investigar el patron puede dejar abierto un canal de salida de datos.",
+  "pasos": [
+    "Identificar el cliente, los dominios, el volumen y el tipo de registros, y guardar el registro de la captura como evidencia.",
+    "Descartar usos legitimos con el dueno del proceso (algunos antivirus o servicios del proveedor usan DNS para telemetria).",
+    "Si no hay explicacion, tratarlo como incidente con el procedimiento del cliente y decidir con operacion como contener el equipo.",
+    "Permitir el DNS saliente solo desde el resolvedor interno, con registro antes de bloquear lo demas.",
+    "Mantener la vigilancia de consultas largas o muy frecuentes hacia un mismo dominio."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Activar el registro de conexiones en la regla antes de cambiar su accion a bloqueo.",
+      "Desplegar los cambios en la ventana acordada y conservar la version anterior de la politica."
+    ],
+    "FortiGate": [
+      "Activar el registro de trafico DNS hacia Internet y revisar que equipos lo usan.",
+      "Deshabilitar la politica antes de borrarla, para poder reactivarla."
+    ],
+    "Claroty xDome": [
+      "Revisar las alertas del activo y su historial de comunicaciones DNS.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que el patron ya no aparece o esta explicado.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Equipo de monitoreo y respuesta a incidentes OT",
+  "referencias": ["MITRE ICS T0869", "IEC 62443 SR 6.2", "IEC 62443 SR 5.2", "NERC CIP-007 R4", "NERC CIP-015", "NIST 800-82 SI-4", "NIST 800-82 SC-7", "NIST CSF DE.CM-01", "NIST CSF DE.AE-02"]
+}

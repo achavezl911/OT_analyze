@@ -1,0 +1,44 @@
+{
+  "id": "pb-evasion-dns-cifrado",
+  "hallazgo": "DNS cifrado hacia resolvedores externos (DoH o DoQ)",
+  "objetivo": "Mantener el DNS de la red de control en el resolvedor interno: que ningun equipo consulte por DNS sobre HTTPS o sobre QUIC directo a Internet.",
+  "prioridad_ot": "Bloquear un resolvedor externo sin revisar quien lo usa puede dejar sin nombres a una aplicacion o a un navegador que lo trae configurado; primero se identifica el uso y se fija el resolvedor interno, y el bloqueo se hace en ventana.",
+  "pasos": [
+    "Identificar el equipo cliente de cada indicador y a su dueno, y confirmar si es un navegador, una aplicacion del proveedor o un servicio del sistema.",
+    "Si el indicador es el dominio canario de Firefox, tratarlo solo como indicio: confirmar en el equipo si el navegador tiene DNS sobre HTTPS activado.",
+    "Desactivar el DNS sobre HTTPS de los navegadores con la directiva de grupo del navegador, probada primero en un equipo no critico, y fijar el resolvedor interno en los clientes.",
+    "Bloquear en el firewall el puerto 853 (DoT y DoQ) y los resolvedores DoH conocidos hacia Internet desde la zona de control, con registro antes de bloquear.",
+    "Permitir DNS solo hacia el resolvedor interno y conservar sus registros como fuente de visibilidad del DNS.",
+    "Repetir la captura en la misma ventana y comparar con la anterior para confirmar que los indicadores desaparecieron."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Activar el registro de conexiones en la regla antes de cambiar su accion a bloqueo.",
+      "Desplegar los cambios en la ventana acordada y conservar la version anterior de la politica."
+    ],
+    "FortiGate": [
+      "Activar el registro de trafico DNS hacia Internet y revisar que equipos lo usan.",
+      "Deshabilitar la politica antes de borrarla, para poder reactivarla."
+    ],
+    "Windows / Active Directory": [
+      "Fijar el servidor DNS interno en los equipos con directivas de grupo (GPO) o por DHCP.",
+      "Respaldar la configuracion DNS antes de cambiarla."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que no hay nombres de resolvedores DoH, conductos HTTPS hacia sus IP ni trafico UDP/853.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de firewall y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0869", "IEC 62443 SR 6.2", "IEC 62443 SR 5.2", "NERC CIP-005 R1", "NIST 800-82 SC-7", "NIST CSF DE.CM-01"]
+}

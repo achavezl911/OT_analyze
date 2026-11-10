@@ -1,0 +1,39 @@
+{
+  "id": "pb-bucle-l2",
+  "hallazgo": "Indicios de bucle de capa 2 o de enrutamiento",
+  "objetivo": "Confirmar si hay un bucle, ubicar el enlace o la ruta que lo causa y corregirlo, con controles que impidan que una tormenta tumbe la red de control.",
+  "prioridad_ot": "Desconectar un cable o apagar un puerto para cortar un bucle puede aislar un segmento o dejar un anillo sin su enlace redundante; se identifica el enlace con los registros y la intervencion se hace en ventana o, si hay incidente, con el dueno del proceso presente.",
+  "pasos": [
+    "Registrar la hora de cada indicio y buscar en los switches y routers los eventos de esa hora: cambios de topologia, puertos en bloqueo y direcciones MAC que se mueven entre puertos.",
+    "Si el indicio es un TTL que baja en el mismo paquete, revisar si la captura se tomo en varios puntos que ven el mismo trafico, y de no ser asi revisar las rutas entre los routers por un ciclo.",
+    "Para una tormenta de difusion, localizar los puertos con mayor trafico de difusion y el origen mas frecuente, y buscar un cable que une dos puertos del mismo dominio.",
+    "Corregir el enlace o la ruta causante en la ventana acordada y de un cambio a la vez.",
+    "Activar el control de tormentas en los puertos de acceso y la proteccion de BPDU en los de borde, primero en laboratorio y luego en la ventana acordada."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar los contadores de difusion por puerto, el historial de cambios de topologia y la tabla de direcciones con movimientos (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Aplicar el control de tormentas con un umbral basado en el trafico normal medido, en un puerto de prueba antes de extenderlo."
+    ],
+    "Claroty xDome": [
+      "Revisar las alertas de trafico de difusion y de cambios de topologia asociadas a los mismos activos y la misma hora.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura en la misma ventana y confirmar que no hay trafico de difusion sostenido, ni paquetes repetidos con TTL que baja, ni rafagas de ICMP time exceeded.",
+    "Confirmar con el dueno del proceso que no hay microcortes ni perdida de comunicacion con los controladores."
+  ],
+  "reversion": [
+    "Reponer el enlace o la ruta retirada si el cambio dejo un segmento aislado, y esperar a que el arbol reconverja antes de otro cambio.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No cortar un enlace de un anillo sin confirmar con el dueno del proceso que existe otro camino."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de redes",
+  "referencias": ["MITRE ICS T0814", "MITRE ICS T0826", "IEC 62443 SR 7.1", "IEC 62443 SR 6.2", "NIST 800-82 SC-5", "NIST 800-82 SI-4", "NIST CSF PR.IR-03", "NIST CSF PR.IR-04"]
+}

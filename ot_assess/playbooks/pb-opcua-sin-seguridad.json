@@ -1,0 +1,49 @@
+{
+  "id": "pb-opcua-sin-seguridad",
+  "hallazgo": "OPC UA sin seguridad de mensajes",
+  "objetivo": "Configurar los servidores y clientes OPC UA con modo de seguridad de firma o de firma y cifrado, y retirar la politica None cuando no se necesite.",
+  "prioridad_ot": "Cambiar la politica de seguridad de un servidor OPC UA desconecta a los clientes que solo usan None o que no tienen el certificado de confianza; el proceso puede perder datos o escritura.",
+  "pasos": [
+    "Listar los servidores y clientes OPC UA y la politica que cada cliente usa realmente (la que ofrece el servidor no es la que se usa).",
+    "Verificar que cada cliente soporta una politica con firma o cifrado (por ejemplo, Basic256Sha256 o superior) con su version actual.",
+    "Preparar la gestion de certificados: emitir, distribuir y marcar como de confianza los certificados de aplicacion.",
+    "Respaldar la configuracion y probar en laboratorio o en un equipo no critico.",
+    "Habilitar la politica segura en el servidor sin quitar todavia None y migrar los clientes uno por uno.",
+    "Retirar la politica None en la ventana acordada, cuando ningun cliente la use, con registro (log) del cambio.",
+    "Si un cliente no puede migrar: aislarlo en su zona y limitar el acceso al servidor por origen."
+  ],
+  "por_plataforma": {
+    "PLC / RTU (generico)": [
+      "Revisar en la documentacion del fabricante las politicas y modos de seguridad que soporta el servidor OPC UA integrado.",
+      "Cargar los certificados de confianza y probar con un cliente de prueba.",
+      "Aplicar el cambio solo en ventana y sin reiniciar el controlador si no hay ventana acordada."
+    ],
+    "Windows / Active Directory": [
+      "Revisar la configuracion de seguridad del servidor o pasarela OPC UA y las cuentas con las que corre.",
+      "Gestionar los certificados de aplicacion con la autoridad del cliente y registrar sus vencimientos."
+    ],
+    "Claroty xDome": [
+      "Verificar los activos con OPC UA y la politica observada para confirmar que ya migraron.",
+      "Revisar las alertas de OPC UA sin seguridad para confirmar que dejan de aparecer."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura o importar de nuevo y confirmar que ya no hay OpenSecureChannel con politica None ni modo sin seguridad.",
+    "Confirmar con el dueno del proceso que los clientes leen y escriben con normalidad.",
+    "Revisar los vencimientos de los certificados y quien los renueva."
+  ],
+  "reversion": [
+    "Volver a habilitar la politica None temporalmente, restringida por origen, si un cliente pierde la conexion.",
+    "Restaurar el respaldo de la configuracion del servidor.",
+    "Documentar el cliente que no pudo migrar y el plan para hacerlo."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No reiniciar controladores ni equipos de control en produccion sin una ventana acordada."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de control y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0830", "MITRE ICS T0842", "IEC 62443 SR 3.1", "IEC 62443 SR 4.1", "IEC 62443 SR 4.3", "NERC CIP-005 R2", "NERC CIP-011 R1", "NIST 800-82 SC-8", "NIST 800-82 SC-13", "NIST CSF PR.DS-02"]
+}

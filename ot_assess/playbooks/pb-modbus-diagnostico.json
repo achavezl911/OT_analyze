@@ -1,0 +1,43 @@
+{
+  "id": "pb-modbus-diagnostico",
+  "hallazgo": "Modbus FC8 de diagnostico (sin reinicio ni silencio)",
+  "objetivo": "Confirmar que el diagnostico Modbus observado (sin subfunciones de reinicio ni de modo solo escucha) viene de un origen autorizado y limitar quien puede enviarlo.",
+  "prioridad_ot": "Aunque estas subfunciones no reinician el equipo, bloquear el codigo de funcion 8 con un filtro mal hecho puede cortar tambien las lecturas.",
+  "pasos": [
+    "Identificar origen, destino y subfunciones de las peticiones FC8, con el registro de la captura.",
+    "Confirmar con el dueno del proceso si una herramienta de puesta en marcha o de monitoreo usa el diagnostico Modbus.",
+    "Si el origen no esta autorizado, tratarlo con el procedimiento de incidentes del cliente.",
+    "Limitar que origenes pueden hablar Modbus con el equipo (solo el maestro identificado).",
+    "Vigilar que no aparezcan las subfunciones de reinicio de comunicaciones o de modo solo escucha, que tienen mayor impacto."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Limitar con reglas el puerto 502 a los maestros identificados (Policies > Access Control) y activar el registro de conexiones (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Si se usa inspeccion de aplicaciones industriales, probar primero en modo deteccion el filtro del codigo de funcion."
+    ],
+    "Claroty xDome": [
+      "Crear o ajustar una alerta para comandos de diagnostico Modbus hacia los controladores.",
+      "Revisar el historial de comunicaciones del equipo para ver otros origenes que usen Modbus."
+    ],
+    "PLC / RTU (generico)": [
+      "Revisar si el equipo permite restringir por IP quien puede conectarse al servidor Modbus.",
+      "Aplicar los cambios solo en ventana, sin reiniciar el controlador en produccion sin ventana acordada."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que el diagnostico solo viene de los origenes autorizados.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Deshabilitar la regla o el filtro de codigo de funcion nuevo (sin borrarlo) si bloquea trafico legitimo.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No probar comandos de diagnostico contra un equipo en produccion sin una ventana acordada."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de control y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0816", "MITRE ICS T0814", "IEC 62443 SR 2.1", "IEC 62443 SR 7.1", "NERC CIP-007 R1", "NERC CIP-005 R1", "NIST 800-82 AC-3", "NIST 800-82 SC-5", "NIST CSF PR.AA-05", "NIST CSF PR.IR-04"]
+}

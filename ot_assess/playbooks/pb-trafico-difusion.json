@@ -1,0 +1,39 @@
+{
+  "id": "pb-trafico-difusion",
+  "hallazgo": "Proporcion alta de trafico de difusion",
+  "objetivo": "Reducir el trafico de difusion que consume capacidad y puede degradar la comunicacion de control, separando lo normal del protocolo de lo anomalo.",
+  "prioridad_ot": "Limitar o segmentar la difusion sin conocer quien la necesita puede cortar protocolos de descubrimiento o de control que dependen de ella.",
+  "pasos": [
+    "Identificar con la captura los equipos que mas difusion generan y el tipo de paquete, y dejar el registro del analisis.",
+    "Confirmar con el dueno del proceso que difusion es parte normal del protocolo industrial y cual no.",
+    "Corregir el equipo que difunde de forma anomala (configuracion, fallo de tarjeta o lazo de red) en la ventana acordada.",
+    "Si el dominio de difusion es demasiado grande, planear su division por VLAN o subredes con el diseno de red aprobado.",
+    "Evaluar limites de difusion en los puertos, probandolos antes en laboratorio o en un segmento de prueba."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar los contadores de difusion por puerto para ubicar el origen.",
+      "Evaluar el control de tormentas de difusion en un puerto de prueba antes de generalizarlo (verificar la sintaxis en la documentacion del fabricante para la version instalada)."
+    ],
+    "Claroty xDome": [
+      "Revisar los activos que mas difusion envian y su tipo de protocolo.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura en el mismo punto y comparar la proporcion de difusion con la anterior.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Deshabilitar el limite o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Mantener acceso por consola o fuera de banda para recuperar el equipo si el cambio corta la gestion."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0814", "IEC 62443 SR 7.1", "NIST 800-82 SC-5", "NIST CSF PR.IR-04"]
+}

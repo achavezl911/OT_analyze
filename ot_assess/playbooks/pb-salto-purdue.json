@@ -1,0 +1,50 @@
+{
+  "id": "pb-salto-purdue",
+  "hallazgo": "Conductos que saltan niveles Purdue",
+  "objetivo": "Hacer que las comunicaciones pasen por el nivel o la zona intermedia que corresponde (por ejemplo, una DMZ industrial) en lugar de saltar niveles Purdue.",
+  "prioridad_ot": "Redirigir una comunicacion directa por un intermediario cambia latencia y puntos de falla: si el intermediario falla, se pierde la comunicacion.",
+  "pasos": [
+    "Confirmar el nivel Purdue de cada activo del conducto; la asignacion es inferida y puede estar equivocada.",
+    "Documentar con el dueno del proceso el proposito de cada conducto que salta niveles (historiador, acceso remoto, mantenimiento).",
+    "Disenar el camino intermedio: un servidor de replicacion o de salto en la zona intermedia que concentre la comunicacion.",
+    "Probar el camino nuevo en laboratorio o en un equipo no critico, midiendo latencia y disponibilidad.",
+    "Migrar en la ventana acordada, manteniendo el camino anterior en paralelo, con registro (log), hasta validar.",
+    "Cerrar el camino directo y actualizar el diagrama de zonas y conductos."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Crear las reglas del camino nuevo en la politica de control de acceso (Policies > Access Control) con registro de conexiones (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Cambiar a bloqueo la regla del camino directo solo despues de validar el camino nuevo."
+    ],
+    "FortiGate": [
+      "Crear las politicas del camino nuevo entre las zonas intermedias, con registro de trafico.",
+      "Deshabilitar la politica del camino directo antes de borrarla, para poder reactivarla."
+    ],
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar las VLAN y las ACL entre niveles para confirmar que el camino directo no queda abierto por otra via.",
+      "Aplicar los cambios de VLAN o de ACL en ventana y con acceso por consola."
+    ],
+    "Windows / Active Directory": [
+      "Configurar el servidor de salto con cuentas individuales, autenticacion multifactor y registro de sesiones.",
+      "Limitar con directivas de grupo (GPO) quien puede usarlo."
+    ]
+  },
+  "verificacion": [
+    "Reimportar los datos y confirmar que el conducto ya no salta niveles.",
+    "Confirmar con el dueno del proceso que la funcion (datos de historiador, acceso, mantenimiento) opera por el camino nuevo.",
+    "Verificar la disponibilidad del intermediario y su comportamiento ante una falla."
+  ],
+  "reversion": [
+    "Reactivar el camino directo anterior, con registro, mientras se corrige el intermediario.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "El nivel Purdue de los activos es inferido y debe validarse con el personal de planta."
+  ],
+  "esfuerzo_estimado": "alto",
+  "responsable": "Arquitectura de red OT y ciberseguridad OT",
+  "referencias": ["IEC 62443 3-2 ZCR 3", "IEC 62443 SR 5.1", "IEC 62443 SR 5.2", "NERC CIP-005 R1", "NIST 800-82 SC-7", "NIST 800-82 AC-4", "NIST CSF PR.IR-01"]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "pb-regla-retorno",
+  "hallazgo": "Reglas de retorno que abren conexiones entrantes",
+  "objetivo": "Quitar o restringir las reglas espejo de retorno que, en un firewall con estado, abren conexiones entrantes que la sesion ya permitida no necesita.",
+  "prioridad_ot": "Quitar una regla de retorno que si era necesaria (por ejemplo, avisos o conexiones iniciadas por el servidor) puede cortar respuestas o eventos no solicitados.",
+  "pasos": [
+    "Confirmar que el firewall es con estado y que la regla de ida ya permite las respuestas de forma automatica.",
+    "Identificar los protocolos que si inician conexiones desde el servidor hacia el cliente y documentarlos como excepciones.",
+    "Activar el registro (log) en la regla de retorno y observar un ciclo de operacion para ver si se usa.",
+    "Respaldar la configuracion y probar la baja de la regla en laboratorio o en un equipo no critico.",
+    "Deshabilitar la regla de retorno en la ventana acordada y vigilar el registro.",
+    "Si no hay impacto durante el periodo acordado, borrarla; si lo hay, reemplazarla por una regla acotada a la excepcion."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Ubicar la regla en la politica de control de acceso y confirmar que el motor de conexiones mantiene el estado de la sesion permitida.",
+      "Activar el registro de conexiones en la regla antes de deshabilitarla.",
+      "Desplegar los cambios en la ventana acordada y conservar la version anterior de la politica."
+    ],
+    "FortiGate": [
+      "Confirmar que la politica de ida usa inspeccion con estado y que la politica de retorno no es necesaria para las respuestas.",
+      "Activar el registro de trafico en la politica de retorno antes de deshabilitarla.",
+      "Deshabilitar la politica antes de borrarla, para poder reactivarla."
+    ],
+    "Switch Cisco IOS/IOS-XE": [
+      "Si el control es una ACL sin estado en el switch, la entrada de retorno puede ser necesaria: confirmarlo antes de quitarla.",
+      "Cuando se pueda, acotar la entrada de retorno a los puertos de respuesta y a los equipos concretos."
+    ]
+  },
+  "verificacion": [
+    "Confirmar con una prueba controlada que las sesiones legitimas siguen completandose.",
+    "Verificar, en laboratorio o en la ventana, que el firewall ya no acepta conexiones nuevas iniciadas desde el sentido de retorno.",
+    "Reimportar la configuracion y confirmar que el hallazgo ya no aparece."
+  ],
+  "reversion": [
+    "Reactivar la regla de retorno deshabilitada y registrar el motivo.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de firewall e ingenieria de redes",
+  "referencias": ["MITRE ICS T0886", "IEC 62443 SR 5.2", "IEC 62443 SR 7.7", "NERC CIP-005 R1", "NERC CIP-007 R1", "NIST 800-82 SC-7 (5)", "NIST 800-82 CM-7", "NIST CSF PR.IR-01"]
+}

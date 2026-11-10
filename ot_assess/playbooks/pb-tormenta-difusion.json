@@ -1,0 +1,39 @@
+{
+  "id": "pb-tormenta-difusion",
+  "hallazgo": "Tormenta de difusion o multidifusion",
+  "objetivo": "Encontrar y detener el origen de la tormenta de difusion o multidifusion, y dejar limites que la contengan si se repite.",
+  "prioridad_ot": "Cortar un puerto o limitar la multidifusion sin saber quien la necesita puede dejar sin comunicacion a controladores o a protocolos industriales (GOOSE, PROFINET) que dependen de ella.",
+  "pasos": [
+    "Anotar la hora del pico, la VLAN y el punto de captura, y correlacionarlos con la bitacora de operacion y los cambios recientes.",
+    "Identificar con la captura quien emite mas difusion y mas ARP (MAC de origen) y ubicar esa MAC en el switch.",
+    "Revisar si hay un bucle de capa 2: cambios de topologia de STP, MAC flapping y puertos que reenvian lo que reciben.",
+    "Confirmar con el dueno del proceso si hay multidifusion industrial legitima en esa VLAN antes de limitarla.",
+    "Desconectar o corregir el equipo o el enlace que origina la tormenta, en ventana acordada.",
+    "Activar storm control en los puertos de acceso con un umbral acordado con operacion y reducir el tamano del dominio de difusion si es necesario."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar show spanning-tree detail y show logging para cambios de topologia y MAC flapping (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Ubicar la MAC emisora con show mac address-table address y el puerto con show interfaces (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Aplicar storm-control broadcast y multicast en los puertos de acceso con un nivel validado con operacion (verificar la sintaxis en la documentacion del fabricante para la version instalada)."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura en las mismas horas y confirmar que el p95 de paquetes/s de difusion y el pico por segundo bajaron del umbral.",
+    "Confirmar con operacion que los equipos de campo mantienen su comunicacion de control sin interrupciones."
+  ],
+  "reversion": [
+    "Retirar o subir el umbral de storm control si corta trafico legitimo, y registrar el cambio.",
+    "Restaurar el respaldo de la configuracion del switch en la ventana, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No apagar un puerto de enlace entre switches sin tener otro camino: se puede aislar una zona de control.",
+    "Probar primero en laboratorio o en un switch no critico y respaldar la configuracion antes de cambiarla.",
+    "Los umbrales de este hallazgo son heuristicas sin calibrar: confirmar con la linea base del sitio antes de concluir.",
+    "Dejar registro de cada cambio y confirmar con el dueno del proceso antes de aplicarlo."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Administracion de redes y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 7.1", "NIST 800-82 SC-5", "NIST CSF PR.IR-04", "MITRE ICS T0814"]
+}

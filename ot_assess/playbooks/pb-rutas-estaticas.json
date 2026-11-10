@@ -1,0 +1,46 @@
+{
+  "id": "pb-rutas-estaticas",
+  "hallazgo": "Rutas estaticas hacia saltos que no responden o sin trafico observado",
+  "objetivo": "Revisar las rutas estaticas cuyo siguiente salto no responde o no tiene trafico, y retirar o corregir las que sean obsoletas.",
+  "prioridad_ot": "Una ruta estatica aparentemente sin uso puede ser un respaldo para una falla futura: quitarla puede cortar la comunicacion cuando falle el enlace principal.",
+  "pasos": [
+    "Listar las rutas senaladas con su destino, siguiente salto e interfaz.",
+    "Confirmar con el equipo de red si el siguiente salto fue retirado, cambio de direccion o es un camino de respaldo.",
+    "Verificar que no haya trafico en el periodo observado y ampliar el periodo si la ruta es de respaldo o de uso eventual.",
+    "Respaldar la configuracion y documentar la ruta antes de tocarla.",
+    "Corregir la direccion del salto si cambio, o deshabilitar la ruta obsoleta en la ventana acordada, con registro (log) del cambio.",
+    "Actualizar el diagrama y la documentacion de red."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Revisar en el FMC las rutas estaticas del dispositivo y si tienen monitoreo de accesibilidad del salto (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Quitar la ruta solo despues de respaldar y con un plan para desplegar de nuevo la anterior."
+    ],
+    "FortiGate": [
+      "Revisar la tabla de rutas estaticas y la deteccion de falla del salto asociada a cada ruta.",
+      "Deshabilitar la ruta antes de borrarla, para poder reactivarla."
+    ],
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar las rutas estaticas del switch de capa 3 y si el salto sigue presente en la tabla ARP del equipo.",
+      "Quitar la ruta solo tras respaldar la configuracion y con acceso por consola."
+    ]
+  },
+  "verificacion": [
+    "Confirmar con una prueba de conectividad, en la ventana, que las comunicaciones por las rutas corregidas funcionan.",
+    "Revisar la tabla de rutas para comprobar que no quedan rutas sin salto valido.",
+    "Reimportar la configuracion y confirmar que el hallazgo ya no aparece."
+  ],
+  "reversion": [
+    "Reactivar la ruta deshabilitada o restaurar el respaldo de la configuracion.",
+    "Volver a anadir la ruta con los datos documentados antes del cambio."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Mantener acceso por consola o fuera de banda para recuperar el equipo si el cambio corta la gestion."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes",
+  "referencias": ["IEC 62443 SR 7.6", "IEC 62443 SR 5.1", "NERC CIP-010 R1", "NIST 800-82 CM-2", "NIST 800-82 CM-6", "NIST CSF PR.PS-01"]
+}

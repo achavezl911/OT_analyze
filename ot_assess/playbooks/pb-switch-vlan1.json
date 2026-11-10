@@ -1,0 +1,39 @@
+{
+  "id": "pb-switch-vlan1",
+  "hallazgo": "VLAN 1 en uso o como VLAN nativa",
+  "objetivo": "Sacar los equipos de la VLAN 1 y fijar en los trunks una VLAN nativa dedicada y sin uso.",
+  "prioridad_ot": "Cambiar la VLAN de un puerto o la nativa de un trunk corta la comunicacion hasta que ambos extremos coinciden; un cambio de VLAN mal coordinado puede detener la operacion.",
+  "pasos": [
+    "Listar los puertos de acceso con equipos en la VLAN 1 y los trunks con nativa 1, segun el reporte.",
+    "Definir con ciberseguridad y operacion la VLAN destino de cada equipo y una VLAN nativa sin uso, y reflejarlo en el direccionamiento.",
+    "Verificar que el otro extremo de cada trunk tendra la misma nativa y que las VLAN nuevas estan permitidas en todo el camino.",
+    "Probar el cambio en laboratorio o en un switch no critico y respaldar la configuracion antes de aplicarlo.",
+    "Aplicar en la ventana acordada, un puerto o un trunk a la vez, con los dos extremos del trunk en el mismo momento.",
+    "Limitar las VLAN permitidas en los trunks y dejar registro del cambio."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Mover el puerto con switchport access vlan hacia la VLAN definida (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Fijar la nativa del trunk con switchport trunk native vlan y las VLAN permitidas con switchport trunk allowed vlan (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Revisar con show interfaces trunk que la nativa coincide en ambos extremos (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Conservar el acceso por consola mientras se hace el cambio."
+    ]
+  },
+  "verificacion": [
+    "Volver a leer la configuracion con la herramienta y confirmar que ya no hay equipos en la VLAN 1 ni trunks con nativa 1.",
+    "Confirmar con operacion que los equipos movidos mantienen su comunicacion y su direccion IP."
+  ],
+  "reversion": [
+    "Devolver el puerto a su VLAN anterior o la nativa a su valor previo en la ventana, en los dos extremos del trunk.",
+    "Restaurar el respaldo de la configuracion del switch con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Un cambio de VLAN o de nativa corta la comunicacion si los extremos no coinciden: coordinar a ambos lados antes.",
+    "Probar primero en laboratorio o en un switch no critico y respaldar la configuracion antes de cambiarla.",
+    "No mover un equipo cuyo direccionamiento dependa de la VLAN sin que el dueno del proceso lo haya revisado."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Administracion de redes y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 5.1", "NERC CIP-005 R1", "NIST 800-82 SC-7", "NIST CSF PR.IR-01"]
+}

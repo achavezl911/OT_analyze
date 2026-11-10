@@ -1,0 +1,43 @@
+{
+  "id": "pb-dns-internet",
+  "hallazgo": "Resolucion de dominios de Internet desde la red",
+  "objetivo": "Saber que dominios de Internet resuelven los equipos de la red de control, aprobar los necesarios y retirar el resto.",
+  "prioridad_ot": "Bloquear dominios sin conocer su uso puede cortar actualizaciones, licencias, sincronizacion de hora o soporte remoto del proveedor.",
+  "pasos": [
+    "Listar los dominios resueltos y los equipos que los piden, con el registro de la captura.",
+    "Clasificar cada dominio: actualizacion, licencia, hora, telemetria del proveedor o desconocido.",
+    "Validar con el dueno del proceso cuales se necesitan, y para que equipos, y anotar la excepcion con fecha de revision.",
+    "Desactivar en los equipos los servicios que consultan dominios innecesarios.",
+    "Permitir solo los dominios aprobados desde el resolvedor interno, con registro antes de bloquear el resto."
+  ],
+  "por_plataforma": {
+    "Windows / Active Directory": [
+      "Desactivar con directivas de grupo (GPO) los servicios de actualizacion o telemetria que salgan a Internet si el cliente no los usa.",
+      "Usar un servidor de actualizaciones interno y aprobar solo lo que el proveedor del SCADA haya validado."
+    ],
+    "Linux": [
+      "Desactivar los servicios innecesarios que expongan consultas a Internet.",
+      "Revisar los repositorios de paquetes y apuntarlos a un repositorio interno aprobado."
+    ],
+    "FortiGate": [
+      "Activar el registro de trafico DNS hacia Internet y revisar que equipos lo usan.",
+      "Deshabilitar la politica antes de borrarla, para poder reactivarla."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que solo se resuelven los dominios aprobados.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de firewall y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 5.1", "IEC 62443 SR 5.2", "NERC CIP-005 R1", "NIST 800-82 SC-7", "NIST 800-82 AC-4", "NIST CSF ID.AM-03", "NIST CSF PR.IR-01"]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "pb-switch-credenciales",
+  "hallazgo": "Credenciales del switch con cifrado reversible o sin cifrar",
+  "objetivo": "Reemplazar las contrasenas tipo 7, en texto y el enable password por secretos con hash fuerte, y rotar las que estuvieron expuestas.",
+  "prioridad_ot": "Cambiar una credencial sin coordinarla puede dejar a las herramientas de gestion y a los respaldos automaticos sin acceso al switch; sin acceso remoto hay que ir al sitio.",
+  "pasos": [
+    "Inventariar donde estan las credenciales afectadas (enable, usuarios locales, lineas) usando solo los conteos del reporte; no copiar valores a correos ni tickets.",
+    "Considerar expuestas las credenciales que aparezcan en respaldos de configuracion, capturas o sesiones pegadas, y planear su rotacion.",
+    "Coordinar con operacion las herramientas que usan esas credenciales para actualizarlas al mismo tiempo.",
+    "Crear los secretos nuevos con hash fuerte y probar el acceso antes de borrar los anteriores.",
+    "Retirar el enable password y los usuarios con contrasena tipo 0 o 7 una vez confirmado el acceso nuevo.",
+    "Guardar la configuracion, dejar registro del cambio y custodiar los respaldos como informacion sensible."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Definir enable secret con tipo 8 o 9 y quitar el enable password (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Recrear los usuarios locales con secret en lugar de password (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Recordar que service password-encryption solo ofusca con tipo 7, que se revierte con herramientas publicas; no lo tome como proteccion.",
+      "Conservar el acceso por consola mientras se hace el cambio."
+    ]
+  },
+  "verificacion": [
+    "Volver a leer la configuracion con la herramienta y confirmar que ya no se cuentan credenciales tipo 0 ni tipo 7 ni enable password.",
+    "Probar el acceso con las credenciales nuevas desde la estacion de gestion.",
+    "Confirmar que los respaldos automaticos y la monitorizacion siguen accediendo al switch."
+  ],
+  "reversion": [
+    "Restaurar el respaldo de la configuracion anterior solo en la ventana y con acceso por consola; despues rotar de nuevo cualquier credencial que haya vuelto.",
+    "Mantener una cuenta de emergencia probada hasta confirmar el acceso con las credenciales nuevas."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No cerrar la sesion actual hasta probar el acceso nuevo en otra: un error deja al switch inaccesible.",
+    "Probar primero en laboratorio o en un switch no critico y respaldar la configuracion antes de cambiarla.",
+    "Confirmar con el dueno del proceso las integraciones que usan la credencial antes de rotarla."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de redes y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0859", "IEC 62443 SR 1.5", "NERC CIP-007 R5", "NIST 800-82 IA-5", "NIST CSF PR.AA-01"]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "pb-escaneo-red",
+  "hallazgo": "Patron compatible con escaneo de red",
+  "objetivo": "Determinar si el patron de escaneo es una herramienta autorizada o un reconocimiento no autorizado, y limitar quien puede escanear la red de control.",
+  "prioridad_ot": "Un escaneo activo puede saturar o bloquear controladores antiguos; bloquear al escaneador sin identificarlo puede detener un inventario o una auditoria autorizados.",
+  "pasos": [
+    "Identificar el origen, los destinos y los puertos del patron, con el registro de la captura.",
+    "Confirmar con el dueno del proceso si hay un escaneo, una auditoria o un inventario programado en esa fecha.",
+    "Si no esta autorizado, tratarlo como incidente con el procedimiento del cliente y conservar la captura.",
+    "Si esta autorizado, documentar la herramienta y el alcance, y acordar con operacion que los escaneos a controladores se hagan en ventana y con perfiles suaves.",
+    "Limitar con reglas que equipos pueden iniciar conexiones hacia muchos destinos en la zona de control, con registro antes de bloquear."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Activar el registro de conexiones en la regla antes de cambiar su accion a bloqueo.",
+      "Desplegar los cambios en la ventana acordada y conservar la version anterior de la politica."
+    ],
+    "FortiGate": [
+      "Revisar la bitacora de trafico del origen para ver destinos y puertos, y activar el registro en la politica que lo permite.",
+      "Deshabilitar la politica antes de borrarla, para poder reactivarla."
+    ],
+    "Claroty xDome": [
+      "Revisar las alertas de escaneo y marcar las que correspondan a herramientas autorizadas, con fecha de revision.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que el patron solo aparece en los horarios y desde los equipos autorizados.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Equipo de monitoreo y respuesta a incidentes OT",
+  "referencias": ["MITRE ICS T0846", "MITRE ICS T0840", "IEC 62443 SR 6.2", "NERC CIP-007 R4", "NIST 800-82 SI-4", "NIST CSF DE.AE-02"]
+}

@@ -1,0 +1,5 @@
+id,origen,destino,puerto,protocolo,accion
+FW-01,10.10.1.10,10.10.1.20,502,tcp,permitir
+FW-02,10.10.1.30,10.10.1.1,23,tcp,denegar
+FW-03,10.10.2.5,10.10.2.6,2404,tcp,permitir
+FW-04,10.10.9.0/24,10.10.1.20,502,tcp,permitir

@@ -1,0 +1,43 @@
+{
+  "id": "pb-sin-vlan",
+  "hallazgo": "Sin segmentacion por VLAN visible en el punto de captura",
+  "objetivo": "Confirmar si la red esta realmente plana o si el punto de captura no deja ver las etiquetas VLAN, y segmentar solo si se confirma.",
+  "prioridad_ot": "Concluir que la red es plana por un artefacto de la captura lleva a un plan de segmentacion innecesario; segmentar sin plan puede cortar comunicaciones de control.",
+  "pasos": [
+    "Revisar si la captura se tomo en un puerto de acceso o con un espejo que quita las etiquetas VLAN, y anotarlo en el registro.",
+    "Revisar la configuracion de los switches para ver que VLAN existen y como se asignan los puertos.",
+    "Repetir la captura en un enlace troncal o con un espejo que conserve las etiquetas, si se sospecha un artefacto.",
+    "Si la red es plana, definir con el dueno del proceso y la arquitectura aprobada los segmentos objetivo.",
+    "Segmentar por etapas en laboratorio y luego en la ventana acordada, con respaldo de la configuracion de cada switch."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar las VLAN configuradas y los puertos de acceso y troncales (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Revisar que el puerto espejo conserve las etiquetas VLAN si se necesita verlas."
+    ],
+    "Linux": [
+      "Repetir la captura en la interfaz del enlace troncal con la herramienta del analista y confirmar que se ven las etiquetas.",
+      "Conservar la captura original como evidencia."
+    ],
+    "Claroty xDome": [
+      "Revisar si los sensores informan la VLAN de cada activo.",
+      "Comparar con la lista de VLAN del switch."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que se ven las VLAN esperadas, o que cada segmento nuevo esta separado.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Devolver los puertos a la VLAN anterior si un equipo pierde comunicacion, y registrar el motivo.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Confirmar con el dueno del proceso que el puerto espejo no sobrecarga el enlace."
+  ],
+  "esfuerzo_estimado": "alto",
+  "responsable": "Arquitectura de red OT y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 5.1", "NERC CIP-005 R1", "NIST 800-82 SC-7", "NIST CSF PR.IR-01"]
+}

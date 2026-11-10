@@ -1,0 +1,39 @@
+{
+  "id": "pb-captura-truncada",
+  "hallazgo": "Captura truncada (snaplen por debajo del MTU)",
+  "objetivo": "Repetir la captura con la longitud completa de cada paquete, porque una captura truncada pierde el contenido de los protocolos y limita las detecciones.",
+  "prioridad_ot": "Repetir la captura sin planificar puede cargar el equipo de captura o el espejo; analizar una captura truncada como si fuera completa da conclusiones incompletas.",
+  "pasos": [
+    "Confirmar en la cabecera del archivo la longitud maxima capturada y compararla con el MTU de la red, y dejar el registro.",
+    "Anotar que detecciones dependen del contenido del paquete y quedan limitadas por la captura actual.",
+    "Repetir la captura con la longitud completa del paquete en la herramienta de captura.",
+    "Coordinar con el dueno del proceso la ventana de la nueva captura y el espacio en disco necesario.",
+    "Conservar la captura truncada y anotar en el informe cuales conclusiones dependen de la nueva."
+  ],
+  "por_plataforma": {
+    "Linux": [
+      "Indicar la longitud completa de paquete en la herramienta de captura del analista (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Revisar el espacio en disco antes de empezar."
+    ],
+    "Claroty xDome": [
+      "Comparar con las comunicaciones del sensor, que no dependen de la longitud de esta captura.",
+      "Anotar la cobertura de los sensores por segmento."
+    ]
+  },
+  "verificacion": [
+    "Abrir la nueva captura y confirmar que la longitud maxima capturada cubre el MTU de la red.",
+    "Registrar en el informe la captura reemplazada y el motivo."
+  ],
+  "reversion": [
+    "Volver a la captura anterior si la nueva no se pudo completar, anotando su limitacion en el informe.",
+    "Conservar la configuracion anterior de la herramienta de captura para volver a ella."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Confirmar con el dueno del proceso que la captura completa no sobrecarga el enlace ni el disco."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": []
+}

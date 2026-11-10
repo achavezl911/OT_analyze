@@ -1,0 +1,52 @@
+{
+  "id": "pb-activos-criticos-expuestos",
+  "hallazgo": "Activos criticos alcanzables desde Internet o IT",
+  "objetivo": "Cortar o controlar los caminos desde Internet o IT hacia activos criticos, dejando solo accesos identificados, autenticados y registrados.",
+  "prioridad_ot": "Cerrar un camino que usa un integrador, un historiador o un acceso remoto legitimo puede dejar al proceso sin soporte o sin datos.",
+  "pasos": [
+    "Revisar cada ruta de ataque del reporte (origen, saltos, puertos) y confirmar con operacion cuales son accesos legitimos.",
+    "Para cada ruta no legitima, identificar el punto de paso (regla, activo intermedio o conducto) donde cortarla con menor impacto.",
+    "Para las rutas legitimas, pasarlas por una zona intermedia (DMZ) con servidor de salto, autenticacion multifactor y registro de sesiones.",
+    "Respaldar la configuracion de los equipos que se van a tocar y probar el corte en laboratorio o en un equipo no critico.",
+    "Aplicar el corte en la ventana acordada, empezando por la regla de mayor alcance y con registro (log) antes de bloquear.",
+    "Retirar o restringir el acceso remoto directo (RDP, VNC, SSH, Telnet) hacia activos criticos que no lo necesiten.",
+    "Repetir el analisis de rutas con los datos nuevos para confirmar que el camino ya no aparece."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Restringir en la politica de control de acceso (Policies > Access Control) las reglas que permiten el camino desde las zonas externas o de IT hacia la zona de control (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Activar el registro de conexiones en la regla antes de cambiar su accion a bloqueo."
+    ],
+    "FortiGate": [
+      "Acotar las politicas que permiten trafico desde las interfaces de IT o Internet hacia la zona de control: origen, destino y servicio concretos.",
+      "Activar el registro de trafico en la politica antes de pasarla a denegar."
+    ],
+    "Windows / Active Directory": [
+      "Limitar quien puede iniciar sesion remota en los equipos de control con grupos de seguridad y directivas de grupo (GPO).",
+      "Exigir autenticacion multifactor en el servidor de salto y retirar las cuentas compartidas."
+    ],
+    "Claroty xDome": [
+      "Usar las comunicaciones del activo para confirmar el origen real del acceso antes de cortarlo.",
+      "Crear una alerta para accesos nuevos desde IT o Internet hacia los activos criticos."
+    ]
+  },
+  "verificacion": [
+    "Reimportar o repetir la captura y confirmar que la ruta ya no aparece en el analisis de rutas de ataque.",
+    "Probar desde un equipo de IT autorizado que el acceso legitimo sigue funcionando por el servidor de salto.",
+    "Revisar el registro del firewall durante un ciclo de operacion para detectar intentos bloqueados."
+  ],
+  "reversion": [
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda.",
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Reactivar temporalmente el acceso cortado, solo para los origenes identificados y con registro, mientras se resuelve la causa."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "La alcanzabilidad se calcula con comunicaciones observadas: no prueba que cada salto sea explotable."
+  ],
+  "esfuerzo_estimado": "alto",
+  "responsable": "Ingenieria de redes y ciberseguridad OT, con el dueno del proceso",
+  "referencias": ["MITRE ICS T0886", "MITRE ICS T0866", "IEC 62443 SR 5.1", "IEC 62443 SR 5.2", "NERC CIP-005 R1", "NERC CIP-005 R2", "NIST 800-82 SC-7", "NIST 800-82 RA-3", "NIST CSF ID.RA-04", "NIST CSF PR.IR-01"]
+}

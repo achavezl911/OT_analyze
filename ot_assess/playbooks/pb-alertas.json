@@ -1,0 +1,50 @@
+{
+  "id": "pb-alertas",
+  "hallazgo": "Alertas de seguridad registradas por la plataforma",
+  "objetivo": "Triar las alertas de la plataforma, separar las legitimas de las que requieren respuesta y ajustar la deteccion para que el equipo vea lo importante.",
+  "prioridad_ot": "Aislar o bloquear un equipo sin confirmar que hay un incidente puede detener un proceso; silenciar alertas sin criterio oculta incidentes reales.",
+  "pasos": [
+    "Agrupar las alertas por firma, origen, destino y activo, y ordenarlas por severidad y criticidad del activo.",
+    "Confirmar con operacion cuales corresponden a actividad planeada (cambios, mantenimiento, ingenieria).",
+    "Escalar al procedimiento de respuesta a incidentes del cliente las que no tengan explicacion.",
+    "Contener solo con aprobacion del dueno del proceso, de preferencia por segmentacion y no apagando equipos.",
+    "Ajustar la deteccion (umbrales, listas de actividad conocida) dejando registro del cambio y responsable, sin silenciar firmas completas.",
+    "Documentar el resultado de cada alerta (falso positivo, actividad legitima, incidente) y revisar la tendencia periodicamente."
+  ],
+  "por_plataforma": {
+    "Claroty xDome": [
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion.",
+      "Crear excepciones solo para origen, destino y firma concretos, con fecha de revision."
+    ],
+    "Cisco FTD (FMC)": [
+      "Correlacionar la alerta con los eventos de conexion del firewall por origen, destino y hora.",
+      "Si se decide contener, bloquear con una regla acotada al flujo y con registro de conexiones."
+    ],
+    "FortiGate": [
+      "Correlacionar la alerta con la bitacora de trafico por origen, destino y hora.",
+      "Si se decide contener, usar una politica acotada al flujo y no a todo el equipo, con registro de trafico."
+    ],
+    "Windows / Active Directory": [
+      "Revisar el registro de eventos de inicio de sesion del equipo implicado en la hora de la alerta.",
+      "Conservar una copia de los registros antes de cualquier limpieza o reinstalacion."
+    ]
+  },
+  "verificacion": [
+    "Confirmar que cada alerta tiene estado, responsable y resultado documentados.",
+    "Comprobar que las excepciones creadas son acotadas y tienen fecha de revision.",
+    "Reimportar las alertas tras el periodo acordado y comparar la tendencia por firma y por activo."
+  ],
+  "reversion": [
+    "Quitar la excepcion o restaurar el umbral anterior si el ajuste oculta alertas necesarias.",
+    "Retirar la regla de contencion en cuanto el dueno del proceso confirme que no hay incidente."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Una alerta es evidencia tecnica de la plataforma, no confirma por si sola un incidente."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Equipo de monitoreo y respuesta a incidentes OT",
+  "referencias": ["IEC 62443 SR 6.2", "IEC 62443 SR 2.8", "NERC CIP-007 R4", "NERC CIP-015", "NIST 800-82 SI-4", "NIST 800-82 AU-6", "NIST CSF DE.CM-01", "NIST CSF DE.AE-02"]
+}

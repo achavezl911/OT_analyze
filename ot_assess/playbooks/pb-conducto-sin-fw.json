@@ -1,0 +1,50 @@
+{
+  "id": "pb-conducto-sin-fw",
+  "hallazgo": "Conductos entre zonas sin firewall observado en el camino",
+  "objetivo": "Poner un punto de control (firewall o ACL) en cada conducto entre zonas que hoy no tiene uno observado, o confirmar que el control existe y no se vio.",
+  "prioridad_ot": "Un firewall mal ubicado o una regla de bloqueo equivocada corta la comunicacion entre zonas y puede detener el proceso.",
+  "pasos": [
+    "Confirmar con el equipo de red si existe un firewall o ACL en el camino que la captura o la exportacion no vio (punto de captura, rutas asimetricas).",
+    "Listar los conductos afectados con origen, destino, puerto y proposito, y validar cada uno con el dueno del proceso.",
+    "Definir para cada conducto el punto de control (firewall, ACL en el switch de capa 3 o diodo) y una politica base: negar por defecto y permitir solo lo identificado.",
+    "Respaldar la configuracion de los equipos que se van a tocar y probar la politica en laboratorio o en un equipo no critico.",
+    "Aplicar la politica en la ventana acordada, primero permitiendo con registro (log) todo el trafico del conducto.",
+    "Revisar el registro durante un ciclo completo de operacion, ajustar y solo entonces pasar a negar lo no identificado.",
+    "Anotar el conducto, la regla y el responsable en el diagrama de zonas y conductos."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Crear o ajustar la politica de control de acceso (Policies > Access Control) con una regla por conducto (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Activar el registro de conexiones en la regla antes de cambiar su accion a bloqueo.",
+      "Desplegar los cambios en la ventana acordada y conservar la version anterior de la politica."
+    ],
+    "FortiGate": [
+      "Crear una politica de firewall por conducto entre las interfaces o zonas correspondientes, con registro de trafico activado.",
+      "Evitar politicas con origen y destino abiertos; usar objetos de direccion y servicios concretos.",
+      "Guardar el respaldo de la configuracion antes de aplicar."
+    ],
+    "Switch Cisco IOS/IOS-XE": [
+      "Si el control sera una ACL en el switch de capa 3, escribirla con registro en las entradas nuevas y aplicarla primero en una interfaz de prueba.",
+      "Confirmar que la ACL se aplica en el sentido correcto (entrada o salida) de la interfaz."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura o importar de nuevo la exportacion y confirmar que el conducto aparece con un firewall en el camino.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio.",
+    "Revisar el registro y confirmar que no hay denegaciones de comunicaciones necesarias."
+  ],
+  "reversion": [
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda.",
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Si la politica ya estaba en negar, volver temporalmente a permitir con registro y revisar lo denegado."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Mantener acceso por consola o fuera de banda para recuperar el equipo si el cambio corta la gestion."
+  ],
+  "esfuerzo_estimado": "alto",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": ["IEC 62443 3-2 ZCR 3", "IEC 62443 SR 5.1", "IEC 62443 SR 5.2", "NERC CIP-005 R1", "NIST 800-82 SC-7", "NIST 800-82 AC-4", "NIST CSF PR.IR-01"]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "pb-ingenieria-controladores",
+  "hallazgo": "Actividad de ingenieria sobre controladores (descarga, arranque o paro)",
+  "objetivo": "Confirmar que cada descarga de programa, arranque o paro de un controlador estaba autorizado, y limitar quien puede hacerlo.",
+  "prioridad_ot": "Una descarga o un cambio de modo no autorizado puede alterar o detener el proceso; bloquear la ingenieria sin plan puede impedir un mantenimiento legitimo.",
+  "pasos": [
+    "Registrar controlador, origen, accion y hora de cada evento.",
+    "Comparar con los permisos de cambio y las ventanas de mantenimiento con el dueno del proceso.",
+    "Si no hay autorizacion, tratarlo como incidente con el procedimiento del cliente y comparar el programa en ejecucion con el ultimo respaldo aprobado.",
+    "Limitar con reglas que solo las estaciones de ingenieria autorizadas hablen el protocolo de programacion con los controladores.",
+    "Exigir control de cambios y un respaldo del programa antes de cada descarga, y poner el selector del controlador en modo run cuando no se programe, donde el equipo lo tenga."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Activar el registro de conexiones en la regla antes de cambiar su accion a bloqueo.",
+      "Desplegar los cambios en la ventana acordada y conservar la version anterior de la politica."
+    ],
+    "Claroty xDome": [
+      "Crear una alerta para descargas y cambios de modo hacia controladores desde equipos que no sean estaciones de ingenieria.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ],
+    "PLC / RTU (generico)": [
+      "Revisar si el fabricante permite proteger la descarga con contrasena o rol y activar el registro de eventos del controlador.",
+      "Aplicar los cambios solo en ventana y sin reiniciar el controlador en produccion sin ventana acordada."
+    ],
+    "Windows / Active Directory": [
+      "Limitar quien puede iniciar sesion en las estaciones de ingenieria con grupos de seguridad y directivas de grupo (GPO).",
+      "Conservar un repositorio de programas con versiones y respaldos."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que las descargas y los cambios de modo solo vienen de las estaciones y horarios autorizados.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No reiniciar controladores ni equipos de control en produccion sin una ventana acordada."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de control y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0843", "MITRE ICS T0858", "IEC 62443 SR 2.1", "IEC 62443 SR 5.2", "NERC CIP-010 R1", "NERC CIP-007 R4", "NIST 800-82 CM-3", "NIST 800-82 CM-5", "NIST CSF PR.AA-05", "NIST CSF PR.PS-01", "NIST CSF DE.CM-03"]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "pb-apipa",
+  "hallazgo": "Equipos con direccion APIPA (169.254.x.x)",
+  "objetivo": "Dar a los equipos con direccion automatica de enlace local una direccion valida y documentada, y corregir la causa por la que no recibieron una.",
+  "prioridad_ot": "Asignar una direccion sin revisar el inventario puede duplicar la de otro equipo de control y cortar su comunicacion.",
+  "pasos": [
+    "Listar los equipos con direccion 169.254.x.x y su MAC, con el registro de la captura.",
+    "Averiguar por que no obtuvieron direccion: servidor DHCP caido, relevo mal configurado, VLAN equivocada o equipo sin configurar.",
+    "Confirmar con el dueno del proceso la direccion que cada equipo debe tener segun el inventario.",
+    "Asignar direccion fija o reserva por MAC, de uno en uno y dentro de la ventana acordada.",
+    "Actualizar el inventario con la direccion y la VLAN de cada equipo."
+  ],
+  "por_plataforma": {
+    "Windows / Active Directory": [
+      "Revisar que el servidor DHCP este autorizado en el dominio y que sus reservas coincidan con el inventario.",
+      "Respaldar el ambito del servidor DHCP antes de cambiarlo."
+    ],
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar que el puerto del equipo este en la VLAN correcta y que el relevo DHCP apunte al servidor autorizado (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Conservar el acceso por consola mientras se hace el cambio."
+    ],
+    "PLC / RTU (generico)": [
+      "Revisar en el equipo si esta configurado para obtener direccion automatica o fija, y ajustarlo solo en ventana.",
+      "Aplicar los cambios sin reiniciar el controlador en produccion sin ventana acordada."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que ya no hay direcciones 169.254.x.x.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Devolver al equipo su configuracion de direccion anterior si perdio comunicacion tras el cambio.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No reiniciar controladores ni equipos de control en produccion sin una ventana acordada."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 7.6", "NERC CIP-010 R1", "NIST 800-82 CM-6", "NIST 800-82 CM-8", "NIST CSF PR.PS-01"]
+}

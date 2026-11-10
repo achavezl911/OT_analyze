@@ -1,0 +1,45 @@
+{
+  "id": "pb-trafico-denegado",
+  "hallazgo": "Trafico observado que el firewall denegaria",
+  "objetivo": "Resolver la discrepancia entre el trafico observado y la politica: o la regla que lo niega no se aplica donde debe, o el trafico es legitimo y falta documentarlo.",
+  "prioridad_ot": "Aplicar una denegacion que hoy no actua puede cortar un flujo que el proceso usa y nadie documento; permitirlo sin revisar abre una brecha.",
+  "pasos": [
+    "Revisar cada flujo observado que la politica denegaria y comprobar si el firewall analizado esta realmente en el camino.",
+    "Descartar otras causas de la discrepancia: captura anterior al cambio de politica, rutas alternas, NAT o reglas de otro firewall.",
+    "Confirmar con el dueno del proceso si el flujo es legitimo.",
+    "Si es legitimo: documentarlo y crear una regla especifica, con origen, destino y puerto concretos.",
+    "Si no es legitimo: localizar por que no se bloquea (ruta que rodea al firewall, regla fuera de lugar) y corregirlo, con registro (log) previo.",
+    "Respaldar la configuracion y aplicar en la ventana acordada."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Comparar los eventos de conexion con la politica de control de acceso (Policies > Access Control) para ver que regla decide el flujo (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Desplegar los cambios en la ventana acordada y conservar la version anterior de la politica."
+    ],
+    "FortiGate": [
+      "Comparar la bitacora de trafico con la politica que decide el flujo y revisar el orden de las politicas.",
+      "Deshabilitar una politica antes de borrarla, para poder reactivarla."
+    ],
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar si existe una ruta que evita al firewall (otra VLAN, otro enlace) y si el trafico cruza el switch sin pasar por el.",
+      "Confirmar las ACL aplicadas en las interfaces de capa 3 del camino."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura o importar de nuevo y comprobar que los flujos que se decidieron bloquear ya no aparecen.",
+    "Confirmar que los flujos legitimos tienen una regla explicita y registro.",
+    "Reimportar la configuracion y revisar que no queden discrepancias sin explicar."
+  ],
+  "reversion": [
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Administracion de firewall e ingenieria de redes",
+  "referencias": ["IEC 62443 SR 5.1", "IEC 62443 SR 5.2", "NERC CIP-005 R1", "NERC CIP-007 R1", "NIST 800-82 SC-7", "NIST 800-82 CM-7", "NIST CSF PR.IR-01"]
+}

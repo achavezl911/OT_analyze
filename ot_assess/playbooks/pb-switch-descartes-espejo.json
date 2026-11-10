@@ -1,0 +1,38 @@
+{
+  "id": "pb-switch-descartes-espejo",
+  "hallazgo": "El puerto destino del espejo (SPAN) descarta paquetes",
+  "objetivo": "Lograr que el puerto destino del SPAN no descarte paquetes, para que la captura que llega al sensor sea completa.",
+  "prioridad_ot": "Cambiar las fuentes del SPAN no afecta el trafico de los equipos, pero un destino mal elegido puede dejar sin servicio a un equipo de campo; el cambio se hace en ventana.",
+  "pasos": [
+    "Anotar el puerto destino, los descartes y desde cuando se acumulan (ultimo clear de contadores).",
+    "Borrar los contadores del puerto destino y medir los descartes durante un periodo de trafico normal para saber si siguen creciendo.",
+    "Sumar el trafico de las fuentes del SPAN y compararlo con la velocidad del puerto destino.",
+    "Reducir las fuentes: quitar las VLAN o los puertos que no se analizan, o espejar solo un sentido si basta.",
+    "Si no alcanza, usar un puerto destino de mayor velocidad o un TAP en el enlace principal.",
+    "Repetir la captura y dejar registro de los descartes antes y despues."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar show interfaces counters errors y show interfaces del puerto destino, y show monitor session N (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Reiniciar los contadores con clear counters del puerto antes de medir (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Quitar fuentes de la sesion con no monitor session N source ... y revisar con show monitor session N (verificar la sintaxis en la documentacion del fabricante para la version instalada)."
+    ]
+  },
+  "verificacion": [
+    "Volver a leer los contadores del puerto destino y confirmar que los descartes ya no crecen.",
+    "Confirmar con el sensor y con el dueno del proceso que la captura nueva no muestra huecos ni perdida de paquetes."
+  ],
+  "reversion": [
+    "Reponer en la sesion las fuentes retiradas si hacen falta para el analisis y buscar otro medio (TAP o puerto mas rapido).",
+    "Restaurar el respaldo de la configuracion del switch en la ventana, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No apuntar el destino del espejo a un puerto que ya tenga un equipo conectado: se pierde su comunicacion.",
+    "Probar primero en laboratorio o en un switch no critico y respaldar la configuracion antes de cambiarla.",
+    "Los descartes son acumulados desde el arranque o el ultimo clear: no concluir con una sola lectura."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de redes y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 6.2", "NERC CIP-015", "NIST 800-82 SI-4", "NIST CSF DE.CM-01"]
+}

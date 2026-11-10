@@ -1,0 +1,316 @@
+{
+  "version": 1,
+  "nota": "Catalogo de servicios de infraestructura que cabria esperar por zona (M6, D69). Puertos: IANA o documentacion del fabricante (Microsoft para WSUS y KMS). Los servicios sin puerto dependen del producto y solo llevan la pregunta. Condiciones: activos, windows, red_ot, activos_red, historiador. Las preguntas usan {zonas} (frase \"la zona A\" o \"las zonas A, B y C\") y {n}; pregunta_1 es la variante para un solo equipo.",
+  "servicios": [
+    {
+      "id": "dns",
+      "servicio": "DNS",
+      "condicion": "activos",
+      "fuente": "IANA",
+      "puertos": [
+        {
+          "puerto": 53,
+          "l4": "udp"
+        },
+        {
+          "puerto": 53,
+          "l4": "tcp"
+        }
+      ],
+      "pregunta": "¿Los {n} equipos de {zonas} resuelven nombres con un servidor DNS fuera de su zona? Indicar cual y por donde pasa.",
+      "pregunta_1": "¿El equipo de {zonas} resuelve nombres con un servidor DNS fuera de su zona? Indicar cual y por donde pasa.",
+      "regla_sugerida": "Permitir {puertos} desde {zonas} hacia el servidor de {servicio} a confirmar, con registro."
+    },
+    {
+      "id": "ntp",
+      "servicio": "NTP",
+      "condicion": "activos",
+      "fuente": "IANA",
+      "puertos": [
+        {
+          "puerto": 123,
+          "l4": "udp"
+        }
+      ],
+      "pregunta": "¿Los {n} equipos de {zonas} sincronizan la hora con un servidor fuera de su zona? Indicar cual y por donde pasa.",
+      "pregunta_1": "¿El equipo de {zonas} sincroniza la hora con un servidor fuera de su zona? Indicar cual y por donde pasa.",
+      "regla_sugerida": "Permitir {puertos} desde {zonas} hacia el servidor de {servicio} a confirmar, con registro."
+    },
+    {
+      "id": "kerberos",
+      "servicio": "Kerberos (Active Directory)",
+      "condicion": "windows",
+      "fuente": "IANA",
+      "puertos": [
+        {
+          "puerto": 88,
+          "l4": "tcp"
+        },
+        {
+          "puerto": 88,
+          "l4": "udp"
+        }
+      ],
+      "pregunta": "¿Los {n} equipos Windows de {zonas} se autentican contra un controlador de dominio fuera de su zona? Indicar cuales controladores y por donde pasa.",
+      "pregunta_1": "¿El equipo Windows de {zonas} se autentica contra un controlador de dominio fuera de su zona? Indicar cual controlador y por donde pasa.",
+      "regla_sugerida": "Permitir {puertos} desde {zonas} hacia el servidor de {servicio} a confirmar, con registro."
+    },
+    {
+      "id": "ldap",
+      "servicio": "LDAP (Active Directory)",
+      "condicion": "windows",
+      "fuente": "IANA",
+      "puertos": [
+        {
+          "puerto": 389,
+          "l4": "tcp"
+        }
+      ],
+      "pregunta": "¿Los {n} equipos Windows de {zonas} consultan el directorio por LDAP en un servidor fuera de su zona?",
+      "pregunta_1": "¿El equipo Windows de {zonas} consulta el directorio por LDAP en un servidor fuera de su zona?",
+      "regla_sugerida": "Permitir {puertos} desde {zonas} hacia el servidor de {servicio} a confirmar, con registro."
+    },
+    {
+      "id": "ldaps",
+      "servicio": "LDAPS (Active Directory)",
+      "condicion": "windows",
+      "fuente": "IANA",
+      "puertos": [
+        {
+          "puerto": 636,
+          "l4": "tcp"
+        }
+      ],
+      "pregunta": "¿Los {n} equipos Windows de {zonas} consultan el directorio por LDAP seguro en un servidor fuera de su zona?",
+      "pregunta_1": "¿El equipo Windows de {zonas} consulta el directorio por LDAP seguro en un servidor fuera de su zona?",
+      "regla_sugerida": "Permitir {puertos} desde {zonas} hacia el servidor de {servicio} a confirmar, con registro."
+    },
+    {
+      "id": "catalogo_global",
+      "servicio": "Catalogo global (Active Directory)",
+      "condicion": "windows",
+      "fuente": "IANA",
+      "puertos": [
+        {
+          "puerto": 3268,
+          "l4": "tcp"
+        },
+        {
+          "puerto": 3269,
+          "l4": "tcp"
+        }
+      ],
+      "pregunta": "¿Los {n} equipos Windows de {zonas} consultan el catalogo global de un controlador fuera de su zona?",
+      "pregunta_1": "¿El equipo Windows de {zonas} consulta el catalogo global de un controlador fuera de su zona?",
+      "regla_sugerida": "Permitir {puertos} desde {zonas} hacia el servidor de {servicio} a confirmar, con registro."
+    },
+    {
+      "id": "smb_gpo",
+      "servicio": "SMB a controladores (GPO y SYSVOL)",
+      "condicion": "windows",
+      "fuente": "IANA",
+      "puertos": [
+        {
+          "puerto": 445,
+          "l4": "tcp"
+        }
+      ],
+      "pregunta": "¿Los {n} equipos Windows de {zonas} aplican directivas de grupo (GPO, SYSVOL) desde un controlador fuera de su zona?",
+      "pregunta_1": "¿El equipo Windows de {zonas} aplica directivas de grupo (GPO, SYSVOL) desde un controlador fuera de su zona?",
+      "regla_sugerida": "Permitir {puertos} desde {zonas} hacia el servidor de {servicio} a confirmar, con registro."
+    },
+    {
+      "id": "rpc",
+      "servicio": "RPC de Windows",
+      "condicion": "windows",
+      "fuente": "IANA",
+      "puertos": [
+        {
+          "puerto": 135,
+          "l4": "tcp"
+        }
+      ],
+      "pregunta": "¿Los {n} equipos Windows de {zonas} usan RPC (135) hacia un servidor fuera de su zona, por ejemplo para la administracion del dominio?",
+      "pregunta_1": "¿El equipo Windows de {zonas} usa RPC (135) hacia un servidor fuera de su zona, por ejemplo para la administracion del dominio?",
+      "regla_sugerida": "Permitir {puertos} desde {zonas} hacia el servidor de {servicio} a confirmar, con registro; RPC abre ademas puertos dinamicos que hay que acotar."
+    },
+    {
+      "id": "wsus",
+      "servicio": "WSUS (actualizaciones de Windows)",
+      "condicion": "windows",
+      "fuente": "Microsoft (puertos por defecto de WSUS)",
+      "puertos": [
+        {
+          "puerto": 8530,
+          "l4": "tcp"
+        },
+        {
+          "puerto": 8531,
+          "l4": "tcp"
+        }
+      ],
+      "pregunta": "¿Los {n} equipos Windows de {zonas} reciben actualizaciones de un servidor WSUS fuera de su zona? Indicar cual y cada cuanto se parchea.",
+      "pregunta_1": "¿El equipo Windows de {zonas} recibe actualizaciones de un servidor WSUS fuera de su zona? Indicar cual y cada cuanto se parchea.",
+      "regla_sugerida": "Permitir {puertos} desde {zonas} hacia el servidor de {servicio} a confirmar, con registro."
+    },
+    {
+      "id": "kms",
+      "servicio": "KMS (activacion de Windows)",
+      "condicion": "windows",
+      "fuente": "Microsoft",
+      "puertos": [
+        {
+          "puerto": 1688,
+          "l4": "tcp"
+        }
+      ],
+      "pregunta": "¿Los {n} equipos Windows de {zonas} se activan contra un servidor KMS fuera de su zona?",
+      "pregunta_1": "¿El equipo Windows de {zonas} se activa contra un servidor KMS fuera de su zona?",
+      "regla_sugerida": "Permitir {puertos} desde {zonas} hacia el servidor de {servicio} a confirmar, con registro."
+    },
+    {
+      "id": "syslog",
+      "servicio": "Syslog",
+      "condicion": "red_ot",
+      "fuente": "IANA",
+      "puertos": [
+        {
+          "puerto": 514,
+          "l4": "udp"
+        }
+      ],
+      "pregunta": "¿Los {n} activos de red u OT de {zonas} envian registros (syslog) a un servidor fuera de su zona? Indicar cual.",
+      "pregunta_1": "¿El activo de red u OT de {zonas} envia registros (syslog) a un servidor fuera de su zona? Indicar cual.",
+      "regla_sugerida": "Permitir {puertos} desde {zonas} hacia el servidor de {servicio} a confirmar, con registro."
+    },
+    {
+      "id": "snmp",
+      "servicio": "SNMP",
+      "condicion": "red_ot",
+      "fuente": "IANA",
+      "puertos": [
+        {
+          "puerto": 161,
+          "l4": "udp"
+        },
+        {
+          "puerto": 162,
+          "l4": "udp"
+        }
+      ],
+      "pregunta": "¿Los {n} activos de red u OT de {zonas} son consultados por SNMP o envian traps a una estacion de monitoreo fuera de su zona? Indicar cual.",
+      "pregunta_1": "¿El activo de red u OT de {zonas} es consultado por SNMP o envia traps a una estacion de monitoreo fuera de su zona? Indicar cual.",
+      "regla_sugerida": "Permitir {puertos} entre {zonas} y la estacion de {servicio} a confirmar, con registro; el sentido de la consulta es del monitor hacia el equipo."
+    },
+    {
+      "id": "tacacs",
+      "servicio": "TACACS+",
+      "condicion": "activos_red",
+      "fuente": "IANA",
+      "puertos": [
+        {
+          "puerto": 49,
+          "l4": "tcp"
+        }
+      ],
+      "pregunta": "¿Los {n} activos de red de {zonas} autentican la administracion contra un servidor TACACS+ fuera de su zona?",
+      "pregunta_1": "¿El activo de red de {zonas} autentica la administracion contra un servidor TACACS+ fuera de su zona?",
+      "regla_sugerida": "Permitir {puertos} desde {zonas} hacia el servidor de {servicio} a confirmar, con registro."
+    },
+    {
+      "id": "radius",
+      "servicio": "RADIUS",
+      "condicion": "activos_red",
+      "fuente": "IANA",
+      "puertos": [
+        {
+          "puerto": 1812,
+          "l4": "udp"
+        },
+        {
+          "puerto": 1813,
+          "l4": "udp"
+        }
+      ],
+      "pregunta": "¿Los {n} activos de red de {zonas} autentican o contabilizan accesos contra un servidor RADIUS fuera de su zona?",
+      "pregunta_1": "¿El activo de red de {zonas} autentica o contabiliza accesos contra un servidor RADIUS fuera de su zona?",
+      "regla_sugerida": "Permitir {puertos} desde {zonas} hacia el servidor de {servicio} a confirmar, con registro."
+    },
+    {
+      "id": "respaldo",
+      "servicio": "Respaldo",
+      "condicion": "activos",
+      "fuente": "sin puerto: depende del producto",
+      "puertos": [],
+      "pregunta": "¿Los {n} equipos de {zonas} se respaldan hacia un servidor fuera de su zona? Indicar producto, puertos y horario.",
+      "pregunta_1": "¿El equipo de {zonas} se respalda hacia un servidor fuera de su zona? Indicar producto, puertos y horario.",
+      "regla_sugerida": "Definir con el cliente segun el producto de respaldo; no hay puerto verificado."
+    },
+    {
+      "id": "antivirus",
+      "servicio": "Actualizacion del antivirus",
+      "condicion": "windows",
+      "fuente": "sin puerto: depende del producto",
+      "puertos": [],
+      "pregunta": "¿Los {n} equipos Windows de {zonas} actualizan el antivirus desde una consola fuera de su zona? Indicar producto y puertos.",
+      "pregunta_1": "¿El equipo Windows de {zonas} actualiza el antivirus desde una consola fuera de su zona? Indicar producto y puertos.",
+      "regla_sugerida": "Definir con el cliente segun el producto de antivirus; no hay puerto verificado."
+    },
+    {
+      "id": "licenciamiento",
+      "servicio": "Licenciamiento",
+      "condicion": "activos",
+      "fuente": "sin puerto: depende del producto",
+      "puertos": [],
+      "pregunta": "¿Algun equipo de {zonas} ({n} activos) valida licencias contra un servidor fuera de su zona? Indicar producto y puertos.",
+      "pregunta_1": "¿El equipo de {zonas} valida licencias contra un servidor fuera de su zona? Indicar producto y puertos.",
+      "regla_sugerida": "Definir con el cliente segun el producto; no hay puerto verificado."
+    },
+    {
+      "id": "replicacion_historiador",
+      "servicio": "Replicacion del historiador",
+      "condicion": "historiador",
+      "fuente": "sin puerto: depende del producto",
+      "puertos": [],
+      "pregunta": "¿Los {n} historiadores de {zonas} replican datos a otro servidor fuera de su zona (sitio alterno o nivel superior)? Indicar producto y puertos.",
+      "pregunta_1": "¿El historiador de {zonas} replica datos a otro servidor fuera de su zona (sitio alterno o nivel superior)? Indicar producto y puertos.",
+      "regla_sugerida": "Definir con el cliente segun el producto del historiador; no hay puerto verificado."
+    },
+    {
+      "id": "soporte_remoto",
+      "servicio": "Soporte remoto del proveedor",
+      "condicion": "activos",
+      "fuente": "sin puerto: depende del producto",
+      "puertos": [],
+      "pregunta": "¿Algun proveedor da soporte remoto a equipos de {zonas} ({n} activos)? Indicar herramienta, origen y ventanas de uso.",
+      "pregunta_1": "¿Algun proveedor da soporte remoto al equipo de {zonas}? Indicar herramienta, origen y ventanas de uso.",
+      "regla_sugerida": "Definir con el cliente segun la herramienta de acceso remoto; abrir solo por ventana y con registro."
+    }
+  ],
+  "generales": [
+    {
+      "id": "tareas_periodicas",
+      "servicio": "Tareas mensuales o trimestrales",
+      "pregunta": "¿Hay tareas mensuales o trimestrales (respaldo completo, parches, cierres) que no cayeron en la ventana observada? Indicar origen, destino y puertos.",
+      "regla_sugerida": "Agregar la regla de cada tarea confirmada antes de bloquear."
+    },
+    {
+      "id": "contingencia",
+      "servicio": "Pruebas de contingencia y sitio alterno",
+      "pregunta": "¿Hay pruebas de contingencia o replicacion al sitio alterno que no cayeron en la ventana observada? Indicar origen, destino y puertos.",
+      "regla_sugerida": "Agregar la regla de cada operacion confirmada antes de bloquear."
+    },
+    {
+      "id": "proveedores",
+      "servicio": "Soporte remoto de proveedores",
+      "pregunta": "¿Hay proveedores que se conectan de forma esporadica (soporte, garantia, mantenimiento) y no aparecieron en la ventana observada? Indicar origen, destino y puertos.",
+      "regla_sugerida": "Agregar la regla de cada acceso confirmado antes de bloquear, limitada a su ventana."
+    },
+    {
+      "id": "certificados_licencias",
+      "servicio": "Renovacion de certificados y licencias",
+      "pregunta": "¿Hay renovaciones de certificados o licencias (anuales o menos frecuentes) que requieran salir a un servidor externo y no aparecieron en la ventana observada?",
+      "regla_sugerida": "Agregar la regla de cada renovacion confirmada antes de bloquear."
+    }
+  ]
+}

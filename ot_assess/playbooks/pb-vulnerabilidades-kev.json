@@ -1,0 +1,50 @@
+{
+  "id": "pb-vulnerabilidades-kev",
+  "hallazgo": "Vulnerabilidades explotadas activamente",
+  "objetivo": "Reducir primero el riesgo de las vulnerabilidades que CISA documenta como explotadas, con parche o mitigacion del fabricante y restriccion de los conductos que alcanzan al activo.",
+  "prioridad_ot": "Parchar o actualizar el firmware de un controlador o de un servidor SCADA sin probar puede detener el proceso o dejar el equipo inutilizable; la urgencia de una vulnerabilidad explotada no justifica un cambio sin ventana ni respaldo.",
+  "pasos": [
+    "Abrir el aviso ICS del fabricante (columna avisos_ics de vulnerabilidades.csv) y confirmar que el producto y la version del activo son los afectados; el cruce es solo por CVE.",
+    "Leer la remediacion del fabricante (parche, mitigacion o solucion alterna) y confirmar con el proveedor que esta aprobada para la version del sistema y del proceso.",
+    "Si hay parche: probarlo en laboratorio o en un equipo no critico y programarlo en la ventana acordada con operacion.",
+    "Mientras tanto, restringir los conductos que alcanzan al activo a los imprescindibles (lista de permitidos, segmentacion) con registro (log), sin cortar comunicaciones que el dueno del proceso no haya identificado.",
+    "Revisar los registros del activo y de los conductos que lo alcanzan en busca de actividad inusual desde la fecha en que la vulnerabilidad se agrego al catalogo.",
+    "La fecha limite del catalogo KEV la fija CISA para agencias federales de EE. UU. (BOD 22-01): usarla solo como referencia de urgencia, no como obligacion del cliente.",
+    "Reimportar las vulnerabilidades y confirmar el estado de cada una."
+  ],
+  "por_plataforma": {
+    "Claroty xDome": [
+      "Filtrar las vulnerabilidades del activo por explotacion conocida para ordenar el trabajo.",
+      "Marcar el estado (parchada, mitigada, aceptada) para que la siguiente exportacion lo refleje."
+    ],
+    "PLC / RTU (generico)": [
+      "Verificar con el fabricante la version de firmware recomendada y el procedimiento de actualizacion.",
+      "Respaldar el programa del controlador antes de cualquier cambio.",
+      "No actualizar el firmware ni reiniciar el controlador en produccion sin una ventana acordada."
+    ],
+    "Windows / Active Directory": [
+      "Probar las actualizaciones en un equipo no critico o en una imagen de laboratorio antes de desplegarlas.",
+      "Aprobar solo lo que el proveedor del SCADA haya validado."
+    ]
+  },
+  "verificacion": [
+    "Reimportar o volver a escanear y confirmar que la vulnerabilidad aparece como parchada o mitigada.",
+    "Confirmar que los conductos restringidos solo permiten lo acordado y que la operacion sigue normal.",
+    "Comprobar que cualquier excepcion aceptada tiene responsable y fecha de revision."
+  ],
+  "reversion": [
+    "Restaurar la version anterior del sistema o del firmware y el respaldo del programa, si el fabricante lo permite.",
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Documentar el motivo y volver a evaluar la mitigacion con el fabricante."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No reiniciar controladores ni equipos de control en produccion sin una ventana acordada.",
+    "Los archivos de CISA son una fuente externa que el analista descargo: una coincidencia de CVE no prueba que el equipo sea explotable ni que haya sido atacado."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de control y ciberseguridad OT, con el proveedor del equipo",
+  "referencias": ["MITRE ICS T0866", "IEC 62443 2-3", "NERC CIP-007 R2", "NERC CIP-010 R3", "NIST 800-82 RA-5", "NIST 800-82 SI-2", "NIST CSF ID.RA-01", "NIST CSF PR.PS-02"]
+}

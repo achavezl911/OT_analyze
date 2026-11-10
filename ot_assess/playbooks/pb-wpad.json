@@ -1,0 +1,39 @@
+{
+  "id": "pb-wpad",
+  "hallazgo": "Busqueda de proxy WPAD por DNS",
+  "objetivo": "Evitar que los equipos busquen un proxy automatico (WPAD) en la red, porque un respondedor falso podria desviar su trafico.",
+  "prioridad_ot": "Cambiar la configuracion de proxy de un equipo que si lo necesita para actualizar o licenciar puede dejarlo sin salida; dejar la busqueda abierta permite un desvio del trafico.",
+  "pasos": [
+    "Identificar los equipos que buscan WPAD y el servidor DNS que responde, con el registro de la captura.",
+    "Confirmar con el dueno del proceso si algun equipo usa un proxy corporativo legitimo.",
+    "Desactivar la deteccion automatica de proxy en los clientes y fijar el proxy explicito solo donde haga falta.",
+    "Crear en el DNS interno una entrada que evite que un tercero registre el nombre wpad.",
+    "Aplicar el cambio por grupos pequenos, empezando por equipos no criticos, dentro de la ventana acordada."
+  ],
+  "por_plataforma": {
+    "Windows / Active Directory": [
+      "Desactivar la deteccion automatica de proxy con directivas de grupo (GPO) y probar en un equipo piloto.",
+      "Respaldar la directiva antes de cambiarla."
+    ],
+    "Linux": [
+      "Revisar si el equipo o sus aplicaciones usan configuracion automatica de proxy y fijarla de forma explicita.",
+      "Revisar el archivo de resolucion de nombres para ver que servidor DNS usa."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que ya no hay consultas WPAD.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Reactivar la deteccion automatica en el equipo afectado si perdio acceso necesario, y registrar el motivo.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de sistemas y redes OT",
+  "referencias": ["MITRE ICS T0830", "IEC 62443 SR 3.1", "IEC 62443 SR 7.7", "NERC CIP-007 R1", "NIST 800-82 CM-7", "NIST 800-82 SC-8", "NIST CSF PR.PS-01", "NIST CSF PR.IR-01"]
+}

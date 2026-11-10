@@ -1,0 +1,39 @@
+{
+  "id": "pb-captura-corta",
+  "hallazgo": "Ventana de captura corta",
+  "objetivo": "Capturar durante un periodo suficiente para ver el trafico periodico y esporadico, porque una ventana corta puede perder comunicaciones que ocurren pocas veces.",
+  "prioridad_ot": "Concluir que no hay otras comunicaciones por una captura corta da una matriz incompleta; una captura larga sin plan puede llenar el disco o cargar el enlace.",
+  "pasos": [
+    "Acordar con el dueno del proceso la duracion de la nueva captura, para que cubra un ciclo completo de operacion, cambios de turno y mantenimientos periodicos.",
+    "Dejar en el registro la fecha, el punto y la duracion de cada captura.",
+    "Planear el espacio en disco y la rotacion de archivos antes de empezar.",
+    "Repetir la captura en la ventana acordada, o en varias sesiones en distintos turnos.",
+    "Anotar en el informe que lo no visto en la ventana corta no esta descartado."
+  ],
+  "por_plataforma": {
+    "Linux": [
+      "Programar la captura con archivos rotativos y limite de espacio para no llenar el disco (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Conservar las capturas originales como evidencia."
+    ],
+    "Switch Cisco IOS/IOS-XE": [
+      "Confirmar que el puerto espejo (SPAN) puede mantenerse el tiempo necesario sin afectar el switch (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Confirmar con el dueno del proceso que el espejo no sobrecarga el enlace."
+    ]
+  },
+  "verificacion": [
+    "Confirmar que la nueva captura cubre el periodo acordado con el dueno del proceso.",
+    "Registrar en el informe la ventana real de cada captura."
+  ],
+  "reversion": [
+    "Detener la captura prolongada si afecta el equipo de captura o el switch, y conservar lo ya capturado.",
+    "Quitar el puerto espejo temporal al terminar y restaurar el respaldo de la configuracion si afecto la gestion."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Confirmar con el dueno del proceso que la captura prolongada no sobrecarga el enlace ni el disco."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": []
+}

@@ -1,0 +1,58 @@
+{
+  "id": "pb-vulnerabilidades",
+  "hallazgo": "Vulnerabilidades conocidas en activos",
+  "objetivo": "Gestionar las vulnerabilidades conocidas priorizando por criticidad del activo y exposicion, con parche, mitigacion o aceptacion documentada.",
+  "prioridad_ot": "Parchar o actualizar el firmware de un controlador o de un servidor SCADA sin probar puede detener el proceso, perder el soporte del fabricante o dejar el equipo inutilizable.",
+  "pasos": [
+    "Priorizar las vulnerabilidades por criticidad del activo, severidad, explotacion conocida y alcanzabilidad desde IT o Internet.",
+    "Consultar el boletin del fabricante para saber si hay parche y si esta aprobado para la version del sistema y del proceso.",
+    "Si hay parche: probarlo en laboratorio o en un equipo no critico y programarlo en la ventana acordada con operacion.",
+    "Si no hay parche o no se puede aplicar: aplicar mitigaciones (segmentacion, bloqueo del servicio vulnerable, lista de permitidos) con registro (log) y documentarlas.",
+    "Respaldar el programa, la configuracion y el firmware antes de cualquier actualizacion.",
+    "Registrar las vulnerabilidades aceptadas, con responsable y fecha de revision.",
+    "Reimportar el inventario y confirmar el estado de cada vulnerabilidad."
+  ],
+  "por_plataforma": {
+    "Claroty xDome": [
+      "Usar la lista de vulnerabilidades del activo y su puntuacion de riesgo para ordenar el trabajo.",
+      "Marcar el estado (parchada, mitigada, aceptada) para que la siguiente exportacion lo refleje."
+    ],
+    "Windows / Active Directory": [
+      "Probar las actualizaciones en un equipo no critico o en una imagen de laboratorio antes de desplegarlas.",
+      "Usar un servidor de actualizaciones interno y aprobar solo lo que el proveedor del SCADA haya validado."
+    ],
+    "PLC / RTU (generico)": [
+      "Verificar con el fabricante la version de firmware recomendada y el procedimiento de actualizacion.",
+      "Respaldar el programa del controlador antes de cualquier cambio.",
+      "No actualizar el firmware ni reiniciar el controlador en produccion sin una ventana acordada."
+    ],
+    "Linux": [
+      "Aplicar solo las actualizaciones validadas por el proveedor de la aplicacion y probarlas antes.",
+      "Desactivar los servicios innecesarios que expongan la vulnerabilidad."
+    ],
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar el aviso de seguridad del fabricante para la version instalada y su version corregida.",
+      "Planear la actualizacion del sistema operativo con ventana, respaldo de la configuracion y acceso fuera de banda."
+    ]
+  },
+  "verificacion": [
+    "Reimportar o volver a escanear y confirmar que la vulnerabilidad aparece como parchada o mitigada.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio.",
+    "Comprobar que la lista de excepciones aceptadas tiene responsable y fecha de revision."
+  ],
+  "reversion": [
+    "Restaurar la version anterior del sistema o del firmware y el respaldo del programa, si el fabricante lo permite.",
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Documentar el motivo y volver a evaluar el parche con el fabricante."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No reiniciar controladores ni equipos de control en produccion sin una ventana acordada.",
+    "La lista de vulnerabilidades viene de la plataforma: una coincidencia de version no prueba que el equipo sea explotable."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de control y ciberseguridad OT, con el proveedor del equipo",
+  "referencias": ["MITRE ICS T0866", "IEC 62443 2-3", "NERC CIP-007 R2", "NERC CIP-010 R3", "NIST 800-82 RA-5", "NIST 800-82 SI-2", "NIST CSF ID.RA-01", "NIST CSF PR.PS-02"]
+}

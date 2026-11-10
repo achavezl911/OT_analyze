@@ -1,0 +1,39 @@
+{
+  "id": "pb-dns-fallas",
+  "hallazgo": "Fallas de resolucion DNS",
+  "objetivo": "Corregir las consultas DNS que fallan, que suelen indicar configuracion vieja, equipos retirados o un servidor DNS mal indicado.",
+  "prioridad_ot": "Borrar entradas o cambiar el servidor DNS de un equipo sin saber que aplicacion lo usa puede cortar la comunicacion de un sistema de control que si funcionaba.",
+  "pasos": [
+    "Listar los nombres que fallan, los equipos que los piden y el servidor que responde, con el registro de la captura.",
+    "Clasificar cada caso: nombre mal escrito, equipo retirado, sufijo de dominio incorrecto o servidor DNS que no responde.",
+    "Confirmar con el dueno del proceso que aplicacion usa cada nombre antes de borrar o cambiar nada.",
+    "Corregir los registros DNS o la configuracion del cliente en la ventana acordada.",
+    "Retirar de los equipos las referencias a nombres o servidores que ya no existen."
+  ],
+  "por_plataforma": {
+    "Windows / Active Directory": [
+      "Revisar los registros del servidor DNS y las zonas para encontrar entradas obsoletas.",
+      "Respaldar la zona DNS antes de modificarla."
+    ],
+    "Linux": [
+      "Revisar el archivo de resolucion de nombres del equipo y los servidores DNS que usa.",
+      "Verificar con una consulta de prueba desde el equipo antes y despues del cambio."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que las consultas fallidas ya no aparecen o estan explicadas.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Restaurar la entrada DNS o la configuracion anterior del cliente si el cambio afecto una aplicacion.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No borrar un registro que el dueno del proceso no haya identificado."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de sistemas y redes OT",
+  "referencias": ["IEC 62443 SR 7.6", "NIST 800-82 CM-6", "NIST 800-82 SC-22", "NIST CSF PR.PS-01"]
+}

@@ -1,0 +1,5269 @@
+{
+ "catalogo": {
+  "version": 1,
+  "generado_por": "scripts/extraer_niveles_62443.py (lee normas/, que no se versiona)",
+  "decision": "D75",
+  "aviso": {
+   "es": "Estructura e identificadores; titulos propios. Sin texto de las normas. No afirma cumplimiento.",
+   "en": "Structure and identifiers; own titles. No text from the standards. Makes no compliance claim."
+  }
+ },
+ "documentos": {
+  "3-3": {
+   "designacion": "ANSI/ISA-62443-3-3 (99.03.03)",
+   "anio": 2013,
+   "edicion": "2013",
+   "vigente_anterior_2020": true,
+   "tema": {
+    "es": "Requisitos de seguridad del sistema y niveles de seguridad",
+    "en": "System security requirements and security levels"
+   }
+  },
+  "4-2": {
+   "designacion": "ANSI/ISA-62443-4-2",
+   "anio": 2018,
+   "edicion": "2018",
+   "vigente_anterior_2020": true,
+   "tema": {
+    "es": "Requisitos tecnicos de seguridad de componentes",
+    "en": "Technical security requirements for components"
+   }
+  },
+  "3-2": {
+   "designacion": "ANSI/ISA-62443-3-2",
+   "anio": 2020,
+   "edicion": "2020",
+   "tema": {
+    "es": "Evaluacion de riesgo y diseno de zonas y conductos",
+    "en": "Security risk assessment and system design (zones and conduits)"
+   }
+  },
+  "tr2-2": {
+   "designacion": "ISA-TR62443-2-2",
+   "anio": 2025,
+   "edicion": "2025",
+   "tema": {
+    "es": "Madurez y tipos de perfil de programa de seguridad",
+    "en": "Maturity and security program rating types"
+   }
+  }
+ },
+ "documentos_no_usados": [
+  {
+   "documento": "ISA-62443-1-1:2007",
+   "motivo": {
+    "es": "Solo terminologia y modelos; edicion anterior a 2020",
+    "en": "Terminology and models only; edition before 2020"
+   }
+  },
+  {
+   "documento": "ISA-62443-4-1:2018",
+   "motivo": {
+    "es": "Ciclo de desarrollo del fabricante, fuera del alcance de la linea base de planta",
+    "en": "Supplier development lifecycle, outside plant baseline scope"
+   }
+  },
+  {
+   "documento": "ISA-TR62443-2-3:2015",
+   "motivo": {
+    "es": "Gestion de parches; ya cubierto por el flujo de vulnerabilidades",
+    "en": "Patch management; already covered by the vulnerability flow"
+   }
+  },
+  {
+   "documento": "ISA-TR99.00.01:2007",
+   "motivo": {
+    "es": "Obsoleto",
+    "en": "Obsolete"
+   }
+  },
+  {
+   "documento": "ISA/IEC 62443-2-1:2024",
+   "motivo": {
+    "es": "No entregado: sin el no se nombran los elementos del programa (SPE)",
+    "en": "Not supplied: program elements (SPE) are not named without it"
+   }
+  }
+ ],
+ "pendiente": {
+  "es": "Nombres de los elementos del programa (SPE): requieren ISA/IEC 62443-2-1:2024",
+  "en": "Security program element (SPE) names: require ISA/IEC 62443-2-1:2024"
+ },
+ "tipos_sl": {
+  "SL-T": {
+   "nombre": {
+    "es": "Nivel de seguridad objetivo",
+    "en": "Target security level"
+   },
+   "fuente": "3-2:2020 ZCR 5.6"
+  },
+  "SL-C": {
+   "nombre": {
+    "es": "Nivel de seguridad de capacidad",
+    "en": "Capability security level"
+   },
+   "fuente": "3-3:2013 y 4-2:2018"
+  },
+  "SL-A": {
+   "nombre": {
+    "es": "Nivel de seguridad logrado",
+    "en": "Achieved security level"
+   },
+   "fuente": "3-3:2013 clausula 1"
+  }
+ },
+ "niveles_sl": {
+  "1": {
+   "es": "Proteccion contra uso indebido casual o fortuito",
+   "en": "Protection against casual or coincidental misuse"
+  },
+  "2": {
+   "es": "Contra un atacante con medios simples, pocos recursos y poca motivacion",
+   "en": "Against an attacker with simple means, low resources and low motivation"
+  },
+  "3": {
+   "es": "Contra medios sofisticados, recursos moderados y habilidades especificas",
+   "en": "Against sophisticated means, moderate resources and IACS specific skills"
+  },
+  "4": {
+   "es": "Contra medios sofisticados, muchos recursos y alta motivacion",
+   "en": "Against sophisticated means, extended resources and high motivation"
+  }
+ },
+ "fr": {
+  "FR1": {
+   "abreviatura": "IAC",
+   "titulo": {
+    "es": "Identificacion y autenticacion",
+    "en": "Identification and authentication"
+   },
+   "apartado_33": "5"
+  },
+  "FR2": {
+   "abreviatura": "UC",
+   "titulo": {
+    "es": "Control de uso",
+    "en": "Use control"
+   },
+   "apartado_33": "6"
+  },
+  "FR3": {
+   "abreviatura": "SI",
+   "titulo": {
+    "es": "Integridad del sistema",
+    "en": "System integrity"
+   },
+   "apartado_33": "7"
+  },
+  "FR4": {
+   "abreviatura": "DC",
+   "titulo": {
+    "es": "Confidencialidad de los datos",
+    "en": "Data confidentiality"
+   },
+   "apartado_33": "8"
+  },
+  "FR5": {
+   "abreviatura": "RDF",
+   "titulo": {
+    "es": "Flujo de datos restringido",
+    "en": "Restricted data flow"
+   },
+   "apartado_33": "9"
+  },
+  "FR6": {
+   "abreviatura": "TRE",
+   "titulo": {
+    "es": "Respuesta oportuna a eventos",
+    "en": "Timely response to events"
+   },
+   "apartado_33": "10"
+  },
+  "FR7": {
+   "abreviatura": "RA",
+   "titulo": {
+    "es": "Disponibilidad de recursos",
+    "en": "Resource availability"
+   },
+   "apartado_33": "11"
+  }
+ },
+ "sr": {
+  "SR 1.1": {
+   "fr": "FR1",
+   "titulo": {
+    "es": "Identificacion y autenticacion de usuarios humanos",
+    "en": "Identify and authenticate human users"
+   },
+   "seccion": "3-3 5.3",
+   "sl": {
+    "1": [
+     "SR 1.1"
+    ],
+    "2": [
+     "SR 1.1",
+     "SR 1.1 RE 1"
+    ],
+    "3": [
+     "SR 1.1",
+     "SR 1.1 RE 1",
+     "SR 1.1 RE 2"
+    ],
+    "4": [
+     "SR 1.1",
+     "SR 1.1 RE 1",
+     "SR 1.1 RE 2",
+     "SR 1.1 RE 3"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 1.1 RE 1",
+    "SR 1.1 RE 2",
+    "SR 1.1 RE 3"
+   ],
+   "cr": "CR 1.1"
+  },
+  "SR 1.2": {
+   "fr": "FR1",
+   "titulo": {
+    "es": "Identificacion y autenticacion de software, procesos y dispositivos",
+    "en": "Identify and authenticate software, processes and devices"
+   },
+   "seccion": "3-3 5.4",
+   "sl": {
+    "1": [],
+    "2": [
+     "SR 1.2"
+    ],
+    "3": [
+     "SR 1.2",
+     "SR 1.2 RE 1"
+    ],
+    "4": [
+     "SR 1.2",
+     "SR 1.2 RE 1"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "SR 1.2 RE 1"
+   ],
+   "cr": "CR 1.2"
+  },
+  "SR 1.3": {
+   "fr": "FR1",
+   "titulo": {
+    "es": "Gestion de cuentas",
+    "en": "Account management"
+   },
+   "seccion": "3-3 5.5",
+   "sl": {
+    "1": [
+     "SR 1.3"
+    ],
+    "2": [
+     "SR 1.3"
+    ],
+    "3": [
+     "SR 1.3",
+     "SR 1.3 RE 1"
+    ],
+    "4": [
+     "SR 1.3",
+     "SR 1.3 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 1.3 RE 1"
+   ],
+   "cr": "CR 1.3"
+  },
+  "SR 1.4": {
+   "fr": "FR1",
+   "titulo": {
+    "es": "Gestion de identificadores",
+    "en": "Identifier management"
+   },
+   "seccion": "3-3 5.6",
+   "sl": {
+    "1": [
+     "SR 1.4"
+    ],
+    "2": [
+     "SR 1.4"
+    ],
+    "3": [
+     "SR 1.4"
+    ],
+    "4": [
+     "SR 1.4"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [],
+   "cr": "CR 1.4"
+  },
+  "SR 1.5": {
+   "fr": "FR1",
+   "titulo": {
+    "es": "Gestion de autenticadores",
+    "en": "Authenticator management"
+   },
+   "seccion": "3-3 5.7",
+   "sl": {
+    "1": [
+     "SR 1.5"
+    ],
+    "2": [
+     "SR 1.5"
+    ],
+    "3": [
+     "SR 1.5",
+     "SR 1.5 RE 1"
+    ],
+    "4": [
+     "SR 1.5",
+     "SR 1.5 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 1.5 RE 1"
+   ],
+   "cr": "CR 1.5"
+  },
+  "SR 1.6": {
+   "fr": "FR1",
+   "titulo": {
+    "es": "Gestion de acceso inalambrico",
+    "en": "Wireless access management"
+   },
+   "seccion": "3-3 5.8",
+   "sl": {
+    "1": [
+     "SR 1.6"
+    ],
+    "2": [
+     "SR 1.6",
+     "SR 1.6 RE 1"
+    ],
+    "3": [
+     "SR 1.6",
+     "SR 1.6 RE 1"
+    ],
+    "4": [
+     "SR 1.6",
+     "SR 1.6 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 1.6 RE 1"
+   ],
+   "cr": "CR 1.6"
+  },
+  "SR 1.7": {
+   "fr": "FR1",
+   "titulo": {
+    "es": "Robustez de la autenticacion por contrasena",
+    "en": "Strength of password authentication"
+   },
+   "seccion": "3-3 5.9",
+   "sl": {
+    "1": [
+     "SR 1.7"
+    ],
+    "2": [
+     "SR 1.7"
+    ],
+    "3": [
+     "SR 1.7",
+     "SR 1.7 RE 1"
+    ],
+    "4": [
+     "SR 1.7",
+     "SR 1.7 RE 1",
+     "SR 1.7 RE 2"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 1.7 RE 1",
+    "SR 1.7 RE 2"
+   ],
+   "cr": "CR 1.7"
+  },
+  "SR 1.8": {
+   "fr": "FR1",
+   "titulo": {
+    "es": "Certificados de infraestructura de clave publica",
+    "en": "Public key infrastructure certificates"
+   },
+   "seccion": "3-3 5.10",
+   "sl": {
+    "1": [],
+    "2": [
+     "SR 1.8"
+    ],
+    "3": [
+     "SR 1.8"
+    ],
+    "4": [
+     "SR 1.8"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [],
+   "cr": "CR 1.8"
+  },
+  "SR 1.9": {
+   "fr": "FR1",
+   "titulo": {
+    "es": "Robustez de la autenticacion por clave publica",
+    "en": "Strength of public key authentication"
+   },
+   "seccion": "3-3 5.11",
+   "sl": {
+    "1": [],
+    "2": [
+     "SR 1.9"
+    ],
+    "3": [
+     "SR 1.9",
+     "SR 1.9 RE 1"
+    ],
+    "4": [
+     "SR 1.9",
+     "SR 1.9 RE 1"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "SR 1.9 RE 1"
+   ],
+   "cr": "CR 1.9"
+  },
+  "SR 1.10": {
+   "fr": "FR1",
+   "titulo": {
+    "es": "Retroalimentacion del autenticador",
+    "en": "Feedback shown while authenticating"
+   },
+   "seccion": "3-3 5.12",
+   "sl": {
+    "1": [
+     "SR 1.10"
+    ],
+    "2": [
+     "SR 1.10"
+    ],
+    "3": [
+     "SR 1.10"
+    ],
+    "4": [
+     "SR 1.10"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [],
+   "cr": "CR 1.10"
+  },
+  "SR 1.11": {
+   "fr": "FR1",
+   "titulo": {
+    "es": "Intentos de inicio de sesion fallidos",
+    "en": "Failed login attempts"
+   },
+   "seccion": "3-3 5.13",
+   "sl": {
+    "1": [
+     "SR 1.11"
+    ],
+    "2": [
+     "SR 1.11"
+    ],
+    "3": [
+     "SR 1.11"
+    ],
+    "4": [
+     "SR 1.11"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [],
+   "cr": "CR 1.11"
+  },
+  "SR 1.12": {
+   "fr": "FR1",
+   "titulo": {
+    "es": "Aviso de uso del sistema",
+    "en": "System use notice"
+   },
+   "seccion": "3-3 5.14",
+   "sl": {
+    "1": [
+     "SR 1.12"
+    ],
+    "2": [
+     "SR 1.12"
+    ],
+    "3": [
+     "SR 1.12"
+    ],
+    "4": [
+     "SR 1.12"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [],
+   "cr": "CR 1.12"
+  },
+  "SR 1.13": {
+   "fr": "FR1",
+   "titulo": {
+    "es": "Acceso desde redes no confiables",
+    "en": "Access from untrusted networks"
+   },
+   "seccion": "3-3 5.15",
+   "sl": {
+    "1": [
+     "SR 1.13"
+    ],
+    "2": [
+     "SR 1.13",
+     "SR 1.13 RE 1"
+    ],
+    "3": [
+     "SR 1.13",
+     "SR 1.13 RE 1"
+    ],
+    "4": [
+     "SR 1.13",
+     "SR 1.13 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 1.13 RE 1"
+   ],
+   "cr": "CR 1.13"
+  },
+  "SR 2.1": {
+   "fr": "FR2",
+   "titulo": {
+    "es": "Aplicacion de autorizacion",
+    "en": "Authorization enforcement"
+   },
+   "seccion": "3-3 6.3",
+   "sl": {
+    "1": [
+     "SR 2.1"
+    ],
+    "2": [
+     "SR 2.1",
+     "SR 2.1 RE 1",
+     "SR 2.1 RE 2"
+    ],
+    "3": [
+     "SR 2.1",
+     "SR 2.1 RE 1",
+     "SR 2.1 RE 2",
+     "SR 2.1 RE 3"
+    ],
+    "4": [
+     "SR 2.1",
+     "SR 2.1 RE 1",
+     "SR 2.1 RE 2",
+     "SR 2.1 RE 3",
+     "SR 2.1 RE 4"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 2.1 RE 1",
+    "SR 2.1 RE 2",
+    "SR 2.1 RE 3",
+    "SR 2.1 RE 4"
+   ],
+   "cr": "CR 2.1"
+  },
+  "SR 2.2": {
+   "fr": "FR2",
+   "titulo": {
+    "es": "Control de uso inalambrico",
+    "en": "Wireless use control"
+   },
+   "seccion": "3-3 6.4",
+   "sl": {
+    "1": [
+     "SR 2.2"
+    ],
+    "2": [
+     "SR 2.2"
+    ],
+    "3": [
+     "SR 2.2",
+     "SR 2.2 RE 1"
+    ],
+    "4": [
+     "SR 2.2",
+     "SR 2.2 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 2.2 RE 1"
+   ],
+   "cr": "CR 2.2"
+  },
+  "SR 2.3": {
+   "fr": "FR2",
+   "titulo": {
+    "es": "Control de uso de dispositivos portatiles y moviles",
+    "en": "Use control for portable and mobile devices"
+   },
+   "seccion": "3-3 6.5",
+   "sl": {
+    "1": [
+     "SR 2.3"
+    ],
+    "2": [
+     "SR 2.3"
+    ],
+    "3": [
+     "SR 2.3",
+     "SR 2.3 RE 1"
+    ],
+    "4": [
+     "SR 2.3",
+     "SR 2.3 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 2.3 RE 1"
+   ],
+   "cr": "CR 2.3"
+  },
+  "SR 2.4": {
+   "fr": "FR2",
+   "titulo": {
+    "es": "Codigo movil",
+    "en": "Mobile code"
+   },
+   "seccion": "3-3 6.6",
+   "sl": {
+    "1": [
+     "SR 2.4"
+    ],
+    "2": [
+     "SR 2.4"
+    ],
+    "3": [
+     "SR 2.4",
+     "SR 2.4 RE 1"
+    ],
+    "4": [
+     "SR 2.4",
+     "SR 2.4 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 2.4 RE 1"
+   ],
+   "cr": "CR 2.4"
+  },
+  "SR 2.5": {
+   "fr": "FR2",
+   "titulo": {
+    "es": "Bloqueo de sesion",
+    "en": "Session lock"
+   },
+   "seccion": "3-3 6.7",
+   "sl": {
+    "1": [
+     "SR 2.5"
+    ],
+    "2": [
+     "SR 2.5"
+    ],
+    "3": [
+     "SR 2.5"
+    ],
+    "4": [
+     "SR 2.5"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [],
+   "cr": "CR 2.5"
+  },
+  "SR 2.6": {
+   "fr": "FR2",
+   "titulo": {
+    "es": "Terminacion de sesion remota",
+    "en": "Remote session termination"
+   },
+   "seccion": "3-3 6.8",
+   "sl": {
+    "1": [],
+    "2": [
+     "SR 2.6"
+    ],
+    "3": [
+     "SR 2.6"
+    ],
+    "4": [
+     "SR 2.6"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [],
+   "cr": "CR 2.6"
+  },
+  "SR 2.7": {
+   "fr": "FR2",
+   "titulo": {
+    "es": "Control de sesiones concurrentes",
+    "en": "Control of concurrent sessions"
+   },
+   "seccion": "3-3 6.9",
+   "sl": {
+    "1": [],
+    "2": [],
+    "3": [
+     "SR 2.7"
+    ],
+    "4": [
+     "SR 2.7"
+    ]
+   },
+   "sl_minimo": 3,
+   "re": [],
+   "cr": "CR 2.7"
+  },
+  "SR 2.8": {
+   "fr": "FR2",
+   "titulo": {
+    "es": "Eventos auditables",
+    "en": "Auditable events"
+   },
+   "seccion": "3-3 6.10",
+   "sl": {
+    "1": [
+     "SR 2.8"
+    ],
+    "2": [
+     "SR 2.8"
+    ],
+    "3": [
+     "SR 2.8",
+     "SR 2.8 RE 1"
+    ],
+    "4": [
+     "SR 2.8",
+     "SR 2.8 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 2.8 RE 1"
+   ],
+   "cr": "CR 2.8"
+  },
+  "SR 2.9": {
+   "fr": "FR2",
+   "titulo": {
+    "es": "Capacidad de almacenamiento de auditoria",
+    "en": "Audit storage capacity"
+   },
+   "seccion": "3-3 6.11",
+   "sl": {
+    "1": [
+     "SR 2.9"
+    ],
+    "2": [
+     "SR 2.9"
+    ],
+    "3": [
+     "SR 2.9",
+     "SR 2.9 RE 1"
+    ],
+    "4": [
+     "SR 2.9",
+     "SR 2.9 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 2.9 RE 1"
+   ],
+   "cr": "CR 2.9"
+  },
+  "SR 2.10": {
+   "fr": "FR2",
+   "titulo": {
+    "es": "Respuesta a fallas del procesamiento de auditoria",
+    "en": "Reaction to audit processing failures"
+   },
+   "seccion": "3-3 6.12",
+   "sl": {
+    "1": [
+     "SR 2.10"
+    ],
+    "2": [
+     "SR 2.10"
+    ],
+    "3": [
+     "SR 2.10"
+    ],
+    "4": [
+     "SR 2.10"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [],
+   "cr": "CR 2.10"
+  },
+  "SR 2.11": {
+   "fr": "FR2",
+   "titulo": {
+    "es": "Marcas de tiempo",
+    "en": "Timestamps"
+   },
+   "seccion": "3-3 6.13",
+   "sl": {
+    "1": [],
+    "2": [
+     "SR 2.11"
+    ],
+    "3": [
+     "SR 2.11",
+     "SR 2.11 RE 1"
+    ],
+    "4": [
+     "SR 2.11",
+     "SR 2.11 RE 1",
+     "SR 2.11 RE 2"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "SR 2.11 RE 1",
+    "SR 2.11 RE 2"
+   ],
+   "cr": "CR 2.11"
+  },
+  "SR 2.12": {
+   "fr": "FR2",
+   "titulo": {
+    "es": "No repudio",
+    "en": "Non-repudiation"
+   },
+   "seccion": "3-3 6.14",
+   "sl": {
+    "1": [],
+    "2": [],
+    "3": [
+     "SR 2.12"
+    ],
+    "4": [
+     "SR 2.12",
+     "SR 2.12 RE 1"
+    ]
+   },
+   "sl_minimo": 3,
+   "re": [
+    "SR 2.12 RE 1"
+   ],
+   "cr": "CR 2.12"
+  },
+  "SR 3.1": {
+   "fr": "FR3",
+   "titulo": {
+    "es": "Integridad de las comunicaciones",
+    "en": "Integrity of communications"
+   },
+   "seccion": "3-3 7.3",
+   "sl": {
+    "1": [
+     "SR 3.1"
+    ],
+    "2": [
+     "SR 3.1"
+    ],
+    "3": [
+     "SR 3.1",
+     "SR 3.1 RE 1"
+    ],
+    "4": [
+     "SR 3.1",
+     "SR 3.1 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 3.1 RE 1"
+   ],
+   "cr": "CR 3.1"
+  },
+  "SR 3.2": {
+   "fr": "FR3",
+   "titulo": {
+    "es": "Proteccion contra codigo malicioso",
+    "en": "Protection against malicious code"
+   },
+   "seccion": "3-3 7.4",
+   "sl": {
+    "1": [
+     "SR 3.2"
+    ],
+    "2": [
+     "SR 3.2",
+     "SR 3.2 RE 1"
+    ],
+    "3": [
+     "SR 3.2",
+     "SR 3.2 RE 1",
+     "SR 3.2 RE 2"
+    ],
+    "4": [
+     "SR 3.2",
+     "SR 3.2 RE 1",
+     "SR 3.2 RE 2"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 3.2 RE 1",
+    "SR 3.2 RE 2"
+   ],
+   "cr": "CR 3.2"
+  },
+  "SR 3.3": {
+   "fr": "FR3",
+   "titulo": {
+    "es": "Verificacion de la funcionalidad de seguridad",
+    "en": "Verification of security functions"
+   },
+   "seccion": "3-3 7.5",
+   "sl": {
+    "1": [
+     "SR 3.3"
+    ],
+    "2": [
+     "SR 3.3"
+    ],
+    "3": [
+     "SR 3.3",
+     "SR 3.3 RE 1"
+    ],
+    "4": [
+     "SR 3.3",
+     "SR 3.3 RE 1",
+     "SR 3.3 RE 2"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 3.3 RE 1",
+    "SR 3.3 RE 2"
+   ],
+   "cr": "CR 3.3"
+  },
+  "SR 3.4": {
+   "fr": "FR3",
+   "titulo": {
+    "es": "Integridad del software y la informacion",
+    "en": "Software and information integrity"
+   },
+   "seccion": "3-3 7.6",
+   "sl": {
+    "1": [],
+    "2": [
+     "SR 3.4"
+    ],
+    "3": [
+     "SR 3.4",
+     "SR 3.4 RE 1"
+    ],
+    "4": [
+     "SR 3.4",
+     "SR 3.4 RE 1"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "SR 3.4 RE 1"
+   ],
+   "cr": "CR 3.4"
+  },
+  "SR 3.5": {
+   "fr": "FR3",
+   "titulo": {
+    "es": "Validacion de entradas",
+    "en": "Input validation"
+   },
+   "seccion": "3-3 7.7",
+   "sl": {
+    "1": [
+     "SR 3.5"
+    ],
+    "2": [
+     "SR 3.5"
+    ],
+    "3": [
+     "SR 3.5"
+    ],
+    "4": [
+     "SR 3.5"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [],
+   "cr": "CR 3.5"
+  },
+  "SR 3.6": {
+   "fr": "FR3",
+   "titulo": {
+    "es": "Salida determinista",
+    "en": "Deterministic output"
+   },
+   "seccion": "3-3 7.8",
+   "sl": {
+    "1": [
+     "SR 3.6"
+    ],
+    "2": [
+     "SR 3.6"
+    ],
+    "3": [
+     "SR 3.6"
+    ],
+    "4": [
+     "SR 3.6"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [],
+   "cr": "CR 3.6"
+  },
+  "SR 3.7": {
+   "fr": "FR3",
+   "titulo": {
+    "es": "Manejo de errores",
+    "en": "Error handling"
+   },
+   "seccion": "3-3 7.9",
+   "sl": {
+    "1": [],
+    "2": [
+     "SR 3.7"
+    ],
+    "3": [
+     "SR 3.7"
+    ],
+    "4": [
+     "SR 3.7"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [],
+   "cr": "CR 3.7"
+  },
+  "SR 3.8": {
+   "fr": "FR3",
+   "titulo": {
+    "es": "Integridad de sesion",
+    "en": "Session integrity"
+   },
+   "seccion": "3-3 7.10",
+   "sl": {
+    "1": [],
+    "2": [
+     "SR 3.8"
+    ],
+    "3": [
+     "SR 3.8",
+     "SR 3.8 RE 1",
+     "SR 3.8 RE 2"
+    ],
+    "4": [
+     "SR 3.8",
+     "SR 3.8 RE 1",
+     "SR 3.8 RE 2",
+     "SR 3.8 RE 3"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "SR 3.8 RE 1",
+    "SR 3.8 RE 2",
+    "SR 3.8 RE 3"
+   ],
+   "cr": "CR 3.8"
+  },
+  "SR 3.9": {
+   "fr": "FR3",
+   "titulo": {
+    "es": "Proteccion de la informacion de auditoria",
+    "en": "Protection of audit information"
+   },
+   "seccion": "3-3 7.11",
+   "sl": {
+    "1": [],
+    "2": [
+     "SR 3.9"
+    ],
+    "3": [
+     "SR 3.9"
+    ],
+    "4": [
+     "SR 3.9",
+     "SR 3.9 RE 1"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "SR 3.9 RE 1"
+   ],
+   "cr": "CR 3.9"
+  },
+  "SR 4.1": {
+   "fr": "FR4",
+   "titulo": {
+    "es": "Confidencialidad de la informacion",
+    "en": "Information confidentiality"
+   },
+   "seccion": "3-3 8.3",
+   "sl": {
+    "1": [
+     "SR 4.1"
+    ],
+    "2": [
+     "SR 4.1",
+     "SR 4.1 RE 1"
+    ],
+    "3": [
+     "SR 4.1",
+     "SR 4.1 RE 1"
+    ],
+    "4": [
+     "SR 4.1",
+     "SR 4.1 RE 1",
+     "SR 4.1 RE 2"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 4.1 RE 1",
+    "SR 4.1 RE 2"
+   ],
+   "cr": "CR 4.1"
+  },
+  "SR 4.2": {
+   "fr": "FR4",
+   "titulo": {
+    "es": "Persistencia de la informacion",
+    "en": "Information persistence"
+   },
+   "seccion": "3-3 8.4",
+   "sl": {
+    "1": [],
+    "2": [
+     "SR 4.2"
+    ],
+    "3": [
+     "SR 4.2",
+     "SR 4.2 RE 1"
+    ],
+    "4": [
+     "SR 4.2",
+     "SR 4.2 RE 1"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "SR 4.2 RE 1"
+   ],
+   "cr": "CR 4.2"
+  },
+  "SR 4.3": {
+   "fr": "FR4",
+   "titulo": {
+    "es": "Uso de criptografia",
+    "en": "Use of cryptography"
+   },
+   "seccion": "3-3 8.5",
+   "sl": {
+    "1": [
+     "SR 4.3"
+    ],
+    "2": [
+     "SR 4.3"
+    ],
+    "3": [
+     "SR 4.3"
+    ],
+    "4": [
+     "SR 4.3"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [],
+   "cr": "CR 4.3"
+  },
+  "SR 5.1": {
+   "fr": "FR5",
+   "titulo": {
+    "es": "Segmentacion de red",
+    "en": "Network segmentation"
+   },
+   "seccion": "3-3 9.3",
+   "sl": {
+    "1": [
+     "SR 5.1"
+    ],
+    "2": [
+     "SR 5.1",
+     "SR 5.1 RE 1"
+    ],
+    "3": [
+     "SR 5.1",
+     "SR 5.1 RE 1",
+     "SR 5.1 RE 2"
+    ],
+    "4": [
+     "SR 5.1",
+     "SR 5.1 RE 1",
+     "SR 5.1 RE 2",
+     "SR 5.1 RE 3"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 5.1 RE 1",
+    "SR 5.1 RE 2",
+    "SR 5.1 RE 3"
+   ],
+   "cr": "CR 5.1"
+  },
+  "SR 5.2": {
+   "fr": "FR5",
+   "titulo": {
+    "es": "Proteccion del limite de zona",
+    "en": "Zone boundary protection"
+   },
+   "seccion": "3-3 9.4",
+   "sl": {
+    "1": [
+     "SR 5.2"
+    ],
+    "2": [
+     "SR 5.2",
+     "SR 5.2 RE 1"
+    ],
+    "3": [
+     "SR 5.2",
+     "SR 5.2 RE 1",
+     "SR 5.2 RE 2",
+     "SR 5.2 RE 3"
+    ],
+    "4": [
+     "SR 5.2",
+     "SR 5.2 RE 1",
+     "SR 5.2 RE 2",
+     "SR 5.2 RE 3"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 5.2 RE 1",
+    "SR 5.2 RE 2",
+    "SR 5.2 RE 3"
+   ],
+   "cr": "CR 5.2"
+  },
+  "SR 5.3": {
+   "fr": "FR5",
+   "titulo": {
+    "es": "Restricciones de comunicacion persona a persona de proposito general",
+    "en": "Limits on general purpose person to person communication"
+   },
+   "seccion": "3-3 9.5",
+   "sl": {
+    "1": [
+     "SR 5.3"
+    ],
+    "2": [
+     "SR 5.3"
+    ],
+    "3": [
+     "SR 5.3",
+     "SR 5.3 RE 1"
+    ],
+    "4": [
+     "SR 5.3",
+     "SR 5.3 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 5.3 RE 1"
+   ],
+   "cr": "CR 5.3"
+  },
+  "SR 5.4": {
+   "fr": "FR5",
+   "titulo": {
+    "es": "Particion de aplicaciones",
+    "en": "Application partitioning"
+   },
+   "seccion": "3-3 9.6",
+   "sl": {
+    "1": [
+     "SR 5.4"
+    ],
+    "2": [
+     "SR 5.4"
+    ],
+    "3": [
+     "SR 5.4"
+    ],
+    "4": [
+     "SR 5.4"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [],
+   "cr": "CR 5.4"
+  },
+  "SR 6.1": {
+   "fr": "FR6",
+   "titulo": {
+    "es": "Accesibilidad del registro de auditoria",
+    "en": "Accessibility of audit logs"
+   },
+   "seccion": "3-3 10.3",
+   "sl": {
+    "1": [
+     "SR 6.1"
+    ],
+    "2": [
+     "SR 6.1"
+    ],
+    "3": [
+     "SR 6.1",
+     "SR 6.1 RE 1"
+    ],
+    "4": [
+     "SR 6.1",
+     "SR 6.1 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 6.1 RE 1"
+   ],
+   "cr": "CR 6.1"
+  },
+  "SR 6.2": {
+   "fr": "FR6",
+   "titulo": {
+    "es": "Monitoreo continuo",
+    "en": "Continuous monitoring"
+   },
+   "seccion": "3-3 10.4",
+   "sl": {
+    "1": [],
+    "2": [
+     "SR 6.2"
+    ],
+    "3": [
+     "SR 6.2"
+    ],
+    "4": [
+     "SR 6.2"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [],
+   "cr": "CR 6.2"
+  },
+  "SR 7.1": {
+   "fr": "FR7",
+   "titulo": {
+    "es": "Proteccion contra denegacion de servicio",
+    "en": "Denial of service protection"
+   },
+   "seccion": "3-3 11.3",
+   "sl": {
+    "1": [
+     "SR 7.1"
+    ],
+    "2": [
+     "SR 7.1",
+     "SR 7.1 RE 1"
+    ],
+    "3": [
+     "SR 7.1",
+     "SR 7.1 RE 1",
+     "SR 7.1 RE 2"
+    ],
+    "4": [
+     "SR 7.1",
+     "SR 7.1 RE 1",
+     "SR 7.1 RE 2"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 7.1 RE 1",
+    "SR 7.1 RE 2"
+   ],
+   "cr": "CR 7.1"
+  },
+  "SR 7.2": {
+   "fr": "FR7",
+   "titulo": {
+    "es": "Gestion de recursos",
+    "en": "Resource management"
+   },
+   "seccion": "3-3 11.4",
+   "sl": {
+    "1": [
+     "SR 7.2"
+    ],
+    "2": [
+     "SR 7.2"
+    ],
+    "3": [
+     "SR 7.2"
+    ],
+    "4": [
+     "SR 7.2"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [],
+   "cr": "CR 7.2"
+  },
+  "SR 7.3": {
+   "fr": "FR7",
+   "titulo": {
+    "es": "Respaldo del sistema de control",
+    "en": "Control system backup"
+   },
+   "seccion": "3-3 11.5",
+   "sl": {
+    "1": [
+     "SR 7.3"
+    ],
+    "2": [
+     "SR 7.3",
+     "SR 7.3 RE 1"
+    ],
+    "3": [
+     "SR 7.3",
+     "SR 7.3 RE 1",
+     "SR 7.3 RE 2"
+    ],
+    "4": [
+     "SR 7.3",
+     "SR 7.3 RE 1",
+     "SR 7.3 RE 2"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 7.3 RE 1",
+    "SR 7.3 RE 2"
+   ],
+   "cr": "CR 7.3"
+  },
+  "SR 7.4": {
+   "fr": "FR7",
+   "titulo": {
+    "es": "Recuperacion y reconstitucion del sistema de control",
+    "en": "Control system recovery and reconstitution"
+   },
+   "seccion": "3-3 11.6",
+   "sl": {
+    "1": [
+     "SR 7.4"
+    ],
+    "2": [
+     "SR 7.4"
+    ],
+    "3": [
+     "SR 7.4"
+    ],
+    "4": [
+     "SR 7.4"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [],
+   "cr": "CR 7.4"
+  },
+  "SR 7.5": {
+   "fr": "FR7",
+   "titulo": {
+    "es": "Energia de emergencia",
+    "en": "Emergency power"
+   },
+   "seccion": "3-3 11.7",
+   "sl": {
+    "1": [
+     "SR 7.5"
+    ],
+    "2": [
+     "SR 7.5"
+    ],
+    "3": [
+     "SR 7.5"
+    ],
+    "4": [
+     "SR 7.5"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [],
+   "cr": null
+  },
+  "SR 7.6": {
+   "fr": "FR7",
+   "titulo": {
+    "es": "Ajustes de configuracion de red y seguridad",
+    "en": "Network and security configuration settings"
+   },
+   "seccion": "3-3 11.8",
+   "sl": {
+    "1": [
+     "SR 7.6"
+    ],
+    "2": [
+     "SR 7.6"
+    ],
+    "3": [
+     "SR 7.6",
+     "SR 7.6 RE 1"
+    ],
+    "4": [
+     "SR 7.6",
+     "SR 7.6 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SR 7.6 RE 1"
+   ],
+   "cr": "CR 7.6"
+  },
+  "SR 7.7": {
+   "fr": "FR7",
+   "titulo": {
+    "es": "Funcionalidad minima",
+    "en": "Least functionality"
+   },
+   "seccion": "3-3 11.9",
+   "sl": {
+    "1": [
+     "SR 7.7"
+    ],
+    "2": [
+     "SR 7.7"
+    ],
+    "3": [
+     "SR 7.7"
+    ],
+    "4": [
+     "SR 7.7"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [],
+   "cr": "CR 7.7"
+  },
+  "SR 7.8": {
+   "fr": "FR7",
+   "titulo": {
+    "es": "Inventario de componentes del sistema de control",
+    "en": "Control system component inventory"
+   },
+   "seccion": "3-3 11.10",
+   "sl": {
+    "1": [],
+    "2": [
+     "SR 7.8"
+    ],
+    "3": [
+     "SR 7.8"
+    ],
+    "4": [
+     "SR 7.8"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [],
+   "cr": "CR 7.8"
+  }
+ },
+ "re_sr": {
+  "SR 1.1 RE 1": {
+   "requisito": "SR 1.1",
+   "titulo": {
+    "es": "Identificacion y autenticacion unica",
+    "en": "Unique identification and authentication"
+   },
+   "sl_minimo": 2,
+   "seccion": "3-3 5.3"
+  },
+  "SR 1.1 RE 2": {
+   "requisito": "SR 1.1",
+   "titulo": {
+    "es": "Autenticacion multifactor en redes no confiables",
+    "en": "Multifactor authentication on untrusted networks"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 5.3"
+  },
+  "SR 1.1 RE 3": {
+   "requisito": "SR 1.1",
+   "titulo": {
+    "es": "Autenticacion multifactor en todas las redes",
+    "en": "Multifactor authentication on all networks"
+   },
+   "sl_minimo": 4,
+   "seccion": "3-3 5.3"
+  },
+  "SR 1.2 RE 1": {
+   "requisito": "SR 1.2",
+   "titulo": {
+    "es": "Identificacion y autenticacion unica",
+    "en": "Unique identification and authentication"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 5.4"
+  },
+  "SR 1.3 RE 1": {
+   "requisito": "SR 1.3",
+   "titulo": {
+    "es": "Gestion unificada de cuentas",
+    "en": "Unified account management"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 5.5"
+  },
+  "SR 1.5 RE 1": {
+   "requisito": "SR 1.5",
+   "titulo": {
+    "es": "Seguridad por hardware de credenciales de software",
+    "en": "Hardware protection of software credentials"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 5.7"
+  },
+  "SR 1.6 RE 1": {
+   "requisito": "SR 1.6",
+   "titulo": {
+    "es": "Identificacion y autenticacion unica",
+    "en": "Unique identification and authentication"
+   },
+   "sl_minimo": 2,
+   "seccion": "3-3 5.8"
+  },
+  "SR 1.7 RE 1": {
+   "requisito": "SR 1.7",
+   "titulo": {
+    "es": "Generacion y vigencia de contrasenas de personas",
+    "en": "Password creation and lifetime rules for people"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 5.9"
+  },
+  "SR 1.7 RE 2": {
+   "requisito": "SR 1.7",
+   "titulo": {
+    "es": "Vigencia de contrasenas de todos los usuarios",
+    "en": "Password lifetime rules for all users"
+   },
+   "sl_minimo": 4,
+   "seccion": "3-3 5.9"
+  },
+  "SR 1.9 RE 1": {
+   "requisito": "SR 1.9",
+   "titulo": {
+    "es": "Seguridad por hardware de la clave publica",
+    "en": "Hardware protection of public keys"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 5.11"
+  },
+  "SR 1.13 RE 1": {
+   "requisito": "SR 1.13",
+   "titulo": {
+    "es": "Aprobacion explicita de solicitudes de acceso",
+    "en": "Explicit approval of access requests"
+   },
+   "sl_minimo": 2,
+   "seccion": "3-3 5.15"
+  },
+  "SR 2.1 RE 1": {
+   "requisito": "SR 2.1",
+   "titulo": {
+    "es": "Autorizacion para todos los usuarios",
+    "en": "Authorization for all users"
+   },
+   "sl_minimo": 2,
+   "seccion": "3-3 6.3"
+  },
+  "SR 2.1 RE 2": {
+   "requisito": "SR 2.1",
+   "titulo": {
+    "es": "Asignacion de permisos a roles",
+    "en": "Mapping of permissions to roles"
+   },
+   "sl_minimo": 2,
+   "seccion": "3-3 6.3"
+  },
+  "SR 2.1 RE 3": {
+   "requisito": "SR 2.1",
+   "titulo": {
+    "es": "Anulacion por supervisor",
+    "en": "Supervisor override"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 6.3"
+  },
+  "SR 2.1 RE 4": {
+   "requisito": "SR 2.1",
+   "titulo": {
+    "es": "Doble aprobacion",
+    "en": "Dual approval"
+   },
+   "sl_minimo": 4,
+   "seccion": "3-3 6.3"
+  },
+  "SR 2.2 RE 1": {
+   "requisito": "SR 2.2",
+   "titulo": {
+    "es": "Identificar y reportar dispositivos inalambricos no autorizados",
+    "en": "Detect and report unauthorized wireless devices"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 6.4"
+  },
+  "SR 2.3 RE 1": {
+   "requisito": "SR 2.3",
+   "titulo": {
+    "es": "Verificar el estado de seguridad de dispositivos portatiles",
+    "en": "Check security state of portable devices"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 6.5"
+  },
+  "SR 2.4 RE 1": {
+   "requisito": "SR 2.4",
+   "titulo": {
+    "es": "Verificacion de integridad del codigo movil",
+    "en": "Integrity check of mobile code"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 6.6"
+  },
+  "SR 2.8 RE 1": {
+   "requisito": "SR 2.8",
+   "titulo": {
+    "es": "Bitacora de auditoria central de todo el sistema",
+    "en": "System-wide central audit trail"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 6.10"
+  },
+  "SR 2.9 RE 1": {
+   "requisito": "SR 2.9",
+   "titulo": {
+    "es": "Aviso al alcanzar el umbral de almacenamiento",
+    "en": "Warning at storage threshold"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 6.11"
+  },
+  "SR 2.11 RE 1": {
+   "requisito": "SR 2.11",
+   "titulo": {
+    "es": "Sincronizacion interna de la hora",
+    "en": "Internal time synchronization"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 6.13"
+  },
+  "SR 2.11 RE 2": {
+   "requisito": "SR 2.11",
+   "titulo": {
+    "es": "Proteccion de la integridad de la fuente de hora",
+    "en": "Integrity of the time source"
+   },
+   "sl_minimo": 4,
+   "seccion": "3-3 6.13"
+  },
+  "SR 2.12 RE 1": {
+   "requisito": "SR 2.12",
+   "titulo": {
+    "es": "No repudio para todos los usuarios",
+    "en": "Non-repudiation for all users"
+   },
+   "sl_minimo": 4,
+   "seccion": "3-3 6.14"
+  },
+  "SR 3.1 RE 1": {
+   "requisito": "SR 3.1",
+   "titulo": {
+    "es": "Proteccion criptografica de integridad",
+    "en": "Cryptographic integrity protection"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 7.3"
+  },
+  "SR 3.2 RE 1": {
+   "requisito": "SR 3.2",
+   "titulo": {
+    "es": "Codigo malicioso en puntos de entrada y salida",
+    "en": "Malicious code control at entry and exit points"
+   },
+   "sl_minimo": 2,
+   "seccion": "3-3 7.4"
+  },
+  "SR 3.2 RE 2": {
+   "requisito": "SR 3.2",
+   "titulo": {
+    "es": "Gestion y reporte central de codigo malicioso",
+    "en": "Central management and reporting of malicious code"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 7.4"
+  },
+  "SR 3.3 RE 1": {
+   "requisito": "SR 3.3",
+   "titulo": {
+    "es": "Verificacion automatizada de funciones de seguridad",
+    "en": "Automated verification of security functions"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 7.5"
+  },
+  "SR 3.3 RE 2": {
+   "requisito": "SR 3.3",
+   "titulo": {
+    "es": "Verificacion durante la operacion normal",
+    "en": "Verification during normal operation"
+   },
+   "sl_minimo": 4,
+   "seccion": "3-3 7.5"
+  },
+  "SR 3.4 RE 1": {
+   "requisito": "SR 3.4",
+   "titulo": {
+    "es": "Aviso automatico de violaciones de integridad",
+    "en": "Automatic notice of integrity violations"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 7.6"
+  },
+  "SR 3.8 RE 1": {
+   "requisito": "SR 3.8",
+   "titulo": {
+    "es": "Invalidar identificadores al terminar la sesion",
+    "en": "Invalidate session IDs at session end"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 7.10"
+  },
+  "SR 3.8 RE 2": {
+   "requisito": "SR 3.8",
+   "titulo": {
+    "es": "Generacion de identificadores de sesion unicos",
+    "en": "Generation of unique session IDs"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 7.10"
+  },
+  "SR 3.8 RE 3": {
+   "requisito": "SR 3.8",
+   "titulo": {
+    "es": "Aleatoriedad de los identificadores de sesion",
+    "en": "Randomness of session IDs"
+   },
+   "sl_minimo": 4,
+   "seccion": "3-3 7.10"
+  },
+  "SR 3.9 RE 1": {
+   "requisito": "SR 3.9",
+   "titulo": {
+    "es": "Registros de auditoria en medio de una sola escritura",
+    "en": "Audit records on write-once media"
+   },
+   "sl_minimo": 4,
+   "seccion": "3-3 7.11"
+  },
+  "SR 4.1 RE 1": {
+   "requisito": "SR 4.1",
+   "titulo": {
+    "es": "Confidencialidad en reposo o en transito por redes no confiables",
+    "en": "Confidentiality at rest or over untrusted networks"
+   },
+   "sl_minimo": 2,
+   "seccion": "3-3 8.3"
+  },
+  "SR 4.1 RE 2": {
+   "requisito": "SR 4.1",
+   "titulo": {
+    "es": "Confidencialidad entre limites de zona",
+    "en": "Confidentiality across zone boundaries"
+   },
+   "sl_minimo": 4,
+   "seccion": "3-3 8.3"
+  },
+  "SR 4.2 RE 1": {
+   "requisito": "SR 4.2",
+   "titulo": {
+    "es": "Purga de recursos de memoria compartida",
+    "en": "Purging of shared memory resources"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 8.4"
+  },
+  "SR 5.1 RE 1": {
+   "requisito": "SR 5.1",
+   "titulo": {
+    "es": "Segmentacion fisica de la red",
+    "en": "Physical network segmentation"
+   },
+   "sl_minimo": 2,
+   "seccion": "3-3 9.3"
+  },
+  "SR 5.1 RE 2": {
+   "requisito": "SR 5.1",
+   "titulo": {
+    "es": "Independencia de redes ajenas al sistema de control",
+    "en": "Independence from non-control networks"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 9.3"
+  },
+  "SR 5.1 RE 3": {
+   "requisito": "SR 5.1",
+   "titulo": {
+    "es": "Aislamiento logico y fisico de redes criticas",
+    "en": "Logical and physical isolation of critical networks"
+   },
+   "sl_minimo": 4,
+   "seccion": "3-3 9.3"
+  },
+  "SR 5.2 RE 1": {
+   "requisito": "SR 5.2",
+   "titulo": {
+    "es": "Denegar por defecto, permitir por excepcion",
+    "en": "Deny by default, allow by exception"
+   },
+   "sl_minimo": 2,
+   "seccion": "3-3 9.4"
+  },
+  "SR 5.2 RE 2": {
+   "requisito": "SR 5.2",
+   "titulo": {
+    "es": "Modo isla",
+    "en": "Island mode"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 9.4"
+  },
+  "SR 5.2 RE 3": {
+   "requisito": "SR 5.2",
+   "titulo": {
+    "es": "Falla cerrada",
+    "en": "Fail closed"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 9.4"
+  },
+  "SR 5.3 RE 1": {
+   "requisito": "SR 5.3",
+   "titulo": {
+    "es": "Prohibir toda comunicacion persona a persona de proposito general",
+    "en": "Prohibit general person to person communication"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 9.5"
+  },
+  "SR 6.1 RE 1": {
+   "requisito": "SR 6.1",
+   "titulo": {
+    "es": "Acceso programatico a los registros de auditoria",
+    "en": "Programmatic access to audit logs"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 10.3"
+  },
+  "SR 7.1 RE 1": {
+   "requisito": "SR 7.1",
+   "titulo": {
+    "es": "Gestion de la carga de comunicaciones",
+    "en": "Management of communication load"
+   },
+   "sl_minimo": 2,
+   "seccion": "3-3 11.3"
+  },
+  "SR 7.1 RE 2": {
+   "requisito": "SR 7.1",
+   "titulo": {
+    "es": "Limitar el efecto de DoS a otros sistemas o redes",
+    "en": "Limit DoS effects on other systems"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 11.3"
+  },
+  "SR 7.3 RE 1": {
+   "requisito": "SR 7.3",
+   "titulo": {
+    "es": "Verificacion de respaldos",
+    "en": "Backup verification"
+   },
+   "sl_minimo": 2,
+   "seccion": "3-3 11.5"
+  },
+  "SR 7.3 RE 2": {
+   "requisito": "SR 7.3",
+   "titulo": {
+    "es": "Automatizacion de respaldos",
+    "en": "Backup automation"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 11.5"
+  },
+  "SR 7.6 RE 1": {
+   "requisito": "SR 7.6",
+   "titulo": {
+    "es": "Reporte legible por maquina de los ajustes de seguridad",
+    "en": "Machine readable report of security settings"
+   },
+   "sl_minimo": 3,
+   "seccion": "3-3 11.8"
+  }
+ },
+ "componente": {
+  "CR 1.1": {
+   "tipo": "CR",
+   "fr": "FR1",
+   "titulo": {
+    "es": "Identificacion y autenticacion de usuarios humanos",
+    "en": "Identify and authenticate human users"
+   },
+   "seccion": "4-2 5.3",
+   "sr": "SR 1.1",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 1.1"
+    ],
+    "2": [
+     "CR 1.1",
+     "CR 1.1 RE 1"
+    ],
+    "3": [
+     "CR 1.1",
+     "CR 1.1 RE 1",
+     "CR 1.1 RE 2"
+    ],
+    "4": [
+     "CR 1.1",
+     "CR 1.1 RE 1",
+     "CR 1.1 RE 2"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "CR 1.1 RE 1",
+    "CR 1.1 RE 2"
+   ]
+  },
+  "CR 1.2": {
+   "tipo": "CR",
+   "fr": "FR1",
+   "titulo": {
+    "es": "Identificacion y autenticacion de software, procesos y dispositivos",
+    "en": "Identify and authenticate software, processes and devices"
+   },
+   "seccion": "4-2 5.4",
+   "sr": "SR 1.2",
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "CR 1.2"
+    ],
+    "3": [
+     "CR 1.2",
+     "CR 1.2 RE 1"
+    ],
+    "4": [
+     "CR 1.2",
+     "CR 1.2 RE 1"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "CR 1.2 RE 1"
+   ]
+  },
+  "CR 1.3": {
+   "tipo": "CR",
+   "fr": "FR1",
+   "titulo": {
+    "es": "Gestion de cuentas",
+    "en": "Account management"
+   },
+   "seccion": "4-2 5.5",
+   "sr": "SR 1.3",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 1.3"
+    ],
+    "2": [
+     "CR 1.3"
+    ],
+    "3": [
+     "CR 1.3"
+    ],
+    "4": [
+     "CR 1.3"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 1.4": {
+   "tipo": "CR",
+   "fr": "FR1",
+   "titulo": {
+    "es": "Gestion de identificadores",
+    "en": "Identifier management"
+   },
+   "seccion": "4-2 5.6",
+   "sr": "SR 1.4",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 1.4"
+    ],
+    "2": [
+     "CR 1.4"
+    ],
+    "3": [
+     "CR 1.4"
+    ],
+    "4": [
+     "CR 1.4"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 1.5": {
+   "tipo": "CR",
+   "fr": "FR1",
+   "titulo": {
+    "es": "Gestion de autenticadores",
+    "en": "Authenticator management"
+   },
+   "seccion": "4-2 5.7",
+   "sr": "SR 1.5",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 1.5"
+    ],
+    "2": [
+     "CR 1.5"
+    ],
+    "3": [
+     "CR 1.5",
+     "CR 1.5 RE 1"
+    ],
+    "4": [
+     "CR 1.5",
+     "CR 1.5 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "CR 1.5 RE 1"
+   ]
+  },
+  "CR 1.6": {
+   "tipo": "CR",
+   "fr": "FR1",
+   "titulo": {
+    "es": "Gestion de acceso inalambrico",
+    "en": "Wireless access management"
+   },
+   "seccion": "4-2 5.8",
+   "sr": "SR 1.6",
+   "clase": "remite_a_tipo_de_dispositivo",
+   "tipos": [
+    "NDR"
+   ]
+  },
+  "CR 1.7": {
+   "tipo": "CR",
+   "fr": "FR1",
+   "titulo": {
+    "es": "Robustez de la autenticacion por contrasena",
+    "en": "Strength of password authentication"
+   },
+   "seccion": "4-2 5.9",
+   "sr": "SR 1.7",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 1.7"
+    ],
+    "2": [
+     "CR 1.7"
+    ],
+    "3": [
+     "CR 1.7",
+     "CR 1.7 RE 1"
+    ],
+    "4": [
+     "CR 1.7",
+     "CR 1.7 RE 1",
+     "CR 1.7 RE 2"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "CR 1.7 RE 1",
+    "CR 1.7 RE 2"
+   ]
+  },
+  "CR 1.8": {
+   "tipo": "CR",
+   "fr": "FR1",
+   "titulo": {
+    "es": "Certificados de infraestructura de clave publica",
+    "en": "Public key infrastructure certificates"
+   },
+   "seccion": "4-2 5.10",
+   "sr": "SR 1.8",
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "CR 1.8"
+    ],
+    "3": [
+     "CR 1.8"
+    ],
+    "4": [
+     "CR 1.8"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": []
+  },
+  "CR 1.9": {
+   "tipo": "CR",
+   "fr": "FR1",
+   "titulo": {
+    "es": "Robustez de la autenticacion por clave publica",
+    "en": "Strength of public key authentication"
+   },
+   "seccion": "4-2 5.11",
+   "sr": "SR 1.9",
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "CR 1.9"
+    ],
+    "3": [
+     "CR 1.9",
+     "CR 1.9 RE 1"
+    ],
+    "4": [
+     "CR 1.9",
+     "CR 1.9 RE 1"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "CR 1.9 RE 1"
+   ]
+  },
+  "CR 1.10": {
+   "tipo": "CR",
+   "fr": "FR1",
+   "titulo": {
+    "es": "Retroalimentacion del autenticador",
+    "en": "Feedback shown while authenticating"
+   },
+   "seccion": "4-2 5.12",
+   "sr": "SR 1.10",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 1.10"
+    ],
+    "2": [
+     "CR 1.10"
+    ],
+    "3": [
+     "CR 1.10"
+    ],
+    "4": [
+     "CR 1.10"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 1.11": {
+   "tipo": "CR",
+   "fr": "FR1",
+   "titulo": {
+    "es": "Intentos de inicio de sesion fallidos",
+    "en": "Failed login attempts"
+   },
+   "seccion": "4-2 5.13",
+   "sr": "SR 1.11",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 1.11"
+    ],
+    "2": [
+     "CR 1.11"
+    ],
+    "3": [
+     "CR 1.11"
+    ],
+    "4": [
+     "CR 1.11"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 1.12": {
+   "tipo": "CR",
+   "fr": "FR1",
+   "titulo": {
+    "es": "Aviso de uso del sistema",
+    "en": "System use notice"
+   },
+   "seccion": "4-2 5.14",
+   "sr": "SR 1.12",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 1.12"
+    ],
+    "2": [
+     "CR 1.12"
+    ],
+    "3": [
+     "CR 1.12"
+    ],
+    "4": [
+     "CR 1.12"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 1.13": {
+   "tipo": "CR",
+   "fr": "FR1",
+   "titulo": {
+    "es": "Acceso desde redes no confiables",
+    "en": "Access from untrusted networks"
+   },
+   "seccion": "4-2 5.15",
+   "sr": "SR 1.13",
+   "clase": "remite_a_tipo_de_dispositivo",
+   "tipos": [
+    "NDR"
+   ]
+  },
+  "CR 1.14": {
+   "tipo": "CR",
+   "fr": "FR1",
+   "titulo": {
+    "es": "Robustez de la autenticacion por clave simetrica",
+    "en": "Strength of symmetric key authentication"
+   },
+   "seccion": "4-2 5.16",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "CR 1.14"
+    ],
+    "3": [
+     "CR 1.14",
+     "CR 1.14 RE 1"
+    ],
+    "4": [
+     "CR 1.14",
+     "CR 1.14 RE 1"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "CR 1.14 RE 1"
+   ]
+  },
+  "CR 2.1": {
+   "tipo": "CR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Aplicacion de autorizacion",
+    "en": "Authorization enforcement"
+   },
+   "seccion": "4-2 6.3",
+   "sr": "SR 2.1",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 2.1"
+    ],
+    "2": [
+     "CR 2.1",
+     "CR 2.1 RE 1",
+     "CR 2.1 RE 2"
+    ],
+    "3": [
+     "CR 2.1",
+     "CR 2.1 RE 1",
+     "CR 2.1 RE 2",
+     "CR 2.1 RE 3"
+    ],
+    "4": [
+     "CR 2.1",
+     "CR 2.1 RE 1",
+     "CR 2.1 RE 2",
+     "CR 2.1 RE 3",
+     "CR 2.1 RE 4"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "CR 2.1 RE 1",
+    "CR 2.1 RE 2",
+    "CR 2.1 RE 3",
+    "CR 2.1 RE 4"
+   ]
+  },
+  "CR 2.2": {
+   "tipo": "CR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Control de uso inalambrico",
+    "en": "Wireless use control"
+   },
+   "seccion": "4-2 6.4",
+   "sr": "SR 2.2",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 2.2"
+    ],
+    "2": [
+     "CR 2.2"
+    ],
+    "3": [
+     "CR 2.2"
+    ],
+    "4": [
+     "CR 2.2"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 2.3": {
+   "tipo": "CR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Control de uso de dispositivos portatiles y moviles",
+    "en": "Use control for portable and mobile devices"
+   },
+   "seccion": "4-2 6.5",
+   "sr": "SR 2.3",
+   "clase": "sin_requisito_de_componente"
+  },
+  "CR 2.4": {
+   "tipo": "CR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Codigo movil",
+    "en": "Mobile code"
+   },
+   "seccion": "4-2 6.6",
+   "sr": "SR 2.4",
+   "clase": "remite_a_tipo_de_dispositivo",
+   "tipos": [
+    "SAR",
+    "EDR",
+    "HDR",
+    "NDR"
+   ]
+  },
+  "CR 2.5": {
+   "tipo": "CR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Bloqueo de sesion",
+    "en": "Session lock"
+   },
+   "seccion": "4-2 6.7",
+   "sr": "SR 2.5",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 2.5"
+    ],
+    "2": [
+     "CR 2.5"
+    ],
+    "3": [
+     "CR 2.5"
+    ],
+    "4": [
+     "CR 2.5"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 2.6": {
+   "tipo": "CR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Terminacion de sesion remota",
+    "en": "Remote session termination"
+   },
+   "seccion": "4-2 6.8",
+   "sr": "SR 2.6",
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "CR 2.6"
+    ],
+    "3": [
+     "CR 2.6"
+    ],
+    "4": [
+     "CR 2.6"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": []
+  },
+  "CR 2.7": {
+   "tipo": "CR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Control de sesiones concurrentes",
+    "en": "Control of concurrent sessions"
+   },
+   "seccion": "4-2 6.9",
+   "sr": "SR 2.7",
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [],
+    "3": [
+     "CR 2.7"
+    ],
+    "4": [
+     "CR 2.7"
+    ]
+   },
+   "sl_minimo": 3,
+   "re": []
+  },
+  "CR 2.8": {
+   "tipo": "CR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Eventos auditables",
+    "en": "Auditable events"
+   },
+   "seccion": "4-2 6.10",
+   "sr": "SR 2.8",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 2.8"
+    ],
+    "2": [
+     "CR 2.8"
+    ],
+    "3": [
+     "CR 2.8"
+    ],
+    "4": [
+     "CR 2.8"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 2.9": {
+   "tipo": "CR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Capacidad de almacenamiento de auditoria",
+    "en": "Audit storage capacity"
+   },
+   "seccion": "4-2 6.11",
+   "sr": "SR 2.9",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 2.9"
+    ],
+    "2": [
+     "CR 2.9"
+    ],
+    "3": [
+     "CR 2.9",
+     "CR 2.9 RE 1"
+    ],
+    "4": [
+     "CR 2.9",
+     "CR 2.9 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "CR 2.9 RE 1"
+   ]
+  },
+  "CR 2.10": {
+   "tipo": "CR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Respuesta a fallas del procesamiento de auditoria",
+    "en": "Reaction to audit processing failures"
+   },
+   "seccion": "4-2 6.12",
+   "sr": "SR 2.10",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 2.10"
+    ],
+    "2": [
+     "CR 2.10"
+    ],
+    "3": [
+     "CR 2.10"
+    ],
+    "4": [
+     "CR 2.10"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 2.11": {
+   "tipo": "CR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Marcas de tiempo",
+    "en": "Timestamps"
+   },
+   "seccion": "4-2 6.13",
+   "sr": "SR 2.11",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 2.11"
+    ],
+    "2": [
+     "CR 2.11",
+     "CR 2.11 RE 1"
+    ],
+    "3": [
+     "CR 2.11",
+     "CR 2.11 RE 1"
+    ],
+    "4": [
+     "CR 2.11",
+     "CR 2.11 RE 1",
+     "CR 2.11 RE 2"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "CR 2.11 RE 1",
+    "CR 2.11 RE 2"
+   ]
+  },
+  "CR 2.12": {
+   "tipo": "CR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "No repudio",
+    "en": "Non-repudiation"
+   },
+   "seccion": "4-2 6.14",
+   "sr": "SR 2.12",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 2.12"
+    ],
+    "2": [
+     "CR 2.12"
+    ],
+    "3": [
+     "CR 2.12"
+    ],
+    "4": [
+     "CR 2.12",
+     "CR 2.12 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "CR 2.12 RE 1"
+   ]
+  },
+  "CR 2.13": {
+   "tipo": "CR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Uso de interfaces fisicas de diagnostico y prueba",
+    "en": "Use of physical diagnostic and test interfaces"
+   },
+   "seccion": "4-2 6.15",
+   "sr": null,
+   "clase": "remite_a_tipo_de_dispositivo",
+   "tipos": [
+    "EDR",
+    "HDR",
+    "NDR"
+   ]
+  },
+  "CR 3.1": {
+   "tipo": "CR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Integridad de las comunicaciones",
+    "en": "Integrity of communications"
+   },
+   "seccion": "4-2 7.3",
+   "sr": "SR 3.1",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 3.1"
+    ],
+    "2": [
+     "CR 3.1",
+     "CR 3.1 RE 1"
+    ],
+    "3": [
+     "CR 3.1",
+     "CR 3.1 RE 1"
+    ],
+    "4": [
+     "CR 3.1",
+     "CR 3.1 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "CR 3.1 RE 1"
+   ]
+  },
+  "CR 3.2": {
+   "tipo": "CR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Proteccion contra codigo malicioso",
+    "en": "Protection against malicious code"
+   },
+   "seccion": "4-2 7.4",
+   "sr": "SR 3.2",
+   "clase": "remite_a_tipo_de_dispositivo",
+   "tipos": [
+    "SAR",
+    "EDR",
+    "HDR",
+    "NDR"
+   ]
+  },
+  "CR 3.3": {
+   "tipo": "CR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Verificacion de la funcionalidad de seguridad",
+    "en": "Verification of security functions"
+   },
+   "seccion": "4-2 7.5",
+   "sr": "SR 3.3",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 3.3"
+    ],
+    "2": [
+     "CR 3.3"
+    ],
+    "3": [
+     "CR 3.3"
+    ],
+    "4": [
+     "CR 3.3",
+     "CR 3.3 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "CR 3.3 RE 1"
+   ]
+  },
+  "CR 3.4": {
+   "tipo": "CR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Integridad del software y la informacion",
+    "en": "Software and information integrity"
+   },
+   "seccion": "4-2 7.6",
+   "sr": "SR 3.4",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 3.4"
+    ],
+    "2": [
+     "CR 3.4",
+     "CR 3.4 RE 1"
+    ],
+    "3": [
+     "CR 3.4",
+     "CR 3.4 RE 1",
+     "CR 3.4 RE 2"
+    ],
+    "4": [
+     "CR 3.4",
+     "CR 3.4 RE 1",
+     "CR 3.4 RE 2"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "CR 3.4 RE 1",
+    "CR 3.4 RE 2"
+   ]
+  },
+  "CR 3.5": {
+   "tipo": "CR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Validacion de entradas",
+    "en": "Input validation"
+   },
+   "seccion": "4-2 7.7",
+   "sr": "SR 3.5",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 3.5"
+    ],
+    "2": [
+     "CR 3.5"
+    ],
+    "3": [
+     "CR 3.5"
+    ],
+    "4": [
+     "CR 3.5"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 3.6": {
+   "tipo": "CR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Salida determinista",
+    "en": "Deterministic output"
+   },
+   "seccion": "4-2 7.8",
+   "sr": "SR 3.6",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 3.6"
+    ],
+    "2": [
+     "CR 3.6"
+    ],
+    "3": [
+     "CR 3.6"
+    ],
+    "4": [
+     "CR 3.6"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 3.7": {
+   "tipo": "CR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Manejo de errores",
+    "en": "Error handling"
+   },
+   "seccion": "4-2 7.9",
+   "sr": "SR 3.7",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 3.7"
+    ],
+    "2": [
+     "CR 3.7"
+    ],
+    "3": [
+     "CR 3.7"
+    ],
+    "4": [
+     "CR 3.7"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 3.8": {
+   "tipo": "CR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Integridad de sesion",
+    "en": "Session integrity"
+   },
+   "seccion": "4-2 7.10",
+   "sr": "SR 3.8",
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "CR 3.8"
+    ],
+    "3": [
+     "CR 3.8"
+    ],
+    "4": [
+     "CR 3.8"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": []
+  },
+  "CR 3.9": {
+   "tipo": "CR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Proteccion de la informacion de auditoria",
+    "en": "Protection of audit information"
+   },
+   "seccion": "4-2 7.11",
+   "sr": "SR 3.9",
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "CR 3.9"
+    ],
+    "3": [
+     "CR 3.9"
+    ],
+    "4": [
+     "CR 3.9",
+     "CR 3.9 RE 1"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "CR 3.9 RE 1"
+   ]
+  },
+  "CR 3.10": {
+   "tipo": "CR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Soporte para actualizaciones",
+    "en": "Support for updates"
+   },
+   "seccion": "4-2 7.12",
+   "sr": null,
+   "clase": "remite_a_tipo_de_dispositivo",
+   "tipos": [
+    "EDR",
+    "HDR",
+    "NDR"
+   ]
+  },
+  "CR 3.11": {
+   "tipo": "CR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Resistencia y deteccion de manipulacion fisica",
+    "en": "Physical tamper resistance and detection"
+   },
+   "seccion": "4-2 7.13",
+   "sr": null,
+   "clase": "remite_a_tipo_de_dispositivo",
+   "tipos": [
+    "EDR",
+    "HDR",
+    "NDR"
+   ]
+  },
+  "CR 3.12": {
+   "tipo": "CR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Raices de confianza del fabricante",
+    "en": "Supplier roots of trust"
+   },
+   "seccion": "4-2 7.14",
+   "sr": null,
+   "clase": "remite_a_tipo_de_dispositivo",
+   "tipos": [
+    "EDR",
+    "HDR",
+    "NDR"
+   ]
+  },
+  "CR 3.13": {
+   "tipo": "CR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Raices de confianza del propietario del activo",
+    "en": "Asset owner roots of trust"
+   },
+   "seccion": "4-2 7.15",
+   "sr": null,
+   "clase": "remite_a_tipo_de_dispositivo",
+   "tipos": [
+    "EDR",
+    "HDR",
+    "NDR"
+   ]
+  },
+  "CR 3.14": {
+   "tipo": "CR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Integridad del proceso de arranque",
+    "en": "Integrity of the boot process"
+   },
+   "seccion": "4-2 7.16",
+   "sr": null,
+   "clase": "remite_a_tipo_de_dispositivo",
+   "tipos": [
+    "EDR",
+    "HDR",
+    "NDR"
+   ]
+  },
+  "CR 4.1": {
+   "tipo": "CR",
+   "fr": "FR4",
+   "titulo": {
+    "es": "Confidencialidad de la informacion",
+    "en": "Information confidentiality"
+   },
+   "seccion": "4-2 8.3",
+   "sr": "SR 4.1",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 4.1"
+    ],
+    "2": [
+     "CR 4.1"
+    ],
+    "3": [
+     "CR 4.1"
+    ],
+    "4": [
+     "CR 4.1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 4.2": {
+   "tipo": "CR",
+   "fr": "FR4",
+   "titulo": {
+    "es": "Persistencia de la informacion",
+    "en": "Information persistence"
+   },
+   "seccion": "4-2 8.4",
+   "sr": "SR 4.2",
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "CR 4.2"
+    ],
+    "3": [
+     "CR 4.2",
+     "CR 4.2 RE 1",
+     "CR 4.2 RE 2"
+    ],
+    "4": [
+     "CR 4.2",
+     "CR 4.2 RE 1",
+     "CR 4.2 RE 2"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "CR 4.2 RE 1",
+    "CR 4.2 RE 2"
+   ]
+  },
+  "CR 4.3": {
+   "tipo": "CR",
+   "fr": "FR4",
+   "titulo": {
+    "es": "Uso de criptografia",
+    "en": "Use of cryptography"
+   },
+   "seccion": "4-2 8.5",
+   "sr": "SR 4.3",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 4.3"
+    ],
+    "2": [
+     "CR 4.3"
+    ],
+    "3": [
+     "CR 4.3"
+    ],
+    "4": [
+     "CR 4.3"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 5.1": {
+   "tipo": "CR",
+   "fr": "FR5",
+   "titulo": {
+    "es": "Segmentacion de red",
+    "en": "Network segmentation"
+   },
+   "seccion": "4-2 9.3",
+   "sr": "SR 5.1",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 5.1"
+    ],
+    "2": [
+     "CR 5.1"
+    ],
+    "3": [
+     "CR 5.1"
+    ],
+    "4": [
+     "CR 5.1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 5.2": {
+   "tipo": "CR",
+   "fr": "FR5",
+   "titulo": {
+    "es": "Proteccion del limite de zona",
+    "en": "Zone boundary protection"
+   },
+   "seccion": "4-2 9.4",
+   "sr": "SR 5.2",
+   "clase": "remite_a_tipo_de_dispositivo",
+   "tipos": [
+    "NDR"
+   ]
+  },
+  "CR 5.3": {
+   "tipo": "CR",
+   "fr": "FR5",
+   "titulo": {
+    "es": "Restricciones de comunicacion persona a persona de proposito general",
+    "en": "Limits on general purpose person to person communication"
+   },
+   "seccion": "4-2 9.5",
+   "sr": "SR 5.3",
+   "clase": "remite_a_tipo_de_dispositivo",
+   "tipos": [
+    "NDR"
+   ]
+  },
+  "CR 5.4": {
+   "tipo": "CR",
+   "fr": "FR5",
+   "titulo": {
+    "es": "Particion de aplicaciones",
+    "en": "Application partitioning"
+   },
+   "seccion": "4-2 9.6",
+   "sr": "SR 5.4",
+   "clase": "sin_requisito_de_componente"
+  },
+  "CR 6.1": {
+   "tipo": "CR",
+   "fr": "FR6",
+   "titulo": {
+    "es": "Accesibilidad del registro de auditoria",
+    "en": "Accessibility of audit logs"
+   },
+   "seccion": "4-2 10.3",
+   "sr": "SR 6.1",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 6.1"
+    ],
+    "2": [
+     "CR 6.1"
+    ],
+    "3": [
+     "CR 6.1",
+     "CR 6.1 RE 1"
+    ],
+    "4": [
+     "CR 6.1",
+     "CR 6.1 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "CR 6.1 RE 1"
+   ]
+  },
+  "CR 6.2": {
+   "tipo": "CR",
+   "fr": "FR6",
+   "titulo": {
+    "es": "Monitoreo continuo",
+    "en": "Continuous monitoring"
+   },
+   "seccion": "4-2 10.4",
+   "sr": "SR 6.2",
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "CR 6.2"
+    ],
+    "3": [
+     "CR 6.2"
+    ],
+    "4": [
+     "CR 6.2"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": []
+  },
+  "CR 7.1": {
+   "tipo": "CR",
+   "fr": "FR7",
+   "titulo": {
+    "es": "Proteccion contra denegacion de servicio",
+    "en": "Denial of service protection"
+   },
+   "seccion": "4-2 11.3",
+   "sr": "SR 7.1",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 7.1"
+    ],
+    "2": [
+     "CR 7.1",
+     "CR 7.1 RE 1"
+    ],
+    "3": [
+     "CR 7.1",
+     "CR 7.1 RE 1"
+    ],
+    "4": [
+     "CR 7.1",
+     "CR 7.1 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "CR 7.1 RE 1"
+   ]
+  },
+  "CR 7.2": {
+   "tipo": "CR",
+   "fr": "FR7",
+   "titulo": {
+    "es": "Gestion de recursos",
+    "en": "Resource management"
+   },
+   "seccion": "4-2 11.4",
+   "sr": "SR 7.2",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 7.2"
+    ],
+    "2": [
+     "CR 7.2"
+    ],
+    "3": [
+     "CR 7.2"
+    ],
+    "4": [
+     "CR 7.2"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 7.3": {
+   "tipo": "CR",
+   "fr": "FR7",
+   "titulo": {
+    "es": "Respaldo del sistema de control",
+    "en": "Control system backup"
+   },
+   "seccion": "4-2 11.5",
+   "sr": "SR 7.3",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 7.3"
+    ],
+    "2": [
+     "CR 7.3",
+     "CR 7.3 RE 1"
+    ],
+    "3": [
+     "CR 7.3",
+     "CR 7.3 RE 1"
+    ],
+    "4": [
+     "CR 7.3",
+     "CR 7.3 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "CR 7.3 RE 1"
+   ]
+  },
+  "CR 7.4": {
+   "tipo": "CR",
+   "fr": "FR7",
+   "titulo": {
+    "es": "Recuperacion y reconstitucion del sistema de control",
+    "en": "Control system recovery and reconstitution"
+   },
+   "seccion": "4-2 11.6",
+   "sr": "SR 7.4",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 7.4"
+    ],
+    "2": [
+     "CR 7.4"
+    ],
+    "3": [
+     "CR 7.4"
+    ],
+    "4": [
+     "CR 7.4"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 7.6": {
+   "tipo": "CR",
+   "fr": "FR7",
+   "titulo": {
+    "es": "Ajustes de configuracion de red y seguridad",
+    "en": "Network and security configuration settings"
+   },
+   "seccion": "4-2 11.8",
+   "sr": "SR 7.6",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 7.6"
+    ],
+    "2": [
+     "CR 7.6"
+    ],
+    "3": [
+     "CR 7.6",
+     "CR 7.6 RE 1"
+    ],
+    "4": [
+     "CR 7.6",
+     "CR 7.6 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "CR 7.6 RE 1"
+   ]
+  },
+  "CR 7.7": {
+   "tipo": "CR",
+   "fr": "FR7",
+   "titulo": {
+    "es": "Funcionalidad minima",
+    "en": "Least functionality"
+   },
+   "seccion": "4-2 11.9",
+   "sr": "SR 7.7",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "CR 7.7"
+    ],
+    "2": [
+     "CR 7.7"
+    ],
+    "3": [
+     "CR 7.7"
+    ],
+    "4": [
+     "CR 7.7"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "CR 7.8": {
+   "tipo": "CR",
+   "fr": "FR7",
+   "titulo": {
+    "es": "Inventario de componentes del sistema de control",
+    "en": "Control system component inventory"
+   },
+   "seccion": "4-2 11.10",
+   "sr": "SR 7.8",
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "CR 7.8"
+    ],
+    "3": [
+     "CR 7.8"
+    ],
+    "4": [
+     "CR 7.8"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": []
+  },
+  "SAR 2.4": {
+   "tipo": "SAR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Codigo movil",
+    "en": "Mobile code"
+   },
+   "seccion": "4-2 12.2",
+   "sr": "SR 2.4",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "SAR 2.4"
+    ],
+    "2": [
+     "SAR 2.4",
+     "SAR 2.4 RE 1"
+    ],
+    "3": [
+     "SAR 2.4",
+     "SAR 2.4 RE 1"
+    ],
+    "4": [
+     "SAR 2.4",
+     "SAR 2.4 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "SAR 2.4 RE 1"
+   ]
+  },
+  "SAR 3.2": {
+   "tipo": "SAR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Proteccion contra codigo malicioso",
+    "en": "Protection against malicious code"
+   },
+   "seccion": "4-2 12.3",
+   "sr": "SR 3.2",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "SAR 3.2"
+    ],
+    "2": [
+     "SAR 3.2"
+    ],
+    "3": [
+     "SAR 3.2"
+    ],
+    "4": [
+     "SAR 3.2"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "EDR 2.4": {
+   "tipo": "EDR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Codigo movil",
+    "en": "Mobile code"
+   },
+   "seccion": "4-2 13.2",
+   "sr": "SR 2.4",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "EDR 2.4"
+    ],
+    "2": [
+     "EDR 2.4",
+     "EDR 2.4 RE 1"
+    ],
+    "3": [
+     "EDR 2.4",
+     "EDR 2.4 RE 1"
+    ],
+    "4": [
+     "EDR 2.4",
+     "EDR 2.4 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "EDR 2.4 RE 1"
+   ]
+  },
+  "EDR 2.13": {
+   "tipo": "EDR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Uso de interfaces fisicas de diagnostico y prueba",
+    "en": "Use of physical diagnostic and test interfaces"
+   },
+   "seccion": "4-2 13.3",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "EDR 2.13"
+    ],
+    "3": [
+     "EDR 2.13",
+     "EDR 2.13 RE 1"
+    ],
+    "4": [
+     "EDR 2.13",
+     "EDR 2.13 RE 1"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "EDR 2.13 RE 1"
+   ]
+  },
+  "EDR 3.2": {
+   "tipo": "EDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Proteccion contra codigo malicioso",
+    "en": "Protection against malicious code"
+   },
+   "seccion": "4-2 13.4",
+   "sr": "SR 3.2",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "EDR 3.2"
+    ],
+    "2": [
+     "EDR 3.2"
+    ],
+    "3": [
+     "EDR 3.2"
+    ],
+    "4": [
+     "EDR 3.2"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "EDR 3.10": {
+   "tipo": "EDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Soporte para actualizaciones",
+    "en": "Support for updates"
+   },
+   "seccion": "4-2 13.5",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "EDR 3.10"
+    ],
+    "2": [
+     "EDR 3.10",
+     "EDR 3.10 RE 1"
+    ],
+    "3": [
+     "EDR 3.10",
+     "EDR 3.10 RE 1"
+    ],
+    "4": [
+     "EDR 3.10",
+     "EDR 3.10 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "EDR 3.10 RE 1"
+   ]
+  },
+  "EDR 3.11": {
+   "tipo": "EDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Resistencia y deteccion de manipulacion fisica",
+    "en": "Physical tamper resistance and detection"
+   },
+   "seccion": "4-2 13.6",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "EDR 3.11"
+    ],
+    "3": [
+     "EDR 3.11",
+     "EDR 3.11 RE 1"
+    ],
+    "4": [
+     "EDR 3.11",
+     "EDR 3.11 RE 1"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "EDR 3.11 RE 1"
+   ]
+  },
+  "EDR 3.12": {
+   "tipo": "EDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Raices de confianza del fabricante",
+    "en": "Supplier roots of trust"
+   },
+   "seccion": "4-2 13.7",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "EDR 3.12"
+    ],
+    "3": [
+     "EDR 3.12"
+    ],
+    "4": [
+     "EDR 3.12"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": []
+  },
+  "EDR 3.13": {
+   "tipo": "EDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Raices de confianza del propietario del activo",
+    "en": "Asset owner roots of trust"
+   },
+   "seccion": "4-2 13.8",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "EDR 3.13"
+    ],
+    "3": [
+     "EDR 3.13"
+    ],
+    "4": [
+     "EDR 3.13"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": []
+  },
+  "EDR 3.14": {
+   "tipo": "EDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Integridad del proceso de arranque",
+    "en": "Integrity of the boot process"
+   },
+   "seccion": "4-2 13.9",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "EDR 3.14"
+    ],
+    "2": [
+     "EDR 3.14",
+     "EDR 3.14 RE 1"
+    ],
+    "3": [
+     "EDR 3.14",
+     "EDR 3.14 RE 1"
+    ],
+    "4": [
+     "EDR 3.14",
+     "EDR 3.14 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "EDR 3.14 RE 1"
+   ]
+  },
+  "HDR 2.4": {
+   "tipo": "HDR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Codigo movil",
+    "en": "Mobile code"
+   },
+   "seccion": "4-2 14.2",
+   "sr": "SR 2.4",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "HDR 2.4"
+    ],
+    "2": [
+     "HDR 2.4",
+     "HDR 2.4 RE 1"
+    ],
+    "3": [
+     "HDR 2.4",
+     "HDR 2.4 RE 1"
+    ],
+    "4": [
+     "HDR 2.4",
+     "HDR 2.4 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "HDR 2.4 RE 1"
+   ]
+  },
+  "HDR 2.13": {
+   "tipo": "HDR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Uso de interfaces fisicas de diagnostico y prueba",
+    "en": "Use of physical diagnostic and test interfaces"
+   },
+   "seccion": "4-2 14.3",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "HDR 2.13"
+    ],
+    "3": [
+     "HDR 2.13",
+     "HDR 2.13 RE 1"
+    ],
+    "4": [
+     "HDR 2.13",
+     "HDR 2.13 RE 1"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "HDR 2.13 RE 1"
+   ]
+  },
+  "HDR 3.2": {
+   "tipo": "HDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Proteccion contra codigo malicioso",
+    "en": "Protection against malicious code"
+   },
+   "seccion": "4-2 14.4",
+   "sr": "SR 3.2",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "HDR 3.2"
+    ],
+    "2": [
+     "HDR 3.2",
+     "HDR 3.2 RE 1"
+    ],
+    "3": [
+     "HDR 3.2",
+     "HDR 3.2 RE 1"
+    ],
+    "4": [
+     "HDR 3.2",
+     "HDR 3.2 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "HDR 3.2 RE 1"
+   ]
+  },
+  "HDR 3.10": {
+   "tipo": "HDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Soporte para actualizaciones",
+    "en": "Support for updates"
+   },
+   "seccion": "4-2 14.5",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "HDR 3.10"
+    ],
+    "2": [
+     "HDR 3.10",
+     "HDR 3.10 RE 1"
+    ],
+    "3": [
+     "HDR 3.10",
+     "HDR 3.10 RE 1"
+    ],
+    "4": [
+     "HDR 3.10",
+     "HDR 3.10 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "HDR 3.10 RE 1"
+   ]
+  },
+  "HDR 3.11": {
+   "tipo": "HDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Resistencia y deteccion de manipulacion fisica",
+    "en": "Physical tamper resistance and detection"
+   },
+   "seccion": "4-2 14.6",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "HDR 3.11"
+    ],
+    "3": [
+     "HDR 3.11",
+     "HDR 3.11 RE 1"
+    ],
+    "4": [
+     "HDR 3.11",
+     "HDR 3.11 RE 1"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "HDR 3.11 RE 1"
+   ]
+  },
+  "HDR 3.12": {
+   "tipo": "HDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Raices de confianza del fabricante",
+    "en": "Supplier roots of trust"
+   },
+   "seccion": "4-2 14.7",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "HDR 3.12"
+    ],
+    "3": [
+     "HDR 3.12"
+    ],
+    "4": [
+     "HDR 3.12"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": []
+  },
+  "HDR 3.13": {
+   "tipo": "HDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Raices de confianza del propietario del activo",
+    "en": "Asset owner roots of trust"
+   },
+   "seccion": "4-2 14.8",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "HDR 3.13"
+    ],
+    "3": [
+     "HDR 3.13"
+    ],
+    "4": [
+     "HDR 3.13"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": []
+  },
+  "HDR 3.14": {
+   "tipo": "HDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Integridad del proceso de arranque",
+    "en": "Integrity of the boot process"
+   },
+   "seccion": "4-2 14.9",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "HDR 3.14"
+    ],
+    "2": [
+     "HDR 3.14",
+     "HDR 3.14 RE 1"
+    ],
+    "3": [
+     "HDR 3.14",
+     "HDR 3.14 RE 1"
+    ],
+    "4": [
+     "HDR 3.14",
+     "HDR 3.14 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "HDR 3.14 RE 1"
+   ]
+  },
+  "NDR 1.6": {
+   "tipo": "NDR",
+   "fr": "FR1",
+   "titulo": {
+    "es": "Gestion de acceso inalambrico",
+    "en": "Wireless access management"
+   },
+   "seccion": "4-2 15.2",
+   "sr": "SR 1.6",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "NDR 1.6"
+    ],
+    "2": [
+     "NDR 1.6",
+     "NDR 1.6 RE 1"
+    ],
+    "3": [
+     "NDR 1.6",
+     "NDR 1.6 RE 1"
+    ],
+    "4": [
+     "NDR 1.6",
+     "NDR 1.6 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "NDR 1.6 RE 1"
+   ]
+  },
+  "NDR 1.13": {
+   "tipo": "NDR",
+   "fr": "FR1",
+   "titulo": {
+    "es": "Acceso desde redes no confiables",
+    "en": "Access from untrusted networks"
+   },
+   "seccion": "4-2 15.3",
+   "sr": "SR 1.13",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "NDR 1.13"
+    ],
+    "2": [
+     "NDR 1.13"
+    ],
+    "3": [
+     "NDR 1.13",
+     "NDR 1.13 RE 1"
+    ],
+    "4": [
+     "NDR 1.13",
+     "NDR 1.13 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "NDR 1.13 RE 1"
+   ]
+  },
+  "NDR 2.4": {
+   "tipo": "NDR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Codigo movil",
+    "en": "Mobile code"
+   },
+   "seccion": "4-2 15.4",
+   "sr": "SR 2.4",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "NDR 2.4"
+    ],
+    "2": [
+     "NDR 2.4",
+     "NDR 2.4 RE 1"
+    ],
+    "3": [
+     "NDR 2.4",
+     "NDR 2.4 RE 1"
+    ],
+    "4": [
+     "NDR 2.4",
+     "NDR 2.4 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "NDR 2.4 RE 1"
+   ]
+  },
+  "NDR 2.13": {
+   "tipo": "NDR",
+   "fr": "FR2",
+   "titulo": {
+    "es": "Uso de interfaces fisicas de diagnostico y prueba",
+    "en": "Use of physical diagnostic and test interfaces"
+   },
+   "seccion": "4-2 15.5",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "NDR 2.13"
+    ],
+    "3": [
+     "NDR 2.13",
+     "NDR 2.13 RE 1"
+    ],
+    "4": [
+     "NDR 2.13",
+     "NDR 2.13 RE 1"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "NDR 2.13 RE 1"
+   ]
+  },
+  "NDR 3.2": {
+   "tipo": "NDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Proteccion contra codigo malicioso",
+    "en": "Protection against malicious code"
+   },
+   "seccion": "4-2 15.6",
+   "sr": "SR 3.2",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "NDR 3.2"
+    ],
+    "2": [
+     "NDR 3.2"
+    ],
+    "3": [
+     "NDR 3.2"
+    ],
+    "4": [
+     "NDR 3.2"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  },
+  "NDR 3.10": {
+   "tipo": "NDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Soporte para actualizaciones",
+    "en": "Support for updates"
+   },
+   "seccion": "4-2 15.7",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "NDR 3.10"
+    ],
+    "2": [
+     "NDR 3.10",
+     "NDR 3.10 RE 1"
+    ],
+    "3": [
+     "NDR 3.10",
+     "NDR 3.10 RE 1"
+    ],
+    "4": [
+     "NDR 3.10",
+     "NDR 3.10 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "NDR 3.10 RE 1"
+   ]
+  },
+  "NDR 3.11": {
+   "tipo": "NDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Resistencia y deteccion de manipulacion fisica",
+    "en": "Physical tamper resistance and detection"
+   },
+   "seccion": "4-2 15.8",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "NDR 3.11"
+    ],
+    "3": [
+     "NDR 3.11",
+     "NDR 3.11 RE 1"
+    ],
+    "4": [
+     "NDR 3.11",
+     "NDR 3.11 RE 1"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": [
+    "NDR 3.11 RE 1"
+   ]
+  },
+  "NDR 3.12": {
+   "tipo": "NDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Raices de confianza del fabricante",
+    "en": "Supplier roots of trust"
+   },
+   "seccion": "4-2 15.9",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "NDR 3.12"
+    ],
+    "3": [
+     "NDR 3.12"
+    ],
+    "4": [
+     "NDR 3.12"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": []
+  },
+  "NDR 3.13": {
+   "tipo": "NDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Raices de confianza del propietario del activo",
+    "en": "Asset owner roots of trust"
+   },
+   "seccion": "4-2 15.10",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [],
+    "2": [
+     "NDR 3.13"
+    ],
+    "3": [
+     "NDR 3.13"
+    ],
+    "4": [
+     "NDR 3.13"
+    ]
+   },
+   "sl_minimo": 2,
+   "re": []
+  },
+  "NDR 3.14": {
+   "tipo": "NDR",
+   "fr": "FR3",
+   "titulo": {
+    "es": "Integridad del proceso de arranque",
+    "en": "Integrity of the boot process"
+   },
+   "seccion": "4-2 15.11",
+   "sr": null,
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "NDR 3.14"
+    ],
+    "2": [
+     "NDR 3.14",
+     "NDR 3.14 RE 1"
+    ],
+    "3": [
+     "NDR 3.14",
+     "NDR 3.14 RE 1"
+    ],
+    "4": [
+     "NDR 3.14",
+     "NDR 3.14 RE 1"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "NDR 3.14 RE 1"
+   ]
+  },
+  "NDR 5.2": {
+   "tipo": "NDR",
+   "fr": "FR5",
+   "titulo": {
+    "es": "Proteccion del limite de zona",
+    "en": "Zone boundary protection"
+   },
+   "seccion": "4-2 15.12",
+   "sr": "SR 5.2",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "NDR 5.2"
+    ],
+    "2": [
+     "NDR 5.2",
+     "NDR 5.2 RE 1"
+    ],
+    "3": [
+     "NDR 5.2",
+     "NDR 5.2 RE 1",
+     "NDR 5.2 RE 2",
+     "NDR 5.2 RE 3"
+    ],
+    "4": [
+     "NDR 5.2",
+     "NDR 5.2 RE 1",
+     "NDR 5.2 RE 2",
+     "NDR 5.2 RE 3"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": [
+    "NDR 5.2 RE 1",
+    "NDR 5.2 RE 2",
+    "NDR 5.2 RE 3"
+   ]
+  },
+  "NDR 5.3": {
+   "tipo": "NDR",
+   "fr": "FR5",
+   "titulo": {
+    "es": "Restricciones de comunicacion persona a persona de proposito general",
+    "en": "Limits on general purpose person to person communication"
+   },
+   "seccion": "4-2 15.13",
+   "sr": "SR 5.3",
+   "clase": "propio",
+   "sl": {
+    "1": [
+     "NDR 5.3"
+    ],
+    "2": [
+     "NDR 5.3"
+    ],
+    "3": [
+     "NDR 5.3"
+    ],
+    "4": [
+     "NDR 5.3"
+    ]
+   },
+   "sl_minimo": 1,
+   "re": []
+  }
+ },
+ "re_componente": {
+  "CR 1.1 RE 1": {
+   "requisito": "CR 1.1",
+   "titulo": {
+    "es": "Identificacion y autenticacion unica",
+    "en": "Unique identification and authentication"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 5.3"
+  },
+  "CR 1.1 RE 2": {
+   "requisito": "CR 1.1",
+   "titulo": {
+    "es": "Autenticacion multifactor en todas las interfaces",
+    "en": "Multifactor authentication on all interfaces"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 5.3"
+  },
+  "CR 1.2 RE 1": {
+   "requisito": "CR 1.2",
+   "titulo": {
+    "es": "Identificacion y autenticacion unica",
+    "en": "Unique identification and authentication"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 5.4"
+  },
+  "CR 1.5 RE 1": {
+   "requisito": "CR 1.5",
+   "titulo": {
+    "es": "Seguridad por hardware de los autenticadores",
+    "en": "Hardware protection of authenticators"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 5.7"
+  },
+  "CR 1.7 RE 1": {
+   "requisito": "CR 1.7",
+   "titulo": {
+    "es": "Generacion y vigencia de contrasenas de personas",
+    "en": "Password creation and lifetime rules for people"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 5.9"
+  },
+  "CR 1.7 RE 2": {
+   "requisito": "CR 1.7",
+   "titulo": {
+    "es": "Vigencia de contrasenas de todos los usuarios",
+    "en": "Password lifetime rules for all users"
+   },
+   "sl_minimo": 4,
+   "seccion": "4-2 5.9"
+  },
+  "CR 1.9 RE 1": {
+   "requisito": "CR 1.9",
+   "titulo": {
+    "es": "Seguridad por hardware de la clave publica",
+    "en": "Hardware protection of public keys"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 5.11"
+  },
+  "CR 1.14 RE 1": {
+   "requisito": "CR 1.14",
+   "titulo": {
+    "es": "Seguridad por hardware de la clave simetrica",
+    "en": "Hardware protection of symmetric keys"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 5.16"
+  },
+  "CR 2.1 RE 1": {
+   "requisito": "CR 2.1",
+   "titulo": {
+    "es": "Autorizacion para todos los usuarios",
+    "en": "Authorization for all users"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 6.3"
+  },
+  "CR 2.1 RE 2": {
+   "requisito": "CR 2.1",
+   "titulo": {
+    "es": "Asignacion de permisos a roles",
+    "en": "Mapping of permissions to roles"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 6.3"
+  },
+  "CR 2.1 RE 3": {
+   "requisito": "CR 2.1",
+   "titulo": {
+    "es": "Anulacion por supervisor",
+    "en": "Supervisor override"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 6.3"
+  },
+  "CR 2.1 RE 4": {
+   "requisito": "CR 2.1",
+   "titulo": {
+    "es": "Doble aprobacion",
+    "en": "Dual approval"
+   },
+   "sl_minimo": 4,
+   "seccion": "4-2 6.3"
+  },
+  "CR 2.9 RE 1": {
+   "requisito": "CR 2.9",
+   "titulo": {
+    "es": "Aviso al alcanzar el umbral de almacenamiento",
+    "en": "Warning at storage threshold"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 6.11"
+  },
+  "CR 2.11 RE 1": {
+   "requisito": "CR 2.11",
+   "titulo": {
+    "es": "Sincronizacion de la hora",
+    "en": "Time synchronization"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 6.13"
+  },
+  "CR 2.11 RE 2": {
+   "requisito": "CR 2.11",
+   "titulo": {
+    "es": "Proteccion de la integridad de la fuente de hora",
+    "en": "Integrity of the time source"
+   },
+   "sl_minimo": 4,
+   "seccion": "4-2 6.13"
+  },
+  "CR 2.12 RE 1": {
+   "requisito": "CR 2.12",
+   "titulo": {
+    "es": "No repudio para todos los usuarios",
+    "en": "Non-repudiation for all users"
+   },
+   "sl_minimo": 4,
+   "seccion": "4-2 6.14"
+  },
+  "CR 3.1 RE 1": {
+   "requisito": "CR 3.1",
+   "titulo": {
+    "es": "Autenticacion de las comunicaciones",
+    "en": "Authentication of communications"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 7.3"
+  },
+  "CR 3.3 RE 1": {
+   "requisito": "CR 3.3",
+   "titulo": {
+    "es": "Verificacion durante la operacion normal",
+    "en": "Verification during normal operation"
+   },
+   "sl_minimo": 4,
+   "seccion": "4-2 7.5"
+  },
+  "CR 3.4 RE 1": {
+   "requisito": "CR 3.4",
+   "titulo": {
+    "es": "Autenticidad del software y la informacion",
+    "en": "Authenticity of software and information"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 7.6"
+  },
+  "CR 3.4 RE 2": {
+   "requisito": "CR 3.4",
+   "titulo": {
+    "es": "Aviso automatico de violaciones de integridad",
+    "en": "Automatic notice of integrity violations"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 7.6"
+  },
+  "CR 3.9 RE 1": {
+   "requisito": "CR 3.9",
+   "titulo": {
+    "es": "Registros de auditoria en medio de una sola escritura",
+    "en": "Audit records on write-once media"
+   },
+   "sl_minimo": 4,
+   "seccion": "4-2 7.11"
+  },
+  "CR 4.2 RE 1": {
+   "requisito": "CR 4.2",
+   "titulo": {
+    "es": "Borrado de recursos de memoria compartida",
+    "en": "Erasure of shared memory resources"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 8.4"
+  },
+  "CR 4.2 RE 2": {
+   "requisito": "CR 4.2",
+   "titulo": {
+    "es": "Verificacion del borrado",
+    "en": "Verification of erasure"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 8.4"
+  },
+  "CR 6.1 RE 1": {
+   "requisito": "CR 6.1",
+   "titulo": {
+    "es": "Acceso programatico a los registros de auditoria",
+    "en": "Programmatic access to audit logs"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 10.3"
+  },
+  "CR 7.1 RE 1": {
+   "requisito": "CR 7.1",
+   "titulo": {
+    "es": "Gestion de la carga de comunicaciones del componente",
+    "en": "Management of component communication load"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 11.3"
+  },
+  "CR 7.3 RE 1": {
+   "requisito": "CR 7.3",
+   "titulo": {
+    "es": "Verificacion de integridad de respaldos",
+    "en": "Backup integrity verification"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 11.5"
+  },
+  "CR 7.6 RE 1": {
+   "requisito": "CR 7.6",
+   "titulo": {
+    "es": "Reporte legible por maquina de los ajustes de seguridad",
+    "en": "Machine readable report of security settings"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 11.8"
+  },
+  "SAR 2.4 RE 1": {
+   "requisito": "SAR 2.4",
+   "titulo": {
+    "es": "Verificacion de autenticidad del codigo movil",
+    "en": "Authenticity check of mobile code"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 12.2"
+  },
+  "EDR 2.4 RE 1": {
+   "requisito": "EDR 2.4",
+   "titulo": {
+    "es": "Verificacion de autenticidad del codigo movil",
+    "en": "Authenticity check of mobile code"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 13.2"
+  },
+  "EDR 2.13 RE 1": {
+   "requisito": "EDR 2.13",
+   "titulo": {
+    "es": "Monitoreo activo",
+    "en": "Active monitoring"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 13.3"
+  },
+  "EDR 3.10 RE 1": {
+   "requisito": "EDR 3.10",
+   "titulo": {
+    "es": "Autenticidad e integridad de las actualizaciones",
+    "en": "Authenticity and integrity of updates"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 13.5"
+  },
+  "EDR 3.11 RE 1": {
+   "requisito": "EDR 3.11",
+   "titulo": {
+    "es": "Aviso de intento de manipulacion",
+    "en": "Notice of tampering attempts"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 13.6"
+  },
+  "EDR 3.14 RE 1": {
+   "requisito": "EDR 3.14",
+   "titulo": {
+    "es": "Autenticidad del proceso de arranque",
+    "en": "Authenticity of the boot process"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 13.9"
+  },
+  "HDR 2.4 RE 1": {
+   "requisito": "HDR 2.4",
+   "titulo": {
+    "es": "Verificacion de autenticidad del codigo movil",
+    "en": "Authenticity check of mobile code"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 14.2"
+  },
+  "HDR 2.13 RE 1": {
+   "requisito": "HDR 2.13",
+   "titulo": {
+    "es": "Monitoreo activo",
+    "en": "Active monitoring"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 14.3"
+  },
+  "HDR 3.2 RE 1": {
+   "requisito": "HDR 3.2",
+   "titulo": {
+    "es": "Informar la version de la proteccion contra codigo malicioso",
+    "en": "Report the malicious code protection version"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 14.4"
+  },
+  "HDR 3.10 RE 1": {
+   "requisito": "HDR 3.10",
+   "titulo": {
+    "es": "Autenticidad e integridad de las actualizaciones",
+    "en": "Authenticity and integrity of updates"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 14.5"
+  },
+  "HDR 3.11 RE 1": {
+   "requisito": "HDR 3.11",
+   "titulo": {
+    "es": "Aviso de intento de manipulacion",
+    "en": "Notice of tampering attempts"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 14.6"
+  },
+  "HDR 3.14 RE 1": {
+   "requisito": "HDR 3.14",
+   "titulo": {
+    "es": "Autenticidad del proceso de arranque",
+    "en": "Authenticity of the boot process"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 14.9"
+  },
+  "NDR 1.6 RE 1": {
+   "requisito": "NDR 1.6",
+   "titulo": {
+    "es": "Identificacion y autenticacion unica",
+    "en": "Unique identification and authentication"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 15.2"
+  },
+  "NDR 1.13 RE 1": {
+   "requisito": "NDR 1.13",
+   "titulo": {
+    "es": "Aprobacion explicita de solicitudes de acceso",
+    "en": "Explicit approval of access requests"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 15.3"
+  },
+  "NDR 2.4 RE 1": {
+   "requisito": "NDR 2.4",
+   "titulo": {
+    "es": "Verificacion de autenticidad del codigo movil",
+    "en": "Authenticity check of mobile code"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 15.4"
+  },
+  "NDR 2.13 RE 1": {
+   "requisito": "NDR 2.13",
+   "titulo": {
+    "es": "Monitoreo activo",
+    "en": "Active monitoring"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 15.5"
+  },
+  "NDR 3.10 RE 1": {
+   "requisito": "NDR 3.10",
+   "titulo": {
+    "es": "Autenticidad e integridad de las actualizaciones",
+    "en": "Authenticity and integrity of updates"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 15.7"
+  },
+  "NDR 3.11 RE 1": {
+   "requisito": "NDR 3.11",
+   "titulo": {
+    "es": "Aviso de intento de manipulacion",
+    "en": "Notice of tampering attempts"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 15.8"
+  },
+  "NDR 3.14 RE 1": {
+   "requisito": "NDR 3.14",
+   "titulo": {
+    "es": "Autenticidad del proceso de arranque",
+    "en": "Authenticity of the boot process"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 15.11"
+  },
+  "NDR 5.2 RE 1": {
+   "requisito": "NDR 5.2",
+   "titulo": {
+    "es": "Denegar todo, permitir por excepcion",
+    "en": "Deny all, allow by exception"
+   },
+   "sl_minimo": 2,
+   "seccion": "4-2 15.12"
+  },
+  "NDR 5.2 RE 2": {
+   "requisito": "NDR 5.2",
+   "titulo": {
+    "es": "Modo isla",
+    "en": "Island mode"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 15.12"
+  },
+  "NDR 5.2 RE 3": {
+   "requisito": "NDR 5.2",
+   "titulo": {
+    "es": "Falla cerrada",
+    "en": "Fail closed"
+   },
+   "sl_minimo": 3,
+   "seccion": "4-2 15.12"
+  }
+ },
+ "zcr": {
+  "ZCR 1": {
+   "titulo": {
+    "es": "Identificar el sistema bajo consideracion",
+    "en": "Identify the system under consideration"
+   },
+   "seccion": "3-2 4.2",
+   "padre": null
+  },
+  "ZCR 1.1": {
+   "titulo": {
+    "es": "Identificar el perimetro y los puntos de acceso",
+    "en": "Identify the perimeter and access points"
+   },
+   "seccion": "3-2 4.2.1",
+   "padre": "ZCR 1"
+  },
+  "ZCR 2": {
+   "titulo": {
+    "es": "Evaluacion inicial de riesgo",
+    "en": "Initial risk assessment"
+   },
+   "seccion": "3-2 4.3",
+   "padre": null
+  },
+  "ZCR 2.1": {
+   "titulo": {
+    "es": "Realizar la evaluacion inicial de riesgo",
+    "en": "Carry out the initial risk assessment"
+   },
+   "seccion": "3-2 4.3.1",
+   "padre": "ZCR 2"
+  },
+  "ZCR 3": {
+   "titulo": {
+    "es": "Dividir el sistema en zonas y conductos",
+    "en": "Partition the system into zones and conduits"
+   },
+   "seccion": "3-2 4.4",
+   "padre": null
+  },
+  "ZCR 3.1": {
+   "titulo": {
+    "es": "Establecer zonas y conductos",
+    "en": "Establish zones and conduits"
+   },
+   "seccion": "3-2 4.4.2",
+   "padre": "ZCR 3"
+  },
+  "ZCR 3.2": {
+   "titulo": {
+    "es": "Separar activos de negocio y de control",
+    "en": "Separate business and control assets"
+   },
+   "seccion": "3-2 4.4.3",
+   "padre": "ZCR 3"
+  },
+  "ZCR 3.3": {
+   "titulo": {
+    "es": "Separar activos relacionados con seguridad funcional",
+    "en": "Separate safety related assets"
+   },
+   "seccion": "3-2 4.4.4",
+   "padre": "ZCR 3"
+  },
+  "ZCR 3.4": {
+   "titulo": {
+    "es": "Separar dispositivos conectados temporalmente",
+    "en": "Separate temporarily connected devices"
+   },
+   "seccion": "3-2 4.4.5",
+   "padre": "ZCR 3"
+  },
+  "ZCR 3.5": {
+   "titulo": {
+    "es": "Separar dispositivos inalambricos",
+    "en": "Separate wireless devices"
+   },
+   "seccion": "3-2 4.4.6",
+   "padre": "ZCR 3"
+  },
+  "ZCR 3.6": {
+   "titulo": {
+    "es": "Separar dispositivos conectados por redes externas",
+    "en": "Separate devices reached over external networks"
+   },
+   "seccion": "3-2 4.4.7",
+   "padre": "ZCR 3"
+  },
+  "ZCR 4": {
+   "titulo": {
+    "es": "Comparacion de riesgo",
+    "en": "Risk comparison"
+   },
+   "seccion": "3-2 4.5",
+   "padre": null
+  },
+  "ZCR 4.1": {
+   "titulo": {
+    "es": "Comparar el riesgo inicial con el tolerable",
+    "en": "Compare initial risk with tolerable risk"
+   },
+   "seccion": "3-2 4.5.2",
+   "padre": "ZCR 4"
+  },
+  "ZCR 5": {
+   "titulo": {
+    "es": "Evaluacion detallada de riesgo",
+    "en": "Detailed risk assessment"
+   },
+   "seccion": "3-2 4.6",
+   "padre": null
+  },
+  "ZCR 5.1": {
+   "titulo": {
+    "es": "Identificar amenazas",
+    "en": "Identify threats"
+   },
+   "seccion": "3-2 4.6.2",
+   "padre": "ZCR 5"
+  },
+  "ZCR 5.2": {
+   "titulo": {
+    "es": "Identificar vulnerabilidades",
+    "en": "Identify vulnerabilities"
+   },
+   "seccion": "3-2 4.6.3",
+   "padre": "ZCR 5"
+  },
+  "ZCR 5.3": {
+   "titulo": {
+    "es": "Determinar consecuencia e impacto",
+    "en": "Determine consequence and impact"
+   },
+   "seccion": "3-2 4.6.4",
+   "padre": "ZCR 5"
+  },
+  "ZCR 5.4": {
+   "titulo": {
+    "es": "Determinar la probabilidad sin mitigar",
+    "en": "Determine unmitigated likelihood"
+   },
+   "seccion": "3-2 4.6.5",
+   "padre": "ZCR 5"
+  },
+  "ZCR 5.5": {
+   "titulo": {
+    "es": "Determinar el riesgo sin mitigar",
+    "en": "Determine unmitigated risk"
+   },
+   "seccion": "3-2 4.6.6",
+   "padre": "ZCR 5"
+  },
+  "ZCR 5.6": {
+   "titulo": {
+    "es": "Determinar el nivel de seguridad objetivo SL-T",
+    "en": "Determine the target security level SL-T"
+   },
+   "seccion": "3-2 4.6.7",
+   "padre": "ZCR 5"
+  },
+  "ZCR 5.7": {
+   "titulo": {
+    "es": "Comparar el riesgo sin mitigar con el tolerable",
+    "en": "Compare unmitigated risk with tolerable risk"
+   },
+   "seccion": "3-2 4.6.8",
+   "padre": "ZCR 5"
+  },
+  "ZCR 5.8": {
+   "titulo": {
+    "es": "Identificar y evaluar contramedidas existentes",
+    "en": "Identify and assess existing countermeasures"
+   },
+   "seccion": "3-2 4.6.9",
+   "padre": "ZCR 5"
+  },
+  "ZCR 5.9": {
+   "titulo": {
+    "es": "Reevaluar probabilidad e impacto",
+    "en": "Reassess likelihood and impact"
+   },
+   "seccion": "3-2 4.6.10",
+   "padre": "ZCR 5"
+  },
+  "ZCR 5.10": {
+   "titulo": {
+    "es": "Determinar el riesgo residual",
+    "en": "Determine residual risk"
+   },
+   "seccion": "3-2 4.6.11",
+   "padre": "ZCR 5"
+  },
+  "ZCR 5.11": {
+   "titulo": {
+    "es": "Comparar el riesgo residual con el tolerable",
+    "en": "Compare residual risk with tolerable risk"
+   },
+   "seccion": "3-2 4.6.12",
+   "padre": "ZCR 5"
+  },
+  "ZCR 5.12": {
+   "titulo": {
+    "es": "Identificar contramedidas adicionales",
+    "en": "Identify additional countermeasures"
+   },
+   "seccion": "3-2 4.6.13",
+   "padre": "ZCR 5"
+  },
+  "ZCR 5.13": {
+   "titulo": {
+    "es": "Documentar y comunicar los resultados",
+    "en": "Document and communicate results"
+   },
+   "seccion": "3-2 4.6.14",
+   "padre": "ZCR 5"
+  },
+  "ZCR 6": {
+   "titulo": {
+    "es": "Documentar requisitos, supuestos y restricciones",
+    "en": "Document requirements, assumptions and constraints"
+   },
+   "seccion": "3-2 4.7",
+   "padre": null
+  },
+  "ZCR 6.1": {
+   "titulo": {
+    "es": "Especificacion de requisitos de ciberseguridad",
+    "en": "Cybersecurity requirements specification"
+   },
+   "seccion": "3-2 4.7.2",
+   "padre": "ZCR 6"
+  },
+  "ZCR 6.2": {
+   "titulo": {
+    "es": "Descripcion del sistema bajo consideracion",
+    "en": "Description of the system under consideration"
+   },
+   "seccion": "3-2 4.7.3",
+   "padre": "ZCR 6"
+  },
+  "ZCR 6.3": {
+   "titulo": {
+    "es": "Diagramas de zonas y conductos",
+    "en": "Zone and conduit drawings"
+   },
+   "seccion": "3-2 4.7.4",
+   "padre": "ZCR 6"
+  },
+  "ZCR 6.4": {
+   "titulo": {
+    "es": "Caracteristicas de zonas y conductos",
+    "en": "Zone and conduit characteristics"
+   },
+   "seccion": "3-2 4.7.5",
+   "padre": "ZCR 6"
+  },
+  "ZCR 6.5": {
+   "titulo": {
+    "es": "Supuestos del entorno de operacion",
+    "en": "Operating environment assumptions"
+   },
+   "seccion": "3-2 4.7.6",
+   "padre": "ZCR 6"
+  },
+  "ZCR 6.6": {
+   "titulo": {
+    "es": "Entorno de amenazas",
+    "en": "Threat environment"
+   },
+   "seccion": "3-2 4.7.7",
+   "padre": "ZCR 6"
+  },
+  "ZCR 6.7": {
+   "titulo": {
+    "es": "Politicas de seguridad de la organizacion",
+    "en": "Organizational security policies"
+   },
+   "seccion": "3-2 4.7.8",
+   "padre": "ZCR 6"
+  },
+  "ZCR 6.8": {
+   "titulo": {
+    "es": "Riesgo tolerable",
+    "en": "Tolerable risk"
+   },
+   "seccion": "3-2 4.7.9",
+   "padre": "ZCR 6"
+  },
+  "ZCR 6.9": {
+   "titulo": {
+    "es": "Requisitos regulatorios",
+    "en": "Regulatory requirements"
+   },
+   "seccion": "3-2 4.7.10",
+   "padre": "ZCR 6"
+  },
+  "ZCR 7": {
+   "titulo": {
+    "es": "Aprobacion del propietario del activo",
+    "en": "Asset owner approval"
+   },
+   "seccion": "3-2 4.8",
+   "padre": null
+  },
+  "ZCR 7.1": {
+   "titulo": {
+    "es": "Obtener la aprobacion del propietario del activo",
+    "en": "Obtain asset owner approval"
+   },
+   "seccion": "3-2 4.8.2",
+   "padre": "ZCR 7"
+  }
+ },
+ "madurez": {
+  "ML 1": {
+   "titulo": {
+    "es": "Inicial: se hace sin documentar",
+    "en": "Initial: done without documentation"
+   },
+   "descripcion": {
+    "es": "Las practicas son ad hoc, sin registro; no se puede mostrar constancia en el tiempo.",
+    "en": "Practices are ad hoc and unrecorded; consistency over time cannot be shown."
+   },
+   "seccion": "TR 2-2:2025 6.2"
+  },
+  "ML 2": {
+   "titulo": {
+    "es": "Documentado: existe el procedimiento",
+    "en": "Documented: a procedure exists"
+   },
+   "descripcion": {
+    "es": "Hay procedimientos o capacitacion escritos, pero puede haber retraso entre definir y ejecutar.",
+    "en": "Written procedures or training exist, but definition and execution may lag apart."
+   },
+   "seccion": "TR 2-2:2025 6.2"
+  },
+  "ML 3": {
+   "titulo": {
+    "es": "Practicado: se ejecuta de forma repetible",
+    "en": "Practiced: executed repeatably"
+   },
+   "descripcion": {
+    "es": "Es un proceso ML 2 que ya se practica en la planta y se puede mostrar repetible.",
+    "en": "A level 2 process that is already practiced on site and shown to be repeatable."
+   },
+   "seccion": "TR 2-2:2025 6.2"
+  },
+  "ML 4": {
+   "titulo": {
+    "es": "Mejorado: se mide y se mejora",
+    "en": "Improving: measured and refined"
+   },
+   "descripcion": {
+    "es": "Con metricas se demuestra eficacia y el programa mejora el proceso con cambios.",
+    "en": "Metrics show effectiveness and the program improves the process through changes."
+   },
+   "seccion": "TR 2-2:2025 6.2"
+  }
+ },
+ "umbral_repetible": {
+  "entre": [
+   "ML 2",
+   "ML 3"
+  ],
+  "descripcion": {
+   "es": "Se considera repetible desde ML 3; por debajo el SPR no se define.",
+   "en": "Repeatable from ML 3; below that the SPR is not defined."
+  },
+  "seccion": "TR 2-2:2025 6.2"
+ },
+ "spr": {
+  "SPR-T": {
+   "nombre": {
+    "es": "SPR objetivo de la zona",
+    "en": "Target SPR of the zone"
+   },
+   "descripcion": {
+    "es": "Nivel de requisitos que el propietario del activo quiere cumplir en operacion, incluyendo sostener los procesos.",
+    "en": "Requirement level the asset owner wants met in operation, including keeping the processes going."
+   },
+   "fuente": "TR 2-2:2025 6.7.3"
+  },
+  "SPR-I": {
+   "nombre": {
+    "es": "SPR implementado (previsto)",
+    "en": "Implemented (predicted) SPR"
+   },
+   "descripcion": {
+    "es": "Estimacion, desde el diseno validado, de lo que se cumplira en operacion si los procesos se ejecutan de forma repetible.",
+    "en": "Estimate from the validated design of what will be met in operation if processes run repeatably."
+   },
+   "fuente": "TR 2-2:2025 6.7.3 y 8.5.4"
+  },
+  "SPR-O": {
+   "nombre": {
+    "es": "SPR operado (logrado)",
+    "en": "Operated (achieved) SPR"
+   },
+   "descripcion": {
+    "es": "Nivel de requisitos cumplido en un momento de la operacion, con repetibilidad y eficacia demostradas.",
+    "en": "Requirement level actually met at a point in operation, with repeatability and effectiveness shown."
+   },
+   "fuente": "TR 2-2:2025 6.7.3",
+   "alias_del_brief": "SPR-A"
+  }
+ },
+ "agregacion": {
+  "regla": "minimo",
+  "descripcion": {
+   "es": "El valor de una zona o conducto es el minimo de los requisitos cumplidos del grupo.",
+   "en": "A zone or conduit value is the minimum over the met requirements of the group."
+  },
+  "fuente": "TR 2-2:2025 8.5.4 (ejemplo del propio TR, no regla obligatoria)"
+ },
+ "contraste_tabla_b1": {
+  "3-3": {
+   "filas": 100,
+   "diferencias": []
+  },
+  "4-2": {
+   "filas": 123,
+   "diferencias": []
+  },
+  "limite": "la extraccion pierde la columna de cada casilla: se compara el numero de casillas y que sean contiguas hasta SL 4"
+ },
+ "anomalias_del_texto": [
+  "EDR 2.13: la linea del SL 4 esta rotulada SL 3 en el texto; se trata como SL 4",
+  "EDR 3.12: la linea del SL 4 esta rotulada SL 3 en el texto; se trata como SL 4",
+  "HDR 2.13: la linea del SL 4 esta rotulada SL 3 en el texto; se trata como SL 4",
+  "HDR 3.12: la linea del SL 4 esta rotulada SL 3 en el texto; se trata como SL 4",
+  "NDR 2.13: la linea del SL 4 esta rotulada SL 3 en el texto; se trata como SL 4",
+  "NDR 3.12: la linea del SL 4 esta rotulada SL 3 en el texto; se trata como SL 4"
+ ]
+}

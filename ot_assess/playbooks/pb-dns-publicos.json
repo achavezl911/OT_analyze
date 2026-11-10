@@ -1,0 +1,43 @@
+{
+  "id": "pb-dns-publicos",
+  "hallazgo": "Consultas DNS a servidores publicos",
+  "objetivo": "Hacer que los equipos de la red de control resuelvan nombres solo por el resolvedor interno autorizado y no por servidores publicos.",
+  "prioridad_ot": "Cortar el DNS hacia servidores publicos sin poner antes un resolvedor interno puede dejar sin nombres a equipos que actualizan, licencian o sincronizan hora.",
+  "pasos": [
+    "Listar los equipos que consultan servidores publicos y a cuales, con el registro de la captura.",
+    "Decidir con el dueno del proceso el resolvedor interno autorizado para cada zona.",
+    "Cambiar la configuracion DNS de los equipos (fija o por DHCP) para que usen ese resolvedor.",
+    "Permitir el DNS saliente solo desde el resolvedor interno, con registro antes de bloquear lo demas.",
+    "Aplicar el bloqueo en la ventana acordada y vigilar el registro por equipos que dependian de la salida directa."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Activar el registro de conexiones en la regla antes de cambiar su accion a bloqueo.",
+      "Desplegar los cambios en la ventana acordada y conservar la version anterior de la politica."
+    ],
+    "FortiGate": [
+      "Activar el registro de trafico DNS hacia Internet y revisar que equipos lo usan.",
+      "Deshabilitar la politica antes de borrarla, para poder reactivarla."
+    ],
+    "Windows / Active Directory": [
+      "Fijar el servidor DNS interno en los equipos con directivas de grupo (GPO) o por DHCP.",
+      "Respaldar la configuracion DNS antes de cambiarla."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que el DNS solo sale desde el resolvedor autorizado.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de firewall y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0869", "IEC 62443 SR 5.1", "IEC 62443 SR 5.2", "NERC CIP-005 R1", "NIST 800-82 SC-7", "NIST 800-82 SC-21", "NIST CSF PR.IR-01"]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "pb-reglas-sombreadas",
+  "hallazgo": "Reglas de firewall sombreadas o sin uso",
+  "objetivo": "Depurar las reglas sombreadas por otras o sin aciertos para reducir la superficie y que la politica se pueda auditar.",
+  "prioridad_ot": "Una regla sin aciertos puede ser de uso estacional (mantenimiento, arranque, respaldo anual): borrarla puede cortar una operacion poco frecuente.",
+  "pasos": [
+    "Listar las reglas sombreadas (otra regla anterior ya decide su trafico) y las que no tienen aciertos en el periodo disponible.",
+    "Para las sombreadas: confirmar que la regla que las tapa es la correcta; borrar la sombreada o corregir el orden.",
+    "Para las sin uso: obtener el contador de aciertos de un periodo largo (al menos un ciclo de mantenimiento) y consultar al dueno de la regla.",
+    "Deshabilitar (no borrar) y vigilar el registro (log) durante el periodo acordado.",
+    "Respaldar la configuracion y aplicar en la ventana acordada.",
+    "Borrar y documentar las reglas que no tuvieron impacto, con fecha y responsable."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Usar el analisis de reglas y el contador de aciertos de la politica de control de acceso (Policies > Access Control) para identificar reglas sin uso o sombreadas (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Deshabilitar antes de borrar y conservar la version anterior de la politica."
+    ],
+    "FortiGate": [
+      "Revisar el contador de aciertos de cada politica y desde cuando se acumula.",
+      "Deshabilitar la politica antes de borrarla, para poder reactivarla."
+    ]
+  },
+  "verificacion": [
+    "Confirmar que las reglas deshabilitadas no generan denegaciones de trafico necesario durante el periodo acordado.",
+    "Reimportar la configuracion y confirmar que el hallazgo ya no lista esas reglas.",
+    "Comprobar que el orden de reglas sigue el diseno acordado."
+  ],
+  "reversion": [
+    "Reactivar la regla deshabilitada y registrar el motivo.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de firewall",
+  "referencias": ["IEC 62443 SR 5.1", "IEC 62443 SR 5.2", "NERC CIP-005 R1", "NERC CIP-007 R1", "NIST 800-82 SC-7", "NIST 800-82 CM-7", "NIST CSF PR.IR-01"]
+}

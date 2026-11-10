@@ -1,0 +1,39 @@
+{
+  "id": "pb-captura-io-ciclico",
+  "hallazgo": "El trafico es casi todo I/O ciclico, que no revela identidad",
+  "objetivo": "Completar el inventario cuando el trafico capturado es casi todo I/O ciclico, que no dice que equipo es cada uno.",
+  "prioridad_ot": "Un inventario hecho solo con trafico ciclico queda sin fabricante ni version; consultar los controladores de forma activa para obtenerlos puede afectar el control.",
+  "pasos": [
+    "Anotar en el registro del informe que el trafico visto es casi todo ciclico y que la identificacion es parcial.",
+    "Capturar tambien en el nivel de supervision o de ingenieria, donde hay mas trafico que identifica equipos.",
+    "Capturar durante un arranque, una descarga de programa autorizada o un mantenimiento acordado con el dueno del proceso.",
+    "Importar exportaciones de plataformas o inventarios del cliente como fuente complementaria.",
+    "No consultar activamente los controladores sin una ventana acordada y un perfil suave."
+  ],
+  "por_plataforma": {
+    "Claroty xDome": [
+      "Exportar el inventario de activos con fabricante, modelo y version para importarlo como fuente.",
+      "Anotar la cobertura de los sensores por segmento."
+    ],
+    "Switch Cisco IOS/IOS-XE": [
+      "Preparar un puerto espejo (SPAN) en el nivel de supervision, con acceso por consola (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Confirmar con el dueno del proceso que el espejo no sobrecarga el enlace."
+    ]
+  },
+  "verificacion": [
+    "Comparar el inventario resultante con la lista de activos del dueno del proceso.",
+    "Registrar en el informe que equipos siguen sin identificar."
+  ],
+  "reversion": [
+    "Quitar el puerto espejo temporal al terminar y restaurar el respaldo de la configuracion del switch si afecto la gestion.",
+    "Conservar la configuracion anterior del switch para volver a ella en la ventana de mantenimiento."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No reiniciar controladores ni equipos de control en produccion sin una ventana acordada."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": []
+}

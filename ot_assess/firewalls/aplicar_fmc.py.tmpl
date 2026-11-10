@@ -1,0 +1,339 @@
+"""Carga a Cisco FMC la politica propuesta por ot_assess (fmc_objetos.json y fmc_reglas.json).
+
+Por defecto SOLO SIMULA (GET, mas el POST del token). Con --aplicar y la confirmacion "SI" crea los objetos que
+faltan y una politica de acceso NUEVA con sus reglas. Nunca usa DELETE ni PUT, nunca modifica lo existente y no
+asigna la politica a ningun equipo. Solo biblioteca estandar (Python 3.9+). Las credenciales se piden en la consola
+(nunca por argumento), no se guardan ni se imprimen. Las rutas de la API deben validarse contra la version del FMC
+(7.6.4) en modo simular antes de aplicar.
+"""
+import argparse
+import base64
+import collections
+import getpass
+import json
+import ssl
+import sys
+import time
+import urllib.error
+import urllib.request
+from datetime import datetime
+from pathlib import Path
+
+POLITICA = __POLITICA__
+AQUI = Path(__file__).resolve().parent
+LIMITE_LLAMADAS = 120      # por minuto (limite del FMC)
+VENTANA = 60.0
+LOTE = 1000
+REINTENTOS_429 = 5
+RUTA_TOKEN = "/api/fmc_platform/v1/auth/generatetoken"
+SECRETOS = []              # valores que jamas deben aparecer en la consola ni en el log
+
+# clave del JSON de objetos, ruta, tipo FMC, familia de nombres (los nombres son unicos dentro de la familia)
+TIPOS = [("hosts", "object/hosts", "Host", "red"),
+         ("redes", "object/networks", "Network", "red"),
+         ("servicios", "object/protocolportobjects", "ProtocolPortObject", "puerto"),
+         ("grupos_red", "object/networkgroups", "NetworkGroup", "red"),
+         ("grupos_servicio", "object/portobjectgroups", "PortObjectGroup", "puerto")]
+
+
+class ErrorApi(Exception):
+    pass
+
+
+def limpiar(texto):
+    texto = str(texto)
+    for s in SECRETOS:
+        if s:
+            texto = texto.replace(s, "***")
+    return texto
+
+
+def mostrar(texto=""):
+    print(limpiar(texto))
+
+
+def crear_peticion(ctx):
+    def peticion(metodo, url, cabeceras, cuerpo):
+        req = urllib.request.Request(url, data=cuerpo, headers=cabeceras, method=metodo)
+        try:
+            with urllib.request.urlopen(req, context=ctx, timeout=60) as r:
+                return r.status, dict(r.headers.items()), r.read()
+        except urllib.error.HTTPError as e:
+            return e.code, dict(e.headers.items()), e.read()
+        except (urllib.error.URLError, OSError) as e:
+            raise ErrorApi("sin conexion con el FMC: %s" % type(e).__name__)
+    return peticion
+
+
+class Cliente:
+    def __init__(self, base, peticion, ruta_log, dormir=time.sleep, reloj=time.monotonic):
+        self.base = base
+        self.peticion = peticion
+        self.ruta_log = ruta_log
+        self.dormir = dormir
+        self.reloj = reloj
+        self.cab = {}
+        self.tiempos = collections.deque()
+        self.dominio = None
+
+    def _log(self, metodo, ruta, codigo):
+        linea = "%s %s %s %s\n" % (datetime.now().isoformat(timespec="seconds"), metodo, ruta, codigo)
+        with open(self.ruta_log, "a", encoding="utf-8") as fh:
+            fh.write(limpiar(linea))
+
+    def _ritmo(self):
+        ahora = self.reloj()
+        while self.tiempos and ahora - self.tiempos[0] >= VENTANA:
+            self.tiempos.popleft()
+        if len(self.tiempos) >= LIMITE_LLAMADAS:
+            self.dormir(max(VENTANA - (ahora - self.tiempos[0]), 1.0))
+            self.tiempos.popleft()
+        self.tiempos.append(self.reloj())
+
+    def llamar(self, metodo, ruta, cuerpo=None, extra=None):
+        """-> (codigo, cabeceras en minusculas, JSON o None). Solo GET y POST."""
+        if metodo not in ("GET", "POST"):
+            raise ErrorApi("metodo no permitido: %s" % metodo)
+        datos = None if cuerpo is None else json.dumps(cuerpo).encode("utf-8")
+        cab = dict(self.cab)
+        cab["Accept"] = "application/json"
+        if datos is not None:
+            cab["Content-Type"] = "application/json"
+        cab.update(extra or {})
+        for _ in range(REINTENTOS_429 + 1):
+            self._ritmo()
+            codigo, h, cu = self.peticion(metodo, self.base + ruta, cab, datos)
+            self._log(metodo, ruta, codigo)
+            if codigo == 429:
+                h = {k.lower(): v for k, v in h.items()}
+                try:
+                    espera = float(h.get("retry-after", "5"))
+                except ValueError:
+                    espera = 5.0
+                mostrar("  FMC pide esperar %.0f s (429)" % espera)
+                self.dormir(max(espera, 0.0))
+                continue
+            try:
+                js = json.loads(cu.decode("utf-8")) if cu else None
+            except (ValueError, UnicodeDecodeError):
+                js = None
+            return codigo, {k.lower(): v for k, v in h.items()}, js
+        raise ErrorApi("%s %s: el FMC siguio respondiendo 429" % (metodo, ruta))
+
+    def exigir(self, metodo, ruta, cuerpo=None, ok=(200, 201, 202)):
+        codigo, h, js = self.llamar(metodo, ruta, cuerpo)
+        if codigo not in ok:
+            detalle = ""
+            if isinstance(js, dict):
+                detalle = json.dumps(js.get("error", js), ensure_ascii=True)[:300]
+            raise ErrorApi("%s %s -> %s %s" % (metodo, ruta, codigo, detalle))
+        return js
+
+    def autenticar(self, usuario, clave):
+        cred = base64.b64encode(("%s:%s" % (usuario, clave)).encode("utf-8")).decode("ascii")
+        codigo, h, _js = self.llamar("POST", RUTA_TOKEN, extra={"Authorization": "Basic " + cred})
+        if codigo in (401, 403):
+            raise ErrorApi("el FMC rechazo las credenciales (%s)" % codigo)
+        token, dominio = h.get("x-auth-access-token"), h.get("domain_uuid")
+        if codigo != 204 and codigo != 200 or not token or not dominio:
+            raise ErrorApi("respuesta de autenticacion inesperada (%s)" % codigo)
+        self.cab = {"X-auth-access-token": token}
+        self.dominio = dominio
+        SECRETOS.append(token)
+
+    def config(self, ruta):
+        return "/api/fmc_config/v1/domain/%s/%s" % (self.dominio, ruta)
+
+    def listar(self, ruta):
+        """Todos los elementos de una coleccion (con paginacion)."""
+        out, desplazamiento = [], 0
+        while True:
+            js = self.exigir("GET", "%s?limit=%d&offset=%d&expanded=true" % (self.config(ruta), LOTE, desplazamiento))
+            items = (js or {}).get("items") or []
+            out.extend(items)
+            if not items or not ((js or {}).get("paging") or {}).get("next"):
+                return out
+            desplazamiento += len(items)
+
+
+def lotes(lista, n=LOTE):
+    for i in range(0, len(lista), n):
+        yield lista[i:i + n]
+
+
+def comparar_valor(clave, objeto, existente):
+    """Texto si el objeto existente con el mismo nombre no es lo que se iba a crear."""
+    if clave in ("hosts", "redes") and "value" in existente and existente["value"] != objeto["value"]:
+        return "valor %s en el FMC, %s en la propuesta" % (existente["value"], objeto["value"])
+    if clave == "servicios" and "port" in existente and (
+            str(existente.get("port")) != objeto["port"] or str(existente.get("protocol", "")).upper() != objeto["protocol"]):
+        return "%s/%s en el FMC, %s/%s en la propuesta" % (
+            existente.get("protocol"), existente.get("port"), objeto["protocol"], objeto["port"])
+    return ""
+
+
+def resolver_regla(r, zonas, refs):
+    def objs(nombres, tabla):
+        return {"objects": [dict(tabla[n], name=n) for n in nombres]}
+    nueva = {k: v for k, v in r.items()
+             if k not in ("sourceZones", "destinationZones", "sourceNetworks", "destinationNetworks",
+                          "destinationPorts")}
+    nueva["type"] = "AccessRule"
+    nueva["sourceZones"] = objs(r["sourceZones"], zonas)
+    nueva["destinationZones"] = objs(r["destinationZones"], zonas)
+    nueva["sourceNetworks"] = objs(r["sourceNetworks"], refs)
+    nueva["destinationNetworks"] = objs(r["destinationNetworks"], refs)
+    if r["destinationPorts"]:
+        nueva["destinationPorts"] = objs(r["destinationPorts"], refs)
+    # sin puertos de destino = cualquier puerto (servicio "cualquiera" de la propuesta): el campo no se envia
+    return nueva
+
+
+def resolver_objeto(o, refs):
+    nuevo = dict(o)
+    if "objects" in o:
+        nuevo["objects"] = [dict(refs[m["name"]], name=m["name"]) for m in o["objects"]]
+    return nuevo
+
+
+def ejecutar(cli, objetos, reglas, politica, aplicar, entrada):
+    zonas_fmc = {z["name"]: {"id": z["id"], "type": "SecurityZone"} for z in cli.listar("object/securityzones")}
+    necesarias = sorted({z for r in reglas for z in r["sourceZones"] + r["destinationZones"]})
+    faltan = [z for z in necesarias if z not in zonas_fmc]
+    if faltan:
+        mostrar("[!] Faltan zonas de seguridad en el FMC (el script no las crea): " + ", ".join(faltan))
+        return 1
+    if any(p["name"] == politica for p in cli.listar("policy/accesspolicies")):
+        mostrar("[!] Ya existe una politica de acceso llamada '%s'. Use --politica con otro nombre; no se modifica "
+                "la existente." % politica)
+        return 1
+
+    existentes = {}
+    for clave, ruta, tipo, _fam in TIPOS:
+        existentes[clave] = {x["name"]: x for x in cli.listar(ruta)}
+    conflictos = []
+    for clave, _ruta, _tipo, fam in TIPOS:
+        for o in objetos.get(clave, []):
+            for otra, _r2, _t2, fam2 in TIPOS:
+                if otra != clave and fam2 == fam and o["name"] in existentes[otra]:
+                    conflictos.append("%s ya existe en el FMC con otro tipo" % o["name"])
+            ex = existentes[clave].get(o["name"])
+            if ex:
+                dif = comparar_valor(clave, o, ex)
+                if dif:
+                    conflictos.append("%s: %s" % (o["name"], dif))
+    if conflictos:
+        mostrar("[!] Objetos con el mismo nombre y distinto contenido; renombre en la propuesta o en el FMC:")
+        for c in conflictos:
+            mostrar("    " + c)
+        return 1
+
+    refs = {}
+    por_crear = {}
+    for clave, _ruta, tipo, _fam in TIPOS:
+        por_crear[clave] = []
+        for o in objetos.get(clave, []):
+            ex = existentes[clave].get(o["name"])
+            if ex:
+                refs[o["name"]] = {"id": ex["id"], "type": tipo}
+            else:
+                por_crear[clave].append(o)
+    mostrar("Politica nueva: %s (accion por defecto BLOCK con registro al inicio)" % politica)
+    mostrar("Reglas: %d en %d lote(s) (%d deshabilitadas)" % (
+        len(reglas), len(list(lotes(reglas))), sum(1 for r in reglas if not r["enabled"])))
+    for clave, _ruta, _tipo, _fam in TIPOS:
+        total = len(objetos.get(clave, []))
+        mostrar("  %-16s existentes %d, a crear %d" % (clave, total - len(por_crear[clave]), len(por_crear[clave])))
+    if not aplicar:
+        mostrar("")
+        mostrar("SIMULACION: no se creo nada. Para crear: --aplicar (pide escribir SI).")
+        return 0
+    if entrada("Escriba SI para crear estos objetos y la politica en el FMC: ").strip() != "SI":
+        mostrar("Cancelado: no se creo nada.")
+        return 0
+
+    for clave, ruta, tipo, _fam in TIPOS:      # el orden de TIPOS deja los grupos al final
+        for lote in lotes(por_crear[clave]):
+            cuerpo = [resolver_objeto(o, refs) for o in lote]
+            js = cli.exigir("POST", cli.config(ruta) + "?bulk=true", cuerpo)
+            items = js if isinstance(js, list) else (js or {}).get("items") or []
+            if len(items) != len(lote):
+                raise ErrorApi("%s: el FMC devolvio %d de %d objetos" % (ruta, len(items), len(lote)))
+            for it in items:
+                refs[it["name"]] = {"id": it["id"], "type": tipo}
+        mostrar("  creados %d %s" % (len(por_crear[clave]), clave))
+
+    js = cli.exigir("POST", cli.config("policy/accesspolicies"), {
+        "type": "AccessPolicy", "name": politica,
+        "description": "Propuesta generada por ot_assess; revisar antes de asignar a un equipo",
+        "defaultAction": {"action": "BLOCK", "logBegin": True, "logEnd": False, "sendEventsToFMC": True}})
+    pid = (js or {}).get("id")
+    if not pid:
+        raise ErrorApi("el FMC no devolvio el id de la politica")
+    mostrar("  politica creada: %s" % politica)
+    n = 0
+    for lote in lotes(reglas):
+        cuerpo = [resolver_regla(r, zonas_fmc, refs) for r in lote]
+        cli.exigir("POST", cli.config("policy/accesspolicies/%s/accessrules?bulk=true" % pid), cuerpo)
+        n += len(lote)
+        mostrar("  reglas creadas: %d de %d" % (n, len(reglas)))
+    mostrar("")
+    mostrar("Listo. La politica NO esta asignada a ningun equipo ni desplegada: revisela en el FMC y asignela en "
+            "una ventana de cambio.")
+    return 0
+
+
+def crear_parser():
+    ap = argparse.ArgumentParser(description="Carga la politica propuesta a Cisco FMC (por defecto solo simula).")
+    ap.add_argument("--simular", action="store_true", help="Solo GET; muestra lo que crearia (por defecto).")
+    ap.add_argument("--aplicar", action="store_true", help="Crea lo que falta y la politica nueva (pide escribir SI).")
+    ap.add_argument("--politica", default=POLITICA, help="Nombre de la politica nueva. Defecto: %(default)s")
+    ap.add_argument("--url", help="URL del FMC (https://...). Si falta, se pide.")
+    ap.add_argument("--ca", metavar="ARCHIVO", help="CA propia (PEM) para verificar el certificado del FMC.")
+    ap.add_argument("--inseguro", action="store_true", help="NO verifica TLS. Solo para laboratorio.")
+    ap.add_argument("--carpeta", default=str(AQUI), help="Carpeta con fmc_objetos.json y fmc_reglas.json.")
+    return ap
+
+
+def main(argv=None, peticion=None, entrada=input, clave=getpass.getpass, dormir=time.sleep, reloj=time.monotonic):
+    args = crear_parser().parse_args(argv)
+    if args.simular and args.aplicar:
+        mostrar("[!] --simular y --aplicar son excluyentes.")
+        return 2
+    carpeta = Path(args.carpeta)
+    try:
+        objetos = json.loads((carpeta / "fmc_objetos.json").read_text(encoding="utf-8"))
+        reglas = json.loads((carpeta / "fmc_reglas.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError) as e:
+        mostrar("[!] No pude leer fmc_objetos.json / fmc_reglas.json en %s: %s" % (carpeta, type(e).__name__))
+        return 2
+    url = (args.url or entrada("URL del FMC (https://...): ")).strip().rstrip("/")
+    if not url.lower().startswith("https://"):
+        mostrar("[!] La URL debe empezar con https:// (las credenciales viajarian en claro).")
+        return 2
+    usuario = entrada("Usuario: ").strip()
+    contrasena = clave("Contrasena: ")
+    SECRETOS.append(contrasena)
+    if args.inseguro:
+        mostrar("[!] ADVERTENCIA: --inseguro desactiva la verificacion del certificado TLS. Un tercero podria "
+                "capturar las credenciales. No lo use fuera de un laboratorio.")
+        ctx = ssl._create_unverified_context()
+    elif args.ca:
+        try:
+            ctx = ssl.create_default_context(cafile=args.ca)
+        except (OSError, ssl.SSLError) as e:
+            mostrar("[!] No pude cargar la CA '%s': %s" % (args.ca, type(e).__name__))
+            return 2
+    else:
+        ctx = ssl.create_default_context()
+    cli = Cliente(url, peticion or crear_peticion(ctx), carpeta / "aplicar_fmc.log", dormir, reloj)
+    try:
+        cli.autenticar(usuario, contrasena)
+        return ejecutar(cli, objetos, reglas, args.politica, args.aplicar, entrada)
+    except ErrorApi as e:
+        mostrar("[!] %s" % e)
+        return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

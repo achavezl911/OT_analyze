@@ -1,0 +1,6 @@
+fecha,origen,destino,puerto,protocolo,firma,severidad,categoria,conteo
+2099-01-01 08:00:00,10.10.1.10,10.10.1.20,502,tcp,Modbus escritura fuera de horario (ficticia),High,Control no autorizado,3
+2099-01-01 08:05:00,10.10.1.30,10.10.1.40,102,tcp,S7 PLC Stop (ficticia),Critical,Control no autorizado,1
+2099-01-01 08:10:00,10.10.2.5,10.10.2.6,2404,tcp,IEC-104 comando inesperado (ficticia),Medium,Anomalia de protocolo,2
+2099-01-01 08:15:00,10.10.1.30,10.10.1.1,23,tcp,Telnet en la red de control (ficticia),Low,Texto claro,1
+2099-01-01 08:20:00,10.10.1.10,10.10.3.6,20000,tcp,Par sin trafico observado (ficticia),Medium,Visibilidad,1

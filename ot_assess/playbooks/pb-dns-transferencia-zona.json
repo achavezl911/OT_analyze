@@ -1,0 +1,43 @@
+{
+  "id": "pb-dns-transferencia-zona",
+  "hallazgo": "Intento de transferencia de zona DNS",
+  "objetivo": "Limitar la transferencia de zona DNS a los servidores secundarios autorizados, porque entrega la lista completa de nombres y direcciones de la red.",
+  "prioridad_ot": "Cerrar la transferencia sin conocer los servidores secundarios puede romper la replicacion entre servidores DNS y dejar zonas desactualizadas.",
+  "pasos": [
+    "Identificar el origen y el servidor DNS destino del intento, con el registro de la captura.",
+    "Confirmar con el dueno del proceso si el origen es un servidor secundario o una herramienta autorizada.",
+    "Si no esta autorizado, tratarlo como incidente (reconocimiento) con el procedimiento del cliente.",
+    "Limitar en cada servidor DNS la transferencia de zona a la lista de secundarios autorizados.",
+    "Limitar con reglas el trafico TCP 53 entre zonas a los servidores que lo necesiten, con registro antes de bloquear."
+  ],
+  "por_plataforma": {
+    "Windows / Active Directory": [
+      "Revisar en las propiedades de cada zona a que servidores se permite la transferencia y dejar solo los autorizados.",
+      "Respaldar la zona DNS antes de modificarla."
+    ],
+    "Linux": [
+      "Revisar en la configuracion del servidor de nombres la lista de servidores permitidos para transferencias y limitarla.",
+      "Probar con una consulta de transferencia desde un equipo no autorizado para ver que se rechaza."
+    ],
+    "Cisco FTD (FMC)": [
+      "Activar el registro de conexiones en la regla antes de cambiar su accion a bloqueo.",
+      "Desplegar los cambios en la ventana acordada y conservar la version anterior de la politica."
+    ]
+  },
+  "verificacion": [
+    "Repetir la prueba de transferencia desde un equipo no autorizado y confirmar que se rechaza.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Volver a permitir la transferencia al servidor secundario legitimo si la replicacion se detuvo.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de sistemas y redes OT",
+  "referencias": ["MITRE ICS T0888", "MITRE ICS T0846", "IEC 62443 SR 2.1", "NERC CIP-005 R1", "NIST 800-82 AC-3", "NIST 800-82 CM-7", "NIST CSF PR.AA-05", "NIST CSF DE.CM-01"]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "pb-dhcp-no-autorizado",
+  "hallazgo": "Mas de un servidor DHCP respondiendo en el segmento",
+  "objetivo": "Identificar cual de los servidores DHCP que responden es el autorizado, sacar de la red al otro y dejar que solo el autorizado pueda contestar en ese segmento.",
+  "prioridad_ot": "Apagar o bloquear el servidor equivocado deja a los equipos sin direccion al renovar su concesion, y dejar un servidor falso entrega puerta de enlace y DNS ajenos: primero se confirma cual es el legitimo y el bloqueo se hace en ventana.",
+  "pasos": [
+    "Listar los servidores que contestaron en la captura (direccion IP y MAC) y los clientes que recibieron cada oferta, y conservar el registro.",
+    "Preguntar al dueno del proceso y a TI cual es el servidor DHCP autorizado y si existe un segundo por respaldo (failover) o un agente de retransmision.",
+    "Localizar el puerto de switch del servidor no reconocido por su MAC y revisar quien lo conecto y desde cuando.",
+    "Revisar en los clientes que recibieron esa oferta la puerta de enlace y el DNS asignados, y corregirlos si apuntan al servidor no autorizado.",
+    "Habilitar DHCP snooping en los switches del segmento, con solo el puerto del servidor autorizado como confiable, primero en laboratorio y luego en la ventana acordada.",
+    "Para los equipos de control, preferir direccion estatica o reserva por MAC en lugar de depender de DHCP."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar la tabla de enlaces de DHCP snooping y los contadores de paquetes descartados por puerto no confiable (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Marcar como confiables solo los puertos del servidor autorizado y de los enlaces entre switches, y aplicarlo de un switch a la vez."
+    ],
+    "Claroty xDome": [
+      "Buscar los activos con funcion de servidor DHCP en el inventario y las alertas asociadas a esa comunicacion.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ],
+    "Windows / Active Directory": [
+      "Confirmar en la consola de DHCP del servidor autorizado los ambitos y las concesiones vigentes.",
+      "Si el servidor no autorizado es un servidor Windows, revisar si esta autorizado en el directorio y retirarlo de la lista de no ser legitimo."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura en la misma ventana y confirmar que solo contesta el servidor autorizado.",
+    "Confirmar con el dueno del proceso que los equipos de control renuevan su direccion sin perdida de comunicacion."
+  ],
+  "reversion": [
+    "Deshabilitar la proteccion nueva en el puerto afectado (sin borrarla) si un equipo legitimo deja de obtener direccion.",
+    "Restaurar el respaldo de la configuracion del switch en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Mantener acceso por consola o fuera de banda para recuperar el equipo si el cambio corta la gestion."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y ciberseguridad OT, con el dueno del servidor DHCP",
+  "referencias": ["MITRE ICS T0830", "IEC 62443 SR 3.1", "IEC 62443 SR 7.6", "NERC CIP-007 R4", "NIST 800-82 SI-4", "NIST 800-82 CM-6", "NIST CSF DE.CM-01", "NIST CSF PR.PS-01"]
+}

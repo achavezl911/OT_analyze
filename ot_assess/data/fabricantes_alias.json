@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "nota": "Grupos de nombres que V1a (D89) trata como el mismo fabricante al cruzar el inventario con los avisos. Cada grupo es una lista de nombres equivalentes (se normalizan al cargar: minusculas, sin puntuacion ni sufijos societarios). Lista de trabajo indicada por el propietario del proyecto, ampliable a mano; no es un registro oficial de marcas.",
+  "grupos": [
+    ["Rockwell Automation", "Allen-Bradley"],
+    ["Schneider Electric", "Modicon"],
+    ["General Electric", "GE", "GE Digital", "GE Vernova", "GE Intelligent Platforms",
+     "GE Automation", "GE Automation & Controls", "GE Fanuc", "GE Fanuc Automation"],
+    ["Belden", "Hirschmann"],
+    ["Siemens"],
+    ["Emerson", "Fisher-Rosemount"]
+  ]
+}

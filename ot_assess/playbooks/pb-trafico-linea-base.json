@@ -1,0 +1,38 @@
+{
+  "id": "pb-trafico-linea-base",
+  "hallazgo": "Trafico fuera de la linea base aprobada",
+  "objetivo": "Explicar por que un conducto mueve mas de 3 veces su volumen aprobado o dejo de ser periodico, y corregir el origen si es una falla.",
+  "prioridad_ot": "Cambiar un equipo o la red para bajar el trafico sin entender la causa puede afectar el control; primero se compara con la operacion del periodo.",
+  "pasos": [
+    "Anotar el conducto, el volumen aprobado (p95 por minuto) y el actual, y la clase de periodicidad aprobada y actual.",
+    "Comparar la ventana de captura con la operacion del periodo: arranques, paros, cambios de receta o de proceso.",
+    "Revisar si cambio el periodo de sondeo del cliente o si hay mas variables o equipos en el conducto.",
+    "Revisar la carga y el estado de los dos extremos y los contadores de errores del camino.",
+    "Si no hay explicacion operativa, tratarlo como una falla o un uso no esperado y corregir el origen en ventana.",
+    "Aprobar una linea base nueva en otra carpeta si el cambio es el nuevo comportamiento normal."
+  ],
+  "por_plataforma": {
+    "PLC / RTU (generico)": [
+      "Revisar en el equipo la carga de comunicaciones y el conteo de conexiones, segun la documentacion del fabricante.",
+      "Confirmar el tiempo de sondeo configurado en el cliente del conducto."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura en condiciones comparables y confirmar que el volumen y la periodicidad vuelven a la linea base o quedan explicados.",
+    "Confirmar con operacion que el conducto mantiene su periodo de sondeo sin huecos."
+  ],
+  "reversion": [
+    "Volver al tiempo de sondeo o a la configuracion anterior del equipo si el cambio degrada el conducto.",
+    "Restaurar el respaldo de la configuracion de red en la ventana, con acceso fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Los umbrales de este hallazgo son heuristicas sin calibrar: confirmar con la linea base del sitio antes de concluir.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Capturas de distinta duracion o en distinto momento del proceso dan volumenes distintos sin que haya una falla.",
+    "Dejar registro de cada cambio y confirmar con el dueno del proceso antes de aplicarlo."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Operacion OT y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 6.2", "IEC 62443 SR 7.2", "NIST 800-82 SI-4", "NIST CSF DE.CM-01", "NIST CSF DE.AE-02"]
+}

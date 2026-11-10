@@ -1,0 +1,39 @@
+{
+  "id": "pb-captura-sin-unicast",
+  "hallazgo": "El punto de captura casi no ve trafico unicast",
+  "objetivo": "Mover o ajustar el punto de captura para que vea el trafico entre equipos, porque solo difusion y multidifusion no permiten analizar las comunicaciones de control.",
+  "prioridad_ot": "Concluir que la red tiene poco trafico por un punto de captura mal elegido da un inventario y una matriz incompletos; cambiar el espejo sin plan puede afectar el switch.",
+  "pasos": [
+    "Confirmar en que puerto o enlace se tomo la captura y que VLAN y equipos cubre, y dejarlo en el registro.",
+    "Identificar con el dueno del proceso donde esta el trafico entre controladores y supervision.",
+    "Mover la captura a un enlace troncal, a un puerto de interconexion o al puerto del equipo que concentra las comunicaciones.",
+    "Ajustar el espejo para incluir las VLAN y los puertos de interes, probandolo antes en laboratorio.",
+    "Repetir la captura en la ventana acordada y comparar la proporcion de trafico unicast."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar las VLAN y los puertos incluidos en la sesion de espejo (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Conservar el acceso por consola mientras se hace el cambio."
+    ],
+    "Claroty xDome": [
+      "Comparar con la lista de segmentos que ve el sensor para decidir donde capturar.",
+      "Anotar la cobertura de los sensores por segmento."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que hay trafico unicast entre los equipos esperados.",
+    "Registrar en el informe el punto de captura y su cobertura."
+  ],
+  "reversion": [
+    "Restaurar la sesion de espejo anterior si el cambio afecto el switch.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Confirmar con el dueno del proceso que el puerto espejo no sobrecarga el enlace."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": []
+}

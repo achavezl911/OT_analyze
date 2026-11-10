@@ -1,0 +1,43 @@
+{
+  "id": "pb-firmware-expuesto",
+  "hallazgo": "Version de firmware expuesta en protocolos de descubrimiento",
+  "objetivo": "Reducir la informacion de version que los equipos anuncian en protocolos de descubrimiento y revisar si esas versiones tienen avisos de seguridad del fabricante.",
+  "prioridad_ot": "Desactivar un protocolo de descubrimiento que usa la herramienta de ingenieria o de monitoreo puede romper ese servicio; actualizar un firmware sin validacion puede detener el proceso.",
+  "pasos": [
+    "Listar los equipos y la version que anuncian, con el registro de la captura.",
+    "Comparar las versiones con los avisos de seguridad del fabricante y registrar los activos afectados en el inventario.",
+    "Confirmar con el dueno del proceso que herramientas usan el descubrimiento antes de desactivarlo.",
+    "Limitar el descubrimiento a la red de gestion y desactivarlo en los puertos hacia equipos de campo que no lo necesitan.",
+    "Planear las actualizaciones de firmware con el fabricante, probarlas en laboratorio y aplicarlas en la ventana acordada."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Limitar los protocolos de descubrimiento de vecinos en los puertos de acceso a equipos de campo (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Conservar el acceso por consola mientras se hace el cambio."
+    ],
+    "PLC / RTU (generico)": [
+      "Revisar si el fabricante permite desactivar el anuncio de version o el servicio de descubrimiento del equipo.",
+      "Aplicarlo solo en ventana, sin reiniciar el controlador en produccion sin ventana acordada."
+    ],
+    "Claroty xDome": [
+      "Usar la lista de vulnerabilidades del activo y su puntuacion de riesgo para ordenar el trabajo.",
+      "Marcar el estado (parchada, mitigada, aceptada) para que la siguiente exportacion lo refleje."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que la version ya no se anuncia donde no corresponde.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Reactivar el servicio de descubrimiento si una herramienta necesaria dejo de funcionar, y registrar el motivo.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No reiniciar controladores ni equipos de control en produccion sin una ventana acordada."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de control y ciberseguridad OT, con el proveedor del equipo",
+  "referencias": ["MITRE ICS T0888", "IEC 62443 SR 7.7", "IEC 62443 SR 7.8", "NERC CIP-010 R1", "NERC CIP-010 R3", "NIST 800-82 CM-8", "NIST 800-82 RA-5", "NIST CSF ID.AM-01", "NIST CSF ID.RA-01"]
+}

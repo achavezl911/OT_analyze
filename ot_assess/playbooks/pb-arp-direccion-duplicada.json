@@ -1,0 +1,39 @@
+{
+  "id": "pb-arp-direccion-duplicada",
+  "hallazgo": "Wireshark marco deteccion de direccion duplicada en ARP",
+  "objetivo": "Confirmar si la alerta de direccion duplicada en ARP es una duplicidad real o un comportamiento normal de equipos redundantes, y actuar solo si es real.",
+  "prioridad_ot": "Tratar como fallo una pareja redundante que cambia de MAC, o cambiar una IP sin confirmar el equipo, puede romper la redundancia del control.",
+  "pasos": [
+    "Localizar en la captura los paquetes ARP con la misma IP y distinta MAC y anotar los tiempos, como registro de la evidencia.",
+    "Comparar con el inventario y con el diseno de redundancia (pares de controladores, firewalls o servidores en alta disponibilidad).",
+    "Confirmar con el dueno del proceso si el cambio de MAC coincide con una conmutacion o un mantenimiento.",
+    "Si no hay explicacion, abrir un incidente y revisar el puerto de origen de cada MAC.",
+    "Si es una duplicidad de configuracion, corregirla en la ventana acordada y actualizar el inventario."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Buscar cada MAC en la tabla de direcciones del switch para ubicar el puerto de cada equipo.",
+      "Evaluar la inspeccion dinamica de ARP y la seguridad de puerto en un segmento de prueba antes de generalizar (verificar la sintaxis en la documentacion del fabricante para la version instalada)."
+    ],
+    "Linux": [
+      "Con la herramienta de captura del analista, repetir la captura en el mismo segmento y filtrar solo ARP para ver si el patron se repite.",
+      "Conservar la captura original como evidencia antes de cualquier cambio."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que la IP la anuncia una sola MAC, o que el cambio coincide con la redundancia documentada.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Restaurar la direccion IP anterior del equipo si el cambio corto su comunicacion.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No deshabilitar un puerto o equipo redundante que el dueno del proceso no haya identificado."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0830", "IEC 62443 SR 3.1", "NERC CIP-007 R4", "NIST 800-82 IA-3", "NIST CSF DE.AE-02"]
+}

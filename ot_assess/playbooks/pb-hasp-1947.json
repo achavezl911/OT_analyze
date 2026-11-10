@@ -1,0 +1,39 @@
+{
+  "id": "pb-hasp-1947",
+  "hallazgo": "Servicio de licenciamiento Sentinel HASP (puerto 1947) en difusion",
+  "objetivo": "Limitar el servicio de licenciamiento HASP a los equipos que lo necesitan y mantenerlo actualizado, en vez de anunciarlo por difusion en toda la red.",
+  "prioridad_ot": "Cerrar el puerto o actualizar el gestor de licencias sin consultar al proveedor puede impedir que arranque una aplicacion licenciada de ingenieria o de control.",
+  "pasos": [
+    "Identificar los equipos que anuncian y consultan el servicio y su version, con el registro de la captura.",
+    "Confirmar con el dueno del proceso y con el proveedor del software que aplicaciones usan la llave de licencia.",
+    "Limitar el puerto 1947 a los servidores de licencias y a los clientes que lo usan, con registro antes de bloquear.",
+    "Desactivar en el gestor la visibilidad de red cuando no se necesite, o limitarla a una lista de clientes.",
+    "Actualizar el gestor de licencias a la version que el proveedor valide, dentro de la ventana acordada."
+  ],
+  "por_plataforma": {
+    "Windows / Active Directory": [
+      "Revisar la version del gestor de licencias instalada y el aviso del proveedor.",
+      "Probar las actualizaciones en un equipo no critico o en una imagen de laboratorio antes de desplegarlas."
+    ],
+    "Cisco FTD (FMC)": [
+      "Activar el registro de conexiones en la regla antes de cambiar su accion a bloqueo.",
+      "Desplegar los cambios en la ventana acordada y conservar la version anterior de la politica."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que el servicio ya no se anuncia a toda la red.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Validar con el proveedor del software cualquier actualizacion antes de aplicarla."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de sistemas y redes OT",
+  "referencias": ["MITRE ICS T0846", "IEC 62443 SR 7.7", "NERC CIP-007 R1", "NERC CIP-007 R2", "NIST 800-82 CM-7", "NIST 800-82 SI-2", "NIST CSF PR.PS-01", "NIST CSF PR.PS-02"]
+}

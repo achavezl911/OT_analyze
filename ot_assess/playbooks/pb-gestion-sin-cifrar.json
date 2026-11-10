@@ -1,0 +1,58 @@
+{
+  "id": "pb-gestion-sin-cifrar",
+  "hallazgo": "Protocolos de gestion sin cifrar en uso",
+  "objetivo": "Reemplazar Telnet, FTP, HTTP, SNMP v1/v2c y otros protocolos de gestion sin cifrar por equivalentes cifrados, o restringirlos a una red de gestion aislada.",
+  "prioridad_ot": "Desactivar Telnet o HTTP sin tener el acceso cifrado funcionando deja al equipo sin gestion; algunos equipos antiguos no soportan alternativas seguras.",
+  "pasos": [
+    "Listar los equipos que usan cada protocolo sin cifrar y quien los administra.",
+    "Verificar si cada equipo soporta el equivalente cifrado (SSH, HTTPS, SNMPv3, SFTP) con su firmware actual.",
+    "Habilitar el protocolo cifrado y probar el acceso antes de desactivar el anterior.",
+    "Para los equipos que no lo soportan: restringir el acceso a una red de gestion o a un servidor de salto y filtrar por origen.",
+    "Cambiar las credenciales que hayan viajado sin cifrar y las comunidades SNMP por defecto.",
+    "Respaldar la configuracion y desactivar el protocolo sin cifrar en la ventana acordada, con registro (log) del cambio.",
+    "Documentar las excepciones con responsable y fecha de revision."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Habilitar SSH con claves adecuadas y probar el acceso antes de deshabilitar Telnet (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Cambiar SNMP v1/v2c por v3 con autenticacion y cifrado (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Limitar el acceso de gestion por lista de acceso a las estaciones autorizadas.",
+      "Conservar el acceso por consola mientras se hace el cambio."
+    ],
+    "FortiGate": [
+      "Permitir en las interfaces de gestion solo HTTPS y SSH, y limitar los equipos de confianza que pueden administrarlas.",
+      "Desactivar HTTP y Telnet en las interfaces de gestion despues de probar el acceso cifrado."
+    ],
+    "PLC / RTU (generico)": [
+      "Revisar en la documentacion del fabricante como desactivar FTP, Telnet y el servidor web sin cifrar, y si afecta la funcion.",
+      "Si no se puede desactivar, aislar el equipo y filtrar el acceso por origen.",
+      "Aplicar los cambios solo en ventana y sin reiniciar el controlador si no hay ventana acordada."
+    ],
+    "Windows / Active Directory": [
+      "Desactivar con directivas de grupo (GPO) los clientes y servicios de Telnet y FTP que no se necesiten.",
+      "Usar RDP con autenticacion a nivel de red o, mejor, un servidor de salto."
+    ],
+    "Linux": [
+      "Sustituir telnet y ftp por ssh y sftp, y deshabilitar los servicios sin cifrar tras verificar el acceso.",
+      "Restringir el servicio de gestion a la red de gestion."
+    ]
+  },
+  "verificacion": [
+    "Volver a capturar o importar y confirmar que el protocolo sin cifrar ya no aparece, o solo en las excepciones documentadas.",
+    "Comprobar que el acceso cifrado funciona desde las estaciones autorizadas.",
+    "Confirmar que las credenciales anteriores fueron cambiadas."
+  ],
+  "reversion": [
+    "Reactivar el protocolo anterior temporalmente, restringido a una estacion, si se pierde la gestion.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No bloquear una comunicacion que el dueno del proceso no haya identificado: un bloqueo mal puesto puede detener la operacion.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Mantener acceso por consola o fuera de banda para recuperar el equipo si el cambio corta la gestion."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Administracion de sistemas y redes OT",
+  "referencias": ["MITRE ICS T0842", "MITRE ICS T0886", "IEC 62443 SR 4.1", "IEC 62443 SR 1.13", "NERC CIP-007 R1", "NERC CIP-005 R2", "NIST 800-82 SC-8", "NIST 800-82 CM-7", "NIST CSF PR.DS-02", "NIST CSF PR.PS-01"]
+}

@@ -1,0 +1,9462 @@
+{
+ "fuente": "NIST SP 800-82 Rev. 3 (septiembre 2023), Apendice F.3, Tabla 22 (lineas base del overlay OT sobre NIST SP 800-53 Rev. 5)",
+ "doi": "https://doi.org/10.6028/NIST.SP.800-82r3",
+ "paginas_pdf": [
+  232,
+  233,
+  234,
+  235,
+  236,
+  237,
+  238,
+  239,
+  240
+ ],
+ "convenciones": {
+  "discusion_ot": "negrita",
+  "agregado": "subrayado: agregado por el overlay frente a SP 800-53B",
+  "quitado": "tachado: quitado por el overlay; no cuenta en esa linea base"
+ },
+ "familias": {
+  "AC": {
+   "es": "Control de acceso"
+  },
+  "AT": {
+   "es": "Concientizacion y capacitacion"
+  },
+  "AU": {
+   "es": "Auditoria y rendicion de cuentas"
+  },
+  "CA": {
+   "es": "Evaluacion, autorizacion y monitoreo"
+  },
+  "CM": {
+   "es": "Gestion de la configuracion"
+  },
+  "CP": {
+   "es": "Planes de contingencia"
+  },
+  "IA": {
+   "es": "Identificacion y autenticacion"
+  },
+  "IR": {
+   "es": "Respuesta a incidentes"
+  },
+  "MA": {
+   "es": "Mantenimiento"
+  },
+  "MP": {
+   "es": "Proteccion de medios"
+  },
+  "PE": {
+   "es": "Proteccion fisica y ambiental"
+  },
+  "PL": {
+   "es": "Planeacion"
+  },
+  "PM": {
+   "es": "Gestion del programa"
+  },
+  "PS": {
+   "es": "Seguridad del personal"
+  },
+  "RA": {
+   "es": "Evaluacion de riesgos"
+  },
+  "SA": {
+   "es": "Adquisicion de sistemas y servicios"
+  },
+  "SC": {
+   "es": "Proteccion de sistemas y comunicaciones"
+  },
+  "SI": {
+   "es": "Integridad del sistema y de la informacion"
+  },
+  "SR": {
+   "es": "Gestion de riesgos de la cadena de suministro"
+  }
+ },
+ "conteos": {
+  "baja": {
+   "controles": 169,
+   "mejoras": 25,
+   "agregados": 11,
+   "quitados": 0
+  },
+  "moderada": {
+   "controles": 215,
+   "mejoras": 123,
+   "agregados": 19,
+   "quitados": 2
+  },
+  "alta": {
+   "controles": 227,
+   "mejoras": 194,
+   "agregados": 20,
+   "quitados": 3
+  }
+ },
+ "fuera_de_orden": [],
+ "controles": {
+  "AC-1": {
+   "familia": "AC",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-2": {
+   "familia": "AC",
+   "titulo": "Account Management",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-2(1)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-2(2)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-2(3)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-2(4)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-2(5)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-2(11)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-2(12)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-2(13)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-3": {
+   "familia": "AC",
+   "titulo": "Access Enforcement",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-3(11)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "AC-4": {
+   "familia": "AC",
+   "titulo": "Information Flow Enforcement",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-4(4)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-5": {
+   "familia": "AC",
+   "titulo": "Separation of Duties",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-6": {
+   "familia": "AC",
+   "titulo": "Least Privilege",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-6(1)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-6(2)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-6(3)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-6(5)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-6(7)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-6(9)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-6(10)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-7": {
+   "familia": "AC",
+   "titulo": "Unsuccessful Logon Attempts",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-8": {
+   "familia": "AC",
+   "titulo": "System Use Notification",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-10": {
+   "familia": "AC",
+   "titulo": "Concurrent Session Control",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-11": {
+   "familia": "AC",
+   "titulo": "Device Lock",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-11(1)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-12": {
+   "familia": "AC",
+   "titulo": "Session Termination",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-14": {
+   "familia": "AC",
+   "titulo": "Permitted Actions without Identification or Authentication",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-17": {
+   "familia": "AC",
+   "titulo": "Remote Access",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-17(1)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-17(2)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-17(3)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-17(4)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-17(9)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "AC-17(10)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "AC-18": {
+   "familia": "AC",
+   "titulo": "Wireless Access",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-18(1)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-18(3)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-18(4)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-18(5)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-19": {
+   "familia": "AC",
+   "titulo": "Access Control for Mobile Devices",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-19(5)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-20": {
+   "familia": "AC",
+   "titulo": "Use of External Systems",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-20(1)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-20(2)": {
+   "familia": "AC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-21": {
+   "familia": "AC",
+   "titulo": "Information Sharing",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AC-22": {
+   "familia": "AC",
+   "titulo": "Publicly Accessible Content",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AT-1": {
+   "familia": "AT",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AT-2": {
+   "familia": "AT",
+   "titulo": "Literacy Training and Awareness",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AT-2(2)": {
+   "familia": "AT",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AT-2(3)": {
+   "familia": "AT",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AT-2(4)": {
+   "familia": "AT",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "AT-3": {
+   "familia": "AT",
+   "titulo": "Role-Based Training",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AT-4": {
+   "familia": "AT",
+   "titulo": "Training Records",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-1": {
+   "familia": "AU",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-2": {
+   "familia": "AU",
+   "titulo": "Event Logging",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-3": {
+   "familia": "AU",
+   "titulo": "Content of Audit Records",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-3(1)": {
+   "familia": "AU",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-4": {
+   "familia": "AU",
+   "titulo": "Audit Log Storage Capacity",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-4(1)": {
+   "familia": "AU",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "AU-5": {
+   "familia": "AU",
+   "titulo": "Response to Audit Logging Process Failures",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-5(1)": {
+   "familia": "AU",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-5(2)": {
+   "familia": "AU",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-6": {
+   "familia": "AU",
+   "titulo": "Audit Record Review, Analysis, and Reporting",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-6(1)": {
+   "familia": "AU",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-6(3)": {
+   "familia": "AU",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-6(5)": {
+   "familia": "AU",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-6(6)": {
+   "familia": "AU",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-7": {
+   "familia": "AU",
+   "titulo": "Audit Record Reduction and Report Generation",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-7(1)": {
+   "familia": "AU",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-8": {
+   "familia": "AU",
+   "titulo": "Time Stamps",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-9": {
+   "familia": "AU",
+   "titulo": "Protection of Audit Information",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-9(2)": {
+   "familia": "AU",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-9(3)": {
+   "familia": "AU",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-9(4)": {
+   "familia": "AU",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-10": {
+   "familia": "AU",
+   "titulo": "Non-repudiation",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-11": {
+   "familia": "AU",
+   "titulo": "Audit Record Retention",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-12": {
+   "familia": "AU",
+   "titulo": "Audit Generation",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-12(1)": {
+   "familia": "AU",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "AU-12(3)": {
+   "familia": "AU",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CA-1": {
+   "familia": "CA",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CA-2": {
+   "familia": "CA",
+   "titulo": "Control Assessments",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CA-2(1)": {
+   "familia": "CA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CA-2(2)": {
+   "familia": "CA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CA-3": {
+   "familia": "CA",
+   "titulo": "Information Exchange",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CA-3(6)": {
+   "familia": "CA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CA-5": {
+   "familia": "CA",
+   "titulo": "Plan of Action and Milestones",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CA-6": {
+   "familia": "CA",
+   "titulo": "Authorization",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CA-7": {
+   "familia": "CA",
+   "titulo": "Continuous Monitoring",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CA-7(1)": {
+   "familia": "CA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CA-7(4)": {
+   "familia": "CA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CA-8": {
+   "familia": "CA",
+   "titulo": "Penetration Testing",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CA-8(1)": {
+   "familia": "CA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": true
+    }
+   }
+  },
+  "CA-9": {
+   "familia": "CA",
+   "titulo": "Internal System Connections",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-1": {
+   "familia": "CM",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-2": {
+   "familia": "CM",
+   "titulo": "Baseline Configuration",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-2(2)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-2(3)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-2(7)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-3": {
+   "familia": "CM",
+   "titulo": "Configuration Change Control",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-3(1)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-3(2)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-3(4)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-3(6)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-4": {
+   "familia": "CM",
+   "titulo": "Impact Analysis",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-4(1)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-4(2)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-5": {
+   "familia": "CM",
+   "titulo": "Access Restrictions for Change",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-5(1)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-6": {
+   "familia": "CM",
+   "titulo": "Configuration Settings",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-6(1)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-6(2)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-7": {
+   "familia": "CM",
+   "titulo": "Least Functionality",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-7(1)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-7(2)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-7(5)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-8": {
+   "familia": "CM",
+   "titulo": "System Component Inventory",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-8(1)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-8(2)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-8(3)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-8(4)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-9": {
+   "familia": "CM",
+   "titulo": "Configuration Management Plan",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-10": {
+   "familia": "CM",
+   "titulo": "Software Usage Restrictions",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-11": {
+   "familia": "CM",
+   "titulo": "User-Installed Software",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-12": {
+   "familia": "CM",
+   "titulo": "Information Location",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CM-12(1)": {
+   "familia": "CM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-1": {
+   "familia": "CP",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-2": {
+   "familia": "CP",
+   "titulo": "Contingency Plan",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-2(1)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-2(2)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-2(3)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-2(5)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-2(8)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-3": {
+   "familia": "CP",
+   "titulo": "Contingency Training",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-3(1)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-4": {
+   "familia": "CP",
+   "titulo": "Contingency Plan Testing",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-4(1)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-4(2)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-6": {
+   "familia": "CP",
+   "titulo": "Alternate Storage Site",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-6(1)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-6(2)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-6(3)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-7": {
+   "familia": "CP",
+   "titulo": "Alternate Processing Site",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-7(1)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-7(2)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-7(3)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-7(4)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-8": {
+   "familia": "CP",
+   "titulo": "Telecommunications Services",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-8(1)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-8(2)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-8(3)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-8(4)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-9": {
+   "familia": "CP",
+   "titulo": "System Backup",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-9(1)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-9(2)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-9(3)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-9(5)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-9(8)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-10": {
+   "familia": "CP",
+   "titulo": "System Recovery and Reconstitution",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-10(2)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-10(4)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "CP-10(6)": {
+   "familia": "CP",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "CP-12": {
+   "familia": "CP",
+   "titulo": "Safe Mode",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "IA-1": {
+   "familia": "IA",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-2": {
+   "familia": "IA",
+   "titulo": "Identification and Authentication (Organizational Users)",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-2(1)": {
+   "familia": "IA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-2(2)": {
+   "familia": "IA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-2(5)": {
+   "familia": "IA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-2(8)": {
+   "familia": "IA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-2(12)": {
+   "familia": "IA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-3": {
+   "familia": "IA",
+   "titulo": "Device Identification and Authentication",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-4": {
+   "familia": "IA",
+   "titulo": "Identifier Management",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-4(4)": {
+   "familia": "IA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-5": {
+   "familia": "IA",
+   "titulo": "Authenticator Management",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-5(1)": {
+   "familia": "IA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-5(2)": {
+   "familia": "IA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-5(6)": {
+   "familia": "IA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-6": {
+   "familia": "IA",
+   "titulo": "Authentication Feedback",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-7": {
+   "familia": "IA",
+   "titulo": "Cryptographic Module Authentication",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-8": {
+   "familia": "IA",
+   "titulo": "Identification and Authentication (Non- Organizational Users)",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-8(1)": {
+   "familia": "IA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-8(2)": {
+   "familia": "IA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-8(4)": {
+   "familia": "IA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-11": {
+   "familia": "IA",
+   "titulo": "Re-authentication",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-12": {
+   "familia": "IA",
+   "titulo": "Identity Proofing",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-12(1)": {
+   "familia": "IA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "IA-12(2)": {
+   "familia": "IA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-12(3)": {
+   "familia": "IA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-12(4)": {
+   "familia": "IA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IA-12(5)": {
+   "familia": "IA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-1": {
+   "familia": "IR",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-2": {
+   "familia": "IR",
+   "titulo": "Incident Response Training",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-2(1)": {
+   "familia": "IR",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-2(2)": {
+   "familia": "IR",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-3": {
+   "familia": "IR",
+   "titulo": "Incident Response Testing",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-3(2)": {
+   "familia": "IR",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-4": {
+   "familia": "IR",
+   "titulo": "Incident Handling",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-4(1)": {
+   "familia": "IR",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-4(4)": {
+   "familia": "IR",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-4(11)": {
+   "familia": "IR",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-5": {
+   "familia": "IR",
+   "titulo": "Incident Monitoring",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-5(1)": {
+   "familia": "IR",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-6": {
+   "familia": "IR",
+   "titulo": "Incident Reporting",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-6(1)": {
+   "familia": "IR",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-6(3)": {
+   "familia": "IR",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-7": {
+   "familia": "IR",
+   "titulo": "Incident Response Assistance",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-7(1)": {
+   "familia": "IR",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "IR-8": {
+   "familia": "IR",
+   "titulo": "Incident Response Plan",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MA-1": {
+   "familia": "MA",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MA-2": {
+   "familia": "MA",
+   "titulo": "Controlled Maintenance",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MA-2(2)": {
+   "familia": "MA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MA-3": {
+   "familia": "MA",
+   "titulo": "Maintenance Tools",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MA-3(1)": {
+   "familia": "MA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MA-3(2)": {
+   "familia": "MA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MA-3(3)": {
+   "familia": "MA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MA-4": {
+   "familia": "MA",
+   "titulo": "Nonlocal Maintenance",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MA-4(1)": {
+   "familia": "MA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "MA-4(3)": {
+   "familia": "MA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MA-5": {
+   "familia": "MA",
+   "titulo": "Maintenance Personnel",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MA-5(1)": {
+   "familia": "MA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MA-6": {
+   "familia": "MA",
+   "titulo": "Timely Maintenance",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MA-7": {
+   "familia": "MA",
+   "titulo": "Field Maintenance",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "MP-1": {
+   "familia": "MP",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MP-2": {
+   "familia": "MP",
+   "titulo": "Media Access",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MP-3": {
+   "familia": "MP",
+   "titulo": "Media Marking",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MP-4": {
+   "familia": "MP",
+   "titulo": "Media Storage",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MP-5": {
+   "familia": "MP",
+   "titulo": "Media Transport",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MP-6": {
+   "familia": "MP",
+   "titulo": "Media Sanitization",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MP-6(1)": {
+   "familia": "MP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MP-6(2)": {
+   "familia": "MP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MP-6(3)": {
+   "familia": "MP",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "MP-7": {
+   "familia": "MP",
+   "titulo": "Media Use",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-1": {
+   "familia": "PE",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-2": {
+   "familia": "PE",
+   "titulo": "Physical Access Authorizations",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-3": {
+   "familia": "PE",
+   "titulo": "Physical Access Control",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-3(1)": {
+   "familia": "PE",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-4": {
+   "familia": "PE",
+   "titulo": "Access Control for Transmission",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-5": {
+   "familia": "PE",
+   "titulo": "Access Control for Output Devices",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-6": {
+   "familia": "PE",
+   "titulo": "Monitoring Physical Access",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-6(1)": {
+   "familia": "PE",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-6(4)": {
+   "familia": "PE",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-8": {
+   "familia": "PE",
+   "titulo": "Visitor Access Records",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-8(1)": {
+   "familia": "PE",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-9": {
+   "familia": "PE",
+   "titulo": "Power Equipment and Cabling",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-10": {
+   "familia": "PE",
+   "titulo": "Emergency Shutoff",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-11": {
+   "familia": "PE",
+   "titulo": "Emergency Power",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-11(1)": {
+   "familia": "PE",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-12": {
+   "familia": "PE",
+   "titulo": "Emergency Lighting",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-13": {
+   "familia": "PE",
+   "titulo": "Fire Protection",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-13(1)": {
+   "familia": "PE",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-13(2)": {
+   "familia": "PE",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-14": {
+   "familia": "PE",
+   "titulo": "Environmental Controls",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-15": {
+   "familia": "PE",
+   "titulo": "Water Damage Protection",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-15(1)": {
+   "familia": "PE",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-16": {
+   "familia": "PE",
+   "titulo": "Delivery and Removal",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-17": {
+   "familia": "PE",
+   "titulo": "Alternate Work Site",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-18": {
+   "familia": "PE",
+   "titulo": "Location of System Components",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PE-22": {
+   "familia": "PE",
+   "titulo": "Component Marking",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "PL-1": {
+   "familia": "PL",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PL-2": {
+   "familia": "PL",
+   "titulo": "System Security and Privacy Plans",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PL-4": {
+   "familia": "PL",
+   "titulo": "Rules of Behavior",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PL-4(1)": {
+   "familia": "PL",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PL-8": {
+   "familia": "PL",
+   "titulo": "Security and Privacy Architecture",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PL-10": {
+   "familia": "PL",
+   "titulo": "Baseline Selection",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PL-11": {
+   "familia": "PL",
+   "titulo": "Baseline Tailoring",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PM-1": {
+   "familia": "PM",
+   "titulo": "Information Security Program Plan",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-2": {
+   "familia": "PM",
+   "titulo": "Information Security Program Leadership Role",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-3": {
+   "familia": "PM",
+   "titulo": "Information Security and Privacy Resources",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-4": {
+   "familia": "PM",
+   "titulo": "Plan of Action and Milestones Process",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-5": {
+   "familia": "PM",
+   "titulo": "System Inventory",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-6": {
+   "familia": "PM",
+   "titulo": "Measures of Performance",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-7": {
+   "familia": "PM",
+   "titulo": "Enterprise Architecture",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-8": {
+   "familia": "PM",
+   "titulo": "Critical Infrastructure Plan",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-9": {
+   "familia": "PM",
+   "titulo": "Risk Management Strategy",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-10": {
+   "familia": "PM",
+   "titulo": "Authorization Process",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-11": {
+   "familia": "PM",
+   "titulo": "Mission and Business Process Definition",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-12": {
+   "familia": "PM",
+   "titulo": "Insider Threat Program",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-13": {
+   "familia": "PM",
+   "titulo": "Security and Privacy Workforce",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-14": {
+   "familia": "PM",
+   "titulo": "Testing, Training, and Monitoring",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-15": {
+   "familia": "PM",
+   "titulo": "Security and Privacy Groups and Associations",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-16": {
+   "familia": "PM",
+   "titulo": "Threat Awareness Program",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-17": {
+   "familia": "PM",
+   "titulo": "Protecting Controlled Unclassified Information on External Systems",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-18": {
+   "familia": "PM",
+   "titulo": "Privacy Program Plan",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-19": {
+   "familia": "PM",
+   "titulo": "Privacy Program Leadership Role",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-20": {
+   "familia": "PM",
+   "titulo": "Dissemination of Privacy Program Information",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-20(1)": {
+   "familia": "PM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PM-21": {
+   "familia": "PM",
+   "titulo": "Accounting of Disclosures",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-22": {
+   "familia": "PM",
+   "titulo": "Personally Identifiable Information Quality Management",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-23": {
+   "familia": "PM",
+   "titulo": "Data Governance Body",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-24": {
+   "familia": "PM",
+   "titulo": "Data Integrity Board",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-25": {
+   "familia": "PM",
+   "titulo": "Minimization of Personally Identifiable Information Used in Testing, Training, and Research",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-26": {
+   "familia": "PM",
+   "titulo": "Complaint Management",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-27": {
+   "familia": "PM",
+   "titulo": "Privacy Reporting",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-28": {
+   "familia": "PM",
+   "titulo": "Risk Framing",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-29": {
+   "familia": "PM",
+   "titulo": "Risk Management Program Leadership Roles",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-30": {
+   "familia": "PM",
+   "titulo": "Supply Chain Risk Management Strategy",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-30(1)": {
+   "familia": "PM",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PM-31": {
+   "familia": "PM",
+   "titulo": "Continuous Monitoring Strategy",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PM-32": {
+   "familia": "PM",
+   "titulo": "Purposing",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   },
+   "toda_la_organizacion": true
+  },
+  "PS-1": {
+   "familia": "PS",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PS-2": {
+   "familia": "PS",
+   "titulo": "Position Risk Designation",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PS-3": {
+   "familia": "PS",
+   "titulo": "Personnel Screening",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PS-4": {
+   "familia": "PS",
+   "titulo": "Personnel Termination",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PS-4(2)": {
+   "familia": "PS",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PS-5": {
+   "familia": "PS",
+   "titulo": "Personnel Transfer",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PS-6": {
+   "familia": "PS",
+   "titulo": "Access Agreements",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PS-7": {
+   "familia": "PS",
+   "titulo": "External Personnel Security",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PS-8": {
+   "familia": "PS",
+   "titulo": "Personnel Sanctions",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "PS-9": {
+   "familia": "PS",
+   "titulo": "Position Descriptions",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "RA-1": {
+   "familia": "RA",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "RA-2": {
+   "familia": "RA",
+   "titulo": "Security Categorization",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "RA-3": {
+   "familia": "RA",
+   "titulo": "Risk Assessment",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "RA-3(1)": {
+   "familia": "RA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "RA-5": {
+   "familia": "RA",
+   "titulo": "Vulnerability Monitoring and Scanning",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "RA-5(2)": {
+   "familia": "RA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "RA-5(4)": {
+   "familia": "RA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "RA-5(5)": {
+   "familia": "RA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "RA-5(11)": {
+   "familia": "RA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "RA-7": {
+   "familia": "RA",
+   "titulo": "Risk Response",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "RA-9": {
+   "familia": "RA",
+   "titulo": "Criticality Analysis",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-1": {
+   "familia": "SA",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-2": {
+   "familia": "SA",
+   "titulo": "Allocation of Resources",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-3": {
+   "familia": "SA",
+   "titulo": "System Development Life Cycle",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-4": {
+   "familia": "SA",
+   "titulo": "Acquisition Process",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-4(1)": {
+   "familia": "SA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-4(2)": {
+   "familia": "SA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-4(5)": {
+   "familia": "SA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-4(9)": {
+   "familia": "SA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-4(10)": {
+   "familia": "SA",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-4(12)": {
+   "familia": "SA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "SA-5": {
+   "familia": "SA",
+   "titulo": "System Documentation",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-8": {
+   "familia": "SA",
+   "titulo": "Security and Privacy Engineering Principles",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-9": {
+   "familia": "SA",
+   "titulo": "External System Services",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-9(2)": {
+   "familia": "SA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-10": {
+   "familia": "SA",
+   "titulo": "Developer Configuration Management",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-11": {
+   "familia": "SA",
+   "titulo": "Developer Testing and Evaluation",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-15": {
+   "familia": "SA",
+   "titulo": "Development Process, Standards, and Tools",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-15(3)": {
+   "familia": "SA",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-16": {
+   "familia": "SA",
+   "titulo": "Developer-Provided Training",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-17": {
+   "familia": "SA",
+   "titulo": "Developer Security Architecture and Design",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-21": {
+   "familia": "SA",
+   "titulo": "Developer Screening",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SA-22": {
+   "familia": "SA",
+   "titulo": "Unsupported System Components",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-1": {
+   "familia": "SC",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-2": {
+   "familia": "SC",
+   "titulo": "Separation of System and User Functionality",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-3": {
+   "familia": "SC",
+   "titulo": "Security Function Isolation",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-4": {
+   "familia": "SC",
+   "titulo": "Information in System Shared Resources",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-5": {
+   "familia": "SC",
+   "titulo": "Denial-of-Service Protection",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-7": {
+   "familia": "SC",
+   "titulo": "Boundary Protection",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-7(3)": {
+   "familia": "SC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-7(4)": {
+   "familia": "SC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-7(5)": {
+   "familia": "SC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-7(7)": {
+   "familia": "SC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-7(8)": {
+   "familia": "SC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-7(18)": {
+   "familia": "SC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-7(21)": {
+   "familia": "SC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-7(28)": {
+   "familia": "SC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "SC-7(29)": {
+   "familia": "SC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "SC-8": {
+   "familia": "SC",
+   "titulo": "Transmission Confidentiality and Integrity",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-8(1)": {
+   "familia": "SC",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-10": {
+   "familia": "SC",
+   "titulo": "Network Disconnect",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": true
+    },
+    "alta": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": true
+    }
+   }
+  },
+  "SC-12": {
+   "familia": "SC",
+   "titulo": "Cryptographic Key Establishment and Management",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-12(1)": {
+   "familia": "SC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-13": {
+   "familia": "SC",
+   "titulo": "Cryptographic Protection",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-15": {
+   "familia": "SC",
+   "titulo": "Collaborative Computing Devices and Applications",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-17": {
+   "familia": "SC",
+   "titulo": "Public Key Infrastructure Certificates",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-18": {
+   "familia": "SC",
+   "titulo": "Mobile Code",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-20": {
+   "familia": "SC",
+   "titulo": "Secure Name /Address Resolution Service (Authoritative Source)",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-21": {
+   "familia": "SC",
+   "titulo": "Secure Name /Address Resolution Service (Recursive or Caching Resolver)",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-22": {
+   "familia": "SC",
+   "titulo": "Architecture and Provisioning for Name/Address Resolution Service",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-23": {
+   "familia": "SC",
+   "titulo": "Session Authenticity",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-24": {
+   "familia": "SC",
+   "titulo": "Fail in Known State",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-28": {
+   "familia": "SC",
+   "titulo": "Protection of Information at Rest",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-28(1)": {
+   "familia": "SC",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-39": {
+   "familia": "SC",
+   "titulo": "Process Isolation",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SC-41": {
+   "familia": "SC",
+   "titulo": "Port and I/O Device Access",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "SC-45": {
+   "familia": "SC",
+   "titulo": "System Time Synchronization",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "SC-47": {
+   "familia": "SC",
+   "titulo": "Alternate Communications Path",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "SI-1": {
+   "familia": "SI",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-2": {
+   "familia": "SI",
+   "titulo": "Flaw Remediation",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-2(2)": {
+   "familia": "SI",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-3": {
+   "familia": "SI",
+   "titulo": "Malicious Code Protection",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-4": {
+   "familia": "SI",
+   "titulo": "System Monitoring",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-4(2)": {
+   "familia": "SI",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-4(4)": {
+   "familia": "SI",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-4(5)": {
+   "familia": "SI",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-4(10)": {
+   "familia": "SI",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-4(12)": {
+   "familia": "SI",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-4(14)": {
+   "familia": "SI",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-4(20)": {
+   "familia": "SI",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-4(22)": {
+   "familia": "SI",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-5": {
+   "familia": "SI",
+   "titulo": "Security Alerts, Advisories, and Directives",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-5(1)": {
+   "familia": "SI",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-6": {
+   "familia": "SI",
+   "titulo": "Security and Privacy Function Verification",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-7": {
+   "familia": "SI",
+   "titulo": "Software, Firmware, and Information Integrity",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-7(1)": {
+   "familia": "SI",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-7(2)": {
+   "familia": "SI",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-7(5)": {
+   "familia": "SI",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-7(7)": {
+   "familia": "SI",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-7(15)": {
+   "familia": "SI",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-8": {
+   "familia": "SI",
+   "titulo": "Spam Protection",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-8(2)": {
+   "familia": "SI",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": true
+    },
+    "alta": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": true
+    }
+   }
+  },
+  "SI-10": {
+   "familia": "SI",
+   "titulo": "Information Input Validation",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-11": {
+   "familia": "SI",
+   "titulo": "Error Handling",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-12": {
+   "familia": "SI",
+   "titulo": "Information Handling and Retention",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-13": {
+   "familia": "SI",
+   "titulo": "Predictable Failure Prevention",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "SI-16": {
+   "familia": "SI",
+   "titulo": "Memory Protection",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SI-17": {
+   "familia": "SI",
+   "titulo": "Fail-Safe Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "SR-1": {
+   "familia": "SR",
+   "titulo": "Policy and Procedures",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SR-2": {
+   "familia": "SR",
+   "titulo": "Supply Chain Risk Management Plan",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SR-2(1)": {
+   "familia": "SR",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SR-3": {
+   "familia": "SR",
+   "titulo": "Supply Chain Controls and Processes",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SR-5": {
+   "familia": "SR",
+   "titulo": "Acquisition Strategies, Tools, and Methods",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SR-5(1)": {
+   "familia": "SR",
+   "titulo": "",
+   "discusion_ot": true,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": true,
+     "quitado": false
+    }
+   }
+  },
+  "SR-6": {
+   "familia": "SR",
+   "titulo": "Supplier Assessments and Reviews",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SR-8": {
+   "familia": "SR",
+   "titulo": "Notification Agreements",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SR-9": {
+   "familia": "SR",
+   "titulo": "Tamper Resistance and Detection",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SR-9(1)": {
+   "familia": "SR",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": false,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SR-10": {
+   "familia": "SR",
+   "titulo": "Inspection of Systems or Components",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SR-11": {
+   "familia": "SR",
+   "titulo": "Component Authenticity",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SR-11(1)": {
+   "familia": "SR",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SR-11(2)": {
+   "familia": "SR",
+   "titulo": "",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  },
+  "SR-12": {
+   "familia": "SR",
+   "titulo": "Component Disposal",
+   "discusion_ot": false,
+   "niveles": {
+    "baja": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "moderada": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    },
+    "alta": {
+     "incluido": true,
+     "agregado": false,
+     "quitado": false
+    }
+   }
+  }
+ }
+}

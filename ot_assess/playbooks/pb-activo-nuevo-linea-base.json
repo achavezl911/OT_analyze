@@ -1,0 +1,38 @@
+{
+  "id": "pb-activo-nuevo-linea-base",
+  "hallazgo": "Activo nuevo no aprobado en la red",
+  "objetivo": "Identificar cada equipo que no estaba en la linea base aprobada, confirmar que su alta fue autorizada y mantener el inventario al dia.",
+  "prioridad_ot": "Desconectar un equipo desconocido sin saber que hace puede cortar una funcion del proceso; primero se identifica y luego se decide.",
+  "pasos": [
+    "Anotar la IP, la MAC, el fabricante, el rol inferido y la zona de cada equipo nuevo, y desde cuando se ve.",
+    "Ubicar el puerto de switch y la VLAN del equipo para encontrarlo fisicamente.",
+    "Identificar al responsable y confirmar con el dueno del proceso que el alta estaba autorizada.",
+    "Si no estaba autorizado, aislarlo en una VLAN de cuarentena o desconectarlo en la ventana acordada.",
+    "Si es legitimo, agregarlo al inventario con responsable, criticidad y zona.",
+    "Aprobar una linea base nueva en otra carpeta cuando el inventario quede conciliado."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Ubicar la MAC del equipo en la tabla de direcciones del switch y anotar el puerto (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Si hay que aislarlo, mover el puerto a una VLAN sin ruta o deshabilitarlo en la ventana (verificar la sintaxis en la documentacion del fabricante para la version instalada)."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que el equipo ya no aparece, o que aparece en el inventario con su responsable.",
+    "Confirmar con operacion que no se perdio ninguna funcion del proceso."
+  ],
+  "reversion": [
+    "Volver a conectar el equipo o su puerto si el aislamiento corta una funcion legitima, y registrar el motivo.",
+    "Restaurar el respaldo de la configuracion del switch en la ventana, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No desconectar un equipo sin confirmar con el dueno del proceso que no tiene una funcion de control.",
+    "Probar primero en laboratorio o en un puerto no critico y respaldar la configuracion antes de cambiarla.",
+    "Un equipo puede aparecer solo porque la captura de esta corrida vio un segmento que la anterior no vio.",
+    "Dejar registro de cada cambio y de la decision tomada sobre cada equipo."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de redes y ciberseguridad OT",
+  "referencias": ["IEC 62443 SR 7.8", "IEC 62443 SR 6.2", "NIST 800-82 CM-8", "NIST 800-82 SI-4", "NIST CSF ID.AM-01"]
+}

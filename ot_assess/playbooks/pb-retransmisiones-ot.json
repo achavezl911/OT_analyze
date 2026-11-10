@@ -1,0 +1,42 @@
+{
+  "id": "pb-retransmisiones-ot",
+  "hallazgo": "Retransmisiones TCP elevadas en un conducto OT",
+  "objetivo": "Determinar si las retransmisiones vienen de la red, del equipo o del espejo de captura, y corregir el origen para que el conducto de control no pierda ni retrase paquetes.",
+  "prioridad_ot": "Cambiar la red o la configuracion de un equipo para reducir retransmisiones puede interrumpir el control; primero se mide, y los cambios se hacen en ventana.",
+  "pasos": [
+    "Anotar los conductos afectados, el porcentaje de retransmisiones y el periodo, y compararlos con la perdida del punto de captura.",
+    "Descartar un espejo que pierde paquetes: revisar los descartes del puerto destino del SPAN antes de culpar a la red.",
+    "Revisar los contadores de errores, CRC y descartes de los puertos del camino entre los dos extremos.",
+    "Revisar la carga del controlador o servidor del conducto y el estado del enlace (velocidad, duplex, cableado).",
+    "Corregir el origen (cable, puerto, saturacion del enlace o carga del equipo) en ventana acordada con operacion.",
+    "Repetir la captura y medir otra vez el porcentaje de retransmisiones del conducto."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar show interfaces y show interfaces counters errors de los puertos del camino (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Comparar velocidad y duplex negociados en ambos extremos del enlace (verificar la sintaxis en la documentacion del fabricante para la version instalada)."
+    ],
+    "PLC / RTU (generico)": [
+      "Revisar en el equipo la carga de CPU y de comunicaciones y el conteo de conexiones simultaneas, segun la documentacion del fabricante.",
+      "Confirmar que el tiempo de sondeo del cliente no excede la capacidad de respuesta del equipo."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura en las mismas condiciones y confirmar que el porcentaje de retransmisiones del conducto bajo del umbral.",
+    "Confirmar con operacion que el conducto de control mantiene su periodo de sondeo sin huecos."
+  ],
+  "reversion": [
+    "Reponer la configuracion anterior del puerto o del equipo si el cambio degrada la comunicacion.",
+    "Restaurar el respaldo de la configuracion del switch en la ventana, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "No cambiar velocidad o duplex de un puerto con equipos de campo sin ventana: el enlace se reinicia.",
+    "Probar primero en laboratorio o en un switch no critico y respaldar la configuracion antes de cambiarla.",
+    "Una retransmision vista en un espejo puede ser un artefacto de la captura: no concluir con una sola medicion.",
+    "Dejar registro de cada cambio y confirmar con el dueno del proceso antes de aplicarlo."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Administracion de redes y operacion OT",
+  "referencias": ["IEC 62443 SR 6.2", "NIST 800-82 SI-4", "NIST CSF DE.CM-01", "NIST CSF PR.IR-04"]
+}

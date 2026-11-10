@@ -1,0 +1,38 @@
+{
+  "id": "pb-perdida-comunicacion",
+  "hallazgo": "Perdida de comunicacion en un conducto de control periodico",
+  "objetivo": "Determinar por que un conducto de sondeo que era regular se interrumpio o termino antes de la captura, y dejar monitoreo continuo de su periodicidad.",
+  "prioridad_ot": "Reiniciar o reconfigurar un controlador o un enlace para recuperar la comunicacion sin entender la causa puede interrumpir el proceso o borrar la evidencia; ignorar el hueco puede dejar al proceso sin lectura ni comando.",
+  "pasos": [
+    "Anotar para cada conducto el instante del hueco o del ultimo paquete y compararlo con la bitacora de operacion y de cambios.",
+    "Revisar los registros del controlador, del cliente (HMI o SCADA) y de los switches en esos instantes (caidas de enlace, arranques, cambios de STP).",
+    "Confirmar si la captura se corto o se pauso en ese momento antes de atribuirlo a la red.",
+    "Si el hueco no tiene explicacion, revisar la carga del controlador y el enlace, y repetir la captura en la misma ventana.",
+    "Mantener monitoreo continuo de la periodicidad de los conductos criticos para alertar cuando se interrumpan."
+  ],
+  "por_plataforma": {
+    "Claroty xDome": [
+      "Revisar las alertas del activo y su historial de comunicaciones en esos instantes.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ],
+    "PLC / RTU (generico)": [
+      "Revisar el registro de eventos y diagnostico del controlador y de sus modulos de comunicacion.",
+      "Aplicar los cambios solo en ventana y sin reiniciar el controlador en produccion sin ventana acordada."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura y confirmar que el conducto mantiene su periodo o que el hueco esta explicado.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Deshabilitar la regla o el cambio nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de control y ciberseguridad OT",
+  "referencias": ["MITRE ICS T0827", "MITRE ICS T0826", "IEC 62443 SR 6.2", "IEC 62443 SR 7.1", "NERC CIP-015", "NIST 800-82 SI-4", "NIST CSF DE.CM-01", "NIST CSF DE.AE-02"]
+}

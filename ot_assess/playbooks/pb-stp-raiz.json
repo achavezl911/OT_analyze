@@ -1,0 +1,40 @@
+{
+  "id": "pb-stp-raiz",
+  "hallazgo": "Cambio del puente raiz de STP durante la captura",
+  "objetivo": "Saber por que cambio el puente raiz del arbol de expansion, fijar la raiz a proposito y evitar que un equipo no previsto pueda tomarla.",
+  "prioridad_ot": "Cambiar prioridades del arbol o apagar puertos sin plan puede aislar un segmento o crear un lazo que sature la red de control; las correcciones se hacen de un switch a la vez y en ventana.",
+  "pasos": [
+    "Registrar la raiz inicial, la nueva, la hora del cambio y la VLAN, a partir de la evidencia del hallazgo.",
+    "Revisar en los registros de los switches si el switch raiz fallo, se reinicio o perdio un enlace a esa hora; si fue asi, el cambio fue legitimo.",
+    "Si la nueva raiz no corresponde a un switch conocido, localizar su puerto por MAC y revisar quien lo conecto.",
+    "Definir la raiz a proposito: prioridad baja en el switch elegido y una secundaria en otro, documentada en el diagrama.",
+    "Proteger los puertos que no deben recibir la raiz y los de borde contra BPDU inesperadas, primero en laboratorio y luego en la ventana acordada.",
+    "Aplicar las correcciones con acceso por consola, de un switch a la vez."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Revisar con el comando de resumen del arbol quien es la raiz de cada VLAN y que puerto apunta a ella (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Evaluar la proteccion de raiz en los puertos que no deben recibir la raiz y la proteccion de BPDU en los puertos de borde, primero en un puerto de prueba."
+    ],
+    "Claroty xDome": [
+      "Revisar si el equipo que anuncio la raiz aparece en el inventario de equipos de red o es desconocido.",
+      "Asignar estado y responsable a cada alerta y anotar el motivo de la resolucion."
+    ]
+  },
+  "verificacion": [
+    "Repetir la captura en la misma ventana y confirmar que la raiz es la elegida y no cambia.",
+    "Confirmar con el dueno del proceso que la operacion sigue normal despues del cambio."
+  ],
+  "reversion": [
+    "Deshabilitar la proteccion o el cambio de prioridad nuevo (sin borrarlo) para volver al comportamiento anterior.",
+    "Restaurar el respaldo de la configuracion en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "Mantener acceso por consola o fuera de banda para recuperar el equipo si el cambio corta la gestion."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes",
+  "referencias": ["MITRE ICS T0814", "MITRE ICS T0830", "IEC 62443 SR 7.1", "IEC 62443 SR 3.1", "NIST 800-82 SC-5", "NIST 800-82 SI-4", "NIST CSF PR.IR-03", "NIST CSF DE.CM-01"]
+}
