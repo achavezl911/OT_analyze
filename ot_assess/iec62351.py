@@ -97,8 +97,12 @@ def _cubierto(caps, p: dict) -> list:
     auth = sum(e["n"] for e in _eventos(caps, "p62351_dnp3_auth")) if p["proteccion"] == "tls_y_autenticacion" else ""
     protegido = tls > 0 or (auth or 0) > 0
     vio = bool(claro) or seguro > 0 or tls > 0 or bool(auth)
-    if not vio and not sin_decodificar:
-        return _fila(p["protocolo"], partes, False, 0, 0, 0, auth, NO_VISTO, [t("Protocolo no visto en la captura.")])
+    if not vio:
+        piezas = [t("Protocolo no visto en la captura.")]
+        if sin_decodificar:
+            piezas.append(t("{n} conductos a 102/tcp sin decodificar: no se asignan a MMS ni a S7comm.",
+                            n=sin_decodificar))
+        return _fila(p["protocolo"], partes, False, 0, 0, 0, auth, NO_VISTO, piezas)
     if tls:
         piezas.append(t("TLS confirmado: ServerHello visto desde el puerto seguro."))
     elif seguro:

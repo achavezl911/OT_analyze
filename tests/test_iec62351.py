@@ -122,6 +122,14 @@ class TablaTest(unittest.TestCase):
         self.assertEqual((s7[COL["conductos_en_claro"]], s7[COL["partes_62351"]], s7[COL["evidencia"]]),
                          (1, "no aplica", ie.NO_APLICA))
 
+    def test_102_sin_decodificar_y_sin_mms_es_no_observado(self):
+        cap = _cap()
+        _flujo(cap, "10.0.0.1", "10.0.0.9", 102)
+        mms = next(f for f in ie.filas([cap]) if f[0].startswith("MMS"))
+        self.assertEqual((mms[COL["observado"]], mms[COL["conductos_en_claro"]], mms[COL["evidencia"]]),
+                         ("no", 0, ie.NO_VISTO))
+        self.assertIn("1 conductos a 102/tcp sin decodificar", mms[COL["nota"]])
+
     def test_goose_no_evaluable(self):
         cap = _cap()
         _correr(cap, _ws__col__protocol="GOOSE", eth__src="aa:00:00:00:00:01", eth__dst="01:0c:cd:01:00:01")
