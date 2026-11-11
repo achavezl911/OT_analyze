@@ -60,6 +60,32 @@ class TestNormalizacion(unittest.TestCase):
     def test_sin_columna_estado_es_abierta(self):
         self.assertEqual(_csv("ip,cve,cvss\n1.1.1.1,CVE-2021-0001,5\n")[0]["estado"], "abierta")
 
+    def test_cvss_v4_alias_vector_y_columnas_junto_a_cvss(self):
+        v4 = "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N"      # 9.3
+        vs = _csv(f"ip,cve,cvss,vector_v4\n1.1.1.1,CVE-2021-0001,5,{v4}\n")
+        self.assertEqual((vs[0]["cvss_v4"], vs[0]["vector_cvss_v4"], vs[0]["cvss"], vs[0]["severidad"]),
+                         (9.3, v4, 5.0, "Media"))                          # severidad sigue con v3
+        vs = _csv("ip,cve,cvss,CVSS4\n1.1.1.1,CVE-2021-0001,5,6.5\n")      # solo puntuacion
+        self.assertEqual((vs[0]["cvss_v4"], vs[0]["vector_cvss_v4"]), (6.5, ""))
+        vs = _csv(f"ip,cve,cvss,cvss_v4_vector,cvss_v4_score\n1.1.1.1,CVE-2021-0001,5,{v4},1.0\n")
+        self.assertEqual(vs[0]["cvss_v4"], 9.3)                            # gana el calculado
+        vs = _csv("ip,cve,cvss,vector_cvss_v4\n1.1.1.1,CVE-2021-0001,5,CVSS:4.0/mal\n")
+        self.assertEqual((vs[0]["cvss_v4"], vs[0]["vector_cvss_v4"]), (None, ""))     # invalido: se ignora
+
+    def test_columnas_v4_solo_si_el_archivo_las_trae(self):
+        activos = {"k1": {"nombre": "PLC-UNO", "ips": ["1.1.1.1"], "mac": "k1"}}
+        sin = vu.cruzar(_csv("ip,cve,cvss\n1.1.1.1,CVE-2021-0001,5\n"), activos)
+        self.assertEqual(vu.columnas(sin), vu.COLUMNAS)
+        self.assertEqual(len(vu.filas_tabla(sin, activos)[0]), len(vu.COLUMNAS))
+        v4 = "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N"
+        con = vu.cruzar(_csv(f"ip,cve,cvss,cvss_v4_vector\n1.1.1.1,CVE-2021-0001,5,{v4}\n"), activos)
+        cols = vu.columnas(con)
+        i = cols.index("cvss")
+        self.assertEqual(cols[i:i + 3], ["cvss", "cvss_v4", "vector_cvss_v4"])
+        fila = vu.filas_tabla(con, activos)[0]
+        self.assertEqual(len(fila), len(cols))
+        self.assertEqual(fila[i:i + 3], [5.0, 9.3, v4])
+
     def test_delimitador_punto_y_coma(self):
         v = _csv("ip,cve,cvss\n1.1.1.1,CVE-2021-0001,5\n", sep=";")
         self.assertEqual((v[0]["ip"], v[0]["cve"]), ("1.1.1.1", "CVE-2021-0001"))

@@ -12,6 +12,7 @@ from pathlib import Path
 from urllib.parse import unquote
 from xml.etree import ElementTree as ET
 
+from . import cvss4
 from .i18n import t, unir
 from .importers.lector import leer_csv
 
@@ -24,6 +25,8 @@ _ALIAS = {
     "cve": "cve", "cve_id": "cve", "vulnerabilidad": "cve", "vulnerability": "cve",
     "severidad": "severidad", "severity": "severidad", "criticidad": "severidad",
     "cvss": "cvss", "cvss_score": "cvss", "score": "cvss",
+    "cvss_v4": "cvss_v4", "cvss4": "cvss_v4", "cvss_v4_score": "cvss_v4", "cvss_v4_base_score": "cvss_v4",
+    "vector_cvss_v4": "vector_cvss_v4", "cvss_v4_vector": "vector_cvss_v4", "vector_v4": "vector_cvss_v4",
     "estado": "estado", "status": "estado", "state": "estado",
     "producto": "producto", "product": "producto",
     "version": "version",
@@ -115,11 +118,12 @@ def vulns_de_filas(filas: list, nombre: str) -> list:
         estado = _ESTADO.get(_norm(v.get("estado")))
         if estado is None:
             raise SystemExit(f"[!] '{nombre}': fila {n}: estado invalido '{v['estado']}'")
+        cvss_v4, vector_v4 = cvss4.resolver(v.get("cvss_v4"), v.get("vector_cvss_v4"))   # solo informativo (D113)
         vulns.append({
             "cve": cve, "severidad": sev, "cvss": cvss, "estado": estado,
             "activo": v.get("activo", ""), "ip": v.get("ip", ""), "mac": v.get("mac", ""),
             "producto": v.get("producto", ""), "version": v.get("version", ""),
-            "fuente": v.get("fuente", ""),
+            "fuente": v.get("fuente", ""), "cvss_v4": cvss_v4, "vector_cvss_v4": vector_v4,
         })
     return vulns
 
@@ -361,21 +365,33 @@ def _con_epss(cruces: list) -> bool:
     return any(c["vuln"].get("epss") is not None for c in cruces)
 
 
+def _con_v4(cruces: list) -> bool:
+    return any(c["vuln"].get("cvss_v4") is not None or c["vuln"].get("vector_cvss_v4") for c in cruces)
+
+
 def columnas(cruces: list) -> list:
-    """COLUMNAS, mas 'epss' al final si el archivo importado la trae (Nozomi)."""
-    return COLUMNAS + (["epss"] if _con_epss(cruces) else [])
+    """COLUMNAS, mas 'epss' al final si el archivo importado la trae (Nozomi) y cvss_v4 y vector_cvss_v4
+    junto a cvss si trae CVSS v4.0 (D113)."""
+    cols = list(COLUMNAS)
+    if _con_v4(cruces):
+        i = cols.index("cvss") + 1
+        cols[i:i] = ["cvss_v4", "vector_cvss_v4"]
+    return cols + (["epss"] if _con_epss(cruces) else [])
 
 
 def filas_tabla(cruces: list, assets: dict) -> list:
     """Filas de vulnerabilidades.csv: asociadas por activo y CVE; al final las no asociadas."""
     from .avisos_cisa import columnas_kev
     epss = _con_epss(cruces)
+    v4 = _con_v4(cruces)
 
     def fila(c):
         v = c["vuln"]
         a = assets.get(c["activo"]) if c["activo"] is not None else None
         return [a["nombre"] if a else "", v["ip"], v["cve"], t(v["severidad"]),
-                "" if v["cvss"] is None else v["cvss"], t(v["estado"]), v["producto"],
+                "" if v["cvss"] is None else v["cvss"],
+                *(["" if v.get("cvss_v4") is None else v["cvss_v4"], v.get("vector_cvss_v4") or ""] if v4 else []),
+                t(v["estado"]), v["producto"],
                 v["version"], v["fuente"], c["por"], *columnas_kev(c),
                 *(["" if v.get("epss") is None else v["epss"]] if epss else [])]
     asoc = sorted((c for c in cruces if c["activo"] is not None),

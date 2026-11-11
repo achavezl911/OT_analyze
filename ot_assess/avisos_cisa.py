@@ -9,9 +9,10 @@ from __future__ import annotations
 import datetime
 import hashlib
 import os
+import re
 from pathlib import Path
 
-from . import json_entrada
+from . import cvss4, json_entrada
 from .i18n import t
 from .importers.lector import leer_csv
 from .vulnerabilidades import _CVE
@@ -26,7 +27,8 @@ TITULO_KEV = "Vulnerabilidades explotadas activamente (catalogo KEV de CISA) en 
 COLUMNAS_KEV = ["kev", "kev_fecha_agregada", "kev_fecha_limite", "kev_ransomware", "avisos_ics",
                 "remediacion_fabricante"]
 COLUMNAS_AVISOS = ["aviso", "titulo", "publicado", "actualizado", "url", "cves", "activos", "abiertas",
-                   "cvss_max", "remediaciones"]
+                   "cvss_max", "cvss_v4_max", "remediaciones"]
+_RE_V4 = re.compile(r"CVSS:4\.0/[A-Za-z0-9:/]+")
 
 
 def _hoy(hoy):
@@ -120,6 +122,39 @@ def detalle_vulnerabilidad(v: dict) -> tuple:
             " ".join(str(detalle.get("details") or "").split())[:EXTRACTO])
 
 
+def cvss4_de_vulnerabilidad(v: dict) -> tuple:
+    """(puntuacion CVSS v4.0 maxima o None, vector que la da o "") de una vulnerabilidad CSAF.
+
+    CSAF 2.0 no tiene campo v4: CISA lo trae solo como vector en una referencia o en una nota, y hay que
+    calcularlo. Tambien lee cvss_v4 estructurado (scores[] y metrics[].content). Un vector invalido se ignora.
+    """
+    if not isinstance(v, dict):
+        return None, ""
+    encontrados = []
+
+    def estructurado(c):
+        if isinstance(c, dict):
+            encontrados.append(cvss4.resolver(c.get("baseScore"), c.get("vectorString")))
+
+    def en_texto(texto):
+        for vec in _RE_V4.findall(texto) if isinstance(texto, str) else ():
+            encontrados.append(cvss4.resolver(None, vec.rstrip("/")))
+    for s in v.get("scores") or ():
+        estructurado(s.get("cvss_v4") if isinstance(s, dict) else None)
+    for m in v.get("metrics") or ():
+        c = m.get("content") if isinstance(m, dict) else None
+        estructurado(c.get("cvss_v4") if isinstance(c, dict) else None)
+    for r in v.get("references") or ():
+        en_texto(r.get("url") if isinstance(r, dict) else None)
+    for n in v.get("notes") or ():
+        en_texto(n.get("text") if isinstance(n, dict) else None)
+    mejor = (None, "")
+    for p, vec in encontrados:
+        if p is not None and (mejor[0] is None or p > mejor[0]):
+            mejor = (p, vec)
+    return mejor
+
+
 def _aviso_csaf(datos, cves: set):
     """(id, aviso reducido o None, fecha de la ultima revision) o None si no es CSAF."""
     doc = datos.get("document") if isinstance(datos, dict) else None
@@ -140,7 +175,8 @@ def _aviso_csaf(datos, cves: set):
         if cve not in cves:
             continue
         cvss, categorias, extracto = detalle_vulnerabilidad(v)
-        aviso["cves"][cve] = {"cvss": cvss, "categorias": categorias, "extracto": extracto}
+        aviso["cves"][cve] = {"cvss": cvss, "categorias": categorias, "extracto": extracto,
+                              "cvss_v4": cvss4_de_vulnerabilidad(v)[0]}
     return aviso_id, (aviso if aviso["cves"] else None), _fecha(aviso["actualizado"])
 
 
@@ -352,9 +388,10 @@ def filas_avisos(cruces: list, assets: dict) -> list:
                           for c in cs if c["activo"] is not None})
         cvss = [a["cves"][cv]["cvss"] for cv in cves if a["cves"][cv]["cvss"] is not None]
         cats = sorted({k for cv in cves for k in a["cves"][cv]["categorias"]})
+        cvss4_ = [a["cves"][cv].get("cvss_v4") for cv in cves if a["cves"][cv].get("cvss_v4") is not None]
         filas.append([aid, a["titulo"], a["publicado"], a["actualizado"], a["url"], ";".join(cves),
                       ";".join(activos), sum(1 for c in cs if _abierta_asociada(c)),
-                      max(cvss) if cvss else "", ";".join(cats)])
+                      max(cvss) if cvss else "", max(cvss4_) if cvss4_ else "", ";".join(cats)])
     return sorted(filas, key=lambda f: (-(f[8] if f[8] != "" else -1), f[0]))
 
 

@@ -221,6 +221,29 @@ class AvisosTest(unittest.TestCase):
         self.assertEqual(tabla[("CVE-2099-0001", "10.0.0.1")],
                          ["ICSA-99-001-01;ICSA-99-002-01", "none_available;vendor_fix;workaround"])
 
+    def test_cvss_v4_max_en_avisos_ics(self):
+        v4a = "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N"           # 9.3
+        v4b = "CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N"           # 5.3
+        d = self.tmp / "avisos_v4"
+        d.mkdir()
+        a = csaf("ICSA-99-040-01", {"CVE-2099-0001": (7.5, ["vendor_fix"]), "CVE-2099-0002": (5.0, [])})
+        a["vulnerabilities"][0]["references"] = [{"category": "external",
+                                                  "url": "https://www.first.org/cvss/calculator/4.0#" + v4a}]
+        a["vulnerabilities"][1]["notes"] = [{"category": "other", "text": "CVSS v4.0 Base Score 5.3 | [" + v4b + "]"}]
+        (d / "a.json").write_text(json.dumps(a), encoding="utf-8")
+        av = ac.cargar_avisos(d, {"CVE-2099-0001", "CVE-2099-0002"})
+        self.assertEqual(av["avisos"]["ICSA-99-040-01"]["cves"]["CVE-2099-0002"]["cvss_v4"], 5.3)
+        cr = cruces([v("CVE-2099-0001", "10.0.0.1"), v("CVE-2099-0002", "10.0.0.2")])
+        ac.anotar(cr, None, av)
+        f = dict(zip(ac.COLUMNAS_AVISOS, ac.filas_avisos(cr, ACTIVOS)[0]))
+        self.assertEqual((f["cvss_max"], f["cvss_v4_max"]), (7.5, 9.3))
+        self.assertEqual(ac.COLUMNAS_AVISOS.index("cvss_v4_max"), ac.COLUMNAS_AVISOS.index("cvss_max") + 1)
+        # sin v4 en ningun CVE: columna vacia
+        cr2 = cruces([v("CVE-2099-0001", "10.0.0.1")])
+        ac.anotar(cr2, None, self.av)
+        f2 = dict(zip(ac.COLUMNAS_AVISOS, ac.filas_avisos(cr2, ACTIVOS)[0]))
+        self.assertEqual(f2["cvss_v4_max"], "")
+
     def test_un_json_que_no_es_csaf_solo_es_error(self):
         with self.assertRaises(SystemExit) as cm:
             ac.cargar_avisos(self.dir / "no_es_csaf.json", {"CVE-2099-0001"})
@@ -441,6 +464,48 @@ class CapturasE2ETest(unittest.TestCase):
         self.assertEqual(res["entorno"]["avisos_ics"]["archivo"], "avisos")
         self.assertNotIn(str(self.tmp), json.dumps(res["entorno"]))
         self.assertNotIn(str(self.tmp), json.dumps(res["vulnerabilidades"]))
+
+
+V4_A = "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N"       # 9.3
+V4_B = "CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N"       # 5.3
+V4_C = "CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N"       # 7.1
+URL_V4 = "https://www.first.org/cvss/calculator/4.0#"
+
+
+class Cvss4DeVulnerabilidadTest(unittest.TestCase):
+    def test_solo_en_referencia(self):
+        v = {"cve": "CVE-2099-1", "references": [{"url": "https://x.example/a"}, {"url": URL_V4 + V4_B}]}
+        self.assertEqual(ac.cvss4_de_vulnerabilidad(v), (5.3, V4_B))
+
+    def test_nota_y_referencia_gana_el_maximo(self):
+        v = {"references": [{"url": URL_V4 + V4_B}],
+             "notes": [{"text": f"CVSS v4.0 Base Score 9.3 | Critical | [{V4_A}]({URL_V4}{V4_A})"}]}
+        self.assertEqual(ac.cvss4_de_vulnerabilidad(v), (9.3, V4_A))
+
+    def test_estructurado_en_scores_y_en_metrics(self):
+        v = {"scores": [{"cvss_v3": {"baseScore": 9.8}, "cvss_v4": {"baseScore": 5.3, "vectorString": V4_B}}]}
+        self.assertEqual(ac.cvss4_de_vulnerabilidad(v), (5.3, V4_B))
+        v = {"metrics": [{"content": {"cvss_v4": {"baseScore": 7.1, "vectorString": V4_C}}}]}
+        self.assertEqual(ac.cvss4_de_vulnerabilidad(v), (7.1, V4_C))
+        # el vector manda sobre el baseScore declarado
+        v = {"metrics": [{"content": {"cvss_v4": {"baseScore": 1.0, "vectorString": V4_A}}}]}
+        self.assertEqual(ac.cvss4_de_vulnerabilidad(v), (9.3, V4_A))
+        # sin vector, el baseScore
+        v = {"scores": [{"cvss_v4": {"baseScore": 6.0}}]}
+        self.assertEqual(ac.cvss4_de_vulnerabilidad(v), (6.0, ""))
+
+    def test_vector_invalido_se_ignora_y_sin_v4_es_none(self):
+        malo = {"references": [{"url": URL_V4 + "CVSS:4.0/AV:N/AC:L"}],
+                "notes": [{"text": "CVSS:4.0/AV:Z/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N"}],
+                "scores": [{"cvss_v4": {"baseScore": "x", "vectorString": "CVSS:3.1/AV:N"}}, "no es dict", None]}
+        self.assertEqual(ac.cvss4_de_vulnerabilidad(malo), (None, ""))
+        self.assertEqual(ac.cvss4_de_vulnerabilidad({"scores": [{"cvss_v3": {"baseScore": 9.8}}]}), (None, ""))
+        self.assertEqual(ac.cvss4_de_vulnerabilidad({}), (None, ""))
+
+    def test_detalle_vulnerabilidad_no_cambia(self):
+        v = {"scores": [{"cvss_v3": {"baseScore": 9.8}}], "references": [{"url": URL_V4 + V4_A}],
+             "remediations": [{"category": "vendor_fix", "details": "Parche"}]}
+        self.assertEqual(ac.detalle_vulnerabilidad(v), (9.8, ["vendor_fix"], "Parche"))
 
 
 if __name__ == "__main__":

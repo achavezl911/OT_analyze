@@ -409,6 +409,38 @@ class DiagramaE2ETest(_Base):
         self.assertEqual(len(hall), 1)
         self.assertNotIn("vulnerabilidades.csv", [p.name for p in out.iterdir()])
 
+    def test_cvss_v4_desde_csaf_en_columnas_nuevas(self):
+        v4 = "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N"
+        aviso = csaf("ICSA-99-31", {"CVE-2099-13005": (9.8, [], [])})
+        aviso["vulnerabilities"][0]["references"] = [{"url": "https://www.first.org/cvss/calculator/4.0#" + v4}]
+        (self.d / "b.json").write_text(json.dumps(aviso), encoding="utf-8")
+        out = self.correr("o4", "--avisos-ics", str(self.d))
+        cab = list(_leer(out / "vulnerabilidades_firmware.csv")[0])
+        self.assertEqual(cab[cab.index("severidad"):cab.index("severidad") + 3],
+                         ["severidad", "cvss_v4", "vector_cvss_v4"])
+        por_cve = {f["cve"]: f for f in _leer(out / "vulnerabilidades_firmware.csv")}
+        self.assertEqual((por_cve["CVE-2099-13005"]["cvss"], por_cve["CVE-2099-13005"]["cvss_v4"],
+                          por_cve["CVE-2099-13005"]["vector_cvss_v4"]), ("9.8", "9.3", v4))
+        self.assertEqual((por_cve["CVE-2099-13001"]["cvss_v4"], por_cve["CVE-2099-13001"]["vector_cvss_v4"]),
+                         ("", ""))                                  # sin v4: vacias
+        self.assertEqual(por_cve["CVE-2099-13001"]["severidad"], "Critica")        # la severidad sigue siendo v3
+
+    def test_catalogo_con_solo_vector_v4_se_puntua(self):
+        v4 = "CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N"       # 7.1
+        cat = _escribir(self.tmp / "cat4.csv",
+                        ["fabricante", "producto", "version_afectada", "cve", "cvss", "vector_v4", "cvss4"],
+                        [["Acme Automation", "PLC-5000", "<3.0", "CVE-2099-13006", "5.5", v4, ""],
+                         ["Acme Automation", "PLC-5000", "<3.0", "CVE-2099-13007", "5.5", v4, "2.0"],
+                         ["Acme Automation", "PLC-5000", "<3.0", "CVE-2099-13008", "5.5", "", "4.5"],
+                         ["Acme Automation", "PLC-5000", "<3.0", "CVE-2099-13009", "5.5", "CVSS:4.0/mal", ""]])
+        out = self.correr("o5", "--catalogo-vulnerabilidades", str(cat))
+        f = {x["cve"]: x for x in _leer(out / "vulnerabilidades_firmware.csv")}
+        self.assertEqual((f["CVE-2099-13006"]["cvss_v4"], f["CVE-2099-13006"]["vector_cvss_v4"]), ("7.1", v4))
+        self.assertEqual(f["CVE-2099-13007"]["cvss_v4"], "7.1")                 # gana el calculado
+        self.assertEqual((f["CVE-2099-13008"]["cvss_v4"], f["CVE-2099-13008"]["vector_cvss_v4"]), ("4.5", ""))
+        self.assertEqual((f["CVE-2099-13009"]["cvss_v4"], f["CVE-2099-13009"]["vector_cvss_v4"]), ("", ""))
+        self.assertEqual({x["cvss"] for x in f.values()}, {"5.5"})                 # v3 intacto
+
     def test_catalogo_solo_y_entorno(self):
         cat = _escribir(self.tmp / "cat.csv", ["fabricante", "producto", "version_afectada", "cve", "cvss"],
                         [["Acme Automation", "PLC-5000", "<3.0", "CVE-2099-13002", "5.5"]])

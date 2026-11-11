@@ -14,12 +14,14 @@ import re
 import unicodedata
 from pathlib import Path
 
+from . import cvss4
 from .avisos_cisa import (
     _fecha,
     avisos_de_antiguedad,
     avisos_de_carga,
     cargar_avisos,
     cargar_kev,
+    cvss4_de_vulnerabilidad,
     detalle_vulnerabilidad,
 )
 from .i18n import t
@@ -39,8 +41,8 @@ NOTA = ("Cruce por texto de fabricante, modelo y firmware del inventario contra 
         "catalogo del analista. Son candidatos a confirmar con el aviso o el fabricante: la herramienta no "
         "consulta la red y no concluye que un equipo sea vulnerable. Las columnas de revision estan vacias a "
         "proposito.")
-COLUMNAS = ["activo", "ip", "fabricante", "modelo", "firmware", "procedencia", "cve", "cvss", "severidad", "aviso",
-            "producto_aviso", "version_afectada", "coincidencia", "estado", "kev", "en_plataforma", "remediacion",
+COLUMNAS = ["activo", "ip", "fabricante", "modelo", "firmware", "procedencia", "cve", "cvss", "severidad", "cvss_v4",
+            "vector_cvss_v4", "aviso", "producto_aviso", "version_afectada", "coincidencia", "estado", "kev", "en_plataforma", "remediacion",
             "fuente", "estado_revision", "revisado_por", "fecha", "comentario"]
 CAB_SECCION = ["activo", "fabricante", "modelo", "firmware", "cve", "cvss", "estado", "kev", "en_plataforma",
                "aviso"]
@@ -53,6 +55,8 @@ ALIAS_COLUMNAS = {
                          "affected_versions"),
     "cve": ("cve", "cve_id"),
     "cvss": ("cvss", "cvss_score", "cvss_v3", "score"),
+    "cvss_v4": ("cvss_v4", "cvss4", "cvss_v4_score", "cvss_v4_base_score"),
+    "vector_cvss_v4": ("vector_cvss_v4", "cvss_v4_vector", "vector_v4"),
     "aviso": ("aviso", "advisory", "boletin", "id_aviso"),
     "remediacion": ("remediacion", "remediation", "mitigacion", "solucion"),
     "fuente": ("fuente", "source"),
@@ -414,13 +418,14 @@ class Indice:
                 continue
             afectados = ids("known_affected", v) - ids("fixed", v) - ids("known_not_affected", v)
             cvss, _cats, extracto = detalle_vulnerabilidad(v)
+            cvss_v4, vector_v4 = cvss4_de_vulnerabilidad(v)
             for pid in sorted(afectados & set(productos)):
                 fab, prod, ver = productos[pid]
                 prod, ver = modelo_en_version(prod, ver)
                 for clave in sorted(claves_fabricante(fab) & self.vendores):
                     self._agregar(clave, {
                         "producto": prod, "version": ver, "cve": cve, "cvss": cvss, "aviso": str(seg["id"]),
-                        "remediacion": extracto, "fuente": ruta})
+                        "cvss_v4": cvss_v4, "vector_cvss_v4": vector_v4, "remediacion": extracto, "fuente": ruta})
 
     def cargar_catalogo(self, ruta) -> list:
         """Lee el catalogo del analista; devuelve los avisos de consola. SystemExit si faltan columnas."""
@@ -449,9 +454,11 @@ class Indice:
             clave = clave_fabricante(dato(f, "fabricante"))
             if clave not in self.vendores:
                 continue
+            cvss_v4, vector_v4 = cvss4.resolver(dato(f, "cvss_v4"), dato(f, "vector_cvss_v4"))
             fuente = p.name + (f" ({dato(f, 'fuente')})" if dato(f, "fuente") else "")
             self._agregar(clave, {"producto": dato(f, "producto"), "version": dato(f, "version_afectada"),
                                   "cve": cve, "cvss": cvss, "aviso": dato(f, "aviso"),
+                                  "cvss_v4": cvss_v4, "vector_cvss_v4": vector_v4,
                                   "remediacion": dato(f, "remediacion"), "fuente": fuente})
         self.catalogo = {"archivo": p.name, "filas": len(filas) - descartadas, "descartadas": descartadas}
         return ([(f"--catalogo-vulnerabilidades: {descartadas} filas sin CVE valido, fabricante o producto "
@@ -556,7 +563,8 @@ def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=Non
         x.update(cve=r["cve"], cvss=r["cvss"], kev=en_kev)
         sev = t(_sev_de_cvss(r["cvss"])) if r["cvss"] is not None else ""
         x["celdas"] = [x["nombre"], ";".join(x["ips"]), x["fab"], x["modelo"], x["fw"], x["procedencia"], r["cve"],
-                       "" if r["cvss"] is None else r["cvss"], sev, r["aviso"], r["producto"], r["version"],
+                       "" if r["cvss"] is None else r["cvss"], sev,
+                       "" if r.get("cvss_v4") is None else r["cvss_v4"], r.get("vector_cvss_v4") or "", r["aviso"], r["producto"], r["version"],
                        t(x["coinc"]), t(x["estado"]),
                        "" if kev_cves is None else t("si" if en_kev else "no"),
                        t("si" if x["en_plat"] else "no"), r["remediacion"], r["fuente"], "", "", "", ""]
