@@ -13,13 +13,6 @@ if ! command -v tshark >/dev/null; then
         || echo "[!] apt-get update con errores (alguna fuente no responde); se intenta instalar tshark igual"
     }
     instalar() { DEBIAN_FRONTEND=noninteractive $S apt-get install -y -qq "${OPC[@]}" tshark >>"$APT_LOG" 2>&1; }
-    if [ -n "${GITHUB_ACTIONS:-}" ]; then
-      # Solo en la CI: el runner prueba primero azure.archive.ubuntu.com (lista /etc/apt/apt-mirrors.txt) y cuando ese
-      # nombre no resuelve cada paquete espera minutos hasta agotar el tiempo del trabajo; se usa archive.ubuntu.com.
-      for f in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
-        if [ -f "$f" ]; then $S sed -i 's#azure\.archive\.ubuntu\.com#archive.ubuntu.com#g' "$f"; fi
-      done
-    fi
     actualizar
     if ! instalar; then
       if [ -n "${GITHUB_ACTIONS:-}" ]; then
