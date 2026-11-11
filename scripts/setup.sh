@@ -4,12 +4,30 @@ set -e
 if ! command -v tshark >/dev/null; then
   if command -v apt-get >/dev/null; then
     S=""; [ "$(id -u)" -ne 0 ] && S="sudo"
-    # sin update, el paquete no se encuentra en un entorno limpio. Una fuente externa del runner caida (p. ej. un
-    # PPA de Launchpad) hace que update salga con 100 aunque el archivo de Ubuntu este al dia: se avisa y se
-    # intenta instalar igual; si tshark no se instala, el script falla como antes.
-    $S apt-get update -qq -o Acquire::Retries=2 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 \
-      || echo "[!] apt-get update con errores (alguna fuente no responde); se intenta instalar tshark igual"
-    DEBIAN_FRONTEND=noninteractive $S apt-get install -y -qq tshark
+    # Sin update, el paquete no se encuentra en un entorno limpio. Una fuente externa del runner caida (p. ej. un PPA
+    # de Launchpad) hace que update salga con error aunque el archivo de Ubuntu este al dia: se avisa y se instala igual.
+    APT_LOG=$(mktemp)
+    OPC=(-o Acquire::Retries=2 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20)
+    actualizar() {
+      $S apt-get update -qq "${OPC[@]}" >>"$APT_LOG" 2>&1 \
+        || echo "[!] apt-get update con errores (alguna fuente no responde); se intenta instalar tshark igual"
+    }
+    instalar() { DEBIAN_FRONTEND=noninteractive $S apt-get install -y -qq "${OPC[@]}" tshark >>"$APT_LOG" 2>&1; }
+    actualizar
+    if ! instalar; then
+      if [ -z "${GITHUB_ACTIONS:-}" ]; then tail -n 20 "$APT_LOG"; exit 100; fi
+      # Solo en la CI: el error va como anotacion (el registro de la CI no se lee sin permisos de administrador) y se
+      # reintenta una vez contra archive.ubuntu.com por si el espejo del runner no responde.
+      grep -E '^(E|W):' "$APT_LOG" | tail -n 6 | sed 's/^/::warning::apt: /' || true
+      for f in /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
+        if [ -f "$f" ]; then $S sed -i 's#azure\.archive\.ubuntu\.com#archive.ubuntu.com#g' "$f"; fi
+      done
+      actualizar
+      if ! instalar; then
+        grep -E '^(E|W):' "$APT_LOG" | tail -n 8 | sed 's/^/::error::apt: /' || true
+        exit 100
+      fi
+    fi
   else
     echo "[!] Instala Wireshark (tshark) manualmente: brew install --cask wireshark / dnf install wireshark-cli"; exit 1
   fi
