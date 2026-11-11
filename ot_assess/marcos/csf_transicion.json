@@ -1,0 +1,1908 @@
+{
+ "marco": "NIST CSF 1.1 a 2.0 (transicion oficial del Core)",
+ "fuente": "NIST, CSF 1.1 to 2.0 Core Transition Changes (CSF 1.1 to 2.0 Core Transition Changes.xlsx)",
+ "url": "https://www.nist.gov/system/files/documents/2024/09/19/CSF%201.1%20to%202.0%20Core%20Transition%20Changes.xlsx",
+ "fecha": "2024-09-19",
+ "derechos": "Obra del gobierno de EE. UU., dominio publico (17 U.S.C. 105). Fuente: NIST, CSF 1.1 to 2.0 Core Transition Changes.",
+ "filas": [
+  {
+   "id_11": "ID.GV",
+   "descripcion_11": "The policies, procedures, and processes to manage and monitor the organization’s regulatory, legal, risk, environmental, and operational requirements are understood and inform the management of cybersecurity risk.",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Removed \"procedures\" and \"processes\"; added \"strategy\" and \"expectations\"\nAdded \"communicated\" and \"monitored\"",
+   "id_20": "GV",
+   "descripcion_20": "The organization’s cybersecurity risk management strategy, expectations, and policy are established, communicated, and monitored",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.BE",
+   "descripcion_11": "The organization’s mission, objectives, stakeholders, and activities are understood and prioritized; this information is used to inform cybersecurity roles, responsibilities, and risk management decisions.",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Changed \"stakeholders\" to \"stakeholder expectations\"\nRemoved \"objectives\" and \"activities\" \nAdded \"dependencies\" and \"legal, regulatory, and contractual requirements\" \nRemoved \"prioritized\"",
+   "id_20": "GV.OC",
+   "descripcion_20": "The circumstances — mission, stakeholder expectations, dependencies, and legal, regulatory, and contractual requirements — surrounding the organization’s cybersecurity risk management decisions are understood",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.BE-2",
+   "descripcion_11": "The organization’s place in critical infrastructure and its industry sector is identified and communicated",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Clarified the original wording",
+   "id_20": "GV.OC-01",
+   "descripcion_20": "The organizational mission is understood and informs cybersecurity risk management",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.BE-3",
+   "descripcion_11": "Priorities for organizational mission, objectives, and activities are established and communicated",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Clarified the original wording",
+   "id_20": "GV.OC-01",
+   "descripcion_20": "The organizational mission is understood and informs cybersecurity risk management",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.GV-2",
+   "descripcion_11": "Cybersecurity roles and responsibilities are coordinated and aligned with internal roles and external partners",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to include all stakeholder needs and expectations for cybersecurity, not just roles and responsibilities",
+   "id_20": "GV.OC-02",
+   "descripcion_20": "Internal and external stakeholders are understood, and their needs and expectations regarding cybersecurity risk management are understood and considered",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.SC-2",
+   "descripcion_11": "Suppliers and third party partners of information systems, components, and services are identified, prioritized, and assessed using a cyber supply chain risk assessment process",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to identification of certain external stakeholders",
+   "id_20": "GV.OC-02",
+   "descripcion_20": "Internal and external stakeholders are understood, and their needs and expectations regarding cybersecurity risk management are understood and considered",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.GV-3",
+   "descripcion_11": "Legal and regulatory requirements regarding cybersecurity, including privacy and civil liberties obligations, are understood and managed",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Added contractual requirements",
+   "id_20": "GV.OC-03",
+   "descripcion_20": "Legal, regulatory, and contractual requirements regarding cybersecurity — including privacy and civil liberties obligations — are understood and managed",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.BE-4",
+   "descripcion_11": "Dependencies and critical functions for delivery of critical services are established",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to what stakeholders depend on",
+   "id_20": "GV.OC-04",
+   "descripcion_20": "Critical objectives, capabilities, and services that stakeholders depend on or expect from the organization are understood and communicated",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.BE-5",
+   "descripcion_11": "Resilience requirements to support delivery of critical services are established for all operating states (e.g. under duress/attack, during recovery, normal operations)",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Added delivery of critical objectives and capabilities",
+   "id_20": "GV.OC-04",
+   "descripcion_20": "Critical objectives, capabilities, and services that stakeholders depend on or expect from the organization are understood and communicated",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.BE-1",
+   "descripcion_11": "The organization’s role in the supply chain is identified and communicated",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Clarified the original wording",
+   "id_20": "GV.OC-05",
+   "descripcion_20": "Outcomes, capabilities, and services that the organization depends on are understood and communicated",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.BE-4",
+   "descripcion_11": "Dependencies and critical functions for delivery of critical services are established",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to what the organization itself depends on",
+   "id_20": "GV.OC-05",
+   "descripcion_20": "Outcomes, capabilities, and services that the organization depends on are understood and communicated",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.RM",
+   "descripcion_11": "The organization’s priorities, constraints, risk tolerances, and assumptions are established and used to support operational risk decisions.",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Added \"risk…appetite statement\"\nAdded \"communicated\"",
+   "id_20": "GV.RM",
+   "descripcion_20": "The organization’s priorities, constraints, risk tolerance and appetite statements, and assumptions are established, communicated, and used to support operational risk decisions",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.RM-1",
+   "descripcion_11": "Risk management processes are established, managed, and agreed to by organizational stakeholders",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Changed \"processes\" to \"objectives\"\nRemoved \"managed\"",
+   "id_20": "GV.RM-01",
+   "descripcion_20": "Risk management objectives are established and agreed to by organizational stakeholders",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.RM-2",
+   "descripcion_11": "Organizational risk tolerance is determined and clearly expressed",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Added \"risk appetite\"\nAdded \"maintained\"",
+   "id_20": "GV.RM-02",
+   "descripcion_20": "Risk appetite and risk tolerance statements are established, communicated, and maintained",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.RM-3",
+   "descripcion_11": "The organization’s determination of risk tolerance is informed by its role in critical infrastructure and sector specific risk analysis",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Removed \"role in critical infrastructure and sector specific risk analysis\"\nAdded \"risk appetite\"\nChanged \"informed\" to \"established, communicated, and maintained\"",
+   "id_20": "GV.RM-02",
+   "descripcion_20": "Risk appetite and risk tolerance statements are established, communicated, and maintained",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.GV-4",
+   "descripcion_11": "Governance and risk management processes address cybersecurity risks",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Removed \"governance\"\nClarified the original wording",
+   "id_20": "GV.RM-03",
+   "descripcion_20": "Cybersecurity risk management activities and outcomes are included in enterprise risk management processes",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.RM-2",
+   "descripcion_11": "Organizational risk tolerance is determined and clearly expressed",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to risk tolerance as expressed through risk response strategy",
+   "id_20": "GV.RM-04",
+   "descripcion_20": "Strategic direction that describes appropriate risk response options is established and communicated",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.SC-1",
+   "descripcion_11": "Cyber supply chain risk management processes are identified, established, assessed, managed, and agreed to by organizational stakeholders",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to specifically mention communication of cybersecurity supply chain risks",
+   "id_20": "GV.RM-05",
+   "descripcion_20": "Lines of communication across the organization are established for cybersecurity risks, including risks from suppliers and other third parties",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.RM-1",
+   "descripcion_11": "Risk management processes are established, managed, and agreed to by organizational stakeholders",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to how cybersecurity risks are calculated, documented, categorized, and prioritized",
+   "id_20": "GV.RM-06",
+   "descripcion_20": "A standardized method for calculating, documenting, categorizing, and prioritizing cybersecurity risks is established and communicated",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "",
+   "descripcion_11": "",
+   "reubicacion": "N/A",
+   "modificaciones": "N/A",
+   "id_20": "GV.RM-07",
+   "descripcion_20": "Strategic opportunities (i.e., positive risks) are characterized and are included in organizational cybersecurity risk discussions",
+   "nueva_en_20": "Y"
+  },
+  {
+   "id_11": "ID.GV-2",
+   "descripcion_11": "Cybersecurity roles and responsibilities are coordinated and aligned with internal roles and external partners",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed \"aligned\" to \"communicated\"\nAdded \"authorities\"\nAdded \"foster accountability, performance assessment, and continuous improvement\"",
+   "id_20": "GV.RR",
+   "descripcion_20": "Cybersecurity roles, responsibilities, and authorities to foster accountability, performance assessment, and continuous improvement are established and communicated",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "",
+   "descripcion_11": "",
+   "reubicacion": "N/A",
+   "modificaciones": "N/A",
+   "id_20": "GV.RR-01",
+   "descripcion_20": "Organizational leadership is responsible and accountable for cybersecurity risk and fosters a culture that is risk-aware, ethical, and continually improving",
+   "nueva_en_20": "Y"
+  },
+  {
+   "id_11": "ID.AM-6",
+   "descripcion_11": "Cybersecurity roles and responsibilities for the entire workforce and third-party stakeholders (e.g., suppliers, customers, partners) are established",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Added \"authorities\"\nAdded \"communicated, understood, and enforced\"\nRemoved third parties from scope",
+   "id_20": "GV.RR-02",
+   "descripcion_20": "Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.GV-2",
+   "descripcion_11": "Cybersecurity roles and responsibilities are coordinated and aligned with internal roles and external partners",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Added \"authorities\"\nChanged \"coordinated and aligned\" to \"established, communicated, understood, and enforced\"",
+   "id_20": "GV.RR-02",
+   "descripcion_20": "Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.DP-1",
+   "descripcion_11": "Roles and responsibilities for detection are well defined to ensure accountability",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all role and responsibility items in GV.RR",
+   "id_20": "GV.RR-02",
+   "descripcion_20": "Roles, responsibilities, and authorities related to cybersecurity risk management are established, communicated, understood, and enforced",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.RM-1",
+   "descripcion_11": "Risk management processes are established, managed, and agreed to by organizational stakeholders",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to allocating adequate resources for risk management processes",
+   "id_20": "GV.RR-03",
+   "descripcion_20": "Adequate resources are allocated commensurate with the cybersecurity risk strategy, roles, responsibilities, and policies",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-11",
+   "descripcion_11": "Cybersecurity is included in human resources practices (e.g., deprovisioning, personnel screening)",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Removed examples from description",
+   "id_20": "GV.RR-04",
+   "descripcion_20": "Cybersecurity is included in human resources practices",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.GV-1",
+   "descripcion_11": "Organizational cybersecurity policy is established and communicated",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Added \"enforced\"",
+   "id_20": "GV.PO",
+   "descripcion_20": "Organizational cybersecurity policy is established, communicated, and enforced",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.GV-1",
+   "descripcion_11": "Organizational cybersecurity policy is established and communicated",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Added details on establishing policy \nAdded \"enforced\"",
+   "id_20": "GV.PO-01",
+   "descripcion_20": "Policy for managing cybersecurity risks is established based on organizational context, cybersecurity strategy, and priorities and is communicated and enforced",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.GV-1",
+   "descripcion_11": "Organizational cybersecurity policy is established and communicated",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Added maintenance of policy \nAdded policy enforcement",
+   "id_20": "GV.PO-02",
+   "descripcion_20": "Policy for managing cybersecurity risks is reviewed, updated, communicated, and enforced to reflect changes in requirements, threats, technology, and organizational mission",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP",
+   "descripcion_11": "Security policies (that address purpose, scope, roles, responsibilities, management commitment, and coordination among organizational entities), processes, and procedures are maintained and used to manage protection of information systems and assets",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed the scope to only include policy maintenance",
+   "id_20": "GV.PO-02",
+   "descripcion_20": "Policy for managing cybersecurity risks is reviewed, updated, communicated, and enforced to reflect changes in requirements, threats, technology, and organizational mission",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "",
+   "descripcion_11": "",
+   "reubicacion": "N/A",
+   "modificaciones": "N/A",
+   "id_20": "GV.OV",
+   "descripcion_20": "Results of organization-wide cybersecurity risk management activities and performance are used to inform, improve, and adjust the risk management strategy",
+   "nueva_en_20": "Y"
+  },
+  {
+   "id_11": "",
+   "descripcion_11": "",
+   "reubicacion": "N/A",
+   "modificaciones": "N/A",
+   "id_20": "GV.OV-01",
+   "descripcion_20": "Cybersecurity risk management strategy outcomes are reviewed to inform and adjust strategy and direction",
+   "nueva_en_20": "Y"
+  },
+  {
+   "id_11": "",
+   "descripcion_11": "",
+   "reubicacion": "N/A",
+   "modificaciones": "N/A",
+   "id_20": "GV.OV-02",
+   "descripcion_20": "The cybersecurity risk management strategy is reviewed and adjusted to ensure coverage of organizational requirements and risks",
+   "nueva_en_20": "Y"
+  },
+  {
+   "id_11": "",
+   "descripcion_11": "",
+   "reubicacion": "N/A",
+   "modificaciones": "N/A",
+   "id_20": "GV.OV-03",
+   "descripcion_20": "Organizational cybersecurity risk management performance is evaluated and reviewed for adjustments needed",
+   "nueva_en_20": "Y"
+  },
+  {
+   "id_11": "ID.SC",
+   "descripcion_11": "The organization’s priorities, constraints, risk tolerances, and assumptions are established and used to support risk decisions associated with managing supply chain risk. The organization has established and implemented the processes to identify, assess and manage supply chain risks.",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Clarified the wording by simplifying it\nAdded \"identified, managed, monitored, and improved\" processes",
+   "id_20": "GV.SC",
+   "descripcion_20": "Cyber supply chain risk management processes are identified, established, managed, monitored, and improved by organizational stakeholders",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.SC-1",
+   "descripcion_11": "Cyber supply chain risk management processes are identified, established, assessed, managed, and agreed to by organizational stakeholders",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Added \"program, strategy, objectives, policies\" to \"processes\"\nRemoved \"identified,\" \"assessed,\" and \"managed\"",
+   "id_20": "GV.SC-01",
+   "descripcion_20": "A cybersecurity supply chain risk management program, strategy, objectives, policies, and processes are established and agreed to by organizational stakeholders",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.AM-6",
+   "descripcion_11": "Cybersecurity roles and responsibilities for the entire workforce and third-party stakeholders (e.g., suppliers, customers, partners) are established",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Removed workforce from scope\nAdded \"communicated\" and \"coordinated\"",
+   "id_20": "GV.SC-02",
+   "descripcion_20": "Cybersecurity roles and responsibilities for suppliers, customers, and partners are established, communicated, and coordinated internally and externally",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.SC-2",
+   "descripcion_11": "Suppliers and third party partners of information systems, components, and services are identified, prioritized, and assessed using a cyber supply chain risk assessment process",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to integrating cyber supply chain risk management into cybersecurity risk management",
+   "id_20": "GV.SC-03",
+   "descripcion_20": "Cybersecurity supply chain risk management is integrated into cybersecurity and enterprise risk management, risk assessment, and improvement processes",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.SC-2",
+   "descripcion_11": "Suppliers and third party partners of information systems, components, and services are identified, prioritized, and assessed using a cyber supply chain risk assessment process",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Changed the scope to only identifying and prioritizing suppliers",
+   "id_20": "GV.SC-04",
+   "descripcion_20": "Suppliers are known and prioritized by criticality",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.SC-3",
+   "descripcion_11": "Contracts with suppliers and third-party partners are used to implement appropriate measures designed to meet the objectives of an organization’s cybersecurity program and Cyber Supply Chain Risk Management Plan.",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Clarified the original wording",
+   "id_20": "GV.SC-05",
+   "descripcion_20": "Requirements to address cybersecurity risks in supply chains are established, prioritized, and integrated into contracts and other types of agreements with suppliers and other relevant third parties",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.SC-1",
+   "descripcion_11": "Cyber supply chain risk management processes are identified, established, assessed, managed, and agreed to by organizational stakeholders",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to addressing risks before entering into an agreement",
+   "id_20": "GV.SC-06",
+   "descripcion_20": "Planning and due diligence are performed to reduce risks before entering into formal supplier or other third-party relationships",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.SC-2",
+   "descripcion_11": "Suppliers and third party partners of information systems, components, and services are identified, prioritized, and assessed using a cyber supply chain risk assessment process",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed the scope to only understanding supplier-related risk throughout the supplier life cycle",
+   "id_20": "GV.SC-07",
+   "descripcion_20": "The risks posed by a supplier, their products and services, and other third parties are understood, recorded, prioritized, assessed, responded to, and monitored over the course of the relationship",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.SC-4",
+   "descripcion_11": "Suppliers and third-party partners are routinely assessed using audits, test results, or other forms of evaluations to confirm they are meeting their contractual obligations.",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Changed the focus from suppliers and partners to the risks they and their products and services pose\nChanged \"assessed\" to \"understood, recorded, prioritized, assessed, responded to, and monitored\"",
+   "id_20": "GV.SC-07",
+   "descripcion_20": "The risks posed by a supplier, their products and services, and other third parties are understood, recorded, prioritized, assessed, responded to, and monitored over the course of the relationship",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.SC-5",
+   "descripcion_11": "Response and recovery planning and testing are conducted with suppliers and third-party providers",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Removed the testing component of ID.SC-5 (moved to ID.IM-02)",
+   "id_20": "GV.SC-08",
+   "descripcion_20": "Relevant suppliers and other third parties are included in incident planning, response, and recovery activities",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.SC-1",
+   "descripcion_11": "Cyber supply chain risk management processes are identified, established, assessed, managed, and agreed to by organizational stakeholders",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to integrating cyber supply chain risk management into cybersecurity and enterprise risk management programs",
+   "id_20": "GV.SC-09",
+   "descripcion_20": "Supply chain security practices are integrated into cybersecurity and enterprise risk management programs, and their performance is monitored throughout the technology product and service life cycle",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.SC-1",
+   "descripcion_11": "Cyber supply chain risk management processes are identified, established, assessed, managed, and agreed to by organizational stakeholders",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to risk management plans addressing post-agreement processes",
+   "id_20": "GV.SC-10",
+   "descripcion_20": "Cybersecurity supply chain risk management plans include provisions for activities that occur after the conclusion of a partnership or service agreement",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID",
+   "descripcion_11": "Develop an organizational understanding to manage cybersecurity risk to systems, people, assets, data, and capabilities",
+   "reubicacion": "N",
+   "modificaciones": "Clarified the original wording",
+   "id_20": "ID",
+   "descripcion_20": "The organization’s current cybersecurity risks are understood",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.AM",
+   "descripcion_11": "The data, personnel, devices, systems, and facilities that enable the organization to achieve business purposes are identified and managed consistent with their relative importance to organizational objectives and the organization’s risk strategy",
+   "reubicacion": "N",
+   "modificaciones": "Added \"data\" and \"services\" as types of assets",
+   "id_20": "ID.AM",
+   "descripcion_20": "Assets (e.g., data, hardware, software, systems, facilities, services, people) that enable the organization to achieve business purposes are identified and managed consistent with their relative importance to organizational objectives and the organization’s risk strategy",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.AM-1",
+   "descripcion_11": "Physical devices and systems within the organization are inventoried",
+   "reubicacion": "N",
+   "modificaciones": "Changed \"within the organization\" to \"managed by the organization\"\nChanged \"physical devices and systems\" to \"hardware\"",
+   "id_20": "ID.AM-01",
+   "descripcion_20": "Inventories of hardware managed by the organization are maintained",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.AM-2",
+   "descripcion_11": "Software platforms and applications within the organization are inventoried",
+   "reubicacion": "N",
+   "modificaciones": "Added \"services\" and \"systems\" \nChanged \"within the organization\" to \"managed by the organization\"",
+   "id_20": "ID.AM-02",
+   "descripcion_20": "Inventories of software, services, and systems managed by the organization are maintained",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.AM-3",
+   "descripcion_11": "Organizational communication and data flows are mapped",
+   "reubicacion": "N",
+   "modificaciones": "Clarified the original wording\nAdded \"authorized\" and \"maintained\"",
+   "id_20": "ID.AM-03",
+   "descripcion_20": "Representations of the organization’s authorized network communication and internal and external network data flows are maintained",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.AE-1",
+   "descripcion_11": "A baseline of network operations and expected data flows for users and systems is established and managed",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Clarified the original wording",
+   "id_20": "ID.AM-03",
+   "descripcion_20": "Representations of the organization’s authorized network communication and internal and external network data flows are maintained",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.AM-4",
+   "descripcion_11": "External information systems are catalogued",
+   "reubicacion": "N",
+   "modificaciones": "Clarified the original wording\nChanged from \"systems\" to \"services\"",
+   "id_20": "ID.AM-04",
+   "descripcion_20": "Inventories of services provided by suppliers are maintained",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.AM-5",
+   "descripcion_11": "Resources (e.g., hardware, devices, data, time, personnel, and software) are prioritized based on their classification, criticality, and business value",
+   "reubicacion": "N",
+   "modificaciones": "Changed \"resources\" to \"assets\" which includes all asset types as specified in ID.AM\nAdded \"resources\" and \"impact on the mission\"; removed \"business value\"",
+   "id_20": "ID.AM-05",
+   "descripcion_20": "Assets are prioritized based on classification, criticality, resources, and impact on the mission",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.AM-3",
+   "descripcion_11": "Organizational communication and data flows are mapped",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Removed data flow mapping from scope\nAdded explicit mention of data and metadata inventories",
+   "id_20": "ID.AM-07",
+   "descripcion_20": "Inventories of data and corresponding metadata for designated data types are maintained",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.DS",
+   "descripcion_11": "Information and records (data) are managed consistent with the organization’s risk strategy to protect the confidentiality, integrity, and availability of information",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized life cycle management items in ID.AM-08",
+   "id_20": "ID.AM-08",
+   "descripcion_20": "Systems, hardware, software, services, and data are managed throughout their life cycles",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.DS-3",
+   "descripcion_11": "Assets are formally managed throughout removal, transfers, and disposition",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed the scope to include the entire life cycle\nChanged \"assets\" to \"systems, hardware, software, services, and data\"\nRemoved \"formally\"",
+   "id_20": "ID.AM-08",
+   "descripcion_20": "Systems, hardware, software, services, and data are managed throughout their life cycles",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-2",
+   "descripcion_11": "A System Development Life Cycle to manage systems is implemented",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Centralized life cycle management items in ID.AM-08",
+   "id_20": "ID.AM-08",
+   "descripcion_20": "Systems, hardware, software, services, and data are managed throughout their life cycles",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-6",
+   "descripcion_11": "Data is destroyed according to policy",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized life cycle management items in ID.AM-08",
+   "id_20": "ID.AM-08",
+   "descripcion_20": "Systems, hardware, software, services, and data are managed throughout their life cycles",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.MA",
+   "descripcion_11": "Maintenance and repairs of industrial control and information system components are performed consistent with policies and procedures",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized life cycle management items in ID.AM-08",
+   "id_20": "ID.AM-08",
+   "descripcion_20": "Systems, hardware, software, services, and data are managed throughout their life cycles",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.MA-1",
+   "descripcion_11": "Maintenance and repair of organizational assets are performed and logged, with approved and controlled tools",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized life cycle management items in ID.AM-08",
+   "id_20": "ID.AM-08",
+   "descripcion_20": "Systems, hardware, software, services, and data are managed throughout their life cycles",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.MA-2",
+   "descripcion_11": "Remote maintenance of organizational assets is approved, logged, and performed in a manner that prevents unauthorized access",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized life cycle management items in ID.AM-08",
+   "id_20": "ID.AM-08",
+   "descripcion_20": "Systems, hardware, software, services, and data are managed throughout their life cycles",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.RA",
+   "descripcion_11": "The organization understands the cybersecurity risk to organizational operations (including mission, functions, image, or reputation), organizational assets, and individuals",
+   "reubicacion": "N",
+   "modificaciones": "Clarified original wording\nChanged \"cybersecurity risk to organizational operations\" to \"cybersecurity risk to the organization\"",
+   "id_20": "ID.RA",
+   "descripcion_20": "The cybersecurity risk to the organization, assets, and individuals is understood by the organization",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.RA-1",
+   "descripcion_11": "Asset vulnerabilities are identified and documented",
+   "reubicacion": "N",
+   "modificaciones": "Added \"validated\"\nChanged \"documented\" to \"recorded\"",
+   "id_20": "ID.RA-01",
+   "descripcion_20": "Vulnerabilities in assets are identified, validated, and recorded",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-12",
+   "descripcion_11": "A vulnerability management plan is developed and implemented",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all vulnerability management items in ID.RA",
+   "id_20": "ID.RA-01",
+   "descripcion_20": "Vulnerabilities in assets are identified, validated, and recorded",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.CM-8",
+   "descripcion_11": "Vulnerability scans are performed",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all vulnerability management items in ID.RA",
+   "id_20": "ID.RA-01",
+   "descripcion_20": "Vulnerabilities in assets are identified, validated, and recorded",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.RA-2",
+   "descripcion_11": "Cyber threat intelligence is received from information sharing forums and sources",
+   "reubicacion": "N",
+   "modificaciones": "None",
+   "id_20": "ID.RA-02",
+   "descripcion_20": "Cyber threat intelligence is received from information sharing forums and sources",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.RA-3",
+   "descripcion_11": "Threats, both internal and external, are identified and documented",
+   "reubicacion": "N",
+   "modificaciones": "Changed \"documented\" to \"recorded\"",
+   "id_20": "ID.RA-03",
+   "descripcion_20": "Internal and external threats to the organization are identified and recorded",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.RA-4",
+   "descripcion_11": "Potential business impacts and likelihoods are identified",
+   "reubicacion": "N",
+   "modificaciones": "Added \"recorded\"\nClarified the original wording",
+   "id_20": "ID.RA-04",
+   "descripcion_20": "Potential impacts and likelihoods of threats exploiting vulnerabilities are identified and recorded",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.RA-5",
+   "descripcion_11": "Threats, vulnerabilities, likelihoods, and impacts are used to determine risk",
+   "reubicacion": "N",
+   "modificaciones": "Changed \"determine risk\" to \"understand inherent risk\"\nAdded \"inform risk response prioritization\"",
+   "id_20": "ID.RA-05",
+   "descripcion_20": "Threats, vulnerabilities, likelihoods, and impacts are used to understand inherent risk and inform risk response prioritization",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.RA-6",
+   "descripcion_11": "Risk responses are identified and prioritized",
+   "reubicacion": "N",
+   "modificaciones": "Added \"planned, tracked, and communicated\"\nChanged \"identified\" to \"chosen\"",
+   "id_20": "ID.RA-06",
+   "descripcion_20": "Risk responses are chosen, prioritized, planned, tracked, and communicated",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.MI-3",
+   "descripcion_11": "Newly identified vulnerabilities are mitigated or documented as accepted risks",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope from two forms of risk responses (mitigating or accepting) to all forms\nChanged scope to include the full risk response life cycle",
+   "id_20": "ID.RA-06",
+   "descripcion_20": "Risk responses are chosen, prioritized, planned, tracked, and communicated",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-3",
+   "descripcion_11": "Configuration change control processes are in place",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Changed the scope to change management",
+   "id_20": "ID.RA-07",
+   "descripcion_20": "Changes and exceptions are managed, assessed for risk impact, recorded, and tracked",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.AN-5",
+   "descripcion_11": "Processes are established to receive, analyze and respond to vulnerabilities disclosed to the organization from internal and external sources (e.g. internal testing, security bulletins, or security researchers)",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Removed examples from the description\nClarified the original wording by simplifying it",
+   "id_20": "ID.RA-08",
+   "descripcion_20": "Processes for receiving, analyzing, and responding to vulnerability disclosures are established",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.DS-8",
+   "descripcion_11": "Integrity checking mechanisms are used to verify hardware integrity",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Added software integrity\nAdded authenticity checking",
+   "id_20": "ID.RA-09",
+   "descripcion_20": "The authenticity and integrity of hardware and software are assessed prior to acquisition and use",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.SC-2",
+   "descripcion_11": "Suppliers and third party partners of information systems, components, and services are identified, prioritized, and assessed using a cyber supply chain risk assessment process",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed the scope to only assessing critical suppliers before acquisition",
+   "id_20": "ID.RA-10",
+   "descripcion_20": "Critical suppliers are assessed prior to acquisition",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "ID.SC-4",
+   "descripcion_11": "Suppliers and third-party partners are routinely assessed using audits, test results, or other forms of evaluations to confirm they are meeting their contractual obligations.",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Changed the scope to only include  performing assessments before certain acquisitions",
+   "id_20": "ID.RA-10",
+   "descripcion_20": "Critical suppliers are assessed prior to acquisition",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-7",
+   "descripcion_11": "Protection processes are improved",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all improvement items in ID.IM",
+   "id_20": "ID.IM",
+   "descripcion_20": "Improvements to organizational cybersecurity risk management processes, procedures and activities are identified across all CSF Functions",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.DP-5",
+   "descripcion_11": "Detection processes are continuously improved",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all improvement items in ID.IM",
+   "id_20": "ID.IM",
+   "descripcion_20": "Improvements to organizational cybersecurity risk management processes, procedures and activities are identified across all CSF Functions",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RC.IM",
+   "descripcion_11": "Recovery planning and processes are improved by incorporating lessons learned into future activities",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all improvement items in ID.IM",
+   "id_20": "ID.IM",
+   "descripcion_20": "Improvements to organizational cybersecurity risk management processes, procedures and activities are identified across all CSF Functions",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "",
+   "descripcion_11": "",
+   "reubicacion": "N/A",
+   "modificaciones": "N/A",
+   "id_20": "ID.IM-01",
+   "descripcion_20": "Improvements are identified from evaluations",
+   "nueva_en_20": "Y"
+  },
+  {
+   "id_11": "ID.SC-5",
+   "descripcion_11": "Response and recovery planning and testing are conducted with suppliers and third-party providers",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized improvement through testing items in ID.IM-02",
+   "id_20": "ID.IM-02",
+   "descripcion_20": "Improvements are identified from security tests and exercises, including those done in coordination with suppliers and relevant third parties",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-10",
+   "descripcion_11": "Response and recovery plans are tested",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Centralized all improvement items in ID.IM",
+   "id_20": "ID.IM-02",
+   "descripcion_20": "Improvements are identified from security tests and exercises, including those done in coordination with suppliers and relevant third parties",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.DP",
+   "descripcion_11": "Detection processes and procedures are maintained and tested to ensure awareness of anomalous events",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all improvement items in ID.IM",
+   "id_20": "ID.IM-02",
+   "descripcion_20": "Improvements are identified from security tests and exercises, including those done in coordination with suppliers and relevant third parties",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.DP-3",
+   "descripcion_11": "Detection processes are tested",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all improvement items in ID.IM",
+   "id_20": "ID.IM-02",
+   "descripcion_20": "Improvements are identified from security tests and exercises, including those done in coordination with suppliers and relevant third parties",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP",
+   "descripcion_11": "Security policies (that address purpose, scope, roles, responsibilities, management commitment, and coordination among organizational entities), processes, and procedures are maintained and used to manage protection of information systems and assets",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed the scope to only include process and procedure maintenance",
+   "id_20": "ID.IM-03",
+   "descripcion_20": "Improvements are identified from execution of operational processes, procedures, and activities",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-7",
+   "descripcion_11": "Protection processes are improved",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all improvement items in ID.IM",
+   "id_20": "ID.IM-03",
+   "descripcion_20": "Improvements are identified from execution of operational processes, procedures, and activities",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-8",
+   "descripcion_11": "Effectiveness of protection technologies is shared",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all improvement items in ID.IM",
+   "id_20": "ID.IM-03",
+   "descripcion_20": "Improvements are identified from execution of operational processes, procedures, and activities",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.DP-5",
+   "descripcion_11": "Detection processes are continuously improved",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all improvement items in ID.IM",
+   "id_20": "ID.IM-03",
+   "descripcion_20": "Improvements are identified from execution of operational processes, procedures, and activities",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.IM",
+   "descripcion_11": "Organizational response activities are improved by incorporating lessons learned from current and previous detection/response activities",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all improvement items in ID.IM",
+   "id_20": "ID.IM-03",
+   "descripcion_20": "Improvements are identified from execution of operational processes, procedures, and activities",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.IM-1",
+   "descripcion_11": "Response plans incorporate lessons learned",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all improvement items in ID.IM",
+   "id_20": "ID.IM-03",
+   "descripcion_20": "Improvements are identified from execution of operational processes, procedures, and activities",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.IM-2",
+   "descripcion_11": "Response strategies are updated",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all improvement items in ID.IM",
+   "id_20": "ID.IM-03",
+   "descripcion_20": "Improvements are identified from execution of operational processes, procedures, and activities",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RC.IM-1",
+   "descripcion_11": "Recovery plans incorporate lessons learned",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all improvement items in ID.IM",
+   "id_20": "ID.IM-03",
+   "descripcion_20": "Improvements are identified from execution of operational processes, procedures, and activities",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RC.IM-2",
+   "descripcion_11": "Recovery strategies are updated",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all improvement items in ID.IM",
+   "id_20": "ID.IM-03",
+   "descripcion_20": "Improvements are identified from execution of operational processes, procedures, and activities",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-9",
+   "descripcion_11": "Response plans (Incident Response and Business Continuity) and recovery plans (Incident Recovery and Disaster Recovery) are in place and managed",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Changed list of plans to be broader\nChanged \"plans…are in place and managed\" to \"plans…are established, communicated, maintained, and improved\"",
+   "id_20": "ID.IM-04",
+   "descripcion_20": "Incident response plans and other cybersecurity plans that affect operations are established, communicated, maintained, and improved",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-10",
+   "descripcion_11": "Response and recovery plans are tested",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all improvement items in ID.IM",
+   "id_20": "ID.IM-04",
+   "descripcion_20": "Incident response plans and other cybersecurity plans that affect operations are established, communicated, maintained, and improved",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.IM-1",
+   "descripcion_11": "Response plans incorporate lessons learned",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all improvement items in ID.IM",
+   "id_20": "ID.IM-04",
+   "descripcion_20": "Incident response plans and other cybersecurity plans that affect operations are established, communicated, maintained, and improved",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RC.IM-1",
+   "descripcion_11": "Recovery plans incorporate lessons learned",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all improvement items in ID.IM",
+   "id_20": "ID.IM-04",
+   "descripcion_20": "Incident response plans and other cybersecurity plans that affect operations are established, communicated, maintained, and improved",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR",
+   "descripcion_11": "Develop and implement appropriate safeguards to ensure delivery of critical services",
+   "reubicacion": "N",
+   "modificaciones": "Clarified original wording\nChanged scope from \"ensure delivery of critical services\" to all service delivery\nChanged \"develop and implement\" to \"used\"",
+   "id_20": "PR",
+   "descripcion_20": "Safeguards to manage the organization’s cybersecurity risks are used",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.AC",
+   "descripcion_11": "Access to physical and logical assets and associated facilities is limited to authorized users, processes, and devices, and is managed consistent with the assessed risk of unauthorized access to authorized activities and transactions.",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Removed \"associated facilities\" (redundant: type of physical asset)\nChanged \"users, processes, and devices\" to \"users, services, and hardware\"",
+   "id_20": "PR.AA",
+   "descripcion_20": "Access to physical and logical assets is limited to authorized users, services, and hardware and managed commensurate with the assessed risk of unauthorized access",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.AC-1",
+   "descripcion_11": "Identities and credentials are issued, managed, verified, revoked, and audited for authorized devices, users and processes",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Changed \"issued, managed, verified, revoked, and audited\" to \"managed\" (managed includes the others)\nChanged \"devices, users and processes\" to \"users, services, and hardware\"",
+   "id_20": "PR.AA-01",
+   "descripcion_20": "Identities and credentials for authorized users, services, and hardware are managed by the organization",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.AC-6",
+   "descripcion_11": "Identities are proofed and bound to credentials and asserted in interactions",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Removed \"and asserted in\"\nAdded \"based on the context of\"",
+   "id_20": "PR.AA-02",
+   "descripcion_20": "Identities are proofed and bound to credentials based on the context of interactions",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.AC-3",
+   "descripcion_11": "Remote access is managed",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Clarified original wording\nChanged the scope to only include the authentication component of remote access management",
+   "id_20": "PR.AA-03",
+   "descripcion_20": "Users, services, and hardware are authenticated",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.AC-7",
+   "descripcion_11": "Users, devices, and other assets are authenticated (e.g., single-factor, multi-factor) commensurate with the risk of the transaction (e.g., individuals’ security and privacy risks and other organizational risks)",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Removed examples from description\nChanged \"Users, devices, and other assets\" to \"Users, services, and hardware\"\nRemoved \"commensurate with the risk of the transaction\" (unnecessarily specific)",
+   "id_20": "PR.AA-03",
+   "descripcion_20": "Users, services, and hardware are authenticated",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "",
+   "descripcion_11": "",
+   "reubicacion": "N/A",
+   "modificaciones": "N/A",
+   "id_20": "PR.AA-04",
+   "descripcion_20": "Identity assertions are protected, conveyed, and verified",
+   "nueva_en_20": "Y"
+  },
+  {
+   "id_11": "PR.AC-1",
+   "descripcion_11": "Identities and credentials are issued, managed, verified, revoked, and audited for authorized devices, users and processes",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed the scope to only include authorization and access control considerations for identities and credentials\nAdded \"incorporate the principles of least privilege and separation of duties\"",
+   "id_20": "PR.AA-05",
+   "descripcion_20": "Access permissions, entitlements, and authorizations are defined in a policy, managed, enforced, and reviewed, and incorporate the principles of least privilege and separation of duties",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.AC-3",
+   "descripcion_11": "Remote access is managed",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed the scope to only include the authorization component of remote access management",
+   "id_20": "PR.AA-05",
+   "descripcion_20": "Access permissions, entitlements, and authorizations are defined in a policy, managed, enforced, and reviewed, and incorporate the principles of least privilege and separation of duties",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.AC-4",
+   "descripcion_11": "Access permissions and authorizations are managed, incorporating the principles of least privilege and separation of duties",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Added \"entitlements\"\nAdded \"defined in a policy\" and \"enforced, and reviewed\"",
+   "id_20": "PR.AA-05",
+   "descripcion_20": "Access permissions, entitlements, and authorizations are defined in a policy, managed, enforced, and reviewed, and incorporate the principles of least privilege and separation of duties",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.AC-2",
+   "descripcion_11": "Physical access to assets is managed and protected",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Changed \"protected\" to \"monitored, and enforced commensurate with risk\"",
+   "id_20": "PR.AA-06",
+   "descripcion_20": "Physical access to assets is managed, monitored, and enforced commensurate with risk",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.PT-4",
+   "descripcion_11": "Communications and control networks are protected",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to physical access control (excluding logical access control)",
+   "id_20": "PR.AA-06",
+   "descripcion_20": "Physical access to assets is managed, monitored, and enforced commensurate with risk",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.AT",
+   "descripcion_11": "The organization’s personnel and partners are provided cybersecurity awareness education and are trained to perform their cybersecurity-related duties and responsibilities consistent with related policies, procedures, and agreements",
+   "reubicacion": "N",
+   "modificaciones": "Removed third parties from the scope\nClarified the original wording by simplifying it",
+   "id_20": "PR.AT",
+   "descripcion_20": "The organization’s personnel are provided with cybersecurity awareness and training so that they can perform their cybersecurity-related tasks",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.AT-1",
+   "descripcion_11": "All users are informed and trained",
+   "reubicacion": "N",
+   "modificaciones": "Changed scope from \"users\" to \"personnel\"\nAdded the desired outcome",
+   "id_20": "PR.AT-01",
+   "descripcion_20": "Personnel are provided with awareness and training so that they possess the knowledge and skills to perform general tasks with cybersecurity risks in mind",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.AT-3",
+   "descripcion_11": "Third-party stakeholders (e.g., suppliers, customers, partners) understand their roles and responsibilities",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all training and awareness items in PR.AT-01 and PR.AT-02",
+   "id_20": "PR.AT-01",
+   "descripcion_20": "Personnel are provided with awareness and training so that they possess the knowledge and skills to perform general tasks with cybersecurity risks in mind",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.CO-1",
+   "descripcion_11": "Personnel know their roles and order of operations when a response is needed",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all training and awareness items in PR.AT",
+   "id_20": "PR.AT-01",
+   "descripcion_20": "Personnel are provided with awareness and training so that they possess the knowledge and skills to perform general tasks with cybersecurity risks in mind",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.AT-2",
+   "descripcion_11": "Privileged users understand their roles and responsibilities",
+   "reubicacion": "N",
+   "modificaciones": "Changed scope from \"privileged users\" the broader \"individuals in specialized roles\"\nAdded the desired outcome",
+   "id_20": "PR.AT-02",
+   "descripcion_20": "Individuals in specialized roles are provided with awareness and training so that they possess the knowledge and skills to perform relevant tasks with cybersecurity risks in mind",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.AT-3",
+   "descripcion_11": "Third-party stakeholders (e.g., suppliers, customers, partners) understand their roles and responsibilities",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all training and awareness items in PR.AT-01 and PR.AT-02",
+   "id_20": "PR.AT-02",
+   "descripcion_20": "Individuals in specialized roles are provided with awareness and training so that they possess the knowledge and skills to perform relevant tasks with cybersecurity risks in mind",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.AT-4",
+   "descripcion_11": "Senior executives understand their roles and responsibilities",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all training and awareness items in PR.AT-01 and PR.AT-02",
+   "id_20": "PR.AT-02",
+   "descripcion_20": "Individuals in specialized roles are provided with awareness and training so that they possess the knowledge and skills to perform relevant tasks with cybersecurity risks in mind",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.AT-5",
+   "descripcion_11": "Physical and cybersecurity personnel understand their roles and responsibilities",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all training and awareness items in PR.AT-01 and PR.AT-02",
+   "id_20": "PR.AT-02",
+   "descripcion_20": "Individuals in specialized roles are provided with awareness and training so that they possess the knowledge and skills to perform relevant tasks with cybersecurity risks in mind",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.DS",
+   "descripcion_11": "Information and records (data) are managed consistent with the organization’s risk strategy to protect the confidentiality, integrity, and availability of information",
+   "reubicacion": "N",
+   "modificaciones": "Clarified the original wording by simplifying it",
+   "id_20": "PR.DS",
+   "descripcion_20": "Data are managed consistent with the organization’s risk strategy to protect the confidentiality, integrity, and availability of information",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.DS-1",
+   "descripcion_11": "Data-at-rest is protected",
+   "reubicacion": "N",
+   "modificaciones": "Added \"confidentiality, integrity, and availability\"",
+   "id_20": "PR.DS-01",
+   "descripcion_20": "The confidentiality, integrity, and availability of data-at-rest are protected",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.DS-5",
+   "descripcion_11": "Protections against data leaks are implemented",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all data-at-rest protection items in PR.DS-01",
+   "id_20": "PR.DS-01",
+   "descripcion_20": "The confidentiality, integrity, and availability of data-at-rest are protected",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.DS-6",
+   "descripcion_11": "Integrity checking mechanisms are used to verify software, firmware, and information integrity",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all data-at-rest protection items in PR.DS-01\nRemoved \"integrity checking mechanisms\" (redundant)",
+   "id_20": "PR.DS-01",
+   "descripcion_20": "The confidentiality, integrity, and availability of data-at-rest are protected",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.PT-2",
+   "descripcion_11": "Removable media is protected and its use restricted according to policy",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all data-at-rest protection items in PR.DS-01",
+   "id_20": "PR.DS-01",
+   "descripcion_20": "The confidentiality, integrity, and availability of data-at-rest are protected",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.DS-2",
+   "descripcion_11": "Data-in-transit is protected",
+   "reubicacion": "N",
+   "modificaciones": "Added \"confidentiality, integrity, and availability\"",
+   "id_20": "PR.DS-02",
+   "descripcion_20": "The confidentiality, integrity, and availability of data-in-transit are protected",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.DS-5",
+   "descripcion_11": "Protections against data leaks are implemented",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all data-in-transit protection items in PR.DS-02",
+   "id_20": "PR.DS-02",
+   "descripcion_20": "The confidentiality, integrity, and availability of data-in-transit are protected",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.DS-5",
+   "descripcion_11": "Protections against data leaks are implemented",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all data-in-use protection items in PR.DS-10",
+   "id_20": "PR.DS-10",
+   "descripcion_20": "The confidentiality, integrity, and availability of data-in-use are protected",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-4",
+   "descripcion_11": "Backups of information are conducted, maintained, and tested",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Added \"protected\"",
+   "id_20": "PR.DS-11",
+   "descripcion_20": "Backups of data are created, protected, maintained, and tested",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP",
+   "descripcion_11": "Security policies (that address purpose, scope, roles, responsibilities, management commitment, and coordination among organizational entities), processes, and procedures are maintained and used to manage protection of information systems and assets",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed the scope to only include using policies, processes, and procedures to protect physical and virtual platforms",
+   "id_20": "PR.PS",
+   "descripcion_20": "The hardware, software (e.g., firmware, operating systems, applications), and services of physical and virtual platforms are managed consistent with the organization’s risk strategy to protect their confidentiality, integrity, and availability",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.MA",
+   "descripcion_11": "Maintenance and repairs of industrial control and information system components are performed consistent with policies and procedures",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized maintenance items in PR.PS\nRemoved \"industrial control and information system components\" to broaden to all computing technologies",
+   "id_20": "PR.PS",
+   "descripcion_20": "The hardware, software (e.g., firmware, operating systems, applications), and services of physical and virtual platforms are managed consistent with the organization’s risk strategy to protect their confidentiality, integrity, and availability",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-1",
+   "descripcion_11": "A baseline configuration of information technology/industrial control systems is created and maintained incorporating security principles (e.g. concept of least functionality)",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed the wording to generalize and broaden its scope",
+   "id_20": "PR.PS-01",
+   "descripcion_20": "Configuration management practices are established and applied",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-3",
+   "descripcion_11": "Configuration change control processes are in place",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Changed the scope to configuration management",
+   "id_20": "PR.PS-01",
+   "descripcion_20": "Configuration management practices are established and applied",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.PT-2",
+   "descripcion_11": "Removable media is protected and its use restricted according to policy",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all configuration items in PR.PS-01",
+   "id_20": "PR.PS-01",
+   "descripcion_20": "Configuration management practices are established and applied",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.PT-3",
+   "descripcion_11": "The principle of least functionality is incorporated by configuring systems to provide only essential capabilities",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized all configuration items in PR.PS-01",
+   "id_20": "PR.PS-01",
+   "descripcion_20": "Configuration management practices are established and applied",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-12",
+   "descripcion_11": "A vulnerability management plan is developed and implemented",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized software maintenance items in PR.PS-02",
+   "id_20": "PR.PS-02",
+   "descripcion_20": "Software is maintained, replaced, and removed commensurate with risk",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.MA-2",
+   "descripcion_11": "Remote maintenance of organizational assets is approved, logged, and performed in a manner that prevents unauthorized access",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized software maintenance items in PR.PS-02",
+   "id_20": "PR.PS-02",
+   "descripcion_20": "Software is maintained, replaced, and removed commensurate with risk",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.DS-3",
+   "descripcion_11": "Assets are formally managed throughout removal, transfers, and disposition",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope from assets to hardware",
+   "id_20": "PR.PS-03",
+   "descripcion_20": "Hardware is maintained, replaced, and removed commensurate with risk",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.MA-1",
+   "descripcion_11": "Maintenance and repair of organizational assets are performed and logged, with approved and controlled tools",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Centralized hardware maintenance items in PR.PS-01",
+   "id_20": "PR.PS-03",
+   "descripcion_20": "Hardware is maintained, replaced, and removed commensurate with risk",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.PT-1",
+   "descripcion_11": "Audit/log records are determined, documented, implemented, and reviewed in accordance with policy",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Changed \"determined, documented, implemented\" to \"generated\"\nRemoved log review from scope",
+   "id_20": "PR.PS-04",
+   "descripcion_20": "Log records are generated and made available for continuous monitoring",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.CM-7",
+   "descripcion_11": "Monitoring for unauthorized personnel, connections, devices, and software is performed",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to stopping unauthorized software",
+   "id_20": "PR.PS-05",
+   "descripcion_20": "Installation and execution of unauthorized software are prevented",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-2",
+   "descripcion_11": "A System Development Life Cycle to manage systems is implemented",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed the scope to only include secure software development",
+   "id_20": "PR.PS-06",
+   "descripcion_20": "Secure software development practices are integrated, and their performance is monitored throughout the software development life cycle",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP",
+   "descripcion_11": "Security policies (that address purpose, scope, roles, responsibilities, management commitment, and coordination among organizational entities), processes, and procedures are maintained and used to manage protection of information systems and assets",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed the scope to only include using policies, processes, and procedures to manage security architectures that protect assets",
+   "id_20": "PR.IR",
+   "descripcion_20": "Security architectures are managed with the organization’s risk strategy to protect asset confidentiality, integrity, and availability, and organizational resilience",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.PT",
+   "descripcion_11": "Technical security solutions are managed to ensure the security and resilience of systems and assets, consistent with related policies, procedures, and agreements",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed \"technical security solutions\" to \"security architectures\"\nClarified the original wording by simplifying it",
+   "id_20": "PR.IR",
+   "descripcion_20": "Security architectures are managed with the organization’s risk strategy to protect asset confidentiality, integrity, and availability, and organizational resilience",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.AC-3",
+   "descripcion_11": "Remote access is managed",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed the scope to only include the network access component of remote access management",
+   "id_20": "PR.IR-01",
+   "descripcion_20": "Networks and environments are protected from unauthorized logical access and usage",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.AC-5",
+   "descripcion_11": "Network integrity is protected (e.g., network segregation, network segmentation)",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Added protection of computing environments\nAdded \"protected from unauthorized logical access and usage\" (not physical)",
+   "id_20": "PR.IR-01",
+   "descripcion_20": "Networks and environments are protected from unauthorized logical access and usage",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.DS-7",
+   "descripcion_11": "The development and testing environment(s) are separate from the production environment",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to include protection of all environments",
+   "id_20": "PR.IR-01",
+   "descripcion_20": "Networks and environments are protected from unauthorized logical access and usage",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.PT-4",
+   "descripcion_11": "Communications and control networks are protected",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Changed scope to be specific to logical access control (excluding physical access control)",
+   "id_20": "PR.IR-01",
+   "descripcion_20": "Networks and environments are protected from unauthorized logical access and usage",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-5",
+   "descripcion_11": "Policy and regulations regarding the physical operating environment for organizational assets are met",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed the wording to generalize and broaden its scope",
+   "id_20": "PR.IR-02",
+   "descripcion_20": "The organization’s technology assets are protected from environmental threats",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.PT-5",
+   "descripcion_11": "Mechanisms (e.g., failsafe, load balancing, hot swap) are implemented to achieve resilience requirements in normal and adverse situations",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Removed examples from description",
+   "id_20": "PR.IR-03",
+   "descripcion_20": "Mechanisms are implemented to achieve resilience requirements in normal and adverse situations",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.DS-4",
+   "descripcion_11": "Adequate capacity to ensure availability is maintained",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Added \"resource\"",
+   "id_20": "PR.IR-04",
+   "descripcion_20": "Adequate resource capacity to ensure availability is maintained",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE",
+   "descripcion_11": "Develop and implement appropriate activities to identify the occurrence of a cybersecurity event",
+   "reubicacion": "N",
+   "modificaciones": "Clarified the original wording\nAdded \"analyzed\"",
+   "id_20": "DE",
+   "descripcion_20": "Possible cybersecurity attacks and compromises are found and analyzed",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.CM",
+   "descripcion_11": "The information system and assets are monitored to identify cybersecurity events and verify the effectiveness of protective measures",
+   "reubicacion": "N",
+   "modificaciones": "Removed \"information system\" (redundant)\nChanged what monitoring is looking for",
+   "id_20": "DE.CM",
+   "descripcion_20": "Assets are monitored to find anomalies, indicators of compromise, and other potentially adverse events",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.CM-1",
+   "descripcion_11": "The network is monitored to detect potential cybersecurity events",
+   "reubicacion": "N",
+   "modificaciones": "Added \"network services\"\nChanged \"cybersecurity events\" to \"adverse events\"",
+   "id_20": "DE.CM-01",
+   "descripcion_20": "Networks and network services are monitored to find potentially adverse events",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.CM-4",
+   "descripcion_11": "Malicious code is detected",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed from what events are detected to where events are detected (on networks)",
+   "id_20": "DE.CM-01",
+   "descripcion_20": "Networks and network services are monitored to find potentially adverse events",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.CM-5",
+   "descripcion_11": "Unauthorized mobile code is detected",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed from what events are detected to where events are detected (on networks)",
+   "id_20": "DE.CM-01",
+   "descripcion_20": "Networks and network services are monitored to find potentially adverse events",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.CM-7",
+   "descripcion_11": "Monitoring for unauthorized personnel, connections, devices, and software is performed",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to monitoring networks and network services",
+   "id_20": "DE.CM-01",
+   "descripcion_20": "Networks and network services are monitored to find potentially adverse events",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.CM-2",
+   "descripcion_11": "The physical environment is monitored to detect potential cybersecurity events",
+   "reubicacion": "N",
+   "modificaciones": "Changed \"cybersecurity events\" to \"adverse events\"",
+   "id_20": "DE.CM-02",
+   "descripcion_20": "The physical environment is monitored to find potentially adverse events",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.CM-3",
+   "descripcion_11": "Personnel activity is monitored to detect potential cybersecurity events",
+   "reubicacion": "N",
+   "modificaciones": "Added \"technology usage\"\nChanged \"cybersecurity events\" to \"adverse events\"",
+   "id_20": "DE.CM-03",
+   "descripcion_20": "Personnel activity and technology usage are monitored to find potentially adverse events",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.CM-7",
+   "descripcion_11": "Monitoring for unauthorized personnel, connections, devices, and software is performed",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to monitoring personnel",
+   "id_20": "DE.CM-03",
+   "descripcion_20": "Personnel activity and technology usage are monitored to find potentially adverse events",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.CM-6",
+   "descripcion_11": "External service provider activity is monitored to detect potential cybersecurity events",
+   "reubicacion": "N",
+   "modificaciones": "Added \"services\"\nChanged \"cybersecurity events\" to \"adverse events\"",
+   "id_20": "DE.CM-06",
+   "descripcion_20": "External service provider activities and services are monitored to find potentially adverse events",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.CM-7",
+   "descripcion_11": "Monitoring for unauthorized personnel, connections, devices, and software is performed",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to monitoring external services and their providers",
+   "id_20": "DE.CM-06",
+   "descripcion_20": "External service provider activities and services are monitored to find potentially adverse events",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.DS-6",
+   "descripcion_11": "Integrity checking mechanisms are used to verify software, firmware, and information integrity",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Removed \"firmware\" (already part of software)\nRemoved \"integrity checking mechanisms\" (redundant)\nCentralized software continuous monitoring in DE.CM-09",
+   "id_20": "DE.CM-09",
+   "descripcion_20": "Computing hardware and software, runtime environments, and their data are monitored to find potentially adverse events",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.DS-8",
+   "descripcion_11": "Integrity checking mechanisms are used to verify hardware integrity",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to include all hardware monitoring",
+   "id_20": "DE.CM-09",
+   "descripcion_20": "Computing hardware and software, runtime environments, and their data are monitored to find potentially adverse events",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.CM-4",
+   "descripcion_11": "Malicious code is detected",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed from what events are detected to where events are detected (on devices)",
+   "id_20": "DE.CM-09",
+   "descripcion_20": "Computing hardware and software, runtime environments, and their data are monitored to find potentially adverse events",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.CM-5",
+   "descripcion_11": "Unauthorized mobile code is detected",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed from what events are detected to where events are detected (on devices)",
+   "id_20": "DE.CM-09",
+   "descripcion_20": "Computing hardware and software, runtime environments, and their data are monitored to find potentially adverse events",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.CM-7",
+   "descripcion_11": "Monitoring for unauthorized personnel, connections, devices, and software is performed",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to monitoring hardware, software, and data\nChanged scope to include all types of potentially adverse events, not just unauthorized entities",
+   "id_20": "DE.CM-09",
+   "descripcion_20": "Computing hardware and software, runtime environments, and their data are monitored to find potentially adverse events",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.AE",
+   "descripcion_11": "Anomalous activity is detected and the potential impact of events is understood.",
+   "reubicacion": "N",
+   "modificaciones": "Added analysis to scope\nClarified what anomalous activity is",
+   "id_20": "DE.AE",
+   "descripcion_20": "Anomalies, indicators of compromise, and other potentially adverse events are analyzed to characterize the events and detect cybersecurity incidents",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.DP-2",
+   "descripcion_11": "Detection activities comply with all applicable requirements",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Removed \"comply with all applicable requirements\" (unnecessary)\nChanged scope from all detection activities to analysis of certain types of detected events",
+   "id_20": "DE.AE",
+   "descripcion_20": "Anomalies, indicators of compromise, and other potentially adverse events are analyzed to characterize the events and detect cybersecurity incidents",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.AE-2",
+   "descripcion_11": "Detected events are analyzed to understand attack targets and methods",
+   "reubicacion": "N",
+   "modificaciones": "Changed \"detected events\" to \"potentially adverse events\" to narrow scope\nChanged \"attack targets and methods\" to \"associated activities\" to broaden scope",
+   "id_20": "DE.AE-02",
+   "descripcion_20": "Potentially adverse events are analyzed to better understand associated activities",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.AE-3",
+   "descripcion_11": "Event data are collected and correlated from multiple sources and sensors",
+   "reubicacion": "N",
+   "modificaciones": "Changed \"event data\" to \"information\" (broadening)\nRemoved \"collected\" and \"sensors\" (redundant)",
+   "id_20": "DE.AE-03",
+   "descripcion_20": "Information is correlated from multiple sources",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.AE-4",
+   "descripcion_11": "Impact of events is determined",
+   "reubicacion": "N",
+   "modificaciones": "Clarified the original wording",
+   "id_20": "DE.AE-04",
+   "descripcion_20": "The estimated impact and scope of adverse events are understood",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.DP-4",
+   "descripcion_11": "Event detection information is communicated",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Clarified the original wording",
+   "id_20": "DE.AE-06",
+   "descripcion_20": "Information on adverse events is provided to authorized staff and tools",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.AE-3",
+   "descripcion_11": "Event data are collected and correlated from multiple sources and sensors",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to correlation through contextual information, including cyber threat intelligence",
+   "id_20": "DE.AE-07",
+   "descripcion_20": "Cyber threat intelligence and other contextual information are integrated into the analysis",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "DE.AE-5",
+   "descripcion_11": "Incident alert thresholds are established",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Changed \"incident alert thresholds\" to \"defined incident criteria\" and added the use of the criteria",
+   "id_20": "DE.AE-08",
+   "descripcion_20": "Incidents are declared when adverse events meet the defined incident criteria",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS",
+   "descripcion_11": "Develop and implement appropriate activities to take action regarding a detected cybersecurity incident",
+   "reubicacion": "N",
+   "modificaciones": "Clarified the original wording",
+   "id_20": "RS",
+   "descripcion_20": "Actions regarding a detected cybersecurity incident are taken",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.RP",
+   "descripcion_11": "Response processes and procedures are executed and maintained, to ensure response to detected cybersecurity incidents.",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed the wording to generalize and broaden its scope",
+   "id_20": "RS.MA",
+   "descripcion_20": "Responses to detected cybersecurity incidents are managed",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.RP-1",
+   "descripcion_11": "Response plan is executed during or after an incident",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Added \"once an incident is declared\"\nAdded \"in coordination with relevant third parties\" (coordination within the organization is already implied)",
+   "id_20": "RS.MA-01",
+   "descripcion_20": "The incident response plan is executed in coordination with relevant third parties once an incident is declared",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.CO-4",
+   "descripcion_11": "Coordination with stakeholders occurs consistent with response plans",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed the wording to generalize and broaden its scope (to include response plan execution)\nAdded \"in coordination with relevant third parties\" (coordination within the organization is already implied)",
+   "id_20": "RS.MA-01",
+   "descripcion_20": "The incident response plan is executed in coordination with relevant third parties once an incident is declared",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.AN-1",
+   "descripcion_11": "Notifications from detection systems are investigated",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed \"notifications from detection systems\" to \"incident reports\" to indicate that an incident has already been declared or reported",
+   "id_20": "RS.MA-02",
+   "descripcion_20": "Incident reports are triaged and validated",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.AN-2",
+   "descripcion_11": "The impact of the incident is understood",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to incident triage",
+   "id_20": "RS.MA-02",
+   "descripcion_20": "Incident reports are triaged and validated",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.AN-2",
+   "descripcion_11": "The impact of the incident is understood",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to incident categorization and prioritization",
+   "id_20": "RS.MA-03",
+   "descripcion_20": "Incidents are categorized and prioritized",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.AN-4",
+   "descripcion_11": "Incidents are categorized consistent with response plans",
+   "reubicacion": "Y (moved to)",
+   "modificaciones": "Added \"prioritized\"\nRemoved \"consistent with response plans\" (redundant)",
+   "id_20": "RS.MA-03",
+   "descripcion_20": "Incidents are categorized and prioritized",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.CO-4",
+   "descripcion_11": "Coordination with stakeholders occurs consistent with response plans",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to coordination involving incident escalation and elevation",
+   "id_20": "RS.MA-04",
+   "descripcion_20": "Incidents are escalated or elevated as needed",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.AN-2",
+   "descripcion_11": "The impact of the incident is understood",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to incident escalation and elevation",
+   "id_20": "RS.MA-04",
+   "descripcion_20": "Incidents are escalated or elevated as needed",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RC.RP-1",
+   "descripcion_11": "Recovery plan is executed during or after a cybersecurity incident",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to only include determining if recovery should be initiated",
+   "id_20": "RS.MA-05",
+   "descripcion_20": "The criteria for initiating incident recovery are applied",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.AN",
+   "descripcion_11": "Analysis is conducted to ensure effective response and support recovery activities",
+   "reubicacion": "N",
+   "modificaciones": "Added support for forensic activities\nChanged \"analysis\" to \"investigations\"",
+   "id_20": "RS.AN",
+   "descripcion_20": "Investigations are conducted to ensure effective response and support forensics and recovery activities",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.AN-3",
+   "descripcion_11": "Forensics are performed",
+   "reubicacion": "N",
+   "modificaciones": "Changed scope from forensics to analysis (which can also include forensics)",
+   "id_20": "RS.AN-03",
+   "descripcion_20": "Analysis is performed to establish what has taken place during an incident and the root cause of the incident",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.AN-3",
+   "descripcion_11": "Forensics are performed",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope from forensics to recording investigation activities (which can also include forensics)",
+   "id_20": "RS.AN-06",
+   "descripcion_20": "Actions performed during an investigation are recorded, and the records’ integrity and provenance are preserved",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "",
+   "descripcion_11": "",
+   "reubicacion": "N/A",
+   "modificaciones": "N/A",
+   "id_20": "RS.AN-07",
+   "descripcion_20": "Incident data and metadata are collected, and their integrity and provenance are preserved",
+   "nueva_en_20": "Y"
+  },
+  {
+   "id_11": "RS.AN-2",
+   "descripcion_11": "The impact of the incident is understood",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to incident magnitude",
+   "id_20": "RS.AN-08",
+   "descripcion_20": "An incident’s magnitude is estimated and validated",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.CO",
+   "descripcion_11": "Response activities are coordinated with internal and external stakeholders (e.g. external support from law enforcement agencies)",
+   "reubicacion": "N",
+   "modificaciones": "Removed examples from description\nAdded \"as required by laws, regulations, or policies\"",
+   "id_20": "RS.CO",
+   "descripcion_20": "Response activities are coordinated with internal and external stakeholders as required by laws, regulations, or policies",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.CO-2",
+   "descripcion_11": "Incidents are reported consistent with established criteria",
+   "reubicacion": "N",
+   "modificaciones": "Changed scope to be specific to stakeholder notification",
+   "id_20": "RS.CO-02",
+   "descripcion_20": "Internal and external stakeholders are notified of incidents",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.CO-3",
+   "descripcion_11": "Information is shared consistent with response plans",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to stakeholder notification",
+   "id_20": "RS.CO-02",
+   "descripcion_20": "Internal and external stakeholders are notified of incidents",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.CO-3",
+   "descripcion_11": "Information is shared consistent with response plans",
+   "reubicacion": "N",
+   "modificaciones": "Changed scope to be specific to information sharing with stakeholders",
+   "id_20": "RS.CO-03",
+   "descripcion_20": "Information is shared with designated internal and external stakeholders",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.CO-5",
+   "descripcion_11": "Voluntary information sharing occurs with external stakeholders to achieve broader cybersecurity situational awareness",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be information sharing with all stakeholders",
+   "id_20": "RS.CO-03",
+   "descripcion_20": "Information is shared with designated internal and external stakeholders",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.MI",
+   "descripcion_11": "Activities are performed to prevent expansion of an event, mitigate its effects, and resolve the incident",
+   "reubicacion": "N",
+   "modificaciones": "Removed \"resolve the incident\"",
+   "id_20": "RS.MI",
+   "descripcion_20": "Activities are performed to prevent expansion of an event and mitigate its effects",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.MI-1",
+   "descripcion_11": "Incidents are contained",
+   "reubicacion": "N",
+   "modificaciones": "None",
+   "id_20": "RS.MI-01",
+   "descripcion_20": "Incidents are contained",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.MI-2",
+   "descripcion_11": "Incidents are mitigated",
+   "reubicacion": "N",
+   "modificaciones": "Changed \"mitigated\" to \"eradicated\"",
+   "id_20": "RS.MI-02",
+   "descripcion_20": "Incidents are eradicated",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RC",
+   "descripcion_11": "Develop and implement appropriate activities to maintain plans for resilience and to restore any capabilities or services that were impaired due to a cybersecurity incident",
+   "reubicacion": "N",
+   "modificaciones": "Changed the wording to generalize and broaden its scope",
+   "id_20": "RC",
+   "descripcion_20": "Assets and operations affected by a cybersecurity incident are restored",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RC.RP",
+   "descripcion_11": "Recovery processes and procedures are executed and maintained to ensure restoration of systems or assets affected by cybersecurity incidents",
+   "reubicacion": "N",
+   "modificaciones": "Clarified the original wording",
+   "id_20": "RC.RP",
+   "descripcion_20": "Restoration activities are performed to ensure operational availability of systems and services affected by cybersecurity incidents",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RC.RP-1",
+   "descripcion_11": "Recovery plan is executed during or after a cybersecurity incident",
+   "reubicacion": "N",
+   "modificaciones": "Changed \"recovery plan\" to \"recovery portion of the incident response plan\"\nAdded \"once initiated from the incident response process\"",
+   "id_20": "RC.RP-01",
+   "descripcion_20": "The recovery portion of the incident response plan is executed once initiated from the incident response process",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RC.RP-1",
+   "descripcion_11": "Recovery plan is executed during or after a cybersecurity incident",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to management of actions performed during recovery",
+   "id_20": "RC.RP-02",
+   "descripcion_20": "Recovery actions are selected, scoped, prioritized, and performed",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "PR.IP-4",
+   "descripcion_11": "Backups of information are conducted, maintained, and tested",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed the scope to be specific to testing/verifying backups before use",
+   "id_20": "RC.RP-03",
+   "descripcion_20": "The integrity of backups and other restoration assets is verified before using them for restoration",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "",
+   "descripcion_11": "",
+   "reubicacion": "N/A",
+   "modificaciones": "N/A",
+   "id_20": "RC.RP-04",
+   "descripcion_20": "Critical mission functions and cybersecurity risk management are considered to establish post-incident operational norms",
+   "nueva_en_20": "Y"
+  },
+  {
+   "id_11": "",
+   "descripcion_11": "",
+   "reubicacion": "N/A",
+   "modificaciones": "N/A",
+   "id_20": "RC.RP-05",
+   "descripcion_20": "The integrity of restored assets is verified, systems and services are restored, and normal operating status is confirmed",
+   "nueva_en_20": "Y"
+  },
+  {
+   "id_11": "",
+   "descripcion_11": "",
+   "reubicacion": "N/A",
+   "modificaciones": "N/A",
+   "id_20": "RC.RP-06",
+   "descripcion_20": "The end of incident recovery is declared based on criteria, and incident-related documentation is completed",
+   "nueva_en_20": "Y"
+  },
+  {
+   "id_11": "RC.CO",
+   "descripcion_11": "Restoration activities are coordinated with internal and external parties (e.g.  coordinating centers, Internet Service Providers, owners of attacking systems, victims, other CSIRTs, and vendors",
+   "reubicacion": "N",
+   "modificaciones": "Removed examples from description",
+   "id_20": "RC.CO",
+   "descripcion_20": "Restoration activities are coordinated with internal and external parties",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RC.CO-3",
+   "descripcion_11": "Recovery activities are communicated to internal and external stakeholders as well as executive and management teams",
+   "reubicacion": "N",
+   "modificaciones": "Added \"progress in restoring operational capabilities\"\nRemoved redundancy in the list of parties to communicate with",
+   "id_20": "RC.CO-03",
+   "descripcion_20": "Recovery activities and progress in restoring operational capabilities are communicated to designated internal and external stakeholders",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RS.CO-2",
+   "descripcion_11": "Incidents are reported consistent with established criteria",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to public notification",
+   "id_20": "RC.CO-04",
+   "descripcion_20": "Public updates on incident recovery are shared using approved methods and messaging",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RC.CO-1",
+   "descripcion_11": "Public relations are managed",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to using public updates on incident recovery to help manage public relations",
+   "id_20": "RC.CO-04",
+   "descripcion_20": "Public updates on incident recovery are shared using approved methods and messaging",
+   "nueva_en_20": "N"
+  },
+  {
+   "id_11": "RC.CO-2",
+   "descripcion_11": "Reputation is repaired after an incident",
+   "reubicacion": "Y (incorporated into)",
+   "modificaciones": "Changed scope to be specific to using public updates on incident recovery to help repair the organization’s reputation",
+   "id_20": "RC.CO-04",
+   "descripcion_20": "Public updates on incident recovery are shared using approved methods and messaging",
+   "nueva_en_20": "N"
+  }
+ ]
+}

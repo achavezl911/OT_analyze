@@ -30,7 +30,8 @@ ANIDADO = "[" * 200000 + "]" * 200000
 INTERNOS = {
     "i18n.py": 2,                       # catalogos de idioma del paquete
     "attack_ics.py": 1,                 # catalogo ATT&CK for ICS del paquete (D112)
-    "evasion.py": 1,                    # data/ del paquete
+    "csf_transicion.py": 1,             # catalogo de transicion CSF 1.1 a 2.0 del paquete (D116)
+    "evasion.py": 1,                   # data/ del paquete
     "obsolescencia.py": 1,              # fin_soporte_so.json del paquete
     "hardening.py": 1,                  # catalogo de hardening del paquete
     "madurez.py": 1,                    # dominios de madurez del paquete

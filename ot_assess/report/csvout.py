@@ -11,6 +11,7 @@ from .. import avisos_cisa as _ac
 from .. import cobertura_captura as _cc
 from .. import conductos_zcr as _zc
 from .. import csf_tiers as _ct
+from .. import csf_transicion as _cft
 from .. import direccionamiento as _dr
 from .. import evasion as _ev
 from .. import fuentes as _fu
@@ -177,6 +178,7 @@ def tablas(res: Assessment) -> list:
                  for f in sorted(c.findings, key=lambda x: SEV_ORDER.get(x["severidad"], 9))]))
 
     out.extend(_atc.tablas([f for c in [*caps, *res.extras] for f in c.findings]))
+    out.extend(_cft.tablas([f for c in [*caps, *res.extras] for f in c.findings], estandares))
 
     out.append(("plan_remediacion.csv", "Plan de remediacion", _re.COLUMNAS, _re.tabla(res)))
     out.extend(_rg.tablas(_rg.de(res)))
