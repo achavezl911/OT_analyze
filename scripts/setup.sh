@@ -13,20 +13,22 @@ if ! command -v tshark >/dev/null; then
         || echo "[!] apt-get update con errores (alguna fuente no responde); se intenta instalar tshark igual"
     }
     instalar() { DEBIAN_FRONTEND=noninteractive $S apt-get install -y -qq "${OPC[@]}" tshark >>"$APT_LOG" 2>&1; }
-    actualizar
-    if ! instalar; then
-      if [ -z "${GITHUB_ACTIONS:-}" ]; then tail -n 20 "$APT_LOG"; exit 100; fi
-      # Solo en la CI: el error va como anotacion (el registro de la CI no se lee sin permisos de administrador) y se
-      # reintenta una vez contra archive.ubuntu.com por si el espejo del runner no responde.
-      grep -E '^(E|W):' "$APT_LOG" | tail -n 6 | sed 's/^/::warning::apt: /' || true
-      for f in /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
+    if [ -n "${GITHUB_ACTIONS:-}" ]; then
+      # Solo en la CI: el runner prueba primero azure.archive.ubuntu.com (lista /etc/apt/apt-mirrors.txt) y cuando ese
+      # nombre no resuelve cada paquete espera minutos hasta agotar el tiempo del trabajo; se usa archive.ubuntu.com.
+      for f in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
         if [ -f "$f" ]; then $S sed -i 's#azure\.archive\.ubuntu\.com#archive.ubuntu.com#g' "$f"; fi
       done
-      actualizar
-      if ! instalar; then
+    fi
+    actualizar
+    if ! instalar; then
+      if [ -n "${GITHUB_ACTIONS:-}" ]; then
+        # el registro de la CI no se lee sin permisos de administrador: el error de apt va como anotacion
         grep -E '^(E|W):' "$APT_LOG" | tail -n 8 | sed 's/^/::error::apt: /' || true
-        exit 100
+      else
+        tail -n 20 "$APT_LOG"
       fi
+      exit 100
     fi
   else
     echo "[!] Instala Wireshark (tshark) manualmente: brew install --cask wireshark / dnf install wireshark-cli"; exit 1
