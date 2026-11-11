@@ -204,6 +204,11 @@ def crear_parser() -> argparse.ArgumentParser:
                          "agrega a matriz_controles.csv una fila por salvaguarda del grupo IG1, IG2 o IG3 "
                          "(perfil cis_ig; por defecto IG2). Los titulos se leen del archivo; la herramienta no "
                          "los distribuye (licencia CC BY-NC-ND 4.0).")
+    ap.add_argument("--cis-mapeo", metavar="ARCHIVO", action="append", dest="cis_mapeo",
+                    help="Mapeo oficial de CIS v8.1 a SP 800-53 Rev 5 o a CSF 2.0 (XLSX oficial de CIS o CSV con "
+                         "las mismas columnas), descargado por usted; repetible, uno por tipo. Requiere --cis: "
+                         "el estado de las filas CIS sale de este mapeo y no de las referencias de NIST. No se "
+                         "copia al repo ni a las salidas mas que ids y relacion.")
     ap.add_argument("--avisos-ics", metavar="RUTA", dest="avisos_ics",
                     help="Un aviso ICS de CISA en CSAF 2.0 (JSON) o una carpeta con muchos (recursiva); "
                          "se cruzan por CVE exacto con --vulnerabilidades y generan avisos_ics.csv; ademas se "
@@ -328,6 +333,8 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     if args.firewall and args.reglas_firewall:
         ap.error("--firewall ya trae las reglas: no se combina con --reglas-firewall")
+    if args.cis_mapeo and not args.cis:
+        ap.error("--cis-mapeo requiere --cis")
     if args.cache_renovar and not args.cache:
         ap.error("--cache-renovar requiere --cache")
     if args.custodia and not Path(args.custodia).is_file():
@@ -612,9 +619,10 @@ def main(argv: list[str] | None = None) -> int:
         print("[!] linea base ISA/IEC 62443: no hay zonas, no se genera")
     from . import cis_controles as _cis
     from . import matriz_controles as _mc
+    cis, cis_mapeo = _cis.cargar_con_mapeos(args.cis, args.cis_mapeo) if args.cis else (None, None)
     res.matriz_controles = _mc.construir(assets, res.zcr, res.firewall,
                                          [f for c in [*res.caps, *res.extras] for f in c.findings], perfil,
-                                         _cis.cargar(args.cis) if args.cis else None)
+                                         cis, cis_mapeo)
     from . import tobe as _tb
     res.tobe = _tb.construir(assets, conduits, res.zonas, res.zcr, res.firewall,      # T1a (D85)
                              [f for c in [*res.caps, *res.extras] for f in c.findings], perfil)

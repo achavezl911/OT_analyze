@@ -200,5 +200,169 @@ class FilasCisTest(unittest.TestCase):
         self.assertEqual(filas[0][4], "Salvaguarda de prueba 14.1")              # el titulo de CIS no se traduce
 
 
+CENTINELA = "TEXTO_CIS_NO_SALE"
+CAB_M53 = ["CIS Control", "CIS Safeguard", "Asset Type", "Security Function", "Title", "Description",
+           "Relationship", "Control Identifier", "Control or Control Enhancement", "Control Text", "Descriptions"]
+CAB_MCSF = ["CIS Control", "CIS Safeguard", "Asset Type", "Security Function", "Title", "Description",
+            "Relationship", "CSF Subcategories"]
+
+
+def _fm(cab, ctl, sal, rel, dest):
+    f = [""] * len(cab)
+    f[0], f[1], f[cab.index("Relationship")], f[-1 if "CSF Subcategories" in cab else 7] = ctl, sal, rel, dest
+    for c in ("Title", "Description", "Control Text", "Descriptions"):
+        if c in cab:
+            f[cab.index(c)] = CENTINELA
+    return f
+
+
+def _filas_m53() -> list:
+    c = CAB_M53
+    filas = [c, _fm(c, "4", "", "", ""), _fm(c, "", "", "", "")]
+    filas[2][4] = CENTINELA
+    filas += [_fm(c, "4", "4.1", "Subset", "CM-8"), _fm(c, "4", "4.1", "Superset", "CM-8 (1)"),
+              _fm(c, "4", "4.2", "", "")]
+    filas += [_fm(c, "", celda, "Subset", "CM-8") for celda in IDS_CELDA_4[2:9]]
+    filas.append(_fm(c, "", "4.0999999999999996", "Equivalent", "PM-5"))
+    return filas
+
+
+class MapeoTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.dir = Path(self.tmp.name)
+        self.addCleanup(self.tmp.cleanup)
+        self.ids = [f"4.{i}" for i in range(1, 13)]
+
+    def _xlsx(self, nombre, filas):
+        p = self.dir / nombre
+        gen_exports.escribir_xlsx(p, filas)
+        return p
+
+    def test_forma_oficial_a_800_53(self):
+        m = cc.cargar_mapeo(self._xlsx("m53.xlsx", _filas_m53()), self.ids)
+        self.assertEqual(m["tipo"], "sp800_53")
+        self.assertEqual(m["archivo"], "m53.xlsx")
+        self.assertEqual(m["por_salvaguarda"]["4.1"], [("CM-8", "Subset"), ("CM-8(1)", "Superset")])
+        self.assertEqual(m["por_salvaguarda"]["4.10"], [("PM-5", "Equivalent")])   # 4.1 y 4.10: mismo flotante
+        self.assertEqual(m["sin"], ["4.2"])
+        self.assertNotIn(CENTINELA, json.dumps(m))
+
+    def test_csf_y_csv(self):
+        c = CAB_MCSF
+        p = self.dir / "csf.csv"
+        with p.open("w", newline="", encoding="utf-8") as f:
+            csv.writer(f).writerows([c, _fm(c, "4", "4.1", "Subset", "ID.AM-01")]
+                                    + [_fm(c, "4", f"4.{i}", "Subset", "ID.AM-01") for i in range(2, 10)]
+                                    + [_fm(c, "4", "4.10", "Equivalent", "ID.AM-08")])
+        m = cc.cargar_mapeo(p, self.ids)
+        self.assertEqual(m["tipo"], "csf2")
+        self.assertEqual(m["por_salvaguarda"]["4.1"], [("ID.AM-01", "Subset")])
+        self.assertEqual(m["por_salvaguarda"]["4.10"], [("ID.AM-08", "Equivalent")])
+
+    def test_errores(self):
+        c = CAB_M53
+        con_ids = lambda filas: self._xlsx("e.xlsx", filas)
+        with self.assertRaises(SystemExit) as e:                         # salvaguarda fuera de --cis
+            cc.cargar_mapeo(con_ids(_filas_m53()), ["4.1", "4.2"])
+        self.assertIn("4.3, 4.4", str(e.exception))
+        with self.assertRaises(SystemExit) as e:                         # destino con forma invalida
+            cc.cargar_mapeo(con_ids([c, _fm(c, "4", "4.1", "Subset", "CM-8"), _fm(c, "4", "4.2", "Subset", "XX8")]),
+                            self.ids)
+        self.assertIn("linea 3", str(e.exception))
+        with self.assertRaises(SystemExit) as e:                         # ordinal que no cuadra
+            cc.cargar_mapeo(con_ids([c, _fm(c, "4", "4.1", "Subset", "CM-8"), _fm(c, "4", "4.3", "Subset", "CM-8")]),
+                            self.ids)
+        self.assertIn("no coincide", str(e.exception))
+        with self.assertRaises(SystemExit) as e:                         # hoja sin las columnas
+            cc.cargar_mapeo(con_ids([["a", "b"], ["1", "2"]]), self.ids)
+        self.assertIn("columnas", str(e.exception))
+
+    def test_tipo_repetido(self):
+        a = self._xlsx("a.xlsx", _filas_m53())
+        b = self._xlsx("b.xlsx", _filas_m53())
+        cis = self._xlsx("cis.xlsx", _archivo_filas())
+        with self.assertRaises(SystemExit) as e:
+            cc.cargar_con_mapeos(cis, [a, b])
+        self.assertIn("mismo tipo", str(e.exception))
+        _c, ms = cc.cargar_con_mapeos(cis, [a])
+        self.assertEqual(len(ms), 1)
+
+
+class FilasMapeoTest(unittest.TestCase):
+    def setUp(self):
+        self.cis = [_sal("14.1"), _sal("99.1", clase="Documentation", funcion="Govern"), _sal("99.2"),
+                    _sal("98.1", clase="Documentation", funcion="Govern")]
+        self.m53 = {"tipo": "sp800_53", "archivo": "a53.xlsx", "sin": ["98.1"], "por_salvaguarda": {
+            "99.2": [("PM-2", "Subset"), ("PM-2(1)", "Superset"), ("ZZ-9", "Parcial")], "99.1": [("ZZ-9", "Equivalent")],
+            "98.1": []}}
+        self.mcsf = {"tipo": "csf2", "archivo": "acsf.csv", "sin": [], "por_salvaguarda": {
+            "99.2": [("GV.RR-01", "Subset")]}}
+
+    def _m(self, mapeos, hall=True):
+        h = [_hall("Hallazgo de ejemplo", "PM-2 (ejemplo)")] if hall else []
+        return _mc(h, cis=self.cis) if mapeos is None else mc.construir({}, {}, {}, h, None, self.cis, mapeos)
+
+    def _fila(self, m, ident):
+        return next(x for x in mc.filas_matriz(m, {}) if x[0] == mc.M_CIS and x[3] == ident)
+
+    def test_brecha_por_el_mapeo_a_800_53(self):
+        self.assertEqual(_fila_cis(self._m(None), "99.2")["estado"], lb.E_SIN)       # NIST no daba correspondencia
+        m = self._m([self.m53])
+        self.assertEqual(_fila_cis(m, "99.2")["estado"], lb.E_BRECHA)
+        ev = self._fila(m, "99.2")[8]
+        self.assertIn("Mapeo CIS a SP 800-53 Rev 5: PM-2 (subconjunto); PM-2(1) (superconjunto); ZZ-9 (Parcial). "
+                      "SP 800-53 en la linea base: PM-2. Filas NIST:", ev)
+        self.assertEqual(m["cis"]["mapeo"], {"sp800_53": "a53.xlsx", "csf2": ""})
+        self.assertIn("ningun control correspondiente esta en la linea base", self._fila(m, "99.1")[8])
+        self.assertEqual(_fila_cis(m, "99.1")["estado"], lb.E_SIN)
+        self.assertEqual(_fila_cis(m, "98.1")["estado"], lb.E_NOEVAL)
+        self.assertIn("Sin correspondencia en el mapeo oficial de CIS", self._fila(m, "98.1")[8])
+        self.assertEqual(_fila_cis(m, "14.1")["estado"], lb.E_SIN)           # no esta en el mapeo
+        self.assertIn("mapeo oficial de CIS (SP 800-53 Rev 5: a53.xlsx)", mc.seccion(m, {})["nota"])
+
+    def test_solo_mapeo_csf(self):
+        m = self._m([self.mcsf])
+        f = _fila_cis(m, "99.2")
+        self.assertEqual(f["subcategorias"], ["GV.RR-01"])
+        esperado = {mc.base_de(c) for c in mc.referencias_csf()["GV.RR-01"]["sp800_53"]}
+        self.assertTrue(esperado)
+        self.assertEqual(set(f["controles"]) - esperado, set())
+        self.assertIn("CSF 2.0 (mapeo CIS): GV.RR-01.", self._fila(m, "99.2")[8])
+        self.assertEqual(_fila_cis(m, "14.1")["estado"], lb.E_SIN)           # sin mapeo: sin correspondencia
+        self.assertEqual(m["cis"]["mapeo"], {"sp800_53": "", "csf2": "acsf.csv"})
+
+    def test_ambos_mapeos(self):
+        m = self._m([self.m53, self.mcsf])
+        f = _fila_cis(m, "99.2")
+        self.assertEqual(f["subcategorias"], ["GV.RR-01"])
+        self.assertEqual(f["controles"], ["PM-2"])                            # los de 800-53, no los de CSF
+        ev = self._fila(m, "99.2")[8]
+        self.assertTrue(ev.startswith("CSF 2.0 (mapeo CIS): GV.RR-01. Mapeo CIS a SP 800-53 Rev 5:"), ev)
+
+    def test_sin_mapeo_igual_y_con_mapeo_solo_cambian_filas_cis(self):
+        base = self._m(None)
+        self.assertEqual(mc.construir({}, {}, {}, [], None, self.cis, []), mc.construir({}, {}, {}, [], None, self.cis))
+        con = self._m([self.m53])
+        self.assertEqual(con["nist"], base["nist"])
+        otras = lambda m: [x for x in mc.filas_matriz(m, {}) if x[0] != mc.M_CIS]
+        self.assertEqual(otras(con), otras(base))
+        self.assertNotEqual(mc.seccion(con, {})["nota"], mc.seccion(base, {})["nota"])
+
+    def test_ingles_y_centinela(self):
+        m = self._m([self.m53, self.mcsf])
+        i18n.usar("en")
+        try:
+            filas = [x for x in mc.filas_matriz(m, {}) if x[0] == mc.M_CIS]
+            nota = mc.seccion(m, {})["nota"]
+        finally:
+            i18n.usar("es")
+        ev = next(x for x in filas if x[3] == "99.2")[8]
+        self.assertIn("CIS mapping to SP 800-53 Rev 5: PM-2 (subset); PM-2(1) (superset)", ev)
+        self.assertIn("review by hand", next(x for x in filas if x[3] == "98.1")[8])
+        self.assertIn("official CIS mapping", nota)
+        self.assertNotIn(CENTINELA, json.dumps([filas, nota, m]))
+
+
 if __name__ == "__main__":
     unittest.main()

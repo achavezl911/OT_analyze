@@ -66,6 +66,12 @@ NOTA_CIS = ("Con --cis incluye las salvaguardas de CIS Controls v8.1 del grupo e
             "analista, con estado agregado de las filas NIST por las referencias informativas de CSF 2.0 de NIST; "
             "una correspondencia no es equivalencia ni prueba de cumplimiento; referencia " + _cis.REFERENCIA)
 
+NOTA_CIS_MAPEO = ("Con --cis incluye las salvaguardas de CIS Controls v8.1 del grupo elegido, leidas del archivo "
+                  "del analista; con --cis-mapeo el estado agregado de las filas NIST sale del mapeo oficial de CIS "
+                  "({a}), entregado por el analista, en lugar de las referencias informativas de CSF 2.0 de NIST; "
+                  "una correspondencia no es equivalencia ni prueba de cumplimiento; referencia "
+                  + _cis.REFERENCIA)
+
 NOTA_TSA = ("Con tsa_sd en el perfil incluye las medidas de la seccion III de la directiva TSA SD 1580/82-2022-01E "
             "con un mapeo propio a SP 800-53 sin revisar por el propietario; una correspondencia no es equivalencia "
             "ni prueba de cumplimiento; el plan de implementacion del cliente (CIP) se contrasta a mano y es SSI.")
@@ -236,7 +242,7 @@ def _construir_tsa(filas_nist: list, perfil: dict | None) -> dict:
     return {"edicion": (perfil or {}).get("tsa_sd", EDICION_TSA), "filas": filas}
 
 
-def _construir_cis(filas_nist: list, cis: list, perfil: dict | None) -> dict:
+def _construir_cis(filas_nist: list, cis: list, perfil: dict | None, mapeos: list | None = None) -> dict:
     """Filas CIS del grupo elegido: estado agregado de las filas NIST por las referencias de CSF 2.0 (D108)."""
     ig, origen = grupo_cis(perfil)
     clave = ig.lower()
@@ -245,31 +251,47 @@ def _construir_cis(filas_nist: list, cis: list, perfil: dict | None) -> dict:
     for sub, d in _csf().items():
         for sal in d["cis_v8_1"]:
             citan.setdefault(sal, []).append(sub)
+    por_tipo = {m["tipo"]: m["por_salvaguarda"] for m in mapeos or ()}
+    m53, mcsf = por_tipo.get("sp800_53"), por_tipo.get("csf2")
     filas = []
     for pos, sal in enumerate(x for x in cis if x[clave]):
-        subs = sorted(citan.get(sal["id"], ()))
-        ctl = {base_de(c) for sub in subs for c in _csf()[sub]["sp800_53"]}
+        d53 = list(m53.get(sal["id"], ())) if m53 is not None else []
+        dcsf = list(mcsf.get(sal["id"], ())) if mcsf is not None else []
+        if mcsf is not None:
+            subs = sorted({d for d, _r in dcsf})
+        else:
+            subs = [] if m53 is not None else sorted(citan.get(sal["id"], ()))
+        if m53 is not None:
+            ctl = {base_de(d) for d, _r in d53}
+        else:
+            ctl = {base_de(c) for sub in subs for c in _csf().get(sub, {}).get("sp800_53", ())}
         ag = _agregar_nist(por_base, ctl)
         if ag["estado"]:
             estado = ag["estado"]
-        elif subs or not (sal["clase"] == "Documentation" or sal["funcion"] == "Govern"):
+        elif subs or d53 or not (sal["clase"] == "Documentation" or sal["funcion"] == "Govern"):
             estado = _lb.E_SIN
         else:
             estado = _lb.E_NOEVAL
+        extra = {"mapeo_sp800_53": d53, "mapeo_csf2": dcsf} if mapeos else {}
         filas.append({
             "id": sal["id"], "control": sal["control"], "titulo": sal["titulo"], "estado": estado,
-            "subcategorias": subs, **{k: v for k, v in ag.items() if k != "estado"}, "_pos": pos})
+            "subcategorias": subs, **extra, **{k: v for k, v in ag.items() if k != "estado"}, "_pos": pos})
     filas.sort(key=lambda r: (_lb.ESTADOS.index(r["estado"]), -r["brecha"], r["_pos"]))
     for i, r in enumerate(filas, 1):
         r["prioridad"] = i
         del r["_pos"]
-    return {"grupo": ig, "origen": origen, "filas": filas}
+    out = {"grupo": ig, "origen": origen, "filas": filas}
+    if mapeos:
+        out["mapeo"] = {"sp800_53": next((m["archivo"] for m in mapeos if m["tipo"] == "sp800_53"), ""),
+                        "csf2": next((m["archivo"] for m in mapeos if m["tipo"] == "csf2"), "")}
+    return out
 
 
 def construir(assets: dict, zcr: dict, firewall: dict, findings: list, perfil: dict | None = None,
-              cis: list | None = None) -> dict:
+              cis: list | None = None, cis_mapeo: list | None = None) -> dict:
     """Parte NIST de la matriz (las filas 62443 salen de la linea base al escribir). Siempre devuelve datos.
-    Con `cis` (cis_controles.cargar) agrega la parte CIS (D108)."""
+    Con `cis` (cis_controles.cargar) agrega la parte CIS (D108); `cis_mapeo` (cargar_mapeo) usa los mapeos
+    oficiales de CIS en lugar de las referencias de NIST (D111)."""
     nivel, origen = linea_base_nist(perfil)
     cat = cargar()["controles"]
     hall = _hallazgos(findings)
@@ -304,7 +326,7 @@ def construir(assets: dict, zcr: dict, firewall: dict, findings: list, perfil: d
     n_c, n_m = conteo(nivel)
     out = {"nist": {"linea_base": nivel, "origen": origen, "controles": n_c, "mejoras": n_m, "filas": filas}}
     if cis:
-        out["cis"] = _construir_cis(filas, cis, perfil)
+        out["cis"] = _construir_cis(filas, cis, perfil, cis_mapeo)
     if (perfil or {}).get("tsa_sd"):
         out["tsa"] = _construir_tsa(filas, perfil)
     return out
@@ -409,6 +431,33 @@ def _filas_2_1(lb: dict) -> list:
     return out
 
 
+_REL_CIS = {"Equivalent": "equivalente", "Subset": "subconjunto", "Superset": "superconjunto"}
+
+
+def _evidencia_mapeo(c: dict, r: dict) -> str:
+    """Evidencia de una fila CIS cuyo estado sale del mapeo oficial de CIS (D111)."""
+    d53 = r["mapeo_sp800_53"]
+    if not (r["subcategorias"] or d53):
+        return t("Sin correspondencia en el mapeo oficial de CIS: revisar a mano")
+    partes = []
+    if c["mapeo"]["csf2"] and r["subcategorias"]:
+        partes.append(t("CSF 2.0 (mapeo CIS): {s}.", s="; ".join(r["subcategorias"])))
+    if d53:
+        m = "; ".join(f"{d} ({t(_REL_CIS[x]) if x in _REL_CIS else x})" for d, x in d53)
+        if r["controles"]:
+            partes.append(t("Mapeo CIS a SP 800-53 Rev 5: {m}.", m=m))
+        else:
+            partes.append(t("Mapeo CIS a SP 800-53 Rev 5: {m}; ningun control correspondiente esta en la linea "
+                            "base NIST elegida", m=m))
+    if r["controles"]:
+        partes.append(t("SP 800-53 en la linea base: {c}. Filas NIST: {b} con brecha, {o} con control "
+                        "observado, {e} sin evidencia, {n} no evaluables", c="; ".join(r["controles"]),
+                        b=r["brecha"], o=r["observado"], e=r["sin_evidencia"], n=r["no_evaluable"]))
+    elif not d53:
+        partes.append(t("Ningun control SP 800-53 correspondiente esta en la linea base NIST elegida"))
+    return " ".join(partes)
+
+
 def _filas_cis(mc: dict) -> list:
     """Una fila por salvaguarda del grupo IG elegido (D108); titulo tal cual del archivo del analista."""
     c = mc.get("cis")
@@ -417,7 +466,9 @@ def _filas_cis(mc: dict) -> list:
     out = []
     for r in c["filas"]:
         s = "; ".join(r["subcategorias"])
-        if r["controles"]:
+        if c.get("mapeo"):
+            evid = _evidencia_mapeo(c, r)
+        elif r["controles"]:
             evid = t("CSF 2.0: {s}; SP 800-53 en la linea base: {c}. Filas NIST: {b} con brecha, {o} con control "
                      "observado, {e} sin evidencia, {n} no evaluables", s=s, c="; ".join(r["controles"]),
                      b=r["brecha"], o=r["observado"], e=r["sin_evidencia"], n=r["no_evaluable"])
@@ -542,6 +593,14 @@ def seccion(mc: dict, lb: dict) -> dict:
     resumen = t("Linea base NIST {nivel} ({origen}): {c} controles y {m} mejoras. Detalle y columnas de validacion "
                 "del analista en {a}.", nivel=t(n["linea_base"]), origen=t(n["origen"]), c=n["controles"],
                 m=n["mejoras"], a=ARCHIVO)
-    nota = t(NOTA) + (" " + t(NOTA_CIS) if mc.get("cis") else "")
+    nota = t(NOTA)
+    if mc.get("cis"):
+        mp = mc["cis"].get("mapeo")
+        if mp:
+            archivos = "; ".join(f"{k}: {v}" for k, v in (("SP 800-53 Rev 5", mp["sp800_53"]),
+                                                          ("CSF 2.0", mp["csf2"])) if v)
+            nota += " " + t(NOTA_CIS_MAPEO, a=archivos)
+        else:
+            nota += " " + t(NOTA_CIS)
     nota += " " + t(NOTA_TSA) if mc.get("tsa") else ""
     return {"titulo": t(TITULO), "nota": nota, "resumen": resumen, "tabla": (cab, filas)}

@@ -110,6 +110,10 @@ def crear_parser() -> argparse.ArgumentParser:
     ap.add_argument("--cis", metavar="ARCHIVO",
                     help="CIS Controls v8.1 (XLSX oficial o CSV; como en el analisis de capturas): filas del "
                          "grupo IG del perfil (cis_ig; por defecto IG2) en matriz_controles.csv.")
+    ap.add_argument("--cis-mapeo", metavar="ARCHIVO", action="append", dest="cis_mapeo",
+                    help="Mapeo oficial de CIS v8.1 a SP 800-53 Rev 5 o a CSF 2.0 (XLSX oficial de CIS o CSV con "
+                         "las mismas columnas; repetible, uno por tipo; requiere --cis). El estado de las filas "
+                         "CIS sale de este mapeo; no se copia al repo ni a las salidas mas que ids y relacion.")
     ap.add_argument("--avisos-ics", metavar="RUTA", dest="avisos_ics",
                     help="Avisos ICS de CISA en CSAF 2.0: un JSON o una carpeta (como en el analisis de capturas).")
     ap.add_argument("--catalogo-vulnerabilidades", metavar="ARCHIVO", dest="catalogo_vulnerabilidades",
@@ -250,6 +254,8 @@ def main(argv: list | None = None) -> int:
     estandares = elegir(args.estandar)
     mapeo = cargar_mapeo(args.mapeo) if args.mapeo else None
 
+    if args.cis_mapeo and not args.cis:
+        ap.error("--cis-mapeo requiere --cis")
     for f in args.switch:
         if not Path(f).is_file():
             ap.error(f"--switch espera un archivo existente: '{f}'")
@@ -546,8 +552,8 @@ def main(argv: list | None = None) -> int:
     res.linea_base = _lb.construir(imp.assets, zon, zcr, reglas_fw, switches, hallazgos, perfil)
     if not res.linea_base:
         print("[!] linea base ISA/IEC 62443: no hay zonas, no se genera")
-    res.matriz_controles = _mc.construir(imp.assets, zcr, reglas_fw, hallazgos, perfil,
-                                         _cis.cargar(args.cis) if args.cis else None)
+    cis, cis_mapeo = _cis.cargar_con_mapeos(args.cis, args.cis_mapeo) if args.cis else (None, None)
+    res.matriz_controles = _mc.construir(imp.assets, zcr, reglas_fw, hallazgos, perfil, cis, cis_mapeo)
     res.tobe = _tb.construir(imp.assets, imp.conduits, zon, zcr, reglas_fw, hallazgos, perfil)    # T1a (D85)
     if _tb.aviso(res.tobe):
         print(_tb.aviso(res.tobe))

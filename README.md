@@ -773,7 +773,14 @@ validación vacías. Estado as-is: el agregado de las filas NIST de la corrida c
 las referencias informativas públicas de NIST CSF 2.0 para esa salvaguarda (`ot_assess/marcos/csf2_referencias.json`,
 solo identificadores; se regenera con `scripts/extraer_csf_referencias.py`). Sin correspondencia publicada: «sin
 evidencia», o «no evaluable» si es de documentación o de gobierno; la evidencia lo dice y pide revisar a mano. Una
-correspondencia no es equivalencia ni cumplimiento. Sin `--cis` la matriz no cambia. **Licencia:** CIS Controls es
+correspondencia no es equivalencia ni cumplimiento. Sin `--cis` la matriz no cambia.
+**Mapeos oficiales de CIS (CIS1b, D111).** `--cis-mapeo ARCHIVO` (requiere `--cis`; repetible, uno por tipo) toma el
+XLSX oficial de CIS que usted descargó (o un CSV con las mismas columnas) de v8.1 a SP 800-53 Rev 5 (columna
+`Control Identifier`) o a CSF 2.0 (`CSF Subcategories`); el tipo sale de la columna. Con el mapeo a 800-53, los
+controles de cada salvaguarda son los de ese mapeo; con el de CSF 2.0, las subcategorías; en ambos casos reemplazan a
+las referencias de NIST. La evidencia lista cada destino con su relación (equivalente, subconjunto, superconjunto) y
+los que están en la línea base. Salvaguarda sin destino: «Sin correspondencia en el mapeo oficial de CIS». Solo se
+guardan ids y relación; ningún texto del archivo pasa a las salidas. Sin `--cis-mapeo` nada cambia. **Licencia:** CIS Controls es
 CC BY-NC-ND 4.0 (no se distribuyen materiales derivados), por eso el repo no contiene ningún título ni texto de CIS,
 solo identificadores; los títulos salen del archivo del analista en cada corrida. Referencia: www.cisecurity.org/controls/.
 **Filas de la TSA SD 1580/82-2022-01E (TSA1, D109).** Con `tsa_sd: "01E"` en el perfil (única edición conocida; otra
