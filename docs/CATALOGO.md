@@ -1,6 +1,6 @@
 # Catalogo generado del codigo
 
-> **No editar a mano.** Lo genera `scripts/generar_catalogo.py` (version del codigo: 0.56.0). Si cambias una regla, un puerto, una opcion o una columna: ejecuta el script. `scripts/verificar.sh` y `tests/test_docs.py` fallan si este archivo esta desactualizado.
+> **No editar a mano.** Lo genera `scripts/generar_catalogo.py` (version del codigo: 0.57.0). Si cambias una regla, un puerto, una opcion o una columna: ejecuta el script. `scripts/verificar.sh` y `tests/test_docs.py` fallan si este archivo esta desactualizado.
 
 ## Reglas de hallazgo
 
