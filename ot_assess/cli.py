@@ -633,7 +633,7 @@ def main(argv: list[str] | None = None) -> int:
     _ma.imprimir(res.madurez)
     res.csf_tiers = _ct.construir(res, declarados_tiers)       # CSF2T (D110)
     _ct.imprimir(res.csf_tiers)
-    inv =res.inventario_normalizado["resumen"]
+    inv = res.inventario_normalizado["resumen"]
     print(f"    inventario normalizado: {inv['activos']} activos, {inv['campos_en_conflicto']} campos en conflicto")
     if args.inventario_manual:
         print(f"    inventario manual: {inv['declarados_no_observados']} declarados no observados, "
