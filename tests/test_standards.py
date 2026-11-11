@@ -73,6 +73,9 @@ class MatrizTest(unittest.TestCase):
         titulos = " | ".join(titulos_de_las_reglas()).lower()
         fragmentos = list(st.MITRE.refs)
         for e in st.ESTANDARES.values():
+            if e.clave == "tsa-sd-1580-82":      # derivado (D118): solo los fragmentos con medida tecnica
+                self.assertTrue(set(e.refs) <= set(fragmentos))
+                continue
             self.assertEqual(list(e.refs), fragmentos, e.clave)     # misma fila en todos los marcos
         for frag in fragmentos:
             self.assertIn(frag, titulos, f"fragmento sin uso: {frag}")
@@ -122,7 +125,8 @@ class MetadatosTest(unittest.TestCase):
             self.assertTrue(e.fuente and e.fuente != st.SIN_DECLARAR, e.clave)
             self.assertTrue(e.version_fuente, e.clave)
             self.assertEqual(e.validacion, {"estado": "sin revisar"}, e.clave)
-            self.assertTrue((st.DIR_MARCOS / f"{e.clave}.json").is_file(), e.clave)
+            if e.clave != "tsa-sd-1580-82":      # derivado (D118): sin JSON propio
+                self.assertTrue((st.DIR_MARCOS / f"{e.clave}.json").is_file(), e.clave)
         self.assertEqual(st.ESTANDARES["iec62443"].version_fuente, "IEC 62443-3-3:2013")
 
     def test_linea_de_fuente_en_el_aviso(self):

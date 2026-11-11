@@ -198,7 +198,7 @@ class ReferenciasTest(unittest.TestCase):
         from ot_assess.standards import referencias
         claves = [MITRE.clave] + [e.clave for e in ESTANDARES.values()]
         self.assertEqual(sorted(claves), sorted(["mitre-ics", "iec62443", "nerc-cip",
-                                                 "nist-800-82", "nist-csf"]))
+                                                 "nist-800-82", "nist-csf", "tsa-sd-1580-82"]))
         orden = ["mitre-ics", "iec62443", "nerc-cip", "nist-800-82", "nist-csf"]
         for titulo, esperado in self.TITULOS.items():
             ref = referencias(titulo)

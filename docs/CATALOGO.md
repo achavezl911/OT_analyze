@@ -10,25 +10,25 @@ Marcos: `M` MITRE ATT&CK for ICS, `I` IEC 62443, `C` NERC CIP, `N` NIST 800-82, 
 
 | # | Regla | Modulo | Severidad | Categoria | Titulo | Deteccion probada de extremo a extremo | Marcos |
 |---|---|---|---|---|---|---|---|
-| 1 | `descubrimiento_windows` | exposure | Media | Exposicion | Protocolos de descubrimiento de Windows activos en la red de control | si | MICNCSF |
-| 2 | `sentinel_hasp` | exposure | Media | Exposicion | Servicio de licenciamiento Sentinel HASP (puerto 1947) en difusion | si | MICNCSF |
-| 3 | `texto_claro` | exposure | Alta | Exposicion | Credenciales o administracion en texto claro | si | MICNCSF |
-| 4 | `gestion_sin_cifrar` | exposure | Media | Exposicion | Protocolos de gestion sin cifrar en uso | si | MICNCSF |
-| 5 | `software_obsoleto` | exposure | Alta | Obsolescencia | Software o sistema operativo fuera de soporte | si | MICNCSF |
-| 6 | `firmware_expuesto` | exposure | Informativa | Identidad | Version de firmware expuesta en protocolos de descubrimiento | si | MICNCSF |
-| 7 | `apipa` | segmentation | Media | Configuracion | Equipos con direccion APIPA (169.254.x.x) | si | ICNCSF |
-| 8 | `ip_publicas` | segmentation | Alta | Segmentacion | Trafico con direcciones IP publicas desde la red OT | si | MICNCSF |
-| 9 | `multiples_subredes` | segmentation | Media | Segmentacion | Multiples subredes conviviendo en el mismo dominio de difusion | si | ICNCSF |
-| 10 | `sin_vlan` | segmentation | Informativa | Visibilidad | Sin segmentacion por VLAN visible en el punto de captura | si | ICNCSF |
-| 11 | `rip` | config | Media | Configuracion | RIP activo en la red de control | si | MICNCSF |
+| 1 | `descubrimiento_windows` | exposure | Media | Exposicion | Protocolos de descubrimiento de Windows activos en la red de control | si | MICNCSF+ |
+| 2 | `sentinel_hasp` | exposure | Media | Exposicion | Servicio de licenciamiento Sentinel HASP (puerto 1947) en difusion | si | MICNCSF+ |
+| 3 | `texto_claro` | exposure | Alta | Exposicion | Credenciales o administracion en texto claro | si | MICNCSF+ |
+| 4 | `gestion_sin_cifrar` | exposure | Media | Exposicion | Protocolos de gestion sin cifrar en uso | si | MICNCSF+ |
+| 5 | `software_obsoleto` | exposure | Alta | Obsolescencia | Software o sistema operativo fuera de soporte | si | MICNCSF+ |
+| 6 | `firmware_expuesto` | exposure | Informativa | Identidad | Version de firmware expuesta en protocolos de descubrimiento | si | MICNCSF+ |
+| 7 | `apipa` | segmentation | Media | Configuracion | Equipos con direccion APIPA (169.254.x.x) | si | ICNCSF+ |
+| 8 | `ip_publicas` | segmentation | Alta | Segmentacion | Trafico con direcciones IP publicas desde la red OT | si | MICNCSF+ |
+| 9 | `multiples_subredes` | segmentation | Media | Segmentacion | Multiples subredes conviviendo en el mismo dominio de difusion | si | ICNCSF+ |
+| 10 | `sin_vlan` | segmentation | Informativa | Visibilidad | Sin segmentacion por VLAN visible en el punto de captura | si | ICNCSF+ |
+| 11 | `rip` | config | Media | Configuracion | RIP activo en la red de control | si | MICNCSF+ |
 | 12 | `dhcp` | config | Baja | Configuracion | DHCP activo en el segmento de control | si | ICNCSF |
-| 13 | `conflicto_arp` | anomaly | Alta | Anomalia | Conflicto de direcciones: una misma IP anunciada por varias MAC | si | MICNCSF |
-| 14 | `arp_duplicado` | anomaly | Alta | Anomalia | Wireshark marco deteccion de direccion duplicada en ARP | si | MICNCSF |
-| 15 | `barrido_arp` | anomaly | Media | Anomalia | Barrido ARP: un equipo pregunta por muchas direcciones | si | MICNCSF |
-| 16 | `escaneo_red` | anomaly | Media | Anomalia | Patron compatible con escaneo de red | si | MICNCSF |
+| 13 | `conflicto_arp` | anomaly | Alta | Anomalia | Conflicto de direcciones: una misma IP anunciada por varias MAC | si | MICNCSF+ |
+| 14 | `arp_duplicado` | anomaly | Alta | Anomalia | Wireshark marco deteccion de direccion duplicada en ARP | si | MICNCSF+ |
+| 15 | `barrido_arp` | anomaly | Media | Anomalia | Barrido ARP: un equipo pregunta por muchas direcciones | si | MICNCSF+ |
+| 16 | `escaneo_red` | anomaly | Media | Anomalia | Patron compatible con escaneo de red | si | MICNCSF+ |
 | 17 | `difusion` | anomaly | Media | Desempeno | Proporcion alta de trafico de difusion | si | MINCSF |
 | 18 | `stp` | anomaly | Media | Desempeno | Cambios de topologia STP frecuentes | si | MINCSF |
-| 19 | `operaciones_control` | control | Alta | Control | Operaciones de escritura o control observadas en la captura | si | MICNCSF |
+| 19 | `operaciones_control` | control | Alta | Control | Operaciones de escritura o control observadas en la captura | si | MICNCSF+ |
 | 19 | `operaciones_control` | control | Informativa | Control | No se observaron escrituras ni comandos de control | si | - |
 | 20 | `actividad_ingenieria` | control | Alta | Control | Actividad de ingenieria sobre controladores (descarga, arranque o paro) | si | MICNCSF |
 | 21 | `captura_ilegible` | visibility | Alta | Captura | Captura ilegible o sin paquetes | si | - |
@@ -40,32 +40,32 @@ Marcos: `M` MITRE ATT&CK for ICS, `I` IEC 62443, `C` NERC CIP, `N` NIST 800-82, 
 | 26 | `io_ciclico` | visibility | Informativa | Visibilidad | El trafico es casi todo I/O ciclico, que no revela identidad | si | - |
 | 27 | `duplicados` | visibility | Baja | Visibilidad | Paquetes duplicados en la captura | si | - |
 | 28 | `ventana_corta` | visibility | Media | Visibilidad | Ventana de captura corta | si | - |
-| 29 | `dns_wpad` | dns | Media | Exposicion | Busqueda de proxy WPAD por DNS | **no** | MICNCSF |
-| 30 | `dns_publico` | dns | Media | Segmentacion | Consultas DNS a servidores publicos | si | MICNCSF |
-| 31 | `dns_dominios_internet` | dns | Baja | Segmentacion | Resolucion de dominios de Internet desde la red | si | ICNCSF |
+| 29 | `dns_wpad` | dns | Media | Exposicion | Busqueda de proxy WPAD por DNS | **no** | MICNCSF+ |
+| 30 | `dns_publico` | dns | Media | Segmentacion | Consultas DNS a servidores publicos | si | MICNCSF+ |
+| 31 | `dns_dominios_internet` | dns | Baja | Segmentacion | Resolucion de dominios de Internet desde la red | si | ICNCSF+ |
 | 32 | `dns_fallas` | dns | Baja | Configuracion | Fallas de resolucion DNS | **no** | INCSF |
-| 33 | `dns_nxdomain` | dns | Baja | Anomalia | Cliente con muchas respuestas NXDOMAIN | **no** | ICNCSF |
-| 34 | `dns_tunel` | dns | Media | Anomalia | Posible tunel DNS | **no** | MICNCSF |
-| 35 | `dns_transferencia_zona` | dns | Media | Exposicion | Intento de transferencia de zona DNS | **no** | MICNCSF |
-| 36 | `dns_dot` | dns | Baja | Visibilidad | DNS cifrado sin visibilidad (DoT) | **no** | ICNCSF |
-| 37 | `opcua_sin_seguridad` | protocolos | Media | Cifrado | OPC UA sin seguridad de mensajes (politica None) | **no** | MICNCSF |
-| 38 | `tls_obsoleto` | protocolos | Media | Cifrado | TLS obsoleto o con suite debil negociado por el servidor | **no** | MICNCSF |
+| 33 | `dns_nxdomain` | dns | Baja | Anomalia | Cliente con muchas respuestas NXDOMAIN | **no** | ICNCSF+ |
+| 34 | `dns_tunel` | dns | Media | Anomalia | Posible tunel DNS | **no** | MICNCSF+ |
+| 35 | `dns_transferencia_zona` | dns | Media | Exposicion | Intento de transferencia de zona DNS | **no** | MICNCSF+ |
+| 36 | `dns_dot` | dns | Baja | Visibilidad | DNS cifrado sin visibilidad (DoT) | **no** | ICNCSF+ |
+| 37 | `opcua_sin_seguridad` | protocolos | Media | Cifrado | OPC UA sin seguridad de mensajes (politica None) | **no** | MICNCSF+ |
+| 38 | `tls_obsoleto` | protocolos | Media | Cifrado | TLS obsoleto o con suite debil negociado por el servidor | **no** | MICNCSF+ |
 | 39 | `modbus_fc8` | protocolos | Alta | Control | Modbus FC8 que reinicia o silencia el equipo | **no** | MICNCSF |
 | 39 | `modbus_fc8` | protocolos | Baja | Control | Modbus FC8 de diagnostico (sin reinicio ni silencio) | **no** | MICNCSF |
 | 40 | `dnp3_reinicio` | protocolos | Alta | Control | DNP3 con reinicio o paro de aplicacion (Cold Restart, Warm Restart, Stop Application) | **no** | MICNCSF |
-| 41 | `perdida_comunicacion_periodica` | periodicidad | Media | Anomalia | Perdida de comunicacion en un conducto de control periodico | **no** | MICNCSF |
-| 42 | `sondeo_irregular` | periodicidad | Baja | Anomalia | Sondeo irregular en conductos de control | **no** | MICNCSF |
-| 43 | `escritor_tardio` | periodicidad | Alta | Control | Escritor de control que aparece a mitad de la captura | **no** | MICNCSF |
-| 46 | `dhcp_no_autorizado` | ataques_l2 | Alta | Anomalia | Mas de un servidor DHCP respondiendo en el segmento | **no** | MICNCSF |
-| 47 | `cambio_raiz_stp` | ataques_l2 | Alta | Anomalia | Cambio del puente raiz de STP durante la captura | **no** | MINCSF |
-| 48 | `bpdu_equipo_final` | ataques_l2 | Alta | Anomalia | BPDU enviadas por un equipo que no es switch | **no** | MICNCSF |
-| 49 | `salto_vlan` | ataques_l2 | Media | Anomalia | Indicios de salto de VLAN (doble etiqueta o DTP) | **no** | MICNCSF |
+| 41 | `perdida_comunicacion_periodica` | periodicidad | Media | Anomalia | Perdida de comunicacion en un conducto de control periodico | **no** | MICNCSF+ |
+| 42 | `sondeo_irregular` | periodicidad | Baja | Anomalia | Sondeo irregular en conductos de control | **no** | MICNCSF+ |
+| 43 | `escritor_tardio` | periodicidad | Alta | Control | Escritor de control que aparece a mitad de la captura | **no** | MICNCSF+ |
+| 46 | `dhcp_no_autorizado` | ataques_l2 | Alta | Anomalia | Mas de un servidor DHCP respondiendo en el segmento | **no** | MICNCSF+ |
+| 47 | `cambio_raiz_stp` | ataques_l2 | Alta | Anomalia | Cambio del puente raiz de STP durante la captura | **no** | MINCSF+ |
+| 48 | `bpdu_equipo_final` | ataques_l2 | Alta | Anomalia | BPDU enviadas por un equipo que no es switch | **no** | MICNCSF+ |
+| 49 | `salto_vlan` | ataques_l2 | Media | Anomalia | Indicios de salto de VLAN (doble etiqueta o DTP) | **no** | MICNCSF+ |
 | 50 | `ha_sin_autenticacion` | ataques_l2 | Media | Anomalia | Redundancia de puerta de enlace (HSRP/VRRP) sin autenticacion | **no** | MINCSF |
-| 51 | `ra_no_esperado` | ataques_l2 | Media | Anomalia | Anuncios de router IPv6 no esperados | **no** | MICNCSF |
-| 52 | `inundacion_mac` | ataques_l2 | Alta | Anomalia | Posible inundacion de la tabla MAC del switch | **no** | MICNCSF |
-| 53 | `bucle_l2` | ataques_l2 | Alta | Desempeno | Indicios de bucle de capa 2 o de enrutamiento | **no** | MINCSF |
+| 51 | `ra_no_esperado` | ataques_l2 | Media | Anomalia | Anuncios de router IPv6 no esperados | **no** | MICNCSF+ |
+| 52 | `inundacion_mac` | ataques_l2 | Alta | Anomalia | Posible inundacion de la tabla MAC del switch | **no** | MICNCSF+ |
+| 53 | `bucle_l2` | ataques_l2 | Alta | Desempeno | Indicios de bucle de capa 2 o de enrutamiento | **no** | MINCSF+ |
 | 54 | `tormenta_difusion` | salud_red | Media | Anomalia | Tormenta de difusion o multidifusion | **no** | MINCSF |
-| 55 | `retransmisiones_ot` | salud_red | Media | Anomalia | Retransmisiones TCP elevadas en un conducto OT | **no** | INCSF |
+| 55 | `retransmisiones_ot` | salud_red | Media | Anomalia | Retransmisiones TCP elevadas en un conducto OT | **no** | INCSF+ |
 
 ## Reglas sobre inventario importado
 
@@ -77,9 +77,9 @@ Marcos: `M` MITRE ATT&CK for ICS, `I` IEC 62443, `C` NERC CIP, `N` NIST 800-82, 
 
 | # | Regla | Modulo | Severidad | Categoria | Titulo | Deteccion probada de extremo a extremo | Marcos |
 |---|---|---|---|---|---|---|---|
-| 1 | `gestion_sin_cifrar_exportacion` | inventario | Media | Exposicion | Protocolos de gestion sin cifrar en uso (segun la exportacion) | si | MICNCSF |
-| 2 | `software_obsoleto_exportacion` | inventario | Alta | Obsolescencia | Software o sistema operativo fuera de soporte (segun el inventario) | si | MICNCSF |
-| 3 | `ip_publicas_exportacion` | inventario | Alta | Segmentacion | Trafico con direcciones IP publicas desde la red OT (segun la exportacion) | si | MICNCSF |
+| 1 | `gestion_sin_cifrar_exportacion` | inventario | Media | Exposicion | Protocolos de gestion sin cifrar en uso (segun la exportacion) | si | MICNCSF+ |
+| 2 | `software_obsoleto_exportacion` | inventario | Alta | Obsolescencia | Software o sistema operativo fuera de soporte (segun el inventario) | si | MICNCSF+ |
+| 3 | `ip_publicas_exportacion` | inventario | Alta | Segmentacion | Trafico con direcciones IP publicas desde la red OT (segun la exportacion) | si | MICNCSF+ |
 
 ## Marcos de referencia
 
@@ -90,6 +90,7 @@ Marcos: `M` MITRE ATT&CK for ICS, `I` IEC 62443, `C` NERC CIP, `N` NIST 800-82, 
 | nerc-cip | NERC CIP | 62 | sin declarar: la version vigente varia por estandar | sin revisar | Las referencias a NERC CIP son orientativas y no constituyen una determinacion de cumplimiento. La aplicabilidad de cada requisito depende de la categorizacion de impacto de los BES Cyber Systems (CIP-002) y de la version vigente del estandar, que no pueden inferirse del trafico ni de un inventario. |
 | nist-800-82 | NIST SP 800-82 / 800-53 | 83 | SP 800-53 Rev. 5; SP 800-82 Rev. 3 | sin revisar | Los controles citados son de NIST SP 800-53 Rev. 5, el catalogo sobre el que NIST SP 800-82 Rev. 3 define la guia para OT. Son orientativos y no equivalen a una evaluacion de cumplimiento. |
 | nist-csf | NIST CSF 2.0 | 83 | CSF 2.0 (2024-02-26) | sin revisar | Las subcategorias citadas son de NIST CSF 2.0. Son orientativas: un analisis pasivo aporta evidencia tecnica relacionada, no un perfil de CSF ni una evaluacion de cumplimiento. La funcion es el prefijo del identificador (GV, ID, PR, DE, RS, RC); Govern (GV) no tiene evidencia observable en el trafico. |
+| tsa-sd-1580-82 | TSA SD 1580/82-2022-01E (seccion III) | 71 | TSA SD 1580/82-2022-01E; SP 800-53 Rev. 5 | sin revisar | Referencias derivadas de dos mapeos propios sin revisar (hallazgo a controles de NIST SP 800-53 y medida de la TSA a controles de NIST SP 800-53). Una referencia no es equivalencia ni prueba de cumplimiento; las medidas documentales de la directiva no se citan. |
 
 ## Cobertura por marco
 
@@ -240,7 +241,7 @@ Operaciones de escritura o comando que se registran en `control.csv`. La lectura
 | `--no-diagrams` | no | - | No generar los diagramas de red |
 | `--diagram-max-nodes` | no | 40 | Equipos maximos en el diagrama por activo (los de mayor riesgo primero). Por defecto 40. |
 | `--diagram-max-edges` | no | 60 | Trazos maximos en el diagrama por activo; se conservan los de mayor criticidad y volumen. Por defecto 60. |
-| `--estandar` | no | - | Marco(s) de referencia de los hallazgos, separados por coma; el primero rige el texto del reporte. Disponibles: iec62443, nerc-cip, nist-800-82, nist-csf (mas los de --estandar-archivo). Por defecto iec62443. |
+| `--estandar` | no | - | Marco(s) de referencia de los hallazgos, separados por coma; el primero rige el texto del reporte. Disponibles: iec62443, nerc-cip, nist-800-82, nist-csf, tsa-sd-1580-82 (mas los de --estandar-archivo). Por defecto iec62443. |
 | `--estandar-archivo` | no | - | Marco propio en JSON (ver README). Se puede repetir. |
 
 ### `python ot_pcap_assess.py diagrama` (exportaciones de plataformas)

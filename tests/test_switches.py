@@ -429,12 +429,12 @@ class HigieneTest(unittest.TestCase):
         from ot_assess import playbooks
         from ot_assess import standards as st
         from ot_assess.switches import higiene as hg
-        esperado = {hg.TIT_SIN_ESPEJO: {"iec62443", "nerc-cip", "nist-800-82", "nist-csf"},
-                    hg.TIT_GESTION: {"iec62443", "nerc-cip", "nist-800-82", "nist-csf", "mitre-ics"},
+        esperado = {hg.TIT_SIN_ESPEJO: {"iec62443", "nerc-cip", "nist-800-82", "nist-csf", "tsa-sd-1580-82"},
+                    hg.TIT_GESTION: {"iec62443", "nerc-cip", "nist-800-82", "nist-csf", "mitre-ics", "tsa-sd-1580-82"},
                     hg.TIT_CRED: {"iec62443", "nerc-cip", "nist-800-82", "nist-csf", "mitre-ics"},
-                    hg.TIT_AAA: {"iec62443", "nerc-cip", "nist-800-82", "nist-csf"},
-                    hg.TIT_PUERTOS: {"iec62443", "nerc-cip", "nist-800-82", "nist-csf"},
-                    hg.TIT_VLAN1: {"iec62443", "nerc-cip", "nist-800-82", "nist-csf"}}
+                    hg.TIT_AAA: {"iec62443", "nerc-cip", "nist-800-82", "nist-csf", "tsa-sd-1580-82"},
+                    hg.TIT_PUERTOS: {"iec62443", "nerc-cip", "nist-800-82", "nist-csf", "tsa-sd-1580-82"},
+                    hg.TIT_VLAN1: {"iec62443", "nerc-cip", "nist-800-82", "nist-csf", "tsa-sd-1580-82"}}
         for tit, claves in esperado.items():
             self.assertEqual(set(st.referencias(tit)), claves, tit)
             self.assertTrue(playbooks.para_titulo(tit), tit)

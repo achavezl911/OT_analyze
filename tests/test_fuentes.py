@@ -167,7 +167,7 @@ class FuentesTest(unittest.TestCase):
         self.assertEqual(hall[0]["severidad"], "Informativa")
         self.assertIn("lab", hall[0]["evidencia"])
         self.assertNotIn("dmz,", hall[0]["evidencia"])
-        self.assertEqual(len(hall[0]["referencias"]) , 4)      # los cinco marcos menos MITRE, sin referencia
+        self.assertEqual(len(hall[0]["referencias"]) , 5)      # los seis marcos menos MITRE, sin referencia
 
     def test_cruces_del_firewall_llevan_fuentes(self):
         out, _ = self._cli("c2", "--firewall", str(self.fw), *[x for f in self._fuentes_cli() for x in ("--fuente-flujos", f)])

@@ -294,7 +294,7 @@ class RutasTest(unittest.TestCase):
         h = f[hg.TIT_RUTAS]
         self.assertEqual(h["severidad"], "Media")                # hay trafico hacia 172.16.5.0/24 sin ARP
         self.assertIn("172.16.5.0/24 -> 10.10.1.254 (inside)", h["evidencia"])
-        self.assertEqual(set(h["referencias"]), {e.clave for e in ESTANDARES.values()})
+        self.assertEqual(set(h["referencias"]), {e.clave for e in ESTANDARES.values() if e.clave != "tsa-sd-1580-82"})   # derivado: este hallazgo no cita medida tecnica
         self.assertNotIn(MITRE.clave, h["referencias"])
         self.assertIn("CM-2", h["referencias"]["nist-800-82"])
         self.assertIn("SR 7.6", h["referencias"]["iec62443"])

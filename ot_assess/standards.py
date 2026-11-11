@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from . import json_entrada
+from . import tsa_hallazgos as _tsa_hallazgos
 from .i18n import t, unir
 
 DIR_MARCOS = Path(__file__).parent / "marcos"
@@ -87,6 +88,8 @@ def _incluido(clave: str) -> Estandar:
 # las columnas del reporte y el catalogo).
 MITRE = _incluido("mitre-ics")
 ESTANDARES: dict = {c: _incluido(c) for c in ("iec62443", "nerc-cip", "nist-800-82", "nist-csf")}
+# Marco derivado en tiempo de ejecucion de nist-800-82 y de las medidas de la TSA (D118); no entra por defecto.
+ESTANDARES[_tsa_hallazgos.CLAVE] = _tsa_hallazgos.construir(ESTANDARES["nist-800-82"])
 
 
 def linea_fuente(e: Estandar) -> str:

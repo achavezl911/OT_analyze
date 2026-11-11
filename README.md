@@ -129,7 +129,7 @@ recursiva).
 | `--switch` | Salida de la CLI de un switch Cisco IOS/IOS-XE o Aruba AOS-CX, o recorrido SNMP (`snmpwalk -On`) de cualquier fabricante, repetible; el formato se detecta solo ([detalle](#switches-cisco-iosios-xe---switch), [AOS-CX](#switches-aruba-aos-cx), [SNMP](#switches-por-recorrido-snmp)): puerto y VLAN de cada activo por MAC y, con la CLI de Cisco, cobertura de las sesiones SPAN. No guarda contraseñas ni comunidades. |
 | `--rutas-firewall` | Tabla de rutas de un firewall (formatos en [Rutas del firewall](#rutas-del-firewall)). Asigna a cada IP la interfaz por la que el firewall la alcanza, marca los conductos que cruzan el firewall y agrupa los diagramas por interfaz. |
 | `--no-diagrams` | No genera los diagramas de red. |
-| `--estandar` | Marco(s) de referencia de los hallazgos, separados por coma: `iec62443` (por defecto), `nerc-cip`, `nist-800-82`, `nist-csf`. El primero rige el texto del reporte. Ver [Estándares](#estándares-de-referencia). |
+| `--estandar` | Marco(s) de referencia de los hallazgos, separados por coma: `iec62443` (por defecto), `nerc-cip`, `nist-800-82`, `nist-csf`, `tsa-sd-1580-82` (derivado, ver TSA2). El primero rige el texto del reporte. Ver [Estándares](#estándares-de-referencia). |
 | `--estandar-archivo` | Marco propio en JSON. Se puede repetir. |
 | `--diagram-max-nodes` | Equipos máximos en el diagrama por activo. Entran primero los que reciben escrituras o participan en conductos críticos. Por defecto 40. |
 | `--diagram-max-edges` | Trazos máximos en el diagrama por activo; se conservan los de mayor criticidad y volumen. Por defecto 60. |
@@ -612,6 +612,7 @@ python ot_pcap_assess.py capturas/ -o reporte/ --estandar iec62443,nerc-cip,nist
 | `nerc-cip` | NERC CIP (CIP-005, -007, -010, -015) | Se presentan como candidatos a Puntos de Acceso Electrónico (EAP) del perímetro (ESP). |
 | `nist-800-82` | NIST SP 800-82 Rev. 3 / controles SP 800-53 Rev. 5 | Se presentan como control de frontera entre zonas (SC-7). |
 | `nist-csf` | NIST CSF 2.0 (subcategorías; la función es el prefijo) | Se presentan como protección de redes (PR.IR-01). Govern (GV) no tiene evidencia en el tráfico. |
+| `tsa-sd-1580-82` | TSA SD 1580/82-2022-01E, sección III (derivado de SP 800-53, TSA2) | Se presentan como medida técnica de frontera entre zonas (III.B.1.b). Sin revisar. |
 
 `ot_assess/marcos/iec62443_niveles.json` (módulo `niveles62443.py`, D75) es el catálogo de requisitos y niveles de seguridad
 de ISA/IEC 62443: FR, SR y RE de la 3-3 con lo que se pide en SL 1-4, requisitos de componente (4-2), ZCR (3-2) y madurez y SPR
@@ -858,6 +859,14 @@ evaluable»; las técnicas, el agregado de las filas NIST de la corrida por un m
 (`ot_assess/marcos/tsa_sd_1580_82.json`: solo ids y títulos cortos propios). La sección del reporte suma una fila por
 letra (III.A a III.F). Una correspondencia no es equivalencia ni cumplimiento; el Plan de Implementación del cliente
 (CIP) es SSI, se contrasta a mano y nunca va al repo. Sin `tsa_sd` la matriz no cambia.
+
+**Referencias de la TSA por hallazgo (TSA2, D118).** `--estandar tsa-sd-1580-82` (o `{"clave": "tsa-sd-1580-82"}` en
+`marcos` del perfil) agrega la columna `tsa-sd-1580-82` a `hallazgos.csv` y la cita en los reportes como a los demás
+marcos; no entra por defecto. No hay mapeo nuevo: se deriva al ejecutar de los dos existentes, hallazgo a controles
+SP 800-53 (`nist-800-82.json`) y medida a controles SP 800-53 (`tsa_sd_1580_82.json`). Un hallazgo cita las medidas
+**técnicas** (III.x) cuyo mapeo incluye el control base de alguno de sus controles (SC-7(3) cuenta como SC-7), en el
+orden de la directiva y sin repetir; las documentales no se citan, y un hallazgo sin medidas queda sin referencia.
+Mapeos propios sin revisar: una referencia no es equivalencia ni cumplimiento.
 
 **Versión de CVSS que decide (CV4b, D114).** `version_cvss` del perfil: `"3"` (por defecto; también 3.0, 3.1) o `"4"` (4.0).
 Con `"4"`, severidad, orden y umbral de Alta se calculan con CVSS v4.0 donde existe y con v3 donde no: en

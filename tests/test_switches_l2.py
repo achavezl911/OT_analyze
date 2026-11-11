@@ -467,7 +467,7 @@ class HallazgosL2Test(unittest.TestCase):
     def test_marcos_playbooks_e_ingles(self):
         from ot_assess import playbooks
         for tit in (hg.TIT_L2, hg.TIT_DTP, hg.TIT_STP):
-            self.assertEqual(set(st.referencias(tit)), {"iec62443", "nist-800-82", "nist-csf", "mitre-ics"}, tit)
+            self.assertEqual(set(st.referencias(tit)), {"iec62443", "nist-800-82", "nist-csf", "mitre-ics", "tsa-sd-1580-82"}, tit)
             pb = playbooks.cargar()[playbooks.para_titulo(tit)]
             self.assertIn("Switch Cisco IOS/IOS-XE", pb["por_plataforma"])
             self.assertIn("ventana", " ".join(pb["pasos"] + pb["precauciones"]).lower())

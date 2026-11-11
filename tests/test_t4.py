@@ -146,7 +146,8 @@ class DeteccionesT4Test(unittest.TestCase):
         from ot_assess import standards as st
         for titulo in TITULOS:
             refs = st.referencias(titulo)
-            self.assertEqual(set(refs), {"mitre-ics", "iec62443", "nist-800-82", "nerc-cip", "nist-csf"}, titulo)
+            self.assertEqual(set(refs) - {"tsa-sd-1580-82"},      # derivado (D118): solo si hay medida tecnica
+                             {"mitre-ics", "iec62443", "nist-800-82", "nerc-cip", "nist-csf"}, titulo)
         self.assertIn("T0816", st.referencias(T_DNP3)["mitre-ics"])
         self.assertIn("SC-13", st.referencias(T_TLS)["nist-800-82"])
 
