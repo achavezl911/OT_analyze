@@ -125,7 +125,9 @@ class TablaTest(unittest.TestCase):
     def test_goose_no_evaluable(self):
         cap = _cap()
         _correr(cap, _ws__col__protocol="GOOSE", eth__src="aa:00:00:00:00:01", eth__dst="01:0c:cd:01:00:01")
-        _correr(cap, _ws__col__protocol="SV", eth__src="aa:00:00:00:00:02", eth__dst="01:0c:cd:04:00:01")
+        cap.l2_flows[("aa:00:00:00:00:02", "01:0c:cd:04:00:01")] += 5000
+        cap.l2_flows[("aa:00:00:00:00:03", "01:0c:cd:01:00:09")] += 1
+        cap.ethertypes["SV"] += 5000
         for n in ("GOOSE (IEC 61850)", "SV (IEC 61850 Sampled Values)"):
             f = _fila_de(cap, n)
             self.assertEqual((f[COL["observado"]], f[COL["conductos_en_claro"]], f[COL["evidencia"]]),
@@ -155,10 +157,11 @@ class TablaTest(unittest.TestCase):
 
 
 class FiltroTest(unittest.TestCase):
-    def test_filtro_incluye_33_y_131_y_sv(self):
+    def test_filtro_incluye_33_y_131_y_no_sv(self):
         dnp3 = next(p for p in DETAIL_FILTER_PARTS if p.startswith("dnp3.al.func in"))
         self.assertIn("32, 33, 131}", dnp3)
-        self.assertIn("sv", DETAIL_FILTER_PARTS)
+        # SV es ciclico de alta tasa: no pasa por el detalle; sus pares salen de l2_flows.
+        self.assertNotIn("sv", DETAIL_FILTER_PARTS)
 
     def test_33_y_131_no_cambian_otros_colectores(self):
         base = _cap()
@@ -174,9 +177,20 @@ class FiltroTest(unittest.TestCase):
         base, sv = _cap(), _cap()
         _correr(base, eth__src="aa:00:00:00:00:02", eth__dst="01:0c:cd:04:00:01")
         _correr(sv, _ws__col__protocol="SV", eth__src="aa:00:00:00:00:02", eth__dst="01:0c:cd:04:00:01")
-        a, b = copy.copy(vars(base)), copy.copy(vars(sv))
-        a.pop("protocolo_eventos"), b.pop("protocolo_eventos")
-        self.assertEqual(a, b)
+        self.assertEqual(copy.copy(vars(base)), copy.copy(vars(sv)))
+
+    def test_acumulado_con_indice(self):
+        cap = _cap()
+        for _ in range(500):
+            _correr(cap, _ws__col__protocol="MMS", ip__src="10.0.0.1", ip__dst="10.0.0.2")
+            _correr(cap, _ws__col__protocol="MMS", ip__src="10.0.0.3", ip__dst="10.0.0.2")
+        self.assertEqual(sorted((e["clave"], e["n"]) for e in cap.protocolo_eventos),
+                         [(["MMS", "10.0.0.1", "10.0.0.2"], 500), (["MMS", "10.0.0.3", "10.0.0.2"], 500)])
+        # Si la lista cambia de objeto (filtro de equipos propios, cache), el indice se rehace.
+        cap.protocolo_eventos = json.loads(json.dumps(cap.protocolo_eventos))
+        _correr(cap, _ws__col__protocol="MMS", ip__src="10.0.0.1", ip__dst="10.0.0.2")
+        self.assertEqual(sorted(e["n"] for e in cap.protocolo_eventos), [500, 501])
+        self.assertEqual(len(cap.protocolo_eventos), 2)
 
 
 class SalidaTest(unittest.TestCase):

@@ -46,6 +46,11 @@ def _pares_flujos(caps, puertos) -> set:
     return {(f["src"], f["dst"]) for c in caps for f in c.flows.values() if (f["dport"], f["l4"]) in want}
 
 
+def _pares_l2(caps, prefijo: str) -> set:
+    """Pares (MAC origen, MAC destino) de cap.l2_flows con destino en el rango multicast `prefijo`."""
+    return {(s, d) for c in caps for (s, d) in c.l2_flows if (d or "").lower().startswith(prefijo)}
+
+
 def _pares_vistos(caps, proto: str) -> set:
     return {(e["origen"], e["destino"]) for e in _eventos(caps, "p62351_visto") if e["proto"] == proto}
 
@@ -72,12 +77,16 @@ def _cubierto(caps, p: dict) -> list:
     seguro = len(_pares_flujos(caps, p["seguro"]))
     dec = p["decodificado"]
     if p["proteccion"] == "capa2":
-        pares = _pares_vistos(caps, dec)
+        multicast = p.get("mac_destino_multicast")
+        pares = _pares_l2(caps, multicast) if multicast else _pares_vistos(caps, dec)
         vio = bool(pares) or any(c.ethertypes.get(dec) for c in caps)
         if not vio:
             return _fila(p["protocolo"], partes, False, 0, 0, 0, "", NO_VISTO, [t("Protocolo no visto en la captura.")])
         piezas.append(t("{proto} visto; la extension de seguridad de IEC 62351-6 no se decodifica en esta version.",
                         proto=dec))
+        if multicast:
+            piezas.append(t("Pares contados por MAC de destino multicast {prefijo}xx:xx; un flujo unicast no se cuenta.",
+                            prefijo=multicast))
         return _fila(p["protocolo"], partes, True, len(pares), 0, 0, "", NO_EVALUABLE, piezas)
     claro = _pares_flujos(caps, p["claro"])
     sin_decodificar = 0

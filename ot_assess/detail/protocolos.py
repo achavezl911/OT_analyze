@@ -10,6 +10,8 @@ colector correspondiente no genera eventos):
 """
 from __future__ import annotations
 
+import weakref
+
 from ..catalog import TLS_SUITES_DEBILES, TLS_VERSIONES_OBSOLETAS
 from ..util import _int_or_none
 from .base import COLLECTORS, RowCtx
@@ -101,21 +103,33 @@ def dnp3_reinicio(rc: RowCtx) -> None:
 # --- Evidencia observable de IEC 62351 (D117): agregados por clave, sin un evento por paquete ---
 PUERTOS_TLS_62351 = (19998, 19999, 3782)
 DNP3_AUTENTICACION = {32: "Authenticate Request", 33: "Authenticate Request No Ack", 131: "Authenticate Response"}
-DECODIFICADOS_62351 = {"MMS": "MMS", "S7COMM": "S7comm", "GOOSE": "GOOSE", "SV": "SV"}
+# SV no pasa por el detalle (trafico ciclico de alta tasa): sus pares salen de cap.l2_flows en iec62351.py.
+DECODIFICADOS_62351 = {"MMS": "MMS", "S7COMM": "S7comm", "GOOSE": "GOOSE"}
+# Indice (tipo, clave) -> evento por captura, para no recorrer protocolo_eventos en cada paquete.
+# Se rehace si la lista de eventos cambio de objeto (filtro de equipos propios, recarga del cache).
+_INDICE_62351: weakref.WeakKeyDictionary = weakref.WeakKeyDictionary()
 
 
 def _acumular(rc: RowCtx, clave: tuple, evento: dict) -> None:
-    for e in rc.cap.protocolo_eventos:
-        if e["tipo"] == evento["tipo"] and e["clave"] == list(clave):
-            e["n"] += 1
-            return
-    rc.cap.protocolo_eventos.append({**evento, "clave": list(clave), "n": 1})
+    lista = rc.cap.protocolo_eventos
+    guardado = _INDICE_62351.get(rc.cap)
+    if guardado is None or guardado[0] is not lista:
+        guardado = (lista, {(e["tipo"], tuple(e["clave"])): e for e in lista if "clave" in e})
+        _INDICE_62351[rc.cap] = guardado
+    k = (evento["tipo"], tuple(clave))
+    e = guardado[1].get(k)
+    if e is not None:
+        e["n"] += 1
+        return
+    e = {**evento, "clave": list(clave), "n": 1}
+    lista.append(e)
+    guardado[1][k] = e
 
 
 @COLLECTORS
 def evidencia_62351(rc: RowCtx) -> None:
     """ServerHello desde los puertos TLS de 62351, funciones de autenticacion segura de DNP3 y
-    protocolo decodificado por par (MMS contra S7comm en 102, GOOSE y SV en capa 2)."""
+    protocolo decodificado por par (MMS contra S7comm en 102, GOOSE en capa 2; SV sale de cap.l2_flows)."""
     if "2" in _lista(rc, "tls.handshake.type"):
         puerto = _int_or_none(rc.get("tcp.srcport"))
         if puerto in PUERTOS_TLS_62351:

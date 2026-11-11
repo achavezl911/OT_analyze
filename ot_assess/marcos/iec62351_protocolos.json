@@ -45,6 +45,7 @@
       "claro": [],
       "seguro": [],
       "decodificado": "SV",
+      "mac_destino_multicast": "01:0c:cd:04:",
       "proteccion": "capa2"
     }
   ],

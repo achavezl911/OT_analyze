@@ -279,7 +279,6 @@ DETAIL_FILTER_PARTS = [
     "iec60870_asdu.typeid >= 45",
     "s7comm",
     "goose",
-    "sv",
     "mms",
     "bacapp",
     "opcua",

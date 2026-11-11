@@ -1860,6 +1860,7 @@
     "Parchar o actualizar el firmware de un controlador o de un servidor SCADA sin probar puede detener el proceso o dejar el equipo inutilizable; la urgencia de una vulnerabilidad explotada no justifica un cambio sin ventana ni respaldo.": "Patching or updating the firmware of a controller or SCADA server without testing can stop the process or leave the device unusable; the urgency of an exploited vulnerability does not justify a change without a window or a backup.",
     "Parchar o actualizar el firmware de un controlador o de un servidor SCADA sin probar puede detener el proceso, perder el soporte del fabricante o dejar el equipo inutilizable.": "Patching or updating the firmware of a controller or a SCADA server without testing can stop the process, lose vendor support or leave the device unusable.",
     "Parcial": "Partial",
+    "Pares contados por MAC de destino multicast {prefijo}xx:xx; un flujo unicast no se cuenta.": "Pairs counted by multicast destination MAC {prefijo}xx:xx; a unicast stream is not counted.",
     "Pares regla de ida -> regla de retorno: {n}. {lista}": "Forward rule -> return rule pairs: {n}. {lista}",
     "Particion de aplicaciones": "Application partitioning",
     "Pasar a permitir con inspeccion salvo justificacion de rendimiento documentada.": "Change to allow with inspection unless a performance justification is documented.",
