@@ -181,6 +181,8 @@ con la configuración se cuentan en la nota y los avisos, y no se les inventan c
 la IP no cambia. No se modela la traducción de puertos (`service`) ni el NAT de otros fabricantes ni entre firewalls en
 cadena. Un activo cuya IP es un mapeado lleva la columna `nota_nat` en el inventario (no se fusiona con el real).
 
+Varias tomas de `show nat detail` (F6c): pegue cada toma con su prompt en la sesión, en orden cronológico, o ponga un archivo por toma en la carpeta (`show_nat_detail_20261106.txt`, `show_nat_detail_20261110.txt`; se leen por nombre, por eso la fecha AAAAMMDD). Cada regla usa el máximo de sus contadores y, si algún contador baja entre dos tomas (clear, despliegue o reinicio), `firewall_nat.csv` lo marca en `reinicio_contadores` y la nota lo dice; agrega `tomas_nat`, `translate_hits_por_toma` y `untranslate_hits_por_toma`.
+
 Con `--firewall` también sale el inventario de lo que cruza el firewall (los conductos que no son `no_cruza`):
 `firewall_cruces.csv` (hoja «Cruces del firewall»), agregado por par de interfaces, protocolo, puerto y protocolo de
 aplicación (orígenes, destinos, ejemplos, conductos, bytes, permitidos, denegados, reglas actuales y destinos en

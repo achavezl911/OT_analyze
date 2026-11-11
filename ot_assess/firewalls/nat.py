@@ -18,6 +18,8 @@ from __future__ import annotations
 
 import ipaddress
 
+from ..i18n import t, unir
+
 LADO_MAPEADO = "lado mapeado"
 LADO_REAL = "lado real"
 INVERSO = " (inverso)"
@@ -26,6 +28,8 @@ COL_NAT = ["linea", "interfaces", "tipo", "origen_real", "origen_mapeado", "dest
            "descripcion", "conductos_traducidos", "estado",
            "origen_real_red", "origen_mapeado_red", "destino_mapeado_red", "destino_real_red"]
 COL_CONTADORES = ["translate_hits", "untranslate_hits"]      # F6b: solo con show nat detail
+COL_TOMAS = ["tomas_nat", "translate_hits_por_toma", "untranslate_hits_por_toma",
+             "reinicio_contadores"]                           # F6c: solo con dos o mas tomas
 ESTADO_CON_ACIERTOS = "sin trafico en la ventana, con aciertos en el contador"
 ESTADO_SIN_ACIERTOS = "sin aciertos en el contador"
 HOJA_NAT = "NAT del firewall"
@@ -190,6 +194,14 @@ def _txt_redes(redes) -> str:
     return "any" if redes is None else ",".join(str(r) for r in redes)
 
 
+def _tomas(n) -> dict:
+    """F6c: columnas por toma; el valor de una toma en que la regla no se emparejo queda vacio."""
+    def lista(i):
+        return "; ".join("" if h is None or h[i] is None else str(h[i]) for h in n.hits_por_toma)
+    return {"tomas_nat": sum(1 for h in n.hits_por_toma if h), "translate_hits_por_toma": lista(0),
+            "untranslate_hits_por_toma": lista(1), "reinicio_contadores": "si" if n.bajadas() else ""}
+
+
 def filas(nats, traductor) -> list:
     """Filas (dicts con COL_NAT y, con show nat detail, COL_CONTADORES) de firewall_nat.csv, en el orden de
     evaluacion. Las redes salen de los objetos de la configuracion o, si faltan, de show nat detail."""
@@ -207,6 +219,8 @@ def filas(nats, traductor) -> list:
              "destino_real_red": _txt_redes(n.red_destino_real) if n.destino else "",
              "translate_hits": "" if n.hits_traducidos is None else n.hits_traducidos,
              "untranslate_hits": "" if n.hits_inversos is None else n.hits_inversos}
+        if len(n.hits_por_toma) > 1:
+            f.update(_tomas(n))
         out.append(f)
     return out
 
@@ -216,20 +230,31 @@ def nota(fw) -> str:
     d = getattr(fw, "nat_detalle", None)
     if not d:
         return ""
-    t = (f"show nat detail: {d['reglas_detalle']} reglas leidas, {d['sin_emparejar']} sin emparejar con la "
-         f"configuracion, {d['config_sin_contador']} reglas de la configuracion sin contadores")
+    piezas = [t("show nat detail: {leidas} reglas leidas, {sin} sin emparejar con la configuracion, {falta} reglas "
+                "de la configuracion sin contadores", leidas=d["reglas_detalle"], sin=d["sin_emparejar"],
+                falta=d["config_sin_contador"])]
     if d.get("modeladas_con_detalle"):
-        t += f"; {d['modeladas_con_detalle']} modeladas con las redes de show nat detail (falta un objeto)"
-    return t
+        piezas.append(t("{n} modeladas con las redes de show nat detail (falta un objeto)",
+                        n=d["modeladas_con_detalle"]))
+    if d.get("tomas", 1) > 1:
+        piezas.append(t("{n} tomas de show nat detail; se usa el maximo por regla", n=d["tomas"]))
+        nombres = [f"{i}={x}" for i, x in enumerate(d.get("nombres") or [], 1) if x]
+        if nombres:
+            piezas.append(t("tomas: {lista}", lista=", ".join(nombres)))
+        for a, b in d.get("reinicios") or []:
+            piezas.append(t("contadores reiniciados entre la toma {a} y la {b} (clear, despliegue o reinicio del "
+                            "equipo): los aciertos entre esas tomas no se ven", a=a, b=b))
+    return unir("; ", piezas)
 
 
 def columnas(nat: dict) -> list:
-    return (["firewall"] if nat.get("multiple") else []) + COL_NAT + (COL_CONTADORES if nat.get("con_contadores") else [])
+    return (["firewall"] if nat.get("multiple") else []) + COL_NAT + (COL_CONTADORES if nat.get("con_contadores") else []) \
+        + (COL_TOMAS if any("tomas_nat" in x for x in nat["filas"]) else [])
 
 
 def filas_tabla(nat: dict) -> list:
     cols = columnas(nat)
-    return [[x[c] for c in cols] for x in nat["filas"]]
+    return [[x.get(c, "") for c in cols] for x in nat["filas"]]
 
 
 def hay(fw: dict) -> bool:

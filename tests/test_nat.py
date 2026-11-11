@@ -4,6 +4,7 @@ from __future__ import annotations
 import csv
 import io
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -357,6 +358,110 @@ class ShowNatDetailTest(unittest.TestCase):
         self.assertFalse(d["nat"]["con_contadores"])
         self.assertEqual(_fila(d)["origen_real_red"], "10.10.1.5/32")
         self.assertFalse(any("show nat detail" in a for a in _fw(OBJ + TWICE + PERMITE).avisos))
+
+
+CFG_C = (OBJ + "object network LAN\n subnet 10.10.1.0 255.255.255.0\n"
+         "object network PUB\n subnet 172.20.0.0 255.255.255.0\n"
+         "nat (inside,outside) source static LAN PUB\n"
+         "nat (inside,outside) source static RS MS\n" + PERMITE)
+
+
+def _det_c(h1: tuple, h2: tuple) -> str:
+    return ("Manual NAT Policies (Section 1)\n"
+            "1 (inside) to (outside) source static LAN PUB\n"
+            f"    translate_hits = {h1[0]}, untranslate_hits = {h1[1]}\n"
+            "    Source - Origin: 10.10.1.0/24, Translated: 172.20.0.0/24\n"
+            "2 (inside) to (outside) source static RS MS\n"
+            f"    translate_hits = {h2[0]}, untranslate_hits = {h2[1]}\n"
+            "    Source - Origin: 10.10.1.5/32, Translated: 10.10.9.50/32\n")
+
+
+def _fw_tomas(config: str, *detalles: str):
+    return cisco.analizar_texto(_sesion(config) + "".join("FW1# show nat detail\n" + d for d in detalles))
+
+
+def _contraste_tomas(config: str, *detalles: str) -> dict:
+    return fi.contrastar(_fw_tomas(config, *detalles), [], "fw.txt", [], None)
+
+
+class VariasTomasTest(unittest.TestCase):
+    """F6c: varias tomas de show nat detail; maximo por regla y reinicio de contadores."""
+
+    def test_reinicio_entre_tomas_usa_el_maximo(self):
+        d = _contraste_tomas(CFG_C, _det_c((30, 0), (198, 12)), _det_c((0, 0), (0, 0)))
+        f0, f1 = _fila(d, 0), _fila(d, 1)
+        self.assertEqual((f0["translate_hits"], f0["untranslate_hits"]), (30, 0))
+        self.assertEqual((f1["translate_hits"], f1["untranslate_hits"]), (198, 12))
+        self.assertEqual([f["estado"] for f in d["nat"]["filas"]], [nt.ESTADO_CON_ACIERTOS] * 2)
+        self.assertEqual((f0["tomas_nat"], f0["translate_hits_por_toma"], f0["untranslate_hits_por_toma"],
+                          f0["reinicio_contadores"]), (2, "30; 0", "0; 0", "si"))
+        self.assertEqual((f1["translate_hits_por_toma"], f1["untranslate_hits_por_toma"]), ("198; 0", "12; 0"))
+        self.assertEqual(nt.columnas(d["nat"])[-4:], nt.COL_TOMAS)
+        self.assertIn("2 tomas de show nat detail; se usa el maximo por regla", d["nat"]["nota"])
+        self.assertIn("contadores reiniciados entre la toma 1 y la 2", d["nat"]["nota"])
+        self.assertFalse(any("sin emparejar" in a for a in _fw_tomas(CFG_C, _det_c((30, 0), (198, 12)),
+                                                                      _det_c((0, 0), (0, 0))).avisos))
+        self.assertEqual(d["nat"]["nota"].count("0 sin emparejar"), 1)
+
+    def test_contadores_que_suben_no_son_reinicio(self):
+        d = _contraste_tomas(CFG_C, _det_c((10, 1), (0, 0)), _det_c((25, 3), (0, 0)))
+        f0, f1 = _fila(d, 0), _fila(d, 1)
+        self.assertEqual((f0["translate_hits"], f0["reinicio_contadores"]), (25, ""))
+        self.assertEqual(f0["translate_hits_por_toma"], "10; 25")
+        self.assertEqual(f1["estado"], nt.ESTADO_SIN_ACIERTOS)
+        self.assertNotIn("reiniciados", d["nat"]["nota"])
+        self.assertIn("2 tomas", d["nat"]["nota"])
+
+    def test_sin_aciertos_en_todas_las_tomas_tras_reinicio_no_cambia_el_estado(self):
+        d = _contraste_tomas(CFG_C, _det_c((5, 0), (0, 0)), _det_c((0, 0), (0, 0)))
+        self.assertEqual(_fila(d, 1)["estado"], nt.ESTADO_SIN_ACIERTOS)
+        self.assertEqual(_fila(d, 1)["reinicio_contadores"], "")
+        self.assertIn("los aciertos entre esas tomas no se ven", d["nat"]["nota"])
+
+    def test_carpeta_con_dos_archivos_nombra_las_tomas(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, "00_sesion.txt").write_text(_sesion(CFG_C), encoding="utf-8")
+            Path(tmp, "show_nat_detail_20261110.txt").write_text(_det_c((0, 0), (0, 0)), encoding="utf-8")
+            Path(tmp, "show_nat_detail_20261106.txt").write_text(_det_c((30, 0), (198, 12)), encoding="utf-8")
+            fw = cisco.cargar(tmp)
+        d = fi.contrastar(fw, [], "fw.txt", [], None)
+        self.assertEqual((_fila(d, 0)["translate_hits_por_toma"], _fila(d, 0)["reinicio_contadores"]), ("30; 0", "si"))
+        self.assertEqual(_fila(d, 1)["untranslate_hits"], 12)
+        self.assertIn("1=show_nat_detail_20261106.txt, 2=show_nat_detail_20261110.txt", d["nat"]["nota"])
+        self.assertFalse(any("sin emparejar" in a for a in fw.avisos))
+
+    def test_una_toma_queda_como_en_f6b(self):
+        d = _contraste_tomas(CFG_C, _det_c((4, 0), (0, 0)))
+        self.assertEqual(nt.columnas(d["nat"]), nt.COL_NAT + nt.COL_CONTADORES)
+        self.assertNotIn("tomas_nat", d["nat"]["filas"][0])
+        self.assertEqual(d["nat"]["nota"], "show nat detail: 2 reglas leidas, 0 sin emparejar con la "
+                                           "configuracion, 0 reglas de la configuracion sin contadores")
+        self.assertEqual(d["nat"]["filas"][0]["translate_hits"], 4)
+        det = _det_c((4, 0), (0, 0)) + ("3 (dmz) to (outside) source static ZZ YY\n"
+                                        "    translate_hits = 9, untranslate_hits = 9\n")
+        self.assertEqual([a for a in _fw_tomas(CFG_C, det).avisos if "show nat detail" in a],
+                         ["show nat detail: 1 de 3 reglas sin emparejar con la configuracion y 0 de 2 reglas de la "
+                          + "configuracion sin contadores"])
+
+    def test_aviso_sin_emparejar_dice_la_toma(self):
+        extra = ("3 (dmz) to (outside) source static ZZ YY\n"
+                 "    translate_hits = 9, untranslate_hits = 9\n")
+        fw = _fw_tomas(CFG_C, _det_c((4, 0), (0, 0)), _det_c((6, 0), (0, 0)) + extra)
+        av = [a for a in fw.avisos if "show nat detail" in a]
+        self.assertEqual(len(av), 2)
+        self.assertTrue(av[1].startswith("show nat detail, toma 2: 1 de 3 reglas sin emparejar"))
+        self.assertTrue(av[0].startswith("show nat detail, toma 1: 0 de 2 reglas sin emparejar"))
+
+    def test_ingles(self):
+        from ot_assess import i18n
+        try:
+            i18n.usar("en")
+            d = _contraste_tomas(CFG_C, _det_c((30, 0), (198, 12)), _det_c((0, 0), (0, 0)))
+            nota = d["nat"]["nota"]
+        finally:
+            i18n.usar("es")
+        self.assertIn("2 show nat detail captures; the maximum per rule is used", nota)
+        self.assertIn("counters reset between capture 1 and 2", nota)
 
 
 class PropuestaYValidacionTest(Base):

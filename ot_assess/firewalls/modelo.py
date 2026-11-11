@@ -124,8 +124,18 @@ class Nat:
     # F6b: de `show nat detail` (None = la sesion no lo trae o la regla no se emparejo)
     hits_traducidos: int | None = None       # translate_hits desde el ultimo clear
     hits_inversos: int | None = None         # untranslate_hits
+    # F6c: una entrada por toma de show nat detail: (translate, untranslate) o None si la regla no se emparejo.
+    # hits_traducidos / hits_inversos son el maximo de las tomas que la emparejaron.
+    hits_por_toma: list = field(default_factory=list)
     redes_detalle: dict = field(default_factory=dict)   # origen_real|origen_mapeado|destino_mapeado|destino_real
     desde_detalle: bool = False      # se modelo con las redes de show nat detail (faltaba un objeto)
+
+    def bajadas(self) -> list:
+        """F6c: numeros k (desde 1) de las tomas k -> k+1 seguidas, ambas emparejadas, en que un contador bajo."""
+        h = self.hits_por_toma
+        return [k + 1 for k in range(len(h) - 1)
+                if h[k] and h[k + 1] and h[k][0] is not None and h[k + 1][0] is not None
+                and (h[k + 1][0] < h[k][0] or h[k + 1][1] < h[k][1])]
 
 
 @dataclass

@@ -4,7 +4,9 @@ Entrada: sesion de terminal pegada (prompts `host# show ...`) o carpeta con un a
 SEGURIDAD: solo se interpretan show route, show arp, nameif, interface ip brief, zone, access-list, object,
 object-group, nat y contadores (rule hits / show access-list). F6b: `show nat detail` (redes ya resueltas y
 translate_hits / untranslate_hits por regla; formato segun la documentacion de Cisco ASA/FTD, NO validado con
-un equipo real). Cualquier otra seccion, y toda linea
+un equipo real). F6c: varias tomas de `show nat detail` (una por seccion, en orden de aparicion; en una
+carpeta, por nombre de archivo): cada una se empareja por separado, el contador de la regla es el maximo y
+se detecta el reinicio (un contador que baja entre dos tomas seguidas). Cualquier otra seccion, y toda linea
 de un running-config que no sea de esos tipos (usuarios, comunidades SNMP, crypto...), se descarta
 sin copiarse a ningun campo del modelo.
 """
@@ -236,7 +238,8 @@ class _Analisis:
         self.acl_cfg: list[str] = []
         self.acl_show: list[str] = []
         self.hits_tabla: dict[str, tuple] = {}
-        self.nat_det: list[dict] = []        # F6b: reglas de show nat detail
+        self.nat_tomas: list[list] = []      # F6c: reglas de cada show nat detail (una lista por toma, en orden)
+        self.nombres_tomas: list[str] = []   # F6c: archivo de cada toma ('' si viene de una sesion pegada)
         self.nat_detalle: dict = {}
         self.hostname = ""
         self.v6 = 0
@@ -434,9 +437,19 @@ class _Analisis:
         if self.nat_detalle:
             self.nat_detalle["modeladas_con_detalle"] = sum(1 for n in self.nat if n.desde_detalle)
 
-    def natdet(self, lineas):
-        """F6b: reglas de `show nat detail` (seccion, interfaces, encabezado, contadores y redes)."""
-        sec, act = 0, None
+    def natdet(self, tomas):
+        """F6b/F6c: cada toma de `show nat detail` (lineas, nombre de archivo), en orden de aparicion. Una
+        toma sin reglas no cuenta."""
+        for lineas, nombre in tomas:
+            reglas = self._leer_natdet(lineas)
+            if reglas:
+                self.nat_tomas.append(reglas)
+                self.nombres_tomas.append(nombre)
+
+    @staticmethod
+    def _leer_natdet(lineas) -> list:
+        """Reglas de una toma (seccion, interfaces, encabezado, contadores y redes)."""
+        out, sec, act = [], 0, None
         for ln in lineas:
             s = ln.strip()
             m = _RE_ND_SEC.match(s)
@@ -447,7 +460,7 @@ class _Analisis:
             if m and sec:
                 act = {"seccion": sec, "ifc": [m["r"].strip(), m["m"].strip()], "tokens": m["resto"].split(),
                        "hits": None, "redes": {}}
-                self.nat_det.append(act)
+                out.append(act)
                 continue
             if act is None:
                 continue
@@ -464,27 +477,54 @@ class _Analisis:
                     r = _redes_detalle(txt)
                     if r is not False:
                         act["redes"][claves[0] if origen else claves[1]] = r
+        return out
 
     def _emparejar_nat(self):
-        """F6b: cada regla de show nat detail con una de la configuracion de su seccion (en orden), comprobando
-        interfaces y objetos. Lo que no empareja no se inventa: se cuenta."""
-        if not self.nat_det:
+        """F6b/F6c: cada regla de cada toma de show nat detail con una de la configuracion de su seccion (en
+        orden), comprobando interfaces y objetos; cada toma por separado. Lo que no empareja no se inventa: se
+        cuenta. Por regla: maximo de los contadores de las tomas que la emparejaron."""
+        if not self.nat_tomas:
             return
-        usados, sin = set(), 0
-        for e in self.nat_det:
+        for n in self.nat:
+            n.hits_por_toma = []
+        avisos, sin_t, tot_t = [], [], []
+        usados_any: set = set()
+        for k, reglas in enumerate(self.nat_tomas, 1):
+            usados, sin = set(), 0
+            for e in reglas:
+                for n in self.nat:
+                    if id(n) not in usados and n.seccion == e["seccion"] and _casa_detalle(n, e):
+                        usados.add(id(n))
+                        n.hits_por_toma.append(e["hits"] or (None, None))
+                        n.redes_detalle = e["redes"]
+                        break
+                else:
+                    sin += 1
             for n in self.nat:
-                if id(n) not in usados and n.seccion == e["seccion"] and _casa_detalle(n, e):
-                    usados.add(id(n))
-                    n.hits_traducidos, n.hits_inversos = e["hits"] or (None, None)
-                    n.redes_detalle = e["redes"]
-                    break
-            else:
-                sin += 1
-        self.nat_detalle = {"reglas_detalle": len(self.nat_det), "sin_emparejar": sin,
-                            "config_sin_contador": len(self.nat) - len(usados)}
-        if sin or len(usados) < len(self.nat):
-            self.avisar(f"show nat detail: {sin} de {len(self.nat_det)} reglas sin emparejar con la configuracion y "
-                        f"{len(self.nat) - len(usados)} de {len(self.nat)} reglas de la configuracion sin contadores")
+                if id(n) not in usados:
+                    n.hits_por_toma.append(None)
+            usados_any |= usados
+            sin_t.append(sin)
+            tot_t.append(len(reglas))
+            txt = (f"{sin} de {len(reglas)} reglas sin emparejar con la configuracion y "
+                   f"{len(self.nat) - len(usados)} de {len(self.nat)} reglas de la configuracion sin contadores")
+            avisos.append((k, txt))
+        reinicios = set()
+        for n in self.nat:
+            vistos = [h for h in n.hits_por_toma if h and h[0] is not None]
+            n.hits_traducidos = max((h[0] for h in vistos), default=None)
+            n.hits_inversos = max((h[1] for h in vistos), default=None)
+            reinicios.update(n.bajadas())
+        self.nat_detalle = {"reglas_detalle": max(tot_t), "sin_emparejar": max(sin_t),
+                            "config_sin_contador": len(self.nat) - len(usados_any),
+                            "tomas": len(self.nat_tomas), "reinicios": [[k, k + 1] for k in sorted(reinicios)],
+                            "nombres": list(self.nombres_tomas)}
+        if len(self.nat_tomas) == 1:
+            if sin_t[0] or len(usados_any) < len(self.nat):
+                self.avisar("show nat detail: " + avisos[0][1])
+        elif any(sin_t):
+            for k, txt in avisos:
+                self.avisar(f"show nat detail, toma {k}: {txt}")
 
     def _o_detalle(self, n, clave, red, err):
         """Si falto un objeto y show nat detail trae la red de ese operando, se usa."""
@@ -918,7 +958,8 @@ def _comando_de_archivo(nombre: str) -> str:
 
 def _analizar(entradas) -> Firewall:
     an = _Analisis()
-    por_clase: dict[str, list[str]] = {c: [] for c in ("ruta", "nameif", "brief", "zona", "config", "hits", "arp", "natdet")}
+    por_clase: dict[str, list[str]] = {c: [] for c in ("ruta", "nameif", "brief", "zona", "config", "hits", "arp")}
+    tomas: list = []                         # F6c: (lineas, archivo) de cada show nat detail, en orden
     hosts: list[str] = []
     for nombre, texto in entradas:
         secs, hs, hubo = _secciones(_limpiar(texto))
@@ -930,6 +971,7 @@ def _analizar(entradas) -> Firewall:
             if cls is None:                          # sin prompt ni nombre util: lo ofrece a todos
                 for lst in por_clase.values():
                     lst.extend(secs[0][1] + ["!"])
+                tomas.append((secs[0][1] + ["!"], nombre))
                 continue
         for cmd, lineas in secs:
             cls = _clase(cmd)
@@ -939,14 +981,17 @@ def _analizar(entradas) -> Firewall:
             if prob:
                 an.avisar(f"comando '{cmd[:60]}': {prob}")
                 continue
-            por_clase[cls].extend(lineas + ["!"])
+            if cls == "natdet":
+                tomas.append((lineas + ["!"], "" if hubo else nombre))
+            else:
+                por_clase[cls].extend(lineas + ["!"])
     if hosts:
         an.hostname = hosts[0]
         if len(set(hosts)) > 1:
             an.avisar("varios hostnames en la entrada ({}): se usa {}".format(", ".join(_unicos(hosts)), hosts[0]))
     an.config(por_clase["config"])
     an.hits(por_clase["hits"])
-    an.natdet(por_clase["natdet"])
+    an.natdet(tomas)
     rutas = _unicos_rutas(an.rutas(por_clase["ruta"]))
     interfaces = _interfaces(an, por_clase, rutas)
     arp = _arp(por_clase["arp"])
