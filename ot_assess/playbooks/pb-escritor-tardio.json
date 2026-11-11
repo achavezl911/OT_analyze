@@ -39,5 +39,5 @@
   ],
   "esfuerzo_estimado": "medio",
   "responsable": "Ingenieria de control y ciberseguridad OT",
-  "referencias": ["MITRE ICS T0855", "MITRE ICS T0836", "IEC 62443 SR 2.1", "IEC 62443 SR 5.2", "IEC 62443 SR 6.2", "NERC CIP-005 R1", "NERC CIP-007 R5", "NERC CIP-015", "NIST 800-82 AC-3", "NIST 800-82 AC-4", "NIST 800-82 SI-4", "NIST CSF PR.AA-05", "NIST CSF DE.CM-01", "NIST CSF DE.AE-02"]
+  "referencias": ["MITRE ICS T1692.001", "MITRE ICS T0836", "IEC 62443 SR 2.1", "IEC 62443 SR 5.2", "IEC 62443 SR 6.2", "NERC CIP-005 R1", "NERC CIP-007 R5", "NERC CIP-015", "NIST 800-82 AC-3", "NIST 800-82 AC-4", "NIST 800-82 SI-4", "NIST CSF PR.AA-05", "NIST CSF DE.CM-01", "NIST CSF DE.AE-02"]
 }

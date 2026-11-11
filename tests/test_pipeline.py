@@ -137,7 +137,7 @@ class PipelineTest(unittest.TestCase):
     def test_hallazgos_llevan_referencias(self):
         fila = next(r for r in _csv(self.out / "hallazgos.csv")
                     if r["titulo"].startswith("Operaciones de escritura"))
-        self.assertIn("T0855", fila["mitre_ics"])
+        self.assertIn("T1692.001", fila["mitre_ics"])
         self.assertIn("SR 2.1", fila["iec62443"])
 
     def test_inventario_une_los_dos_puntos_de_captura(self):

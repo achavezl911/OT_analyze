@@ -24,7 +24,7 @@ CLASES = ("descarga", "carga", "modo", "reinicio", "firmware", "forzado", "confi
 TECNICA = {
     "descarga": "T0843 Program Download", "carga": "T0845 Program Upload",
     "modo": "T0858 Change Operating Mode", "reinicio": "T0816 Device Restart/Shutdown",
-    "firmware": "T0857 System Firmware", "forzado": "T0836 Modify Parameter", "configuracion": "",
+    "firmware": "T1693.001 Modify Firmware: System Firmware", "forzado": "T0836 Modify Parameter", "configuracion": "",
 }
 
 

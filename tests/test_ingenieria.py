@@ -85,7 +85,7 @@ class SesionesTest(unittest.TestCase):
                     op(T0 + 2, "forzado", proto="X"))
         self.assertEqual([(f[6], f[10]) for f in ing.filas([c])],
                          [("configuracion", ""), ("forzado", "T0836 Modify Parameter"),
-                          ("firmware", "T0857 System Firmware")])
+                          ("firmware", "T1693.001 Modify Firmware: System Firmware")])
 
 
 class HallazgoTest(unittest.TestCase):
@@ -159,7 +159,7 @@ class TablasTest(unittest.TestCase):
         txt = next(v for sec in d.values() if isinstance(sec, dict) for kk, v in sec.items()
                    if kk == "actividad de ingenieria")
         self.assertEqual(txt, "T0843 Program Download; T0845 Program Upload; T0858 Change Operating Mode; "
-                              "T0816 Device Restart/Shutdown; T0857 System Firmware")
+                              "T0816 Device Restart/Shutdown; T1693.001 Modify Firmware: System Firmware")
 
 
 @unittest.skipUnless(shutil.which("tshark") and HAY_SCAPY, "requiere tshark y scapy")

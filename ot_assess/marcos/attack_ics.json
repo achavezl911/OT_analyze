@@ -1,0 +1,744 @@
+{
+ "aviso": "Copyright 2015-2026, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation. The MITRE Corporation (MITRE) hereby grants you a non-exclusive, royalty-free license to use ATT&CK(R) for research, development, and commercial purposes. Any copy you make for such purposes is authorized provided that you reproduce MITRE's copyright designation and this license in any such copy.",
+ "fuente": "mitre-attack/attack-stix-data ics-attack-20.1.json",
+ "marco": "MITRE ATT&CK for ICS",
+ "obsoletas": {
+  "T0807": "Command-Line Interface",
+  "T0853": "Scripting"
+ },
+ "publicada": "2026-11-05",
+ "revocadas": {
+  "T0803": {
+   "nombre": "Block Command Message",
+   "por": "T1691.001"
+  },
+  "T0804": {
+   "nombre": "Block Reporting Message",
+   "por": "T1691.002"
+  },
+  "T0805": {
+   "nombre": "Block Serial COM",
+   "por": "T1695.001"
+  },
+  "T0812": {
+   "nombre": "Default Credentials",
+   "por": "T1694.001"
+  },
+  "T0839": {
+   "nombre": "Module Firmware",
+   "por": "T1693.002"
+  },
+  "T0855": {
+   "nombre": "Unauthorized Command Message",
+   "por": "T1692.001"
+  },
+  "T0856": {
+   "nombre": "Spoof Reporting Message",
+   "por": "T1692.002"
+  },
+  "T0857": {
+   "nombre": "System Firmware",
+   "por": "T1693.001"
+  },
+  "T0891": {
+   "nombre": "Hardcoded Credentials",
+   "por": "T1694.002"
+  }
+ },
+ "tacticas": [
+  {
+   "id": "initial-access",
+   "nombre": "Initial Access"
+  },
+  {
+   "id": "execution",
+   "nombre": "Execution"
+  },
+  {
+   "id": "persistence",
+   "nombre": "Persistence"
+  },
+  {
+   "id": "privilege-escalation",
+   "nombre": "Privilege Escalation"
+  },
+  {
+   "id": "evasion",
+   "nombre": "Evasion"
+  },
+  {
+   "id": "discovery",
+   "nombre": "Discovery"
+  },
+  {
+   "id": "lateral-movement",
+   "nombre": "Lateral Movement"
+  },
+  {
+   "id": "collection",
+   "nombre": "Collection"
+  },
+  {
+   "id": "command-and-control",
+   "nombre": "Command and Control"
+  },
+  {
+   "id": "inhibit-response-function",
+   "nombre": "Inhibit Response Function"
+  },
+  {
+   "id": "impair-process-control",
+   "nombre": "Impair Process Control"
+  },
+  {
+   "id": "impact",
+   "nombre": "Impact"
+  }
+ ],
+ "tecnicas": {
+  "T0800": {
+   "nombre": "Activate Firmware Update Mode",
+   "tacticas": [
+    "inhibit-response-function"
+   ]
+  },
+  "T0801": {
+   "nombre": "Monitor Process State",
+   "tacticas": [
+    "collection"
+   ]
+  },
+  "T0802": {
+   "nombre": "Automated Collection",
+   "tacticas": [
+    "collection"
+   ]
+  },
+  "T0806": {
+   "nombre": "Brute Force I/O",
+   "tacticas": [
+    "impair-process-control"
+   ]
+  },
+  "T0809": {
+   "nombre": "Data Destruction",
+   "tacticas": [
+    "inhibit-response-function"
+   ]
+  },
+  "T0811": {
+   "nombre": "Data from Information Repositories",
+   "tacticas": [
+    "collection"
+   ]
+  },
+  "T0813": {
+   "nombre": "Denial of Control",
+   "tacticas": [
+    "impact"
+   ]
+  },
+  "T0814": {
+   "nombre": "Denial of Service",
+   "tacticas": [
+    "inhibit-response-function"
+   ]
+  },
+  "T0815": {
+   "nombre": "Denial of View",
+   "tacticas": [
+    "impact"
+   ]
+  },
+  "T0816": {
+   "nombre": "Device Restart/Shutdown",
+   "tacticas": [
+    "inhibit-response-function"
+   ]
+  },
+  "T0817": {
+   "nombre": "Drive-by Compromise",
+   "tacticas": [
+    "initial-access"
+   ]
+  },
+  "T0819": {
+   "nombre": "Exploit Public-Facing Application",
+   "tacticas": [
+    "initial-access"
+   ]
+  },
+  "T0820": {
+   "nombre": "Exploitation for Evasion",
+   "tacticas": [
+    "evasion"
+   ]
+  },
+  "T0821": {
+   "nombre": "Modify Controller Tasking",
+   "tacticas": [
+    "execution"
+   ]
+  },
+  "T0822": {
+   "nombre": "External Remote Services",
+   "tacticas": [
+    "initial-access"
+   ]
+  },
+  "T0823": {
+   "nombre": "Graphical User Interface",
+   "tacticas": [
+    "execution"
+   ]
+  },
+  "T0826": {
+   "nombre": "Loss of Availability",
+   "tacticas": [
+    "impact"
+   ]
+  },
+  "T0827": {
+   "nombre": "Loss of Control",
+   "tacticas": [
+    "impact"
+   ]
+  },
+  "T0828": {
+   "nombre": "Loss of Productivity and Revenue",
+   "tacticas": [
+    "impact"
+   ]
+  },
+  "T0829": {
+   "nombre": "Loss of View",
+   "tacticas": [
+    "impact"
+   ]
+  },
+  "T0830": {
+   "nombre": "Adversary-in-the-Middle",
+   "tacticas": [
+    "collection"
+   ]
+  },
+  "T0831": {
+   "nombre": "Manipulation of Control",
+   "tacticas": [
+    "impact"
+   ]
+  },
+  "T0832": {
+   "nombre": "Manipulation of View",
+   "tacticas": [
+    "impact"
+   ]
+  },
+  "T0834": {
+   "nombre": "Native API",
+   "tacticas": [
+    "execution"
+   ]
+  },
+  "T0835": {
+   "nombre": "Manipulate I/O Image",
+   "tacticas": [
+    "inhibit-response-function"
+   ]
+  },
+  "T0836": {
+   "nombre": "Modify Parameter",
+   "tacticas": [
+    "impair-process-control"
+   ]
+  },
+  "T0837": {
+   "nombre": "Loss of Protection",
+   "tacticas": [
+    "impact"
+   ]
+  },
+  "T0838": {
+   "nombre": "Modify Alarm Settings",
+   "tacticas": [
+    "inhibit-response-function"
+   ]
+  },
+  "T0840": {
+   "nombre": "Network Connection Enumeration",
+   "tacticas": [
+    "discovery"
+   ]
+  },
+  "T0842": {
+   "nombre": "Network Sniffing",
+   "tacticas": [
+    "discovery"
+   ]
+  },
+  "T0843": {
+   "nombre": "Program Download",
+   "tacticas": [
+    "lateral-movement"
+   ]
+  },
+  "T0843.001": {
+   "nombre": "Program Download: Download All",
+   "tacticas": [
+    "lateral-movement"
+   ]
+  },
+  "T0843.002": {
+   "nombre": "Program Download: Online Edit",
+   "tacticas": [
+    "lateral-movement"
+   ]
+  },
+  "T0843.003": {
+   "nombre": "Program Download: Program Append",
+   "tacticas": [
+    "lateral-movement"
+   ]
+  },
+  "T0845": {
+   "nombre": "Program Upload",
+   "tacticas": [
+    "collection"
+   ]
+  },
+  "T0846": {
+   "nombre": "Remote System Discovery",
+   "tacticas": [
+    "discovery"
+   ]
+  },
+  "T0846.001": {
+   "nombre": "Remote System Discovery: Port Scan",
+   "tacticas": [
+    "discovery"
+   ]
+  },
+  "T0846.002": {
+   "nombre": "Remote System Discovery: Broadcast Discovery",
+   "tacticas": [
+    "discovery"
+   ]
+  },
+  "T0846.003": {
+   "nombre": "Remote System Discovery: Multicast Discovery",
+   "tacticas": [
+    "discovery"
+   ]
+  },
+  "T0847": {
+   "nombre": "Replication Through Removable Media",
+   "tacticas": [
+    "initial-access"
+   ]
+  },
+  "T0848": {
+   "nombre": "Rogue Master",
+   "tacticas": [
+    "initial-access"
+   ]
+  },
+  "T0849": {
+   "nombre": "Masquerading",
+   "tacticas": [
+    "evasion"
+   ]
+  },
+  "T0851": {
+   "nombre": "Rootkit",
+   "tacticas": [
+    "evasion",
+    "inhibit-response-function"
+   ]
+  },
+  "T0852": {
+   "nombre": "Screen Capture",
+   "tacticas": [
+    "collection"
+   ]
+  },
+  "T0858": {
+   "nombre": "Change Operating Mode",
+   "tacticas": [
+    "execution",
+    "evasion"
+   ]
+  },
+  "T0859": {
+   "nombre": "Valid Accounts",
+   "tacticas": [
+    "persistence",
+    "lateral-movement"
+   ]
+  },
+  "T0860": {
+   "nombre": "Wireless Compromise",
+   "tacticas": [
+    "initial-access"
+   ]
+  },
+  "T0861": {
+   "nombre": "Point & Tag Identification",
+   "tacticas": [
+    "collection"
+   ]
+  },
+  "T0862": {
+   "nombre": "Supply Chain Compromise",
+   "tacticas": [
+    "initial-access"
+   ]
+  },
+  "T0863": {
+   "nombre": "User Execution",
+   "tacticas": [
+    "execution"
+   ]
+  },
+  "T0864": {
+   "nombre": "Transient Cyber Asset",
+   "tacticas": [
+    "initial-access"
+   ]
+  },
+  "T0865": {
+   "nombre": "Spearphishing Attachment",
+   "tacticas": [
+    "initial-access"
+   ]
+  },
+  "T0866": {
+   "nombre": "Exploitation of Remote Services",
+   "tacticas": [
+    "initial-access",
+    "lateral-movement"
+   ]
+  },
+  "T0867": {
+   "nombre": "Lateral Tool Transfer",
+   "tacticas": [
+    "lateral-movement"
+   ]
+  },
+  "T0868": {
+   "nombre": "Detect Operating Mode",
+   "tacticas": [
+    "collection"
+   ]
+  },
+  "T0869": {
+   "nombre": "Standard Application Layer Protocol",
+   "tacticas": [
+    "command-and-control"
+   ]
+  },
+  "T0869.001": {
+   "nombre": "Standard Application Layer Protocol: DNS",
+   "tacticas": [
+    "command-and-control"
+   ]
+  },
+  "T0869.002": {
+   "nombre": "Standard Application Layer Protocol: Publish/Subscribe Protocols",
+   "tacticas": [
+    "command-and-control"
+   ]
+  },
+  "T0871": {
+   "nombre": "Execution through API",
+   "tacticas": [
+    "execution"
+   ]
+  },
+  "T0872": {
+   "nombre": "Indicator Removal on Host",
+   "tacticas": [
+    "evasion"
+   ]
+  },
+  "T0873": {
+   "nombre": "Project File Infection",
+   "tacticas": [
+    "persistence"
+   ]
+  },
+  "T0873.001": {
+   "nombre": "Project File Infection: Siemens Project File Format",
+   "tacticas": [
+    "persistence"
+   ]
+  },
+  "T0874": {
+   "nombre": "Hooking",
+   "tacticas": [
+    "execution",
+    "privilege-escalation"
+   ]
+  },
+  "T0877": {
+   "nombre": "I/O Image",
+   "tacticas": [
+    "collection"
+   ]
+  },
+  "T0878": {
+   "nombre": "Alarm Suppression",
+   "tacticas": [
+    "inhibit-response-function"
+   ]
+  },
+  "T0879": {
+   "nombre": "Damage to Property",
+   "tacticas": [
+    "impact"
+   ]
+  },
+  "T0880": {
+   "nombre": "Loss of Safety",
+   "tacticas": [
+    "impact"
+   ]
+  },
+  "T0881": {
+   "nombre": "Service Stop",
+   "tacticas": [
+    "inhibit-response-function"
+   ]
+  },
+  "T0882": {
+   "nombre": "Theft of Operational Information",
+   "tacticas": [
+    "impact"
+   ]
+  },
+  "T0883": {
+   "nombre": "Internet Accessible Device",
+   "tacticas": [
+    "initial-access"
+   ]
+  },
+  "T0884": {
+   "nombre": "Connection Proxy",
+   "tacticas": [
+    "command-and-control"
+   ]
+  },
+  "T0885": {
+   "nombre": "Commonly Used Port",
+   "tacticas": [
+    "command-and-control"
+   ]
+  },
+  "T0886": {
+   "nombre": "Remote Services",
+   "tacticas": [
+    "initial-access",
+    "lateral-movement"
+   ]
+  },
+  "T0887": {
+   "nombre": "Wireless Sniffing",
+   "tacticas": [
+    "discovery",
+    "collection"
+   ]
+  },
+  "T0888": {
+   "nombre": "Remote System Information Discovery",
+   "tacticas": [
+    "discovery"
+   ]
+  },
+  "T0889": {
+   "nombre": "Modify Program",
+   "tacticas": [
+    "persistence"
+   ]
+  },
+  "T0890": {
+   "nombre": "Exploitation for Privilege Escalation",
+   "tacticas": [
+    "privilege-escalation"
+   ]
+  },
+  "T0892": {
+   "nombre": "Change Credential",
+   "tacticas": [
+    "inhibit-response-function"
+   ]
+  },
+  "T0893": {
+   "nombre": "Data from Local System",
+   "tacticas": [
+    "collection"
+   ]
+  },
+  "T0894": {
+   "nombre": "System Binary Proxy Execution",
+   "tacticas": [
+    "evasion"
+   ]
+  },
+  "T0895": {
+   "nombre": "Autorun Image",
+   "tacticas": [
+    "execution"
+   ]
+  },
+  "T1691": {
+   "nombre": "Block Operational Technology Message",
+   "tacticas": [
+    "inhibit-response-function"
+   ]
+  },
+  "T1691.001": {
+   "nombre": "Block Operational Technology Message: Command Message",
+   "tacticas": [
+    "inhibit-response-function"
+   ]
+  },
+  "T1691.002": {
+   "nombre": "Block Operational Technology Message: Reporting Message",
+   "tacticas": [
+    "inhibit-response-function"
+   ]
+  },
+  "T1692": {
+   "nombre": "Unauthorized Message",
+   "tacticas": [
+    "evasion",
+    "impair-process-control"
+   ]
+  },
+  "T1692.001": {
+   "nombre": "Unauthorized Message: Command Message",
+   "tacticas": [
+    "evasion",
+    "impair-process-control"
+   ]
+  },
+  "T1692.002": {
+   "nombre": "Unauthorized Message: Reporting Message",
+   "tacticas": [
+    "evasion",
+    "impair-process-control"
+   ]
+  },
+  "T1693": {
+   "nombre": "Modify Firmware",
+   "tacticas": [
+    "persistence",
+    "inhibit-response-function",
+    "impair-process-control"
+   ]
+  },
+  "T1693.001": {
+   "nombre": "Modify Firmware: System Firmware",
+   "tacticas": [
+    "persistence",
+    "inhibit-response-function",
+    "impair-process-control"
+   ]
+  },
+  "T1693.002": {
+   "nombre": "Modify Firmware: Module Firmware",
+   "tacticas": [
+    "persistence",
+    "inhibit-response-function",
+    "impair-process-control"
+   ]
+  },
+  "T1694": {
+   "nombre": "Insecure Credentials",
+   "tacticas": [
+    "persistence",
+    "lateral-movement"
+   ]
+  },
+  "T1694.001": {
+   "nombre": "Insecure Credentials: Default Credentials",
+   "tacticas": [
+    "persistence",
+    "lateral-movement"
+   ]
+  },
+  "T1694.002": {
+   "nombre": "Insecure Credentials: Hardcoded Credentials",
+   "tacticas": [
+    "persistence",
+    "lateral-movement"
+   ]
+  },
+  "T1695": {
+   "nombre": "Block Communications",
+   "tacticas": [
+    "inhibit-response-function"
+   ]
+  },
+  "T1695.001": {
+   "nombre": "Block Communications: Serial COM",
+   "tacticas": [
+    "inhibit-response-function"
+   ]
+  },
+  "T1695.002": {
+   "nombre": "Block Communications: Ethernet",
+   "tacticas": [
+    "inhibit-response-function"
+   ]
+  },
+  "T1695.003": {
+   "nombre": "Block Communications: Wi-Fi",
+   "tacticas": [
+    "inhibit-response-function"
+   ]
+  },
+  "T1701": {
+   "nombre": "Command and Scripting Interpreter",
+   "tacticas": [
+    "execution"
+   ]
+  },
+  "T1701.001": {
+   "nombre": "Command and Scripting Interpreter: PowerShell",
+   "tacticas": [
+    "execution"
+   ]
+  },
+  "T1701.002": {
+   "nombre": "Command and Scripting Interpreter: Windows Command Shell",
+   "tacticas": [
+    "execution"
+   ]
+  },
+  "T1701.003": {
+   "nombre": "Command and Scripting Interpreter: Unix Shell",
+   "tacticas": [
+    "execution"
+   ]
+  },
+  "T1701.004": {
+   "nombre": "Command and Scripting Interpreter: Visual Basic",
+   "tacticas": [
+    "execution"
+   ]
+  },
+  "T1701.005": {
+   "nombre": "Command and Scripting Interpreter: Python",
+   "tacticas": [
+    "execution"
+   ]
+  },
+  "T1701.006": {
+   "nombre": "Command and Scripting Interpreter: JavaScript",
+   "tacticas": [
+    "execution"
+   ]
+  }
+ },
+ "version": "20.1"
+}

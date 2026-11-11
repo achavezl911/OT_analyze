@@ -641,6 +641,18 @@ mapean a ningún marco, a propósito.
 Cada clave de `referencias` es un fragmento (sin distinguir mayúsculas) del título del hallazgo;
 los títulos están en `hallazgos.csv`. Luego: `--estandar-archivo mi-norma.json --estandar mi-norma`.
 
+**MITRE ATT&CK for ICS v20.1.** `ot_assess/marcos/attack_ics.json` es un catálogo compacto (ids, nombres y tácticas;
+sin descripciones) sacado del STIX oficial de MITRE; una prueba impide citar un id que no esté vigente en él. T0855
+y T0857 están revocadas desde v19: se citan T1692.001 (Unauthorized Message: Command Message) y T1693.001 (Modify
+Firmware: System Firmware). El mapeo hallazgo -> técnica sigue siendo propio ("sin revisar"). Para una versión
+nueva: descarga `ics-attack-<versión>.json` de `mitre-attack/attack-stix-data` y ejecuta
+`python3 scripts/actualizar_attack_ics.py ics-attack-<versión>.json` (con `--check` solo compara).
+
+**Avisos de terceros (MITRE ATT&CK).** Copyright 2015-2026, The MITRE Corporation. MITRE ATT&CK and ATT&CK are
+registered trademarks of The MITRE Corporation. The MITRE Corporation (MITRE) hereby grants you a non-exclusive,
+royalty-free license to use ATT&CK(R) for research, development, and commercial purposes. Any copy you make for such
+purposes is authorized provided that you reproduce MITRE's copyright designation and this license in any such copy.
+
 ## Perfil de proyecto
 
 Un JSON por engagement con cliente, sitio, marcos y datos declarados. Ejemplo ficticio y completo:

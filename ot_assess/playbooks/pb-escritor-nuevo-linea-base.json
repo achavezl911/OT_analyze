@@ -34,5 +34,5 @@
   ],
   "esfuerzo_estimado": "medio",
   "responsable": "Ciberseguridad OT y operacion del proceso",
-  "referencias": ["IEC 62443 SR 2.1", "IEC 62443 SR 5.2", "NIST 800-82 AC-3", "NIST CSF PR.AA-05", "MITRE ICS T0855"]
+  "referencias": ["IEC 62443 SR 2.1", "IEC 62443 SR 5.2", "NIST 800-82 AC-3", "NIST CSF PR.AA-05", "MITRE ICS T1692.001"]
 }

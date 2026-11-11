@@ -97,7 +97,7 @@ class MatrizTest(unittest.TestCase):
 
     def test_referencias_por_marco(self):
         r = st.referencias("Operaciones de escritura o control observadas en la captura")
-        self.assertIn("T0855", r["mitre-ics"])
+        self.assertIn("T1692.001", r["mitre-ics"])
         self.assertIn("SR 2.1", r["iec62443"])
         self.assertIn("CIP-005 R1", r["nerc-cip"])
         self.assertIn("AC-3", r["nist-800-82"])
