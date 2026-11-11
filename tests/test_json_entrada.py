@@ -29,6 +29,7 @@ ANIDADO = "[" * 200000 + "]" * 200000
 # Archivos que leen datos internos del paquete (no son entrada del usuario): archivo -> numero de json.load(s).
 INTERNOS = {
     "i18n.py": 2,                       # catalogos de idioma del paquete
+    "attack_ics.py": 1,                 # catalogo ATT&CK for ICS del paquete (D112)
     "evasion.py": 1,                    # data/ del paquete
     "obsolescencia.py": 1,              # fin_soporte_so.json del paquete
     "hardening.py": 1,                  # catalogo de hardening del paquete
