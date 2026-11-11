@@ -155,6 +155,39 @@ class FabricanteYProductoTest(unittest.TestCase):
         self.assertTrue(vf.producto_casa("Acme PLC-5000", "PLC-5000", ["acme"]))     # sin el nombre del fabricante
 
 
+class MlfbTest(_Base):
+    def test_deteccion(self):
+        for v in ("6GK5_7xx-xAxx0-xAx0", "6GK5_746-1AA60-4BA0", "6GK5204-2BB10-2CA2", "6GK5 746-1AA60-4BA0"):
+            with self.subTest(v=v):
+                self.assertTrue(vf.es_mlfb(v))
+        for v in ("V4.01", "<V6.4", "vers:intdot/<4.3", "W744-1", "6.2.1", "6GK5", ""):
+            with self.subTest(v=v):
+                self.assertFalse(vf.es_mlfb(v))
+
+    def test_casado(self):
+        p = "6GK5_7xx-xAxx0-xAx0"
+        self.assertTrue(vf.mlfb_casa(p, "6GK5721-1AA00-0AA0"))
+        self.assertTrue(vf.mlfb_casa(p, "6gk5 721-1aa00-0aa0"))
+        self.assertFalse(vf.mlfb_casa(p, "6GK5208-0BA00-2AC2"))
+        self.assertFalse(vf.mlfb_casa(p, "6GK5746-1AA60-4BA0"))
+
+    def test_cruce_modelo_o_familia(self):
+        regs = [ent("192.0.2.1", "Siemens", "SCALANCE XC208", ""),
+                ent("192.0.2.2", "Siemens", "SCALANCE M-800", ""),
+                ent("192.0.2.3", "Siemens", "6GK5721-1AA00-0AA0", ""),
+                ent("192.0.2.4", "Siemens", "6GK5208-0BA00-2AC2", "")]
+        aviso = csaf("ICSA-99-213-01", {"CVE-2099-21301": (9.8, [], [])}, vendor="Siemens", producto="SCALANCE",
+                     version="6GK5_7xx-xAxx0-xAx0")
+        res = correr(regs, [aviso])
+        self.assertEqual({x["ips"][0]: x["coinc"] for x in res["filas"]},
+                         {"192.0.2.1": "familia (sin numero de modelo)", "192.0.2.2": "familia (sin numero de modelo)",
+                          "192.0.2.3": "modelo exacto"})
+        self.assertEqual(vf._candidatas(res), [])    # sin version el estado queda como hoy: no comparable / sin firmware
+        for x in res["filas"]:
+            self.assertEqual(x["celdas"][vf.COLUMNAS.index("producto_aviso")], "SCALANCE (6GK5_7xx-xAxx0-xAx0)")
+            self.assertEqual(x["celdas"][vf.COLUMNAS.index("version_afectada")], "")
+
+
 class CruceTest(_Base):
     def test_rango_intdot_tres_firmwares(self):
         regs = [ent("192.0.2.1", "ACME Automation Inc.", "PLC-5000", "V2.3.0"),

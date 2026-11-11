@@ -266,6 +266,28 @@ def modelo_en_version(producto, version) -> tuple:
     return producto, version
 
 
+_RE_MLFB = re.compile(r"^6[A-Za-z]{2}[A-Za-z0-9][ _]?[A-Za-z0-9?]{3}-[A-Za-z0-9?]{5}-[A-Za-z0-9?]{4}$")
+_RE_MLFB_COMPACTO = re.compile(r"^6[A-Z]{2}[A-Z0-9]{13}$")
+
+
+def es_mlfb(valor) -> bool:
+    """Numero de pedido de Siemens (D119), con o sin comodines ('x' minuscula o '?'; '_' es el espacio)."""
+    return bool(_RE_MLFB.match(str(valor or "").strip()))
+
+
+def mlfb_casa(patron, modelo) -> bool:
+    """El modelo del inventario, compactado, es un MLFB y casa con el patron del aviso (comodin = cualquier caracter)."""
+    m = re.sub(r"[\s_-]", "", str(modelo or "")).upper()
+    p = re.sub(r"[\s_-]", "", str(patron or ""))
+    if not _RE_MLFB_COMPACTO.match(m) or len(p) != len(m):
+        return False
+    return all(a in "x?" or a.upper() == b for a, b in zip(p, m))
+
+
+def _modelo_es_mlfb(modelo) -> bool:
+    return bool(_RE_MLFB_COMPACTO.match(re.sub(r"[\s_-]", "", str(modelo or "")).upper()))
+
+
 def _cmp(a: tuple, b: tuple) -> int:
     n = max(len(a), len(b))
     a, b = a + (0,) * (n - len(a)), b + (0,) * (n - len(b))
@@ -423,10 +445,14 @@ class Indice:
             cvss_v4, vector_v4 = cvss4_de_vulnerabilidad(v)
             for pid in sorted(afectados & set(productos)):
                 fab, prod, ver = productos[pid]
-                prod, ver = modelo_en_version(prod, ver)
+                mlfb = ""
+                if es_mlfb(ver):
+                    mlfb, ver = str(ver).strip(), ""
+                else:
+                    prod, ver = modelo_en_version(prod, ver)
                 for clave in sorted(claves_fabricante(fab) & self.vendores):
                     self._agregar(clave, {
-                        "producto": prod, "version": ver, "cve": cve, "cvss": cvss, "aviso": str(seg["id"]),
+                        "mlfb": mlfb, "producto": prod, "version": ver, "cve": cve, "cvss": cvss, "aviso": str(seg["id"]),
                         "cvss_v4": cvss_v4, "vector_cvss_v4": vector_v4, "remediacion": extracto, "fuente": ruta})
 
     def cargar_catalogo(self, ruta) -> list:
@@ -557,7 +583,12 @@ def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=Non
         clave = clave_fabricante(fab)
         ips = [i for i in val("ips").split(";") if i]
         for r in ind.por_fabricante.get(clave, ()):
-            coinc = nivel_producto(r["producto"], modelo, _nombres_de(clave) + [normalizar_nombre(fab)])
+            if r.get("mlfb") and _modelo_es_mlfb(modelo):
+                coinc = COINCIDENCIA if mlfb_casa(r["mlfb"], modelo) else ""
+            else:
+                coinc = nivel_producto(r["producto"], modelo, _nombres_de(clave) + [normalizar_nombre(fab)])
+                if coinc and r.get("mlfb"):
+                    coinc = COINCIDENCIA_FAMILIA
             if not coinc:
                 continue
             ev = "si" if es_todas(r["version"]) else evaluar(r["version"], fw) if fw else "sin"
@@ -586,7 +617,7 @@ def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=Non
         x["celdas"] = [x["nombre"], ";".join(x["ips"]), x["fab"], x["modelo"], x["fw"], x["procedencia"], r["cve"],
                        "" if r["cvss"] is None else r["cvss"], sev,
                        "" if r.get("cvss_v4") is None else r["cvss_v4"], r.get("vector_cvss_v4") or "", *([dec] if v4 else []),
-                       r["aviso"], r["producto"], r["version"],
+                       r["aviso"], r["producto"] + (f" ({r['mlfb']})" if r.get("mlfb") else ""), r["version"],
                        t(x["coinc"]), t(x["estado"]),
                        "" if kev_cves is None else t("si" if en_kev else "no"),
                        t("si" if x["en_plat"] else "no"), r["remediacion"], r["fuente"], "", "", "", ""]
