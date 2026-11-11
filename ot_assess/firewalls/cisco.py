@@ -982,7 +982,7 @@ def _analizar(entradas) -> Firewall:
                 an.avisar(f"comando '{cmd[:60]}': {prob}")
                 continue
             if cls == "natdet":
-                tomas.append((lineas + ["!"], "" if hubo else nombre))
+                tomas.append((lineas + ["!"], nombre if len(entradas) > 1 else ""))   # carpeta: nombre del archivo
             else:
                 por_clase[cls].extend(lineas + ["!"])
     if hosts:

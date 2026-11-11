@@ -430,6 +430,26 @@ class VariasTomasTest(unittest.TestCase):
         self.assertIn("1=show_nat_detail_20261106.txt, 2=show_nat_detail_20261110.txt", d["nat"]["nota"])
         self.assertFalse(any("sin emparejar" in a for a in fw.avisos))
 
+    def test_carpeta_de_sesiones_con_prompt_nombra_las_tomas(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, "00_sesion.txt").write_text(_sesion(CFG_C), encoding="utf-8")
+            Path(tmp, "fw_20261106.txt").write_text("FW1# show nat detail\n" + _det_c((30, 0), (0, 0)), encoding="utf-8")
+            Path(tmp, "fw_20261110.txt").write_text("FW1# show nat detail\n" + _det_c((0, 0), (0, 0)), encoding="utf-8")
+            fw = cisco.cargar(tmp)
+        d = fi.contrastar(fw, [], "fw.txt", [], None)
+        self.assertIn("1=fw_20261106.txt, 2=fw_20261110.txt", d["nat"]["nota"])
+        self.assertEqual(_fila(d, 0)["reinicio_contadores"], "si")
+
+    def test_sesion_pegada_con_dos_tomas_no_nombra_archivos(self):
+        texto = (_sesion(CFG_C) + "FW1# show nat detail\n" + _det_c((30, 0), (0, 0))
+                 + "FW1# show nat detail\n" + _det_c((0, 0), (0, 0)))
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, "sesion.txt").write_text(texto, encoding="utf-8")
+            fw = cisco.cargar(str(Path(tmp, "sesion.txt")))
+        d = fi.contrastar(fw, [], "fw.txt", [], None)
+        self.assertIn("2 tomas", d["nat"]["nota"])
+        self.assertNotIn("tomas: 1=", d["nat"]["nota"])
+
     def test_una_toma_queda_como_en_f6b(self):
         d = _contraste_tomas(CFG_C, _det_c((4, 0), (0, 0)))
         self.assertEqual(nt.columnas(d["nat"]), nt.COL_NAT + nt.COL_CONTADORES)
