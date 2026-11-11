@@ -96,3 +96,40 @@ def dnp3_reinicio(rc: RowCtx) -> None:
             rc.cap.protocolo_eventos.append({
                 "tipo": "dnp3_reinicio", "frame": rc.frame, "maestro": rc.sip, "outstation": rc.get("ip.dst"),
                 "codigo": code, "enlace": f"{rc.get('dnp3.src')}->{rc.get('dnp3.dst')}"})
+
+
+# --- Evidencia observable de IEC 62351 (D117): agregados por clave, sin un evento por paquete ---
+PUERTOS_TLS_62351 = (19998, 19999, 3782)
+DNP3_AUTENTICACION = {32: "Authenticate Request", 33: "Authenticate Request No Ack", 131: "Authenticate Response"}
+DECODIFICADOS_62351 = {"MMS": "MMS", "S7COMM": "S7comm", "GOOSE": "GOOSE", "SV": "SV"}
+
+
+def _acumular(rc: RowCtx, clave: tuple, evento: dict) -> None:
+    for e in rc.cap.protocolo_eventos:
+        if e["tipo"] == evento["tipo"] and e["clave"] == list(clave):
+            e["n"] += 1
+            return
+    rc.cap.protocolo_eventos.append({**evento, "clave": list(clave), "n": 1})
+
+
+@COLLECTORS
+def evidencia_62351(rc: RowCtx) -> None:
+    """ServerHello desde los puertos TLS de 62351, funciones de autenticacion segura de DNP3 y
+    protocolo decodificado por par (MMS contra S7comm en 102, GOOSE y SV en capa 2)."""
+    if "2" in _lista(rc, "tls.handshake.type"):
+        puerto = _int_or_none(rc.get("tcp.srcport"))
+        if puerto in PUERTOS_TLS_62351:
+            _acumular(rc, (puerto, rc.sip, rc.get("ip.dst")), {
+                "tipo": "p62351_tls", "puerto": puerto, "servidor": rc.sip, "cliente": rc.get("ip.dst")})
+    for x in _lista(rc, "dnp3.al.func"):
+        code = _codigo(x)
+        if code in DNP3_AUTENTICACION:
+            # 32 y 33 las envia el maestro; 131 es la respuesta de la outstation.
+            maestro, outstation = (rc.get("ip.dst"), rc.sip) if code == 131 else (rc.sip, rc.get("ip.dst"))
+            _acumular(rc, (code, maestro, outstation), {
+                "tipo": "p62351_dnp3_auth", "codigo": code, "maestro": maestro, "outstation": outstation})
+    proto = DECODIFICADOS_62351.get(rc.get("_ws.col.protocol").upper())
+    if proto:
+        origen, destino = rc.sip or rc.smac, rc.get("ip.dst") or rc.get("eth.dst")
+        _acumular(rc, (proto, origen, destino), {
+            "tipo": "p62351_visto", "proto": proto, "origen": origen, "destino": destino})

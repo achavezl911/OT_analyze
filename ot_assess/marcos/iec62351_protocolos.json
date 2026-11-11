@@ -1,0 +1,56 @@
+{
+  "validacion": "sin revisar",
+  "nota": "Tabla propia derivada del resumen publico de cada parte de IEC 62351; no contiene ni cita texto de la norma. Dice que partes cubren cada protocolo y que senal observable de proteccion se busca en la captura; no es un dictamen.",
+  "protocolos": [
+    {
+      "clave": "iec104",
+      "protocolo": "IEC 60870-5-104",
+      "partes": ["IEC 62351-3", "IEC 62351-5"],
+      "claro": [["tcp", 2404]],
+      "seguro": [["tcp", 19998]],
+      "decodificado": "",
+      "proteccion": "tls"
+    },
+    {
+      "clave": "dnp3",
+      "protocolo": "DNP3",
+      "partes": ["IEC 62351-3", "IEC 62351-5"],
+      "claro": [["tcp", 20000], ["udp", 20000]],
+      "seguro": [["tcp", 19999]],
+      "decodificado": "",
+      "proteccion": "tls_y_autenticacion"
+    },
+    {
+      "clave": "mms",
+      "protocolo": "MMS (IEC 61850 cliente-servidor)",
+      "partes": ["IEC 62351-3", "IEC 62351-4"],
+      "claro": [["tcp", 102]],
+      "seguro": [["tcp", 3782]],
+      "decodificado": "MMS",
+      "proteccion": "tls"
+    },
+    {
+      "clave": "goose",
+      "protocolo": "GOOSE (IEC 61850)",
+      "partes": ["IEC 62351-6"],
+      "claro": [],
+      "seguro": [],
+      "decodificado": "GOOSE",
+      "proteccion": "capa2"
+    },
+    {
+      "clave": "sv",
+      "protocolo": "SV (IEC 61850 Sampled Values)",
+      "partes": ["IEC 62351-6"],
+      "claro": [],
+      "seguro": [],
+      "decodificado": "SV",
+      "proteccion": "capa2"
+    }
+  ],
+  "roles": {
+    "protocolo": "control de acceso por roles (IEC 62351-8)",
+    "partes": ["IEC 62351-8"]
+  },
+  "excluidos_no_cubiertos": [["tcp", 2404], ["tcp", 20000], ["udp", 20000], ["tcp", 102]]
+}

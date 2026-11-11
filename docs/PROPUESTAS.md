@@ -60,7 +60,7 @@ con XML, que se pueden escribir con la biblioteca estándar (el lector de XLSX y
 | T4 | **Seguridad de protocolos**: OPC UA con SecurityPolicy None, versiones de TLS, Modbus FC8, reinicio DNP3 (P7) | Hallazgos de mayor valor en un assessment | M | Escenarios sintéticos |
 | T5 | **Periodicidad**: detectar polling irregular, pérdida de comunicación y escritores nuevos con series de tiempo | Anomalías sin plataforma | L | Nada |
 | T6 | **Cruce opcional con avisos CISA** (D1) | Contexto de vulnerabilidad sin base de CVE propia | M | Decidir fuente y actualización |
-| T7 | **IEC 62351, dictamen de aplicabilidad por protocolo**: para cada protocolo observado, qué parte aplica (-3 perfiles TCP/IP, -5 serie IEC 60870-5 y derivados, -6 IEC 61850, -8 control de acceso por roles), si hay evidencia de la protección (por ejemplo TLS o autenticación segura) y "no aplica" donde la norma no cubre el protocolo | Lo exige un cliente de alimentos | M | B2; texto de la norma en `normas/` (D3) |
+| T7 | **IEC 62351, dictamen de aplicabilidad por protocolo**: para cada protocolo observado, qué parte aplica (-3 perfiles TCP/IP, -5 serie IEC 60870-5 y derivados, -6 IEC 61850, -8 control de acceso por roles), si hay evidencia de la protección (por ejemplo TLS o autenticación segura) y "no aplica" donde la norma no cubre el protocolo | Lo exige un cliente de alimentos | M | B2; texto de la norma en `normas/` (D3). **Hecha la parte observable (D117, `iec62351_evidencia.csv`):** sin texto de la norma; el dictamen de aplicabilidad con catálogo propio queda al propietario |
 
 ## A · Auditoría y calidad
 

@@ -210,7 +210,7 @@ class HtmlIdiomaTest(unittest.TestCase):
         self.assertEqual(self.hojas("en"), [
             "Inventory", "Capture coverage", "Network health", "Top devices", "Top conduits", "Protocol mix",
             "Traffic baseline", "Sensors", "Sensor gaps", "Normalized inventory", "Inventory provenance", "Obsolescence", "Communications", "Zones", "Hardening by type", "Hardening by asset", "Log sources", "IP addressing", "Specific baseline", "Conduit baseline", "General baseline",
-            "Baseline 2-1", "Controls matrix", "Identity", "Findings", "ATT&amp;CK ICS coverage", "Remediation plan", "Risk register", "Maturity by domain",
+            "Baseline 2-1", "Controls matrix", "Identity", "Findings", "ATT&amp;CK ICS coverage", "IEC 62351 evidence", "Remediation plan", "Risk register", "Maturity by domain",
             "Maturity questionnaire", "DNS records",
             "DNS resolutions", "DNS servers", "Control", "Coverage iec62443", "Risk heat map"])
         self.assertEqual(self.hojas("es")[:25], [

@@ -17,6 +17,7 @@ from .. import evasion as _ev
 from .. import fuentes as _fu
 from .. import fuentes_log as _fl
 from .. import hardening as _hd
+from .. import iec62351 as _i62351
 from .. import ingenieria as _ing
 from .. import inventario_normalizado as _in
 from .. import inventario_presentado as _ip
@@ -179,6 +180,7 @@ def tablas(res: Assessment) -> list:
 
     out.extend(_atc.tablas([f for c in [*caps, *res.extras] for f in c.findings]))
     out.extend(_cft.tablas([f for c in [*caps, *res.extras] for f in c.findings], estandares))
+    out.extend(_i62351.tablas(caps))
 
     out.append(("plan_remediacion.csv", "Plan de remediacion", _re.COLUMNAS, _re.tabla(res)))
     out.extend(_rg.tablas(_rg.de(res)))

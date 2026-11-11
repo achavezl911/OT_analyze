@@ -88,7 +88,7 @@ class PipelineTest(unittest.TestCase):
                                  "Fuentes de log", "Direccionamiento IP", "Linea base especifica",
                                  "Linea base conductos", "Linea base general", "Linea base 2-1",
                                  "Matriz de controles", "Identidad",
-                                 "Hallazgos", "ATT&amp;CK ICS cobertura", "Plan de remediacion", "Registro de riesgos", "Madurez por dominio",
+                                 "Hallazgos", "ATT&amp;CK ICS cobertura", "IEC 62351 evidencia", "Plan de remediacion", "Registro de riesgos", "Madurez por dominio",
                                  "Cuestionario de madurez", "DNS registros",
                                  "DNS resoluciones", "DNS servidores", "Control",
                                  "Cobertura iec62443", "Mapa de calor de riesgo"])
