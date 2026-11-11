@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .. import acceso_remoto as _ar
 from .. import alertas as _al
+from .. import attack_cobertura as _atc
 from .. import avisos_cisa as _ac
 from .. import cobertura_captura as _cc
 from .. import conductos_zcr as _zc
@@ -59,12 +60,13 @@ COLUMNAS_COBERTURA = ["id", "grupo", "categoria", "texto", "cobertura",
 
 def cabecera_hallazgos(estandares: list) -> list:
     return (["id", "captura", "severidad", "categoria", "titulo", "evidencia",
-             "por_que_importa", "recomendacion", "mitre_ics"] + [e.clave for e in estandares])
+             "por_que_importa", "recomendacion", "mitre_ics", "mitre_ics_tacticas"] + [e.clave for e in estandares])
 
 
 def fila_hallazgo(nombre_origen: str, f: dict, estandares: list) -> list:
     return ([f.get("id") or id_hallazgo(f["titulo"]), nombre_origen, t(f["severidad"]), t(f["categoria"]), t(f["titulo"]), t(f["evidencia"]),
-             t(f["por_que_importa"]), t(f["recomendacion"]), f["referencias"].get("mitre-ics", "")]
+             t(f["por_que_importa"]), t(f["recomendacion"]), f["referencias"].get("mitre-ics", ""),
+             _atc.tacticas_de(f["referencias"].get("mitre-ics", ""))]
             + [traducir_refs(f["referencias"].get(e.clave, "")) for e in estandares])
 
 
@@ -173,6 +175,8 @@ def tablas(res: Assessment) -> list:
                 [fila_hallazgo(c.name, f, estandares)
                  for c in [*caps, *res.extras]
                  for f in sorted(c.findings, key=lambda x: SEV_ORDER.get(x["severidad"], 9))]))
+
+    out.extend(_atc.tablas([f for c in [*caps, *res.extras] for f in c.findings]))
 
     out.append(("plan_remediacion.csv", "Plan de remediacion", _re.COLUMNAS, _re.tabla(res)))
     out.extend(_rg.tablas(_rg.de(res)))

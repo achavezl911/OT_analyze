@@ -204,13 +204,13 @@ class HtmlIdiomaTest(unittest.TestCase):
         self.assertTrue(self.csv_cab("en", "inventario.csv").startswith(
             "device,ips,mac,hop_mac,manufacturer,model_description,firmware,inferred_role,purdue_zone,"))
         self.assertTrue(self.csv_cab("en", "hallazgos.csv").startswith(
-            "id,capture,severity,category,title,evidence,why_it_matters,recommendation,mitre_ics,iec62443"))
+            "id,capture,severity,category,title,evidence,why_it_matters,recommendation,mitre_ics,mitre_ics_tactics,iec62443"))
 
     def test_nombres_de_hoja(self):
         self.assertEqual(self.hojas("en"), [
             "Inventory", "Capture coverage", "Network health", "Top devices", "Top conduits", "Protocol mix",
             "Traffic baseline", "Sensors", "Sensor gaps", "Normalized inventory", "Inventory provenance", "Obsolescence", "Communications", "Zones", "Hardening by type", "Hardening by asset", "Log sources", "IP addressing", "Specific baseline", "Conduit baseline", "General baseline",
-            "Baseline 2-1", "Controls matrix", "Identity", "Findings", "Remediation plan", "Risk register", "Maturity by domain",
+            "Baseline 2-1", "Controls matrix", "Identity", "Findings", "ATT&amp;CK ICS coverage", "Remediation plan", "Risk register", "Maturity by domain",
             "Maturity questionnaire", "DNS records",
             "DNS resolutions", "DNS servers", "Control", "Coverage iec62443", "Risk heat map"])
         self.assertEqual(self.hojas("es")[:25], [
