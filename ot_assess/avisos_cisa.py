@@ -375,8 +375,10 @@ def columnas_kev(c: dict) -> list:
             ";".join(a["id"] for a in c.get("avisos") or ()), ";".join(cats)]
 
 
-def filas_avisos(cruces: list, assets: dict) -> list:
-    """Una fila por aviso con cruce, por cvss_max descendente y luego aviso."""
+def filas_avisos(cruces: list, assets: dict, version_cvss: str = "3") -> list:
+    """Una fila por aviso con cruce, por cvss_max descendente y luego aviso.
+
+    Con version_cvss "4" (D114) ordena por cvss_v4_max y, donde esta vacio, por cvss_max."""
     por_aviso = {}
     for c in cruces:
         for a in c.get("avisos") or ():
@@ -392,6 +394,8 @@ def filas_avisos(cruces: list, assets: dict) -> list:
         filas.append([aid, a["titulo"], a["publicado"], a["actualizado"], a["url"], ";".join(cves),
                       ";".join(activos), sum(1 for c in cs if _abierta_asociada(c)),
                       max(cvss) if cvss else "", max(cvss4_) if cvss4_ else "", ";".join(cats)])
+    if version_cvss == "4":
+        return sorted(filas, key=lambda f: (-(f[9] if f[9] != "" else f[8] if f[8] != "" else -1), f[0]))
     return sorted(filas, key=lambda f: (-(f[8] if f[8] != "" else -1), f[0]))
 
 

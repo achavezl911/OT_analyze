@@ -656,7 +656,7 @@ purposes is authorized provided that you reproduce MITRE's copyright designation
 **Avisos de terceros (calculadora CVSS v4.0).** `ot_assess/cvss4.py` es un port a Python de la calculadora oficial de
 FIRST (repo FIRSTdotorg/cvss-v4-calculator: `cvss_score.js`, `cvss_lookup.js`, `max_composed.js`, `max_severity.js`,
 `metrics.js`). Se usa para puntuar vectores CVSS v4.0 (columnas `cvss_v4` de `vulnerabilidades_firmware.csv` y
-`vulnerabilidades.csv`, `cvss_v4_max` de `avisos_ics.csv`); no decide severidad ni orden. Licencia BSD-2-Clause:
+`vulnerabilidades.csv`, `cvss_v4_max` de `avisos_ics.csv`); solo decide severidad y orden con `version_cvss: "4"` en el perfil. Licencia BSD-2-Clause:
 
 > Copyright (c) 2023 FIRST.ORG, Inc., Red Hat, and contributors
 >
@@ -826,6 +826,14 @@ evaluable»; las técnicas, el agregado de las filas NIST de la corrida por un m
 (`ot_assess/marcos/tsa_sd_1580_82.json`: solo ids y títulos cortos propios). La sección del reporte suma una fila por
 letra (III.A a III.F). Una correspondencia no es equivalencia ni cumplimiento; el Plan de Implementación del cliente
 (CIP) es SSI, se contrasta a mano y nunca va al repo. Sin `tsa_sd` la matriz no cambia.
+
+**Versión de CVSS que decide (CV4b, D114).** `version_cvss` del perfil: `"3"` (por defecto; también 3.0, 3.1) o `"4"` (4.0).
+Con `"4"`, severidad, orden y umbral de Alta se calculan con CVSS v4.0 donde existe y con v3 donde no: en
+`vulnerabilidades_firmware.csv` aparece la columna `cvss_decide` (`4.0`, `3.x` o vacía) tras `vector_cvss_v4`, `severidad`
+sale de la puntuación efectiva, el hallazgo es Alta si hay KEV o efectiva >= 9.0 y su evidencia cita "CVSS v4.0" o "CVSS v3"
+por CVE; `avisos_ics.csv` ordena por `cvss_v4_max` y, si está vacío, por `cvss_max`; en `--vulnerabilidades` la severidad
+explícita de la plataforma se respeta siempre, la ausente se deriva de `cvss_v4` si existe, y una fila con solo `cvss_v4` o
+su vector se acepta. Con `"3"` o sin la clave nada cambia.
 En `importacion.json`, `perfil_proyecto` es este perfil y `perfil` sigue siendo el de columnas de la plataforma.
 
 **Inventario normalizado (I1a, D78).** `inventario_normalizado.csv` (una fila por activo, id estable `A-` + 8 hex del

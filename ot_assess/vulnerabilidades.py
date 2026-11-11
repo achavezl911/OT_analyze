@@ -69,8 +69,11 @@ def _sev_de_cvss(x: float) -> str:
     return "Baja"
 
 
-def vulns_de_filas(filas: list, nombre: str) -> list:
-    """Convierte los registros de leer_csv en vulnerabilidades normalizadas. 'nombre' es el archivo, sin ruta."""
+def vulns_de_filas(filas: list, nombre: str, version_cvss: str = "3") -> list:
+    """Convierte los registros de leer_csv en vulnerabilidades normalizadas. 'nombre' es el archivo, sin ruta.
+
+    Con version_cvss "4" (D114) la severidad no explicita se deriva de cvss_v4 si existe."""
+    v4 = version_cvss == "4"
     if not filas:
         raise SystemExit(f"[!] '{nombre}': sin filas o sin encabezado")
     if len(filas) > MAX_FILAS:
@@ -88,7 +91,7 @@ def vulns_de_filas(filas: list, nombre: str) -> list:
         raise SystemExit(f"[!] '{nombre}': falta la columna requerida 'cve'")
     if not campos & {"activo", "ip", "mac"}:
         raise SystemExit(f"[!] '{nombre}': falta una columna de identificacion (activo, ip o mac)")
-    if not campos & {"severidad", "cvss"}:
+    if not campos & ({"severidad", "cvss", "cvss_v4", "vector_cvss_v4"} if v4 else {"severidad", "cvss"}):
         raise SystemExit(f"[!] '{nombre}': falta la columna severidad o cvss")
     vulns = []
     for n, fila in enumerate(filas, 1):
@@ -109,7 +112,10 @@ def vulns_de_filas(filas: list, nombre: str) -> list:
                 cvss = float("nan")
             if not (0.0 <= cvss <= 10.0):       # tambien rechaza nan e inf
                 raise SystemExit(f"[!] '{nombre}': fila {n}: cvss fuera de 0-10 '{v['cvss']}'")
+        cvss_v4, vector_v4 = cvss4.resolver(v.get("cvss_v4"), v.get("vector_cvss_v4"))   # informativo salvo version_cvss 4 (D114)
         sev = _SEVERIDAD.get(_norm(v.get("severidad")))
+        if sev is None and v4 and cvss_v4 is not None and cvss_v4 > 0:
+            sev = cvss4.severidad(cvss_v4)
         if sev is None and cvss is not None and cvss > 0:
             sev = _sev_de_cvss(cvss)
         if sev is None:
@@ -118,7 +124,6 @@ def vulns_de_filas(filas: list, nombre: str) -> list:
         estado = _ESTADO.get(_norm(v.get("estado")))
         if estado is None:
             raise SystemExit(f"[!] '{nombre}': fila {n}: estado invalido '{v['estado']}'")
-        cvss_v4, vector_v4 = cvss4.resolver(v.get("cvss_v4"), v.get("vector_cvss_v4"))   # solo informativo (D113)
         vulns.append({
             "cve": cve, "severidad": sev, "cvss": cvss, "estado": estado,
             "activo": v.get("activo", ""), "ip": v.get("ip", ""), "mac": v.get("mac", ""),
@@ -245,7 +250,7 @@ def aviso_cpe_ambiguo(n: int) -> str:
     return f"{n} activos con CPE ambiguo: sin modelo inferido" if n else ""
 
 
-def cargar(path) -> list:
+def cargar(path, version_cvss: str = "3") -> list:
     p = Path(path)
     try:
         raw = p.read_bytes()
@@ -254,10 +259,10 @@ def cargar(path) -> list:
     if p.suffix.lower() == ".xlsx" or raw[:2] == b"PK":
         from .importers.lector import leer_xlsx
         try:
-            return vulns_de_filas(leer_xlsx(raw), p.name)
+            return vulns_de_filas(leer_xlsx(raw), p.name, version_cvss)
         except (ValueError, KeyError, zipfile.BadZipFile, ET.ParseError) as e:
             raise SystemExit(f"[!] '{p.name}' no parece un XLSX valido: {e}")
-    return vulns_de_filas(leer_csv(raw), p.name)
+    return vulns_de_filas(leer_csv(raw), p.name, version_cvss)
 
 
 def aviso_sin_activo(cruces: list, nombre: str) -> str:

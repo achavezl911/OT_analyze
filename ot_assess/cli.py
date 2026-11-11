@@ -550,7 +550,7 @@ def main(argv: list[str] | None = None) -> int:
     inferidos, fuente_cpe = None, ""
     if args.vulnerabilidades:
         from . import vulnerabilidades as _vu
-        vulns = _vu.cargar(args.vulnerabilidades)
+        vulns = _vu.cargar(args.vulnerabilidades, (perfil or {}).get("version_cvss", "3"))
         cruces = _vu.cruzar(vulns, assets)
         inferidos, ambiguos = _vu.inferir_equipos(cruces)      # N2 (D101)
         fuente_cpe = "cpe " + Path(args.vulnerabilidades).name
@@ -591,7 +591,7 @@ def main(argv: list[str] | None = None) -> int:
     res.inventario_normalizado = _in.construir([*registros, *manual], perfil, bool(args.inventario_manual), propios)
     if indice_vf:        # V1a (D89): despues del inventario normalizado
         res.vuln_firmware = _vf.construir(indice_vf, res.inventario_normalizado, res.vulns_cruces, assets,
-                                          kev_cat, avisos)
+                                          kev_cat, avisos, (perfil or {}).get("version_cvss", "3"))
         extra = Capture(Path("vulnerabilidades por firmware"))
         _vf.agregar_hallazgo(extra, res.vuln_firmware)
         if extra.findings:

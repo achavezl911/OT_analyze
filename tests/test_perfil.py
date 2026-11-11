@@ -69,5 +69,17 @@ class PerfilTest(unittest.TestCase):
         d = base(); d["cliente"] = "  "; self.falla(d, "cliente")
 
 
+    def test_version_cvss_validos_normalizados_y_sin_clave(self):
+        for v, esperado in (("3", "3"), ("3.0", "3"), ("3.1", "3"), (3, "3"), (3.1, "3"),
+                            ("4", "4"), ("4.0", "4"), (4, "4"), (4.0, "4")):
+            self.assertEqual(self.cargar({**base(), "version_cvss": v})["version_cvss"], esperado, v)
+        self.assertNotIn("version_cvss", self.cargar(base()))
+
+    def test_version_cvss_invalidos(self):
+        for v in ("5", "v4", True, False, [4], 4.5, None, ""):
+            self.falla({**base(), "version_cvss": v}, "version_cvss")
+        self.falla({**base(), "version_cvss": "x"}, '"3"')
+
+
 if __name__ == "__main__":
     unittest.main()

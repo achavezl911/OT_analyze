@@ -649,5 +649,64 @@ class ExportacionesClarotyTest(_Base):
                          [("modelo exacto", "version no comparable: revisar")])
 
 
+class VersionCvssTest(_Base):
+    def _aviso(self):
+        a = csaf("ICSA-99-4", {"CVE-2099-90001": (9.8, [], []), "CVE-2099-90002": (7.0, [], []),
+                               "CVE-2099-90003": (6.0, [], [])})
+        for v, p4 in zip(a["vulnerabilities"], (6.9, 8.7, None)):
+            if p4 is not None:
+                v["scores"][0]["cvss_v4"] = {"baseScore": p4}
+        return a
+
+    def _res(self, ver):
+        regs = [ent("192.0.2.1", "Acme Automation", "PLC-5000", "1.0")]
+        ind = vf.Indice(vf.fabricantes_de(regs))
+        ind.visitar(self._aviso(), "a.json")
+        return vf.construir(ind, inventario(*regs), None, {}, None, None, ver)
+
+    def test_v4_decide_severidad_orden_y_columna(self):
+        res = self._res("4")
+        cols = res["columnas"]
+        self.assertEqual(cols[cols.index("vector_cvss_v4") + 1], "cvss_decide")
+        f = {x["cve"]: dict(zip(cols, x["celdas"])) for x in res["filas"]}
+        self.assertEqual([x["cve"] for x in res["filas"]], ["CVE-2099-90002", "CVE-2099-90001", "CVE-2099-90003"])
+        self.assertEqual((f["CVE-2099-90001"]["severidad"], f["CVE-2099-90001"]["cvss_decide"]), ("Media", "4.0"))
+        self.assertEqual((f["CVE-2099-90002"]["severidad"], f["CVE-2099-90002"]["cvss_decide"]), ("Alta", "4.0"))
+        self.assertEqual((f["CVE-2099-90003"]["severidad"], f["CVE-2099-90003"]["cvss_decide"]), ("Media", "3.x"))
+        cap = Capture(Path("x"))
+        vf.agregar_hallazgo(cap, res)
+        self.assertEqual(cap.findings[0]["severidad"], "Media")
+        ev = cap.findings[0]["evidencia"]
+        self.assertIn("CVSS v4.0 8.7", ev)
+        self.assertIn("CVSS v3 6.0", ev)
+        sec = vf.seccion(res)
+        self.assertIn("CVSS v4.0", sec["nota"])
+        self.assertEqual(sec["tabla"][1][0][5], 8.7)      # primera fila, columna cvss: la efectiva
+        self.assertEqual(vf.tablas(res)[0][2], cols)
+        self.assertIn("cvss_decide", vf.para_json(res)["filas"][0])
+
+    def test_v3_o_sin_clave_identico(self):
+        res3, res = self._res("3"), self._res("3")
+        self.assertEqual(res3["columnas"], vf.COLUMNAS)
+        self.assertNotIn("cvss_decide", res["columnas"])
+        self.assertEqual([x["cve"] for x in res["filas"]], ["CVE-2099-90001", "CVE-2099-90002", "CVE-2099-90003"])
+        cap = Capture(Path("x"))
+        vf.agregar_hallazgo(cap, res)
+        self.assertEqual(cap.findings[0]["severidad"], "Alta")
+        self.assertNotIn("v4.0", cap.findings[0]["evidencia"])
+        self.assertNotIn("CVSS v4", vf.seccion(res)["nota"])
+
+    def test_alta_si_efectiva_v4_llega_a_9(self):
+        a = csaf("ICSA-99-5", {"CVE-2099-90009": (5.0, [], [])})
+        a["vulnerabilities"][0]["scores"][0]["cvss_v4"] = {"baseScore": 9.3}
+        regs = [ent("192.0.2.1", "Acme Automation", "PLC-5000", "1.0")]
+        ind = vf.Indice(vf.fabricantes_de(regs))
+        ind.visitar(a, "a.json")
+        for ver, sev in (("4", "Alta"), ("3", "Media")):
+            cap = Capture(Path("x"))
+            vf.agregar_hallazgo(cap, vf.construir(ind, inventario(*regs), None, {}, None, None, ver))
+            self.assertEqual(cap.findings[0]["severidad"], sev)
+
+
 if __name__ == "__main__":
     unittest.main()

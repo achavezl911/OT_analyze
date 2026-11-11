@@ -508,5 +508,17 @@ class Cvss4DeVulnerabilidadTest(unittest.TestCase):
         self.assertEqual(ac.detalle_vulnerabilidad(v), (9.8, ["vendor_fix"], "Parche"))
 
 
+class OrdenVersionCvssTest(unittest.TestCase):
+    def test_orden_por_v4_con_caida_a_v3(self):
+        def cr(aviso, cvss, v4):
+            a = {"id": aviso, "titulo": aviso, "publicado": "", "actualizado": "", "url": "",
+                 "cves": {"CVE-2099-5": {"cvss": cvss, "categorias": [], "extracto": "", "cvss_v4": v4}}}
+            return {"avisos": [a], "vuln": {"cve": "CVE-2099-5", "estado": "abierta"}, "activo": "k1"}
+        cruces_ = [cr("A", 9.8, 6.9), cr("B", 7.0, 8.7), cr("C", 8.0, None)]
+        self.assertEqual([f[0] for f in ac.filas_avisos(cruces_, ACTIVOS)], ["A", "C", "B"])
+        self.assertEqual([f[0] for f in ac.filas_avisos(cruces_, ACTIVOS, "3")], ["A", "C", "B"])
+        self.assertEqual([f[0] for f in ac.filas_avisos(cruces_, ACTIVOS, "4")], ["B", "C", "A"])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -44,6 +44,8 @@ NOTA = ("Cruce por texto de fabricante, modelo y firmware del inventario contra 
 COLUMNAS = ["activo", "ip", "fabricante", "modelo", "firmware", "procedencia", "cve", "cvss", "severidad", "cvss_v4",
             "vector_cvss_v4", "aviso", "producto_aviso", "version_afectada", "coincidencia", "estado", "kev", "en_plataforma", "remediacion",
             "fuente", "estado_revision", "revisado_por", "fecha", "comentario"]
+NOTA_V4 = ("Severidad y orden por CVSS v4.0 segun el perfil; donde el aviso o el catalogo no trae v4, por v3 "
+           "(columna cvss_decide).")
 CAB_SECCION = ["activo", "fabricante", "modelo", "firmware", "cve", "cvss", "estado", "kev", "en_plataforma",
                "aviso"]
 MAX_FILAS_SECCION = 30
@@ -515,8 +517,26 @@ def _ips_en_plataforma(cruces, assets) -> dict:
     return out
 
 
-def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=None) -> dict:
-    """Candidatas por activo y CVE del inventario normalizado `inv` contra el indice."""
+def _efectiva(r: dict, v4: bool) -> tuple:
+    """(puntuacion, version que decide) del registro: con v4 (D114) cvss_v4 si existe, si no v3."""
+    if v4 and r.get("cvss_v4") is not None:
+        return r["cvss_v4"], "4.0"
+    if r["cvss"] is not None:
+        return r["cvss"], "3.x"
+    return None, ""
+
+
+def _sev_de(punt, dec: str) -> str:
+    if punt is None:
+        return ""
+    return t(cvss4.severidad(punt) if dec == "4.0" else _sev_de_cvss(punt))
+
+
+def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=None, version_cvss: str = "3") -> dict:
+    """Candidatas por activo y CVE del inventario normalizado `inv` contra el indice.
+
+    version_cvss "4" (D114): severidad, orden y umbral por CVSS v4.0 con caida a v3; agrega la columna cvss_decide."""
+    v4 = version_cvss == "4"
     plat = _ips_en_plataforma(cruces, assets or {})
     con_modelo = con_fw = 0
     mejores: dict = {}
@@ -546,7 +566,7 @@ def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=Non
                 vistos_fuera.add(llave)
                 continue
             estado = E_AFECTADA if ev == "si" else E_NC if ev == "nc" else E_SIN
-            clasif = (_ORDEN_ESTADO[estado], _ORDEN_COINC[coinc], -(r["cvss"] if r["cvss"] is not None else -1), r["aviso"])
+            clasif = (_ORDEN_ESTADO[estado], _ORDEN_COINC[coinc], -(_efectiva(r, v4)[0] if _efectiva(r, v4)[0] is not None else -1), r["aviso"])
             if llave in mejores and mejores[llave][0] <= clasif:
                 continue
             mejores[llave] = (clasif, {
@@ -560,16 +580,18 @@ def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=Non
     for _clasif, x in mejores.values():
         r = x["reg"]
         en_kev = bool(kev_cves is not None and r["cve"] in kev_cves)
-        x.update(cve=r["cve"], cvss=r["cvss"], kev=en_kev)
-        sev = t(_sev_de_cvss(r["cvss"])) if r["cvss"] is not None else ""
+        ef, dec = _efectiva(r, v4)
+        x.update(cve=r["cve"], cvss=r["cvss"], kev=en_kev, cvss_ef=ef, cvss_dec=dec)
+        sev = _sev_de(ef, dec) if v4 else (t(_sev_de_cvss(r["cvss"])) if r["cvss"] is not None else "")
         x["celdas"] = [x["nombre"], ";".join(x["ips"]), x["fab"], x["modelo"], x["fw"], x["procedencia"], r["cve"],
                        "" if r["cvss"] is None else r["cvss"], sev,
-                       "" if r.get("cvss_v4") is None else r["cvss_v4"], r.get("vector_cvss_v4") or "", r["aviso"], r["producto"], r["version"],
+                       "" if r.get("cvss_v4") is None else r["cvss_v4"], r.get("vector_cvss_v4") or "", *([dec] if v4 else []),
+                       r["aviso"], r["producto"], r["version"],
                        t(x["coinc"]), t(x["estado"]),
                        "" if kev_cves is None else t("si" if en_kev else "no"),
                        t("si" if x["en_plat"] else "no"), r["remediacion"], r["fuente"], "", "", "", ""]
         filas.append(x)
-    filas.sort(key=lambda x: (_ORDEN_ESTADO[x["estado"]], _ORDEN_COINC[x["coinc"]], -(x["cvss"] if x["cvss"] is not None else -1),
+    filas.sort(key=lambda x: (_ORDEN_ESTADO[x["estado"]], _ORDEN_COINC[x["coinc"]], -(x["cvss_ef"] if x["cvss_ef"] is not None else -1),
                               x["nombre"], x["cve"]))
     por_estado = {e: sum(1 for x in filas if x["estado"] == e) for e in ESTADOS}
     resumen = {"activos_con_fabricante_y_modelo": con_modelo, "activos_con_firmware": con_fw,
@@ -577,7 +599,9 @@ def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=Non
                "filas_catalogo": ind.catalogo["filas"] if ind.catalogo else 0,
                "filas": len(filas), "por_estado": por_estado, "firmware_fuera_de_rango": fuera,
                "revision_mas_reciente": av["ultimo"] if av else ind.ultimo, "kev": bool(kev)}
-    return {"filas": filas, "resumen": resumen}
+    cols = [*COLUMNAS[:COLUMNAS.index("vector_cvss_v4") + 1], *(["cvss_decide"] if v4 else []),
+            *COLUMNAS[COLUMNAS.index("vector_cvss_v4") + 1:]]
+    return {"filas": filas, "resumen": resumen, "columnas": cols, "version_cvss": "4" if v4 else "3"}
 
 
 # ---------------------------------------------------------------------------
@@ -593,17 +617,22 @@ def agregar_hallazgo(cap, vf: dict) -> None:
     cand = _candidatas(vf) if vf else []
     if not cand:
         return
-    alta = any(x["kev"] or (x["cvss"] is not None and x["cvss"] >= 9.0) for x in cand)
+    alta = any(x["kev"] or (x["cvss_ef"] is not None and x["cvss_ef"] >= 9.0) for x in cand)
     por_cve: dict = {}
     for x in cand:
         por_cve.setdefault(x["cve"], []).append(x)
-    top = sorted(por_cve, key=lambda c: (-max((x["cvss"] if x["cvss"] is not None else -1) for x in por_cve[c]), c))
+    v4 = vf.get("version_cvss") == "4"
+    top = sorted(por_cve, key=lambda c: (-max((x["cvss_ef"] if x["cvss_ef"] is not None else -1) for x in por_cve[c]), c))
     lineas = []
     for cve in top[:5]:
         xs = por_cve[cve]
-        cvss = max((x["cvss"] for x in xs if x["cvss"] is not None), default=None)
+        con = [x for x in xs if x["cvss_ef"] is not None]
+        mejor = max(con, key=lambda x: x["cvss_ef"]) if con else None
+        cvss = mejor["cvss_ef"] if mejor else None
         nombres = sorted({x["nombre"] for x in xs})
-        lineas.append(t("{cve} (CVSS {c}; {a})", cve=cve, c="-" if cvss is None else cvss,
+        plantilla = ("{cve} (CVSS v4.0 {c}; {a})" if mejor["cvss_dec"] == "4.0" else "{cve} (CVSS v3 {c}; {a})") \
+            if v4 and mejor else "{cve} (CVSS {c}; {a})"
+        lineas.append(t(plantilla, cve=cve, c="-" if cvss is None else cvss,
                         a=", ".join(nombres[:3]) + (f" (+{len(nombres) - 3})" if len(nombres) > 3 else "")))
     activos = sorted({x["id"] for x in cand})
     ev = t("Cruce por texto contra los avisos locales y el catalogo del analista; candidatos a confirmar con el "
@@ -627,7 +656,7 @@ def hay(vf: dict) -> bool:
 def tablas(vf: dict) -> list:
     if not hay(vf) or not vf["filas"]:
         return []
-    return [(ARCHIVO, HOJA, COLUMNAS, [x["celdas"] for x in vf["filas"]])]
+    return [(ARCHIVO, HOJA, vf.get("columnas", COLUMNAS), [x["celdas"] for x in vf["filas"]])]
 
 
 def _texto_resumen(r: dict) -> str:
@@ -645,11 +674,17 @@ def _texto_resumen(r: dict) -> str:
 
 def seccion(vf: dict) -> dict:
     r = vf["resumen"]
-    cols = [COLUMNAS.index(c) for c in CAB_SECCION]
+    v4 = vf.get("version_cvss") == "4"
+    todas = vf.get("columnas", COLUMNAS)
+    cols = [todas.index(c) for c in CAB_SECCION]
+    ic = CAB_SECCION.index("cvss")
     filas = [[x["celdas"][i] for i in cols] for x in vf["filas"][:MAX_FILAS_SECCION]]
+    if v4:      # D114: la seccion muestra la puntuacion que decidio
+        for f, x in zip(filas, vf["filas"]):
+            f[ic] = "" if x["cvss_ef"] is None else x["cvss_ef"]
     mas = len(vf["filas"]) - len(filas)
     vacio = "" if r["activos_con_fabricante_y_modelo"] else t(TEXTO_VACIO)
-    return {"titulo": t(TITULO), "nota": t(NOTA), "resumen": _texto_resumen(r),
+    return {"titulo": t(TITULO), "nota": t(NOTA) + (" " + t(NOTA_V4) if v4 else ""), "resumen": _texto_resumen(r),
             "tabla": ([t(c) for c in CAB_SECCION], filas),
             "mas": t("Se muestran {n} filas; {m} mas estan en vulnerabilidades_firmware.csv.",
                      n=len(filas), m=mas) if mas > 0 else "",
@@ -660,4 +695,4 @@ def para_json(vf: dict) -> dict:
     if not hay(vf):
         return {}
     return {"nota": t(NOTA), "resumen": vf["resumen"],
-            "filas": [dict(zip(COLUMNAS, x["celdas"])) for x in vf["filas"]]}
+            "filas": [dict(zip(vf.get("columnas", COLUMNAS), x["celdas"])) for x in vf["filas"]]}

@@ -50,7 +50,7 @@ def cargar(path) -> dict:
     d = objeto(d, "perfil", ("version", "cliente", *TEXTOS, "idioma", "marcos", "regulacion",
                              "captura", "engagement", "sl_objetivo", "ml_objetivo", "linea_base_nist", "cis_ig", "tsa_sd", "criticidad_activos", "dominios_internos", "zonas",
                              "equipos_propios", "vlans_esperadas", "ajustes_riesgo", "madurez_objetivo",
-                             "csf_tiers_objetivo"))
+                             "csf_tiers_objetivo", "version_cvss"))
     if d.get("version") != 1 or isinstance(d.get("version"), bool):
         fallo("'version' es requerida y solo se admite 1.")
     out: dict = {"version": 1, "cliente": texto(d["cliente"], "cliente") if "cliente" in d
@@ -129,6 +129,10 @@ def cargar(path) -> dict:
         if texto(d["tsa_sd"], "tsa_sd") not in EDICIONES_TSA:
             fallo(f"'tsa_sd': '{d['tsa_sd']}' no es una edicion conocida (ediciones: {', '.join(EDICIONES_TSA)}).")
         out["tsa_sd"] = d["tsa_sd"]
+    if "version_cvss" in d:     # D114: version de CVSS que decide severidad, orden y umbral
+        out["version_cvss"] = version_cvss(d["version_cvss"])
+        if out["version_cvss"] is None:
+            fallo(f"'version_cvss': {d['version_cvss']!r} no es valido; valores: \"3\" (3.0, 3.1) o \"4\" (4.0).")
     if "zonas" in d:
         out["zonas"] = _zonas(d["zonas"], out.get("sl_objetivo", {}), fallo, texto, objeto)
     if "criticidad_activos" in d:
@@ -262,6 +266,17 @@ def _zonas(lista, sl_objetivo: dict, fallo, texto, objeto) -> list:
             nz["dmz"] = z["dmz"]
         out.append(nz)
     return out
+
+
+def version_cvss(v):
+    """'3' o '4' (D114). Acepta 3, 3.0, 3.1, 4, 4.0 y sus textos; bool y lo demas -> None."""
+    if not isinstance(v, bool) and isinstance(v, (str, int, float)):
+        s = str(v).strip()
+        if s in ("3", "3.0", "3.1"):
+            return "3"
+        if s in ("4", "4.0"):
+            return "4"
+    return None
 
 
 def aplicar(ap, args, por_defecto: dict) -> dict:

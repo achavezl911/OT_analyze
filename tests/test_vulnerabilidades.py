@@ -239,5 +239,36 @@ class TestCpeN2(unittest.TestCase):
         self.assertIn("1 activos con CPE ambiguo", vu.aviso_cpe_ambiguo(1))
 
 
+class VersionCvssTest(unittest.TestCase):
+    def _v(self, texto, ver):
+        return vu.vulns_de_filas(vu.leer_csv(texto.encode()), "v.csv", ver)
+
+    def test_severidad_derivada_de_v4_solo_con_4(self):
+        t = "ip,cve,cvss,cvss_v4\n1.1.1.1,CVE-2021-0001,9.8,6.9\n"
+        self.assertEqual(self._v(t, "4")[0]["severidad"], "Media")
+        self.assertEqual(self._v(t, "3")[0]["severidad"], "Critica")
+        self.assertEqual(vu.vulns_de_filas(vu.leer_csv(t.encode()), "v.csv")[0]["severidad"], "Critica")
+
+    def test_severidad_explicita_se_respeta(self):
+        t = "ip,cve,severidad,cvss,cvss_v4\n1.1.1.1,CVE-2021-0001,Baja,9.8,9.9\n"
+        for ver in ("3", "4"):
+            self.assertEqual(self._v(t, ver)[0]["severidad"], "Baja")
+
+    def test_solo_v4_se_acepta_con_4_y_falla_con_3(self):
+        t = "ip,cve,cvss_v4\n1.1.1.1,CVE-2021-0001,8.7\n"
+        self.assertEqual(self._v(t, "4")[0]["severidad"], "Alta")
+        with self.assertRaises(SystemExit):
+            self._v(t, "3")
+        v = "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N"
+        t = f"ip,cve,vector_cvss_v4\n1.1.1.1,CVE-2021-0001,{v}\n"
+        self.assertEqual(self._v(t, "4")[0]["severidad"], "Critica")
+        with self.assertRaises(SystemExit):
+            self._v(t, "3")
+
+    def test_sin_v4_cae_a_v3(self):
+        t = "ip,cve,cvss,cvss_v4\n1.1.1.1,CVE-2021-0001,9.8,\n"
+        self.assertEqual(self._v(t, "4")[0]["severidad"], "Critica")
+
+
 if __name__ == "__main__":
     unittest.main()

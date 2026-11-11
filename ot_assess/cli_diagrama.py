@@ -463,7 +463,7 @@ def main(argv: list | None = None) -> int:
     vulns = cruces = inferidos = None
     fuente_cpe = ""
     if args.vulnerabilidades:
-        vulns = _vu.cargar(args.vulnerabilidades)
+        vulns = _vu.cargar(args.vulnerabilidades, (perfil or {}).get("version_cvss", "3"))
         cruces = _vu.cruzar(vulns, imp.assets)
         inferidos, ambiguos = _vu.inferir_equipos(cruces)      # N2 (D101)
         fuente_cpe = "cpe " + Path(args.vulnerabilidades).name
@@ -493,11 +493,11 @@ def main(argv: list | None = None) -> int:
             w = escritor_csv(fh)
             w.writerow(_vu.columnas(cruces))
             w.writerows(_vu.filas_tabla(cruces, imp.assets))
-        if avisos and "avisos_ics" in res.vulnerabilidades and _ac.filas_avisos(cruces, imp.assets):
+        if avisos and "avisos_ics" in res.vulnerabilidades and _ac.filas_avisos(cruces, imp.assets, (perfil or {}).get("version_cvss", "3")):
             with open(out / "avisos_ics.csv", "w", newline="", encoding="utf-8-sig") as fh:
                 w = escritor_csv(fh)
                 w.writerow(_ac.COLUMNAS_AVISOS)
-                w.writerows(_ac.filas_avisos(cruces, imp.assets))
+                w.writerows(_ac.filas_avisos(cruces, imp.assets, (perfil or {}).get("version_cvss", "3")))
     else:
         _ac.preparar(args, None)
     if indice_vf:
@@ -519,7 +519,7 @@ def main(argv: list | None = None) -> int:
     res.inventario_normalizado = _in.construir([*registros, *manual], perfil, bool(args.inventario_manual), propios)
     if indice_vf:        # V1a (D89): despues del inventario normalizado
         res.vuln_firmware = _vf.construir(indice_vf, res.inventario_normalizado, res.vulns_cruces, imp.assets,
-                                          kev_cat, avisos)
+                                          kev_cat, avisos, (perfil or {}).get("version_cvss", "3"))
         extra = Capture(Path("vulnerabilidades por firmware"))
         _vf.agregar_hallazgo(extra, res.vuln_firmware)
         hallazgos += [(extra.name, f) for f in extra.findings]

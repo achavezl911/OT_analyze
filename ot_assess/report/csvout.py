@@ -244,7 +244,7 @@ def tablas(res: Assessment) -> list:
                     _vu.filas_tabla(res.vulns_cruces, assets)))
 
     if "avisos_ics" in res.vulnerabilidades:
-        filas = _ac.filas_avisos(res.vulns_cruces, assets)
+        filas = _ac.filas_avisos(res.vulns_cruces, assets, (getattr(res, "perfil", None) or {}).get("version_cvss", "3"))
         if filas:
             out.append(("avisos_ics.csv", "Avisos ICS", _ac.COLUMNAS_AVISOS, filas))
 
