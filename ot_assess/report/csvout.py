@@ -9,6 +9,7 @@ from .. import alertas as _al
 from .. import avisos_cisa as _ac
 from .. import cobertura_captura as _cc
 from .. import conductos_zcr as _zc
+from .. import csf_tiers as _ct
 from .. import direccionamiento as _dr
 from .. import evasion as _ev
 from .. import fuentes as _fu
@@ -176,6 +177,7 @@ def tablas(res: Assessment) -> list:
     out.append(("plan_remediacion.csv", "Plan de remediacion", _re.COLUMNAS, _re.tabla(res)))
     out.extend(_rg.tablas(_rg.de(res)))
     out.extend(_ma.tablas(res.madurez))
+    out.extend(_ct.tablas(res.csf_tiers))
 
     out.append(("dns_registros.csv", "DNS registros", _rd.COL_REGISTROS, _rd.registros(res)))
     out.append(("dns_resoluciones.csv", "DNS resoluciones", _rd.COL_RESOLUCIONES, _rd.resoluciones(res)))

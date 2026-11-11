@@ -49,7 +49,8 @@ def cargar(path) -> dict:
         raise SystemExit(f"[!] No pude leer el perfil '{nombre}': {e}")
     d = objeto(d, "perfil", ("version", "cliente", *TEXTOS, "idioma", "marcos", "regulacion",
                              "captura", "engagement", "sl_objetivo", "ml_objetivo", "linea_base_nist", "cis_ig", "tsa_sd", "criticidad_activos", "dominios_internos", "zonas",
-                             "equipos_propios", "vlans_esperadas", "ajustes_riesgo", "madurez_objetivo"))
+                             "equipos_propios", "vlans_esperadas", "ajustes_riesgo", "madurez_objetivo",
+                             "csf_tiers_objetivo"))
     if d.get("version") != 1 or isinstance(d.get("version"), bool):
         fallo("'version' es requerida y solo se admite 1.")
     out: dict = {"version": 1, "cliente": texto(d["cliente"], "cliente") if "cliente" in d
@@ -112,6 +113,9 @@ def cargar(path) -> dict:
     if "madurez_objetivo" in d:     # M7 (D84): nivel objetivo (0 a 4) por dominio de madurez
         from .madurez import objetivos_validos
         out["madurez_objetivo"] = objetivos_validos(d["madurez_objetivo"], fallo)
+    if "csf_tiers_objetivo" in d:   # CSF2T (D110): tier objetivo (1 a 4) por funcion de NIST CSF 2.0
+        from .csf_tiers import objetivos_validos as tiers_validos
+        out["csf_tiers_objetivo"] = tiers_validos(d["csf_tiers_objetivo"], fallo)
     if "linea_base_nist" in d:
         if texto(d["linea_base_nist"], "linea_base_nist") not in ("baja", "moderada", "alta"):
             fallo(f"'linea_base_nist': '{d['linea_base_nist']}' no es baja, moderada ni alta.")

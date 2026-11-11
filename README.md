@@ -660,6 +660,9 @@ registro de riesgos (R1): ver `riesgos.csv` en la tabla de salidas. Los valores 
 La clave opcional `madurez_objetivo` (`{"segmentacion": 3, "parches": 2}`; enteros de 0 a 4; claves `activos`,
 `segmentacion`, `acceso`, `parches`, `monitoreo`, `incidentes`, `suministro`, `riesgo`) fija el nivel objetivo de cada
 dominio de la madurez por dominio (M7); si falta, rige el número de `ml_objetivo` y, si tampoco, 2 propuesto por la herramienta.
+La clave opcional `csf_tiers_objetivo` (`{"GV": "Repetible", "PR": 3}`; funciones `GV`, `ID`, `PR`, `DE`, `RS`, `RC`; tier 1 a 4
+o su nombre) fija la meta de cada función de los Tiers de NIST CSF 2.0; ver «Niveles (Tiers) de NIST CSF 2.0 por función»
+y la opción `--csf-tiers ARCHIVO`.
 La clave opcional `zonas` declara las zonas del cliente (IEC 62443-3-2), con ejemplo en
 [`docs/ejemplos/perfil_zonas.json`](docs/ejemplos/perfil_zonas.json): lista de
 `{"nombre", "redes": [CIDR], "descripcion", "sl_t": "SL1".."SL4", "inferida": true|false}`. `inferida: true` marca una zona
@@ -1176,6 +1179,39 @@ hojas «Madurez por dominio» y «Cuestionario de madurez», sección en HTML (t
 en línea, sin JavaScript; el radar solo aparece si hay niveles), Markdown y Word (tabla) y la clave `madurez` de
 `resultado.json`. Sin cuestionario la sección muestra objetivo y señales y apunta a la plantilla. La línea base 62443
 (B7b) no cambia.
+
+#### Niveles (Tiers) de NIST CSF 2.0 por función (CSF2T)
+
+Cuando el cliente mide la madurez con los Tiers de NIST CSF 2.0 y fija una meta por función (por ejemplo Gobernar,
+Proteger, Detectar y Recuperar en «Repetible»; Identificar y Responder en «Adaptativo»), la herramienta entrega la hoja
+de trabajo; **no mide los tiers** (caracterizan el rigor del gobierno y la gestión del riesgo; los declara la
+organización en la entrevista, NIST SP 1302). Se activa con la clave `csf_tiers_objetivo` del perfil, con `--csf-tiers
+ARCHIVO`, o con ambos; sin ninguno no sale nada nuevo.
+
+```json
+"csf_tiers_objetivo": {"GV": "Repetible", "ID": "Adaptativo", "PR": 3, "DE": 3, "RS": 4, "RC": "Repetible"}
+```
+
+Claves: `GV` Gobernar, `ID` Identificar, `PR` Proteger, `DE` Detectar, `RS` Responder, `RC` Recuperar. Tier: 1 a 4 (número
+o texto) o el nombre, en español o inglés y sin distinguir mayúsculas: 1 Parcial (Partial), 2 Informado por el riesgo
+(Risk Informed), 3 Repetible (Repeatable), 4 Adaptativo (Adaptive). Una función desconocida o un tier inválido es un
+error. La función sin meta en el perfil, o sin perfil, queda en Tier 2 «propuesto por la herramienta; lo fija el
+cliente».
+
+La corrida escribe `csf_tiers.csv` (una fila por función, en el orden del CSF): meta y su origen, `tier_actual` y
+`brecha` vacíos, y por función el conteo de filas NIST de la matriz de controles en brecha con evidencia, control
+observado, sin evidencia y no evaluables, más cuántas subcategorías y controles de SP 800-53 la alcanzan. Las filas de
+una función son las del control base citado por las referencias informativas de CSF 2.0 de sus subcategorías
+(`marcos/csf2_referencias.json`); son evidencia relacionada, no un veredicto. Después de la entrevista se llenan
+`tier_actual` (1 a 4 o el nombre; vacío = sin tier) y `evidencia_presentada`, `entrevistado`, `fecha`, `comentario`, y
+se entrega el mismo archivo con `--csf-tiers csf_tiers.csv` (también en `diagrama`). Se leen solo esas columnas
+(separador `,` o `;`, BOM aceptado, cabeceras en español o inglés); una función repetida o desconocida o un tier
+inválido detiene la corrida con el número de línea. Brecha = máx(0, meta - actual). Con un tier declarado de 3 o más y un
+hallazgo de severidad Alta en las filas NIST de la función, la columna `revision` lo marca («revisar: la evidencia de red
+no respalda el tier declarado»); no cambia el tier.
+
+Salidas: `csf_tiers.csv` (hoja «Tiers CSF 2.0»), sección «Niveles (Tiers) de NIST CSF 2.0 por función» en HTML, Markdown
+y Word después de la de madurez, y la clave `csf_tiers` de `resultado.json`. Nunca «cumple» ni «no cumple».
 
 ### Validar la política propuesta contra otra ventana (`politica-validar`)
 

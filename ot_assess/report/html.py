@@ -11,6 +11,7 @@ from .. import alertas as _al
 from .. import cobertura as _cobertura
 from .. import cobertura_captura as _cc
 from .. import conductos_zcr as _zc
+from .. import csf_tiers as _ct
 from .. import direccionamiento as _dr
 from .. import entorno as _entorno
 from .. import firewall as _firewall
@@ -610,6 +611,19 @@ def write_html(res: Assessment, outdir: Path) -> Path:
         a("</tbody></table></div>")
         if ms["radar"]:
             a('<div class="radar">' + _ma.radar_svg(res.madurez) + "</div>")
+
+    # ---------------- niveles (Tiers) de NIST CSF 2.0 por funcion (CSF2T, D110) ---------------- #
+    if _ct.hay(res.csf_tiers):
+        cs = _ct.seccion(res.csf_tiers)
+        a("<h2>" + esc(cs["titulo"]) + "</h2>")
+        a(f'<div class="nota">{esc(cs["nota"])}</div>')
+        a(f"<p>{esc(cs['resumen'])}</p>")
+        a(f"<p>{esc(t('Origen del objetivo'))}: {esc(cs['origen_objetivo'])}</p>")
+        a('<div class="tbl"><table><thead><tr>' + "".join(f"<th>{esc(str(c))}</th>" for c in cs["cab"])
+          + "</tr></thead><tbody>")
+        for fila in cs["filas"]:
+            a("<tr>" + "".join(f"<td>{esc(str(c))}</td>" for c in fila) + "</tr>")
+        a("</tbody></table></div>")
 
     # ---------------- visibilidad ---------------- #
     if not caps:

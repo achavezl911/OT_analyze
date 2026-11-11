@@ -104,6 +104,7 @@ class Assessment:
     linea_base_aprobada: dict = field(default_factory=dict)   # linea_base_aprobada.evaluar (LB1, D82)
     riesgos: dict = field(default_factory=dict)         # riesgo.de (R1, D83): registro, mapa de calor y quick wins
     madurez: dict = field(default_factory=dict)         # madurez.construir (M7, D84): madurez por dominio
+    csf_tiers: dict = field(default_factory=dict)       # csf_tiers.construir (CSF2T, D110): tiers de CSF 2.0 por funcion
     tobe: dict = field(default_factory=dict)            # tobe.construir (T1a, D85): allowlist zona x zona propuesta
     hardening: dict = field(default_factory=dict)       # hardening.construir (T1b, D86): hardening por tipo de equipo
     direccionamiento: dict = field(default_factory=dict)   # direccionamiento.construir (G1b, D88): redes observadas

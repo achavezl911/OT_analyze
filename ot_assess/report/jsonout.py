@@ -8,6 +8,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from .. import cobertura_captura as _cc
+from .. import csf_tiers as _ct
 from .. import direccionamiento as _dr
 from .. import fuentes_log as _fl
 from .. import hardening as _hd
@@ -102,6 +103,7 @@ def write_json(res: Assessment, outdir: Path) -> None:
                     "cobertura_captura": _cc.para_json(res.cobertura_captura),
                     "riesgos": _rg.para_json(_rg.de(res)),
                     "madurez": _ma.para_json(res.madurez),
+                    **({"csf_tiers": _ct.para_json(res.csf_tiers)} if _ct.hay(res.csf_tiers) else {}),
                     "tobe": _tb.para_json(res.tobe),
                     "hardening": _hd.para_json(res.hardening),
                     "fuentes_log": _fl.para_json(res.fuentes_log),

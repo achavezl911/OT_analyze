@@ -10,6 +10,7 @@ from .. import alertas as _al
 from .. import cobertura as _cobertura
 from .. import cobertura_captura as _cc
 from .. import conductos_zcr as _zc
+from .. import csf_tiers as _ct
 from .. import direccionamiento as _dr
 from .. import entorno as _entorno
 from .. import firewall as _firewall
@@ -263,6 +264,18 @@ def write_md(res: Assessment, outdir: Path) -> Path:
         out.append("| " + " | ".join(md_escape(str(c)) for c in ms["cab"]) + " |")
         out.append("|" + "---|" * len(ms["cab"]))
         out += ["| " + " | ".join(md_escape(str(c)) for c in fila) + " |" for fila in ms["filas"]]
+        out.append("")
+
+    # --- niveles (Tiers) de NIST CSF 2.0 por funcion (CSF2T, D110) ------- #
+    if _ct.hay(res.csf_tiers):
+        cs = _ct.seccion(res.csf_tiers)
+        out.append("## " + cs["titulo"] + "\n")
+        out.append("> " + cs["nota"] + "\n")
+        out.append(cs["resumen"] + "\n")
+        out.append(t("Origen del objetivo") + ": " + md_escape(cs["origen_objetivo"]) + "\n")
+        out.append("| " + " | ".join(md_escape(str(c)) for c in cs["cab"]) + " |")
+        out.append("|" + "---|" * len(cs["cab"]))
+        out += ["| " + " | ".join(md_escape(str(c)) for c in fila) + " |" for fila in cs["filas"]]
         out.append("")
 
     # --- inventario ----------------------------------------------------- #

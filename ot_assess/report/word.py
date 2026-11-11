@@ -10,6 +10,7 @@ from .. import alertas as _al
 from .. import cobertura as _cobertura
 from .. import cobertura_captura as _cc
 from .. import conductos_zcr as _zc
+from .. import csf_tiers as _ct
 from .. import direccionamiento as _dr
 from .. import entorno as _entorno
 from .. import firewall as _firewall
@@ -161,6 +162,11 @@ def construir_bloques(res: Assessment) -> list:
 
     if _ma.hay(res.madurez):        # M7 (D84)
         s = _ma.seccion(res.madurez)
+        b += [("h1", s["titulo"]), ("nota", s["nota"]), ("p", s["resumen"]),
+              ("p", t("Origen del objetivo") + ": " + s["origen_objetivo"]), ("tabla", s["cab"], s["filas"])]
+
+    if _ct.hay(res.csf_tiers):      # CSF2T (D110)
+        s = _ct.seccion(res.csf_tiers)
         b += [("h1", s["titulo"]), ("nota", s["nota"]), ("p", s["resumen"]),
               ("p", t("Origen del objetivo") + ": " + s["origen_objetivo"]), ("tabla", s["cab"], s["filas"])]
 

@@ -154,6 +154,11 @@ def crear_parser() -> argparse.ArgumentParser:
                          "respuesta 0 a 4, N/A o vacio por pregunta. Calcula nivel actual, objetivo y brecha por "
                          "dominio y senala donde la evidencia de red no respalda lo declarado. Escribe madurez.csv. "
                          "Objetivo: madurez_objetivo o ml_objetivo del perfil.")
+    ap.add_argument("--csf-tiers", metavar="ARCHIVO", dest="csf_tiers",
+                    help="csf_tiers.csv llenado por el analista (la corrida lo escribe con la meta de "
+                         "csf_tiers_objetivo del perfil): columna tier_actual con 1 a 4 o el nombre del tier por "
+                         "funcion de NIST CSF 2.0. Calcula la brecha frente a la meta y agrega la evidencia de las "
+                         "filas NIST de la matriz de controles. La herramienta no mide los tiers.")
     ap.add_argument("--inventario-manual", metavar="ARCHIVO",
                     help="Hoja de inventario del cliente o del equipo (CSV, JSON o XLSX, encabezados libres: se "
                          "reconocen por alias; --mapeo con la clave \"manual\" corrige columnas). Sus valores "
@@ -268,6 +273,8 @@ def main(argv: list | None = None) -> int:
         ap.error(f"--linea-base espera una carpeta existente: '{args.linea_base}'")
     from . import madurez as _ma
     respuestas_madurez = _ma.leer_opcion(ap, args.madurez)
+    from . import csf_tiers as _ct
+    declarados_tiers = _ct.leer_opcion(ap, args.csf_tiers)
     if args.inventario_manual and not Path(args.inventario_manual).is_file():
         ap.error(f"--inventario-manual espera un archivo existente: '{args.inventario_manual}'")
     if args.catalogo_vulnerabilidades and not Path(args.catalogo_vulnerabilidades).is_file():
@@ -554,6 +561,8 @@ def main(argv: list | None = None) -> int:
     archivos = write_diagrams(res, out)       # despues de los hallazgos: el TO-BE cita sus IDs
     res.madurez = _ma.construir(res, respuestas_madurez)       # M7 (D84)
     _ma.imprimir(res.madurez)
+    res.csf_tiers = _ct.construir(res, declarados_tiers)       # CSF2T (D110)
+    _ct.imprimir(res.csf_tiers)
     inv = res.inventario_normalizado["resumen"]
     print(f"    inventario normalizado: {inv['activos']} activos, {inv['campos_en_conflicto']} campos en conflicto")
     if args.inventario_manual:

@@ -177,6 +177,11 @@ def _csf() -> dict:
     return _cache["csf"]
 
 
+def referencias_csf() -> dict:
+    """{subcategoria CSF 2.0: {"cis_v8_1": [...], "sp800_53": [...]}} (marcos/csf2_referencias.json), solo ids."""
+    return _csf()
+
+
 def _por_base(filas_nist: list) -> dict:
     por_base: dict = {}
     for r in filas_nist:

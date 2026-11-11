@@ -231,6 +231,12 @@ def crear_parser() -> argparse.ArgumentParser:
                          "respuesta 0 a 4, N/A o vacio por pregunta. Calcula nivel actual, objetivo y brecha por "
                          "dominio y senala donde la evidencia de red no respalda lo declarado. Escribe madurez.csv. "
                          "Objetivo: madurez_objetivo o ml_objetivo del perfil.")
+    ap.add_argument("--csf-tiers", metavar="ARCHIVO", dest="csf_tiers",
+                    help="csf_tiers.csv llenado por el analista (la corrida lo escribe con la meta de "
+                         "csf_tiers_objetivo del perfil): columna tier_actual con 1 a 4 o el nombre del tier "
+                         "(Parcial, Informado por el riesgo, Repetible, Adaptativo) por funcion de NIST CSF 2.0. "
+                         "Calcula la brecha frente a la meta y agrega la evidencia de las filas NIST de la matriz "
+                         "de controles. La herramienta no mide los tiers.")
     ap.add_argument("--inventario-manual", metavar="ARCHIVO",
                     help="Hoja de inventario del cliente o del equipo (CSV, JSON o XLSX, encabezados libres: se "
                          "reconocen por alias). Sus valores quedan como declarados en inventario_normalizado.csv; "
@@ -351,6 +357,8 @@ def main(argv: list[str] | None = None) -> int:
         ap.error(f"--linea-base espera una carpeta existente: '{args.linea_base}'")
     from . import madurez as _ma
     respuestas_madurez = _ma.leer_opcion(ap, args.madurez)
+    from . import csf_tiers as _ct
+    declarados_tiers = _ct.leer_opcion(ap, args.csf_tiers)
     if args.mapeo and not args.inventario_manual:
         ap.error("--mapeo requiere --inventario-manual")
     if args.inventario_manual and not Path(args.inventario_manual).is_file():
@@ -623,7 +631,9 @@ def main(argv: list[str] | None = None) -> int:
                                          [f for c in [*res.caps, *res.extras] for f in c.findings])   # G1b (D88)
     res.madurez = _ma.construir(res, respuestas_madurez)       # M7 (D84): con los hallazgos ya completos
     _ma.imprimir(res.madurez)
-    inv = res.inventario_normalizado["resumen"]
+    res.csf_tiers = _ct.construir(res, declarados_tiers)       # CSF2T (D110)
+    _ct.imprimir(res.csf_tiers)
+    inv =res.inventario_normalizado["resumen"]
     print(f"    inventario normalizado: {inv['activos']} activos, {inv['campos_en_conflicto']} campos en conflicto")
     if args.inventario_manual:
         print(f"    inventario manual: {inv['declarados_no_observados']} declarados no observados, "
