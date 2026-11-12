@@ -682,6 +682,21 @@ pasiva» (la extensión de seguridad de 62351-6 no se decodifica). Los protocolo
 solo si se vieron. **No es un dictamen ni dice cumple/no cumple;** no crea hallazgos. Solo capturas, no exportaciones de
 plataformas. Solo CSV y libro.
 
+**Evidencia IEC 62351 por flujo (E62351F, D125).** Con la clave de perfil `iec62351_flujos` (`true`, o un objeto
+`{"estados": [2 a 10 textos únicos de 1 a 40 caracteres], "inicial": uno de ellos}`; por defecto `por revisar`, `confirmado`,
+`no aplica`, `excepcion documentada`) o con `--iec62351-estados ARCHIVO`, la corrida principal y `diagrama` escriben
+`iec62351_flujos.csv` (hoja `IEC 62351 flujos`): una fila por flujo (origen, destino, transporte, puerto) de un protocolo del
+mapa, con `id_flujo` estable (`F62-` + 10 hex del sha256 de `protocolo|origen|destino|transporte|puerto`; no cambia con el
+idioma), `canal`, `tls_confirmado` (con capturas, solo si hubo ServerHello de ese servidor a ese cliente en el puerto seguro),
+`autenticacion_segura` (DNP3, por par), `evidencia`, `estado_equipo` (el inicial), `nota_equipo` (vacía) y `nota`. En 102/tcp
+solo los pares vistos como MMS cuentan como MMS; los no decodificados salen como «MMS o S7comm (sin decodificar)» y no se
+evalúan. GOOSE y SV (capa 2) solo con capturas. Con exportaciones las filas salen con `fuente` = `exportacion` y TLS vacío.
+`--iec62351-estados` trae `estado_equipo` y `nota_equipo` de un CSV de una corrida anterior (coma o punto y coma, UTF-8; hasta
+20 MB y 100000 filas; cabeceras en español o en inglés): un estado fuera de la lista permitida o un `id_flujo` repetido con
+valores distintos termina con código 2 antes de escribir; un estado vacío conserva el inicial; los ids que ya no existen se
+cuentan y se avisan. Los estados no se traducen (son del equipo). `resultado.json` lleva el bloque `iec62351_flujos`. Sin la
+clave ni la opción no cambia ninguna salida. Mapeo propio sin revisar: evidencia observable, no un dictamen.
+
 **Avisos de terceros (MITRE ATT&CK).** Copyright 2015-2026, The MITRE Corporation. MITRE ATT&CK and ATT&CK are
 registered trademarks of The MITRE Corporation. The MITRE Corporation (MITRE) hereby grants you a non-exclusive,
 royalty-free license to use ATT&CK(R) for research, development, and commercial purposes. Any copy you make for such

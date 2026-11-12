@@ -52,7 +52,7 @@ def cargar(path) -> dict:
                              "captura", "engagement", "sl_objetivo", "ml_objetivo", "linea_base_nist", "cis_ig", "tsa_sd", "criticidad_activos", "dominios_internos", "zonas",
                              "equipos_propios", "vlans_esperadas", "ajustes_riesgo", "madurez_objetivo",
                              "csf_tiers_objetivo", "version_cvss", "subcomandos_deshabilitados", "leyenda_salidas",
-                             "modelo_evidencia", "riesgo", "avisos_solo_paquete"))
+                             "modelo_evidencia", "riesgo", "avisos_solo_paquete", "iec62351_flujos"))
     if d.get("version") != 1 or isinstance(d.get("version"), bool):
         fallo("'version' es requerida y solo se admite 1.")
     out: dict = {"version": 1, "cliente": texto(d["cliente"], "cliente") if "cliente" in d
@@ -201,6 +201,11 @@ def cargar(path) -> dict:
         if not isinstance(d["avisos_solo_paquete"], bool):
             fallo("'avisos_solo_paquete' debe ser true o false.")
         out["avisos_solo_paquete"] = d["avisos_solo_paquete"]
+    if "iec62351_flujos" in d:      # E62351F (D125)
+        from .iec62351 import estados_validos
+        flujos = estados_validos(d["iec62351_flujos"], fallo)
+        if flujos:
+            out["iec62351_flujos"] = flujos
     if "modelo_evidencia" in d:     # EVID1 (D122)
         from .inventario_normalizado import modelo_valido
         out["modelo_evidencia"] = modelo_valido(d["modelo_evidencia"], fallo)

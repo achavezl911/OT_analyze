@@ -18,6 +18,7 @@ from . import evasion as _ev
 from . import fuentes as _fu
 from . import fuentes_log as _fl
 from . import hardening as _hd
+from . import iec62351 as _ie
 from . import inventario_normalizado as _in
 from . import linea_base as _lb
 from . import matriz_controles as _mc
@@ -47,7 +48,7 @@ from .perfil import aplicar as aplicar_perfil
 from .permisos import salida_privada
 from .report import write_all
 from .report.common import escritor_csv
-from .report.csvout import cabecera_hallazgos, fila_hallazgo
+from .report.csvout import cabecera_hallazgos, cabecera_t, fila_hallazgo
 from .report.diagrams import write_diagrams
 from .report.pagina import write_pagina
 from .rules.acceso_remoto import hallazgo as _hallazgo_ar
@@ -116,6 +117,9 @@ def crear_parser() -> argparse.ArgumentParser:
                     help="Mapeo oficial de CIS v8.1 a SP 800-53 Rev 5 o a CSF 2.0 (XLSX oficial de CIS o CSV con "
                          "las mismas columnas; repetible, uno por tipo; requiere --cis). El estado de las filas "
                          "CIS sale de este mapeo; no se copia al repo ni a las salidas mas que ids y relacion.")
+    ap.add_argument("--iec62351-estados", metavar="ARCHIVO", dest="iec62351_estados",
+                    help="Un iec62351_flujos.csv de una corrida anterior que el equipo lleno (como en el analisis "
+                         "de capturas): traslada estado_equipo y nota_equipo por id_flujo.")
     ap.add_argument("--avisos-ics", metavar="RUTA", dest="avisos_ics",
                     help="Avisos ICS de CISA en CSAF 2.0: un JSON o una carpeta (como en el analisis de capturas).")
     ap.add_argument("--paquete-avisos", metavar="CARPETA", dest="paquete_avisos",
@@ -349,6 +353,7 @@ def main(argv: list | None = None) -> int:
     zon = _zo.asignar(imp.assets, perfil, rutas, reglas_fw, zonas)
     for adv in zon["avisos"]:
         print(f"[!] {adv}")
+    _ie.preparar(ap, args, perfil, [], imp.conduits, imp.assets)      # E62351F (D125)
     zcr = _zc.construir(imp.assets, imp.conduits, zon, reglas_fw)
     ra = _ra.construir(imp.assets, imp.conduits, zon, reglas_fw, perfil, zcr, args.origen_ataque,
                        args.objetivo_ataque)
@@ -390,6 +395,7 @@ def main(argv: list | None = None) -> int:
     multiple = _tp.es_multiple(reglas_fw)
     tablas_fw = [("zonas.csv", _zo.COLUMNAS, _zo.filas_tabla(zon))]
     tablas_fw += [(a, c, f) for a, _h, c, f in _sw.tablas(switches)]
+    tablas_fw += [(a, cabecera_t(res, c), f) for a, _h, c, f in _ie.tablas_flujos(args)]      # E62351F (D125)
     if _zc.hay(zcr):
         tablas_fw.append((_zc.ARCHIVO, _zc.COLUMNAS, _zc.filas_tabla(zcr)))
     tablas_fw += [(a, c, f) for a, _h, c, f in _ra.tablas(ra)]

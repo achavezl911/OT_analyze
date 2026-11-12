@@ -181,6 +181,7 @@ def tablas(res: Assessment) -> list:
     out.extend(_atc.tablas([f for c in [*caps, *res.extras] for f in c.findings]))
     out.extend(_cft.tablas([f for c in [*caps, *res.extras] for f in c.findings], estandares))
     out.extend(_i62351.tablas(caps))
+    out.extend(_i62351.tablas_flujos(res.args))
 
     out.append(("plan_remediacion.csv", "Plan de remediacion", _re.COLUMNAS, _re.tabla(res)))
     out.extend(_rg.tablas(_rg.de(res)))

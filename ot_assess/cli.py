@@ -210,6 +210,10 @@ def crear_parser() -> argparse.ArgumentParser:
                          "las mismas columnas), descargado por usted; repetible, uno por tipo. Requiere --cis: "
                          "el estado de las filas CIS sale de este mapeo y no de las referencias de NIST. No se "
                          "copia al repo ni a las salidas mas que ids y relacion.")
+    ap.add_argument("--iec62351-estados", metavar="ARCHIVO", dest="iec62351_estados",
+                    help="Un iec62351_flujos.csv de una corrida anterior que el equipo lleno: traslada estado_equipo "
+                         "y nota_equipo por id_flujo y activa la tabla aunque el perfil no tenga iec62351_flujos. "
+                         "Un estado fuera de la lista permitida termina con codigo 2.")
     ap.add_argument("--avisos-ics", metavar="RUTA", dest="avisos_ics",
                     help="Un aviso ICS de CISA en CSAF 2.0 (JSON) o una carpeta con muchos (recursiva); "
                          "se cruzan por CVE exacto con --vulnerabilidades y generan avisos_ics.csv; ademas se "
@@ -538,6 +542,8 @@ def main(argv: list[str] | None = None) -> int:
     res.zonas = _zo.asignar(assets, perfil, res.rutas, res.firewall, zonas)
     for adv in _zo.presentada(res.zonas, _ip.filas(res))["avisos"]:   # Z-I3 (D107): las zonas vacias de la tabla
         print(f"[!] {adv}")
+    from . import iec62351 as _ie
+    _ie.preparar(ap, args, perfil, caps, conduits, assets)      # E62351F (D125)
     from . import conductos_zcr as _zc
     res.zcr = _zc.construir(assets, conduits, res.zonas, res.firewall)
     if _zc.hay(res.zcr):

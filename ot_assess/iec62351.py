@@ -10,12 +10,16 @@ evaluan de forma pasiva.
 """
 from __future__ import annotations
 
+import csv
+import hashlib
+import io
 import json
 from functools import lru_cache
 from pathlib import Path
 
 from .catalog import OT_PORTS
 from .i18n import t
+from .roles import mostrar as mostrar_rol
 
 RUTA = Path(__file__).parent / "marcos" / "iec62351_protocolos.json"
 HOJA = "IEC 62351 evidencia"
@@ -149,3 +153,292 @@ def tablas(caps) -> list:
     if not caps:
         return []
     return [(ARCHIVO, HOJA, COLUMNAS, filas(caps))]
+
+
+# ---------------------------------------------------------------------------------------------------------
+# E62351F (D125): evidencia por flujo con estado y nota del equipo, activada por perfil u opcion.
+# ---------------------------------------------------------------------------------------------------------
+ARCHIVO_FLUJOS = "iec62351_flujos.csv"
+HOJA_FLUJOS = "IEC 62351 flujos"
+ATRIBUTO = "iec62351_flujos"          # resultado de preparar(), colgado de args
+COLUMNAS_FLUJOS = ["id_flujo", "protocolo", "partes_62351", "origen", "origen_nombre", "origen_zona",
+                   "origen_nivel", "destino", "destino_nombre", "destino_zona", "destino_nivel", "transporte",
+                   "puerto", "canal", "tls_confirmado", "autenticacion_segura", "evidencia", "fuente",
+                   "estado_equipo", "nota_equipo", "nota"]
+ESTADOS_DEFECTO = ["por revisar", "confirmado", "no aplica", "excepcion documentada"]
+PROTO_SIN_DECODIFICAR = "MMS o S7comm (sin decodificar)"
+CLARO, SEGURO, CAPA2 = "en claro", "puerto seguro", "capa 2"
+MAX_BYTES_ESTADOS = 20 * 1024 * 1024
+MAX_FILAS_ESTADOS = 100000
+# Un archivo escrito con --idioma en lleva las cabeceras traducidas: se aceptan ambas.
+ALIAS = {"id_flujo": ("id_flujo", "flow_id"), "estado_equipo": ("estado_equipo", "team_status"),
+         "nota_equipo": ("nota_equipo", "team_note")}
+_C = {c: i for i, c in enumerate(COLUMNAS_FLUJOS)}
+
+
+def estados_validos(v, fallo):
+    """Normaliza la clave de perfil iec62351_flujos: None (apagada) o {'estados': [...], 'inicial': x}."""
+    if v is False:
+        return None
+    if v is True:
+        return {"estados": list(ESTADOS_DEFECTO), "inicial": ESTADOS_DEFECTO[0]}
+    if not isinstance(v, dict):
+        fallo("'iec62351_flujos' debe ser true, false o un objeto con 'estados' e 'inicial'.")
+    for k in v:
+        if k not in ("estados", "inicial"):
+            fallo("clave desconocida '" + str(k) + "' en 'iec62351_flujos'.")
+    est = v.get("estados", ESTADOS_DEFECTO)
+    if not isinstance(est, list) or not 2 <= len(est) <= 10:
+        fallo("'iec62351_flujos.estados' debe ser una lista de 2 a 10 textos.")
+    for x in est:
+        if (not isinstance(x, str) or not 1 <= len(x) <= 40 or x != x.strip()
+                or "\n" in x or "\r" in x):
+            fallo("'iec62351_flujos.estados': cada estado es un texto de 1 a 40 caracteres, sin saltos de "
+                  "linea ni espacios en los extremos.")
+    if len(set(est)) != len(est):
+        fallo("'iec62351_flujos.estados' tiene estados repetidos.")
+    ini = v.get("inicial", est[0])
+    if not isinstance(ini, str) or ini not in est:
+        fallo("'iec62351_flujos.inicial' debe ser uno de los estados.")
+    return {"estados": list(est), "inicial": ini}
+
+
+class _Activos:
+    """Busca el activo de un extremo por id, MAC o IP."""
+
+    def __init__(self, assets):
+        self.por_clave = {}
+        for k, a in (assets or {}).items():
+            self.por_clave[str(k).lower()] = a
+            if a.get("mac"):
+                self.por_clave[str(a["mac"]).lower()] = a
+        for a in (assets or {}).values():
+            for ip in a.get("ips") or ():
+                self.por_clave.setdefault(str(ip).lower(), a)
+
+    def de(self, clave) -> dict:
+        return self.por_clave.get(str(clave).lower(), {})
+
+
+def _extremo(activos, k, lado) -> list:
+    clave = k[lado]
+    a = activos.de(clave)
+    nombre = k.get(lado + "_nombre") or a.get("nombre") or clave
+    nivel = k.get(lado + "_zona") or a.get("purdue") or ""
+    return [clave, nombre, a.get("zona_asignada") or "", mostrar_rol(nivel)]
+
+
+def _id_flujo(proto, origen, destino, l4, puerto) -> str:
+    base = "|".join([proto, origen, destino, l4, str(puerto)])
+    return "F62-" + hashlib.sha256(base.encode("utf-8")).hexdigest()[:10]
+
+
+def _flujo(activos, k, proto, partes, canal, l4, puerto, tls, auth, evidencia, fuente, piezas, ini) -> dict:
+    fila = [_id_flujo(proto, k["src"], k["dst"], l4, puerto), proto, partes, *_extremo(activos, k, "src"),
+            *_extremo(activos, k, "dst"), l4, puerto, t(canal), tls, auth, t(evidencia), t(fuente), ini, "",
+            " ".join([*piezas, t(FIJA)])]
+    return {"clave": evidencia, "fila": fila}
+
+
+def _pares_en(par, otros) -> bool:
+    return par in otros or (par[1], par[0]) in otros
+
+
+def _filas_captura(caps, conduits, activos, ini) -> list:
+    out = []
+    tls_vistos = {(e["servidor"], e["cliente"], e["puerto"]) for e in _eventos(caps, "p62351_tls")}
+    auth_vistos = {(e["maestro"], e["outstation"]) for e in _eventos(caps, "p62351_dnp3_auth")}
+    for p in cargar()["protocolos"]:
+        partes = "; ".join(p["partes"])
+        dec = p["decodificado"]
+        if p["proteccion"] == "capa2":
+            multicast = p.get("mac_destino_multicast")
+            pares = _pares_l2(caps, multicast) if multicast else _pares_vistos(caps, dec)
+            for s, d in pares:
+                pieza = t("{proto} visto; la extension de seguridad de IEC 62351-6 no se decodifica en esta "
+                          "version.", proto=dec)
+                out.append(_flujo(activos, {"src": s, "dst": d}, p["protocolo"], partes, CAPA2, "", "", "", "",
+                                  NO_EVALUABLE, "captura", [pieza], ini))
+            continue
+        claro = {(l4, str(pt)) for l4, pt in p["claro"]}
+        seguro = {(l4, str(pt)) for l4, pt in p["seguro"]}
+        mms = _pares_vistos(caps, dec) if dec else set()
+        s7 = _pares_vistos(caps, "S7comm") if dec else set()
+        con_auth = p["proteccion"] == "tls_y_autenticacion"
+        for k in conduits:
+            clave = (k["l4"], str(k["port"]))
+            if clave not in claro and clave not in seguro:
+                continue
+            par = (k["src"], k["dst"])
+            a_ok = con_auth and _pares_en(par, auth_vistos)
+            auth = _si_no(a_ok) if con_auth else ""
+            piezas = []
+            if con_auth:
+                piezas.append(t("Autenticacion segura de DNP3 vista en el par maestro/outstation.") if a_ok
+                              else t("Sin autenticacion segura de DNP3 vista en el par maestro/outstation."))
+            if clave in seguro:
+                tls = (k["dst"], k["src"], int(k["port"])) in tls_vistos
+                piezas.insert(0, t("Flujo al puerto seguro con ServerHello visto del servidor al cliente: TLS "
+                                   "confirmado.") if tls else
+                              t("Flujo al puerto seguro sin ServerHello visto de ese servidor a ese cliente: TLS no "
+                                "confirmado (Wireshark puede no decodificar TLS en ese puerto o el handshake no "
+                                "esta en la captura)."))
+                out.append(_flujo(activos, k, p["protocolo"], partes, SEGURO, k["l4"], k["port"], _si_no(tls),
+                                  auth, OBSERVADA if tls or a_ok else NO_OBSERVADA, "captura", piezas, ini))
+                continue
+            proto, ev = p["protocolo"], (OBSERVADA if a_ok else NO_OBSERVADA)
+            if dec:      # 102/tcp lo comparten MMS y S7comm: se separa por el protocolo decodificado
+                if _pares_en(par, s7) and not _pares_en(par, mms):
+                    continue
+                if not _pares_en(par, mms):
+                    proto, ev = PROTO_SIN_DECODIFICAR, NO_EVALUABLE
+                    piezas.append(t("Flujo a 102/tcp sin decodificar: no se asigna a MMS ni a S7comm."))
+            if ev == NO_OBSERVADA:
+                piezas.append(t("Flujo en el puerto en claro sin proteccion observada para este par."))
+            out.append(_flujo(activos, k, proto, partes, CLARO, k["l4"], k["port"], "", auth, ev, "captura",
+                              piezas, ini))
+    return out
+
+
+def _filas_exportacion(conduits, activos, ini) -> list:
+    out = []
+    for p in cargar()["protocolos"]:
+        if p["proteccion"] == "capa2":
+            continue
+        partes = "; ".join(p["partes"])
+        for k in conduits:
+            l4, port = k.get("l4") or "", str(k.get("port") or "")
+            en = [canal for canal, lista in ((CLARO, p["claro"]), (SEGURO, p["seguro"]))
+                  for pl4, pt in lista if str(pt) == port and l4 in ("", pl4)]
+            if not en:
+                continue
+            canal, proto, ev = en[0], p["protocolo"], NO_EVALUABLE
+            piezas = [t("exportacion: sin paquetes para confirmar TLS")]
+            if canal == CLARO:
+                ev = NO_OBSERVADA
+                piezas.append(t("Conducto importado en el puerto en claro; la exportacion no permite comprobar "
+                                "otra proteccion."))
+                if p["decodificado"]:
+                    serv = str(k.get("servicio") or "").lower()
+                    if "mms" not in serv and "s7" in serv:
+                        continue
+                    if "mms" not in serv:
+                        proto, ev = PROTO_SIN_DECODIFICAR, NO_EVALUABLE
+                        piezas.append(t("Flujo a 102/tcp sin decodificar: no se asigna a MMS ni a S7comm."))
+            out.append(_flujo(activos, k, proto, partes, canal, l4, port, "", "", ev, "exportacion", piezas, ini))
+    return out
+
+
+def construir(caps, conduits, assets, inicial: str) -> list:
+    """Filas por flujo como [{'clave': evidencia, 'fila': [...]}], sin repetidos y en orden fijo."""
+    activos = _Activos(assets)
+    crudas = (_filas_captura(caps, conduits, activos, inicial) if caps
+              else _filas_exportacion(conduits, activos, inicial))
+    unicas: dict = {}
+    for x in crudas:
+        unicas.setdefault(x["fila"][0], x)
+
+    def orden(x):
+        f = x["fila"]
+        pt = str(f[_C["puerto"]])
+        return (f[_C["protocolo"]], f[_C["origen"]], f[_C["destino"]], int(pt) if pt.isdigit() else -1,
+                f[_C["transporte"]])
+    return sorted(unicas.values(), key=orden)
+
+
+def leer_estados(ruta) -> dict:
+    """{id_flujo: (estado, nota)} de un iec62351_flujos.csv llenado por el equipo. ValueError si no sirve."""
+    p = Path(ruta)
+    try:
+        if p.stat().st_size > MAX_BYTES_ESTADOS:
+            raise ValueError("'" + p.name + "' pesa mas de 20 MB.")
+        texto = p.read_bytes().decode("utf-8-sig")
+    except (OSError, UnicodeDecodeError) as e:
+        raise ValueError("No pude leer '" + p.name + "': " + str(e))
+    cab = texto.split("\n", 1)[0]
+    sep = ";" if cab.count(";") > cab.count(",") else ","
+    out: dict = {}
+    try:
+        lector = csv.reader(io.StringIO(texto), delimiter=sep)
+        cols = [c.strip() for c in (next(lector, None) or [])]
+        idx = {}
+        for k, alias in ALIAS.items():
+            hay = [cols.index(a) for a in alias if a in cols]
+            if not hay:
+                raise ValueError("'" + p.name + "' no tiene la columna " + k + ".")
+            idx[k] = hay[0]
+        n = 0
+        for fila in lector:
+            if not any(c.strip() for c in fila):
+                continue
+            n += 1
+            if n > MAX_FILAS_ESTADOS:
+                raise ValueError("'" + p.name + "' tiene mas de " + str(MAX_FILAS_ESTADOS) + " filas.")
+            cel = [fila[idx[k]] if idx[k] < len(fila) else "" for k in ("id_flujo", "estado_equipo", "nota_equipo")]
+            ident, estado, nota = cel[0].strip(), cel[1].strip(), cel[2]
+            if not ident:
+                continue
+            if ident in out and out[ident] != (estado, nota):
+                raise ValueError("id_flujo repetido con valores distintos: " + ident + ".")
+            out[ident] = (estado, nota)
+    except csv.Error as e:
+        raise ValueError("'" + p.name + "' no es un CSV valido: " + str(e))
+    return out
+
+
+def preparar(ap, args, perfil, caps, conduits, assets):
+    """Arma la tabla por flujo si el perfil o --iec62351-estados la piden y la guarda en args.
+    Un estado importado vacio conserva el inicial. Los errores del archivo terminan con codigo 2
+    (ap.error) antes de escribir salidas."""
+    cfg = (perfil or {}).get("iec62351_flujos")
+    ruta = getattr(args, "iec62351_estados", None)
+    if not cfg and not ruta:
+        return None
+    cfg = cfg or {"estados": list(ESTADOS_DEFECTO), "inicial": ESTADOS_DEFECTO[0]}
+    filas = construir(caps, conduits, assets, cfg["inicial"])
+    ids = {x["fila"][0] for x in filas}
+    importados = no_encontrados = 0
+    if ruta:
+        try:
+            previos = leer_estados(ruta)
+        except ValueError as e:
+            ap.error(str(e))
+        malos = sorted(i for i, (est, _n) in previos.items() if i in ids and est and est not in cfg["estados"])
+        if malos:
+            ap.error("estado no permitido en " + str(len(malos)) + " flujos (ids: " + ", ".join(malos[:10])
+                     + "). Permitidos: " + ", ".join(cfg["estados"]) + ".")
+        for x in filas:
+            previo = previos.get(x["fila"][0])
+            if previo:
+                if previo[0]:
+                    x["fila"][_C["estado_equipo"]] = previo[0]
+                x["fila"][_C["nota_equipo"]] = previo[1]
+                importados += 1
+        no_encontrados = len(set(previos) - ids)
+        if no_encontrados:
+            print("[!] --iec62351-estados: " + str(no_encontrados) + " id_flujo del archivo ya no existen en esta "
+                  "corrida; no se trasladan.")
+    por_estado = {e: 0 for e in cfg["estados"]}
+    por_ev: dict = {}
+    for x in filas:
+        est = x["fila"][_C["estado_equipo"]]
+        por_estado[est] = por_estado.get(est, 0) + 1
+        por_ev[x["clave"]] = por_ev.get(x["clave"], 0) + 1
+    res = {"filas": [x["fila"] for x in filas],
+           "json": {"filas": len(filas), "estados": list(cfg["estados"]), "por_estado": por_estado,
+                    "por_evidencia": dict(sorted(por_ev.items())), "estados_importados": importados,
+                    "ids_no_encontrados": no_encontrados}}
+    setattr(args, ATRIBUTO, res)
+    return res
+
+
+def tablas_flujos(args) -> list:
+    d = getattr(args, ATRIBUTO, None)
+    if not isinstance(d, dict):
+        return []
+    return [(ARCHIVO_FLUJOS, HOJA_FLUJOS, COLUMNAS_FLUJOS, d["filas"])]
+
+
+def para_json(args):
+    d = getattr(args, ATRIBUTO, None)
+    return d["json"] if isinstance(d, dict) else None
