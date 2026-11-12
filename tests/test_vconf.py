@@ -113,6 +113,18 @@ class IdTest(unittest.TestCase):
         v["activo"] = ""
         self.assertEqual(vc.clave_plataforma(v), "P 1")
 
+    def test_misma_pareja_sin_ip_en_la_fila_importada(self):
+        """Fila importada sin ip (Nozomi) asociada a un activo con ips: el id coincide con el de firmware."""
+        activo = {"nombre": "PLC-1", "ips": ["10.0.0.9", "10.0.0.10"]}
+        plan = vc.Plan(vc._defecto(), {})
+        v = {"cve": "CVE-2024-0001", "ip": "", "mac": "aa:bb", "activo": "otro nombre"}
+        x = {"reg": {"cve": "CVE-2024-0001"}, "ips": ["10.0.0.9", "10.0.0.10"], "nombre": "PLC-1"}
+        self.assertEqual(plan.id_plataforma(v, activo), plan.id_firmware(x))
+        self.assertNotEqual(plan.id_plataforma(v, activo), plan.id_plataforma(v))
+        sin_ip = {"nombre": "PLC-2", "ips": []}
+        x2 = {"reg": {"cve": "CVE-2024-0001"}, "ips": [], "nombre": "PLC-2"}
+        self.assertEqual(plan.id_plataforma(v, sin_ip), plan.id_firmware(x2))
+
 
 class Base(unittest.TestCase):
     def setUp(self):
