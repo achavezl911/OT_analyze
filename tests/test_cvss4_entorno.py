@@ -9,9 +9,10 @@ RAIZ = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ))
 sys.path.insert(0, str(RAIZ / "tests"))
 
-from ot_assess import cvss4, cvss4_entorno as ce
-from ot_assess import vulnerabilidades as vu
+from ot_assess import cvss4
+from ot_assess import cvss4_entorno as ce
 from ot_assess import vuln_firmware as vf
+from ot_assess import vulnerabilidades as vu
 from test_vuln_firmware import csaf, ent, inventario
 
 BASE = "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N"
