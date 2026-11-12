@@ -161,6 +161,11 @@ def construir_bloques(res: Assessment) -> list:
               ("tabla", cab, filas, [[s["colores"].get(n) for n in fila] for fila in niveles]),
               ("tabla", s["cab_top"], s["top"]), ("p", s["nota_quick"])]
         b.append(("tabla", s["cab_quick"], s["quick"]) if s["quick"] else ("p", s["sin_quick"]))
+        vs = s["valoracion"]
+        if vs:      # RM2b (D130)
+            b += [("h2", vs["titulo"]), ("tabla", vs["cab"], vs["filas"]), ("p", vs["frase"])]
+            for titulo, (cab_v, filas_v, niv_v), _texto in vs["mapas"]:
+                b += [("h2", titulo), ("tabla", cab_v, filas_v, [[s["colores"].get(n) for n in fila] for fila in niv_v])]
 
     if _ma.hay(res.madurez):        # M7 (D84)
         s = _ma.seccion(res.madurez)

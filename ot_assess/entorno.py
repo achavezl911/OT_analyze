@@ -84,6 +84,9 @@ def construir(run, tshark_bin: str, caps: list, args, ignorados: list[str]) -> d
                       "sha256": getattr(args, "sha_capturas", {}).get(c.path) or sha256_archivo(c.path),
                       "legible": not c.error, "muestreada": bool(c.sampled)} for c in caps],
     }
+    val = getattr(args, "valoraciones_riesgo", None)
+    if val:      # RM2b (D130): sin la opcion la salida no cambia
+        out["valoraciones_riesgo"] = {"archivo": Path(val).name, "sha256": sha256_archivo(Path(val))}
     if getattr(args, "paquete_avisos_info", None):      # sin --paquete-avisos la salida no cambia (AVK1)
         out["paquete_avisos"] = args.paquete_avisos_info
     if getattr(args, "custodia", None):      # sin --custodia la salida no cambia en nada (K1)

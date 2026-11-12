@@ -23,4 +23,10 @@ def write_xlsx(res: Assessment, outdir: Path) -> Path:
         cab, filas, niveles = _rg.cuadricula(r)
         hojas.append((nombre_hoja(_rg.HOJA_MAPA), cab, filas,
                       [[_relleno(r["metodo"], n) if n else "" for n in fila] for fila in niveles]))
+    for hoja, cab, filas, niveles in _rg.valoraciones_xlsx(r):      # RM2b (D130)
+        if niveles is None:
+            hojas.append((nombre_hoja(hoja), cab, filas))
+        else:
+            hojas.append((nombre_hoja(hoja), cab, filas,
+                          [[_relleno(r["metodo"], n) if n else "" for n in fila] for fila in niveles]))
     return escribir_xlsx(outdir / "reporte_ot.xlsx", hojas)

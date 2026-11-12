@@ -874,6 +874,26 @@ salidas no cambian:
 En modo `candidatos` los niveles, la elevación y el quick win se aplican solo a las filas que puntúa el analista.
 `resultado.json` agrega `riesgos.metodo` cuando hay alguna subclave. Los resúmenes de `sitios` siguen usando los cuatro
 niveles por defecto.
+`riesgo.valoraciones` (RM2b, D130) activa la valoración inherente (sin controles), residual actual (la de la
+herramienta) y residual objetivo (tras el tratamiento planeado). La herramienta no infiere la inherente ni la objetivo:
+las valora el equipo. Objeto opcional (`{}` vale) con `tratamientos` (2 a 8 textos únicos de 1 a 30 caracteres; por
+defecto mitigar, aceptar, transferir, evitar; los del perfil no se traducen) y `nivel_aceptable` (nombre de un nivel
+efectivo del método: el apetito de riesgo). La opción `--valoraciones-riesgo ARCHIVO` (corrida y `diagrama`) la activa
+sin la subclave. Escribe `valoraciones_riesgo.csv` (hoja `Valoracion de riesgos`), una fila por riesgo: columnas de la
+herramienta (`id_riesgo`, `id_hallazgo`, `titulo`, `*_actual`), del equipo (`probabilidad_inherente`,
+`impacto_inherente`, `controles_existentes`, `tratamiento`, `controles_planeados`, `probabilidad_objetivo`,
+`impacto_objetivo`, `responsable`, `fecha_objetivo` AAAA-MM-DD, `justificacion`) y calculadas (`puntuacion_*`,
+`nivel_*`, `dentro_de_apetito`, `observaciones`). Ese mismo archivo, llenado, se devuelve con la opción (coma o punto y
+coma, UTF-8 con o sin BOM, cabeceras en español o inglés; llave `id_riesgo` o `id_hallazgo`). Códigos 2 sin salidas:
+archivo inexistente, sin columna llave, id repetido, valor fuera de 1..N del eje, tratamiento fuera de la lista, fecha
+inválida o texto de más de 500 caracteres. Las filas cuyo id no aparece en la corrida se conservan al final con la
+observación «no aparece en esta corrida». Puntuación = P x I con la escala y los niveles del proyecto, sin elevación y
+solo con el par completo; las observaciones (valoración incompleta, inherente menor que la actual, objetivo mayor que la
+actual, objetivo sin tratamiento, fuera de apetito) nunca son error. Para corregir la actual sigue `ajustes_riesgo`.
+`riesgos.csv` agrega al final `puntuacion_inherente`, `nivel_inherente`, `puntuacion_objetivo`, `nivel_objetivo`,
+`tratamiento` y `dentro_de_apetito`; los reportes agregan la tabla «Valoracion del riesgo» (conteo por nivel de cada
+valoración), la frase de apetito y un mapa de calor inherente y otro objetivo; `resultado.json` agrega
+`riesgos.valoraciones`. Sin la subclave ni la opción, las salidas no cambian.
 La clave opcional `madurez_objetivo` (`{"segmentacion": 3, "parches": 2}`; enteros de 0 a 4; claves `activos`,
 `segmentacion`, `acceso`, `parches`, `monitoreo`, `incidentes`, `suministro`, `riesgo`) fija el nivel objetivo de cada
 dominio de la madurez por dominio (M7); si falta, rige el número de `ml_objetivo` y, si tampoco, 2 propuesto por la herramienta.

@@ -11,6 +11,7 @@ from __future__ import annotations
 import hashlib
 import re
 
+from . import valoraciones_riesgo as _val
 from .catalog import CRIT_ORDER, SEV_ORDER
 from .i18n import t
 from .perfil import DIMENSIONES_IMPACTO, dimension_inferida, dimensiones_impacto, escalas
@@ -382,8 +383,13 @@ def construir(res) -> dict:
     avisos = [t("ajustes_riesgo: el hallazgo {h} no aparece en esta corrida; el ajuste no se aplica.", h=h)
               for h in sorted(set(ajustes) - usados)]
     nota = t(NOTA) + (" " + t(NOTA_METODO) if m["declarado"] else "")
-    return {"filas": filas, "mapa": _mapa(filas, m), "quick_wins": [r for r in filas if r["quick_win"] == "si"],
-            "avisos": avisos, "nota": nota, "modo": "candidatos" if candidatos else "puntuado", "metodo": m}
+    out = {"filas": filas, "mapa": _mapa(filas, m), "quick_wins": [r for r in filas if r["quick_win"] == "si"],
+           "avisos": avisos, "nota": nota, "modo": "candidatos" if candidatos else "puntuado", "metodo": m}
+    plan = _val.de_args(getattr(res, "args", None))
+    if plan is not None:        # RM2b (D130): sin la subclave ni la opcion no se agrega nada
+        out["valoraciones"] = _val.calcular(plan, filas, m)
+        avisos.extend(_val.aviso(out["valoraciones"]))
+    return out
 
 
 def _reescalado(v: int, motivo: str, n: int) -> tuple:
@@ -451,12 +457,20 @@ def _m(r: dict) -> dict:
 def columnas(r: dict) -> list:
     """Columnas de riesgos.csv: las fijas y, segun el metodo del proyecto, etiquetas de escala y elevacion."""
     m = _m(r)
-    return COLUMNAS + [c for c, (_, etq) in COL_ETQ.items() if m[etq]] + (["elevacion"] if m["con_elevacion"] else [])
+    return (COLUMNAS + [c for c, (_, etq) in COL_ETQ.items() if m[etq]] + (["elevacion"] if m["con_elevacion"] else [])
+            + (_val.COL_REGISTRO if r.get("valoraciones") else []))
 
 
 def tabla(r: dict) -> list:
     cols, m = columnas(r), _m(r)
-    return [[x.get(c, "") for c in cols] for x in (_mostrar(f, m) for f in r["filas"])]
+    val = r.get("valoraciones")
+    filas = []
+    for f in r["filas"]:
+        x = _mostrar(f, m)
+        if val:
+            x.update(_val.extra_registro(val, f["id_riesgo"], m))
+        filas.append(x)
+    return [[x.get(c, "") for c in cols] for x in filas]
 
 
 def tabla_mapa(r: dict) -> list:
@@ -469,7 +483,23 @@ def tablas(r: dict) -> list:
     """[(archivo, hoja, cabecera, filas)]; el mapa va al XLSX como cuadricula (xlsxout), no como tabla plana."""
     if not hay(r):
         return []
-    return [(ARCHIVO_REGISTRO, HOJA_REGISTRO, columnas(r), tabla(r)), (ARCHIVO_MAPA, None, COL_MAPA, tabla_mapa(r))]
+    out = [(ARCHIVO_REGISTRO, HOJA_REGISTRO, columnas(r), tabla(r)), (ARCHIVO_MAPA, None, COL_MAPA, tabla_mapa(r))]
+    if r.get("valoraciones") and r["valoraciones"]["filas"]:
+        out.append((_val.ARCHIVO, _val.HOJA, _val.COLUMNAS, _val.tabla(r["valoraciones"], _m(r))))
+    return out
+
+
+def valoraciones_xlsx(r: dict) -> list:
+    """[(hoja, cabecera, filas, niveles)] del resumen y de los mapas inherente y objetivo (RM2b, D130)."""
+    val = r.get("valoraciones") if hay(r) else None
+    if not val:
+        return []
+    res = _val.resumen(val, _m(r))
+    out = [(_val.HOJAS["resumen"], res["cab"], res["filas"] + [[res["frase"]] + [""] * (len(res["cab"]) - 1)], None)]
+    for eje, mapa in val["mapas"].items():
+        cab, filas, niveles = cuadricula({"mapa": mapa, "metodo": _m(r)})
+        out.append((_val.HOJAS[eje], cab, filas, niveles))
+    return out
 
 
 def cuadricula(r: dict) -> tuple:
@@ -525,10 +555,25 @@ def seccion(r: dict) -> dict:
         if n_p:
             resumen += " " + por_nivel
     return {"titulo": t(TITULO), "nota": nota, "resumen": resumen, "mapa": cuadricula(r),
+            "valoracion": _seccion_val(r, m),
             "mapa_texto": cuadricula_texto(r), "cab_top": [t(c) for c in (CAB_TOP_CAND if cand else CAB_TOP)],
             "top": top, "colores": {n: c for n, _, c in m["niveles"]}, "propio": m["propio_niveles"],
             "cab_quick": [t(c) for c in CAB_QUICK], "quick": quick, "nota_quick": _nota_quick(m),
             "sin_quick": t(SIN_QUICK), "vacia": ""}
+
+
+def _seccion_val(r: dict, m: dict):
+    """Tabla resumen y mapas inherente y objetivo (RM2b, D130); None sin la funcion activa."""
+    val = r.get("valoraciones")
+    if not val:
+        return None
+    res = _val.resumen(val, m)
+    mapas = []
+    for eje, mapa in val["mapas"].items():
+        sub = {"mapa": mapa, "metodo": m}
+        mapas.append((t(_val.TITULO_MAPAS[eje]), cuadricula(sub), cuadricula_texto(sub)))
+    return {"titulo": t(_val.TITULO), "cab": res["cab"], "filas": res["filas"], "frase": res["frase"],
+            "mapas": mapas}
 
 
 def para_json(r: dict) -> dict:
@@ -544,4 +589,6 @@ def para_json(r: dict) -> dict:
                          "niveles": [{"nombre": n, "desde": d} for n, d, _ in m["niveles"]],
                          "elevacion": len(m["elevacion"]),
                          "quick_win": {"niveles": m["qw_niveles"], "esfuerzo": m["qw_esfuerzo"]}}
+    if r.get("valoraciones"):
+        out["valoraciones"] = _val.para_json(r["valoraciones"])
     return out

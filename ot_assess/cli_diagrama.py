@@ -13,6 +13,7 @@ from . import avisos_cisa as _ac
 from . import cis_controles as _cis
 from . import conductos_zcr as _zc
 from . import confirmacion_vulns as _vconf
+from . import valoraciones_riesgo as _val
 from . import cvss4_entorno as _ce
 from . import direccionamiento as _dr
 from . import entregables as _entregables
@@ -136,6 +137,11 @@ def crear_parser() -> argparse.ArgumentParser:
                     help="Un vulnerabilidades_revision.csv de una corrida anterior que el equipo lleno (como en el "
                          "analisis de capturas): traslada estado, confirmado_por, fecha y motivo por id_vulnerabilidad. "
                          "Un archivo que no sirve termina con codigo 2.")
+    ap.add_argument("--valoraciones-riesgo", metavar="ARCHIVO", dest="valoraciones_riesgo",
+                    help="Un valoraciones_riesgo.csv de una corrida anterior que el equipo lleno: traslada por "
+                         "id_riesgo (o id_hallazgo) la valoracion inherente y objetivo, controles, tratamiento, "
+                         "responsable, fecha_objetivo y justificacion, y activa la valoracion aunque el perfil no "
+                         "tenga riesgo.valoraciones. Un archivo que no sirve termina con codigo 2.")
     ap.add_argument("--catalogo-vulnerabilidades", metavar="ARCHIVO", dest="catalogo_vulnerabilidades",
                     help="Catalogo del analista (CSV o XLSX) con vulnerabilidades por fabricante, producto y "
                          "version afectada (como en el analisis de capturas).")
@@ -259,6 +265,8 @@ def _entorno_exportacion(args, imp, fuentes) -> dict:
         "estandares": str(args.estandar), "max_packets": 0, "campos_ignorados": [],
         "capturas": [], "entradas": _arch([*args.activos, *args.enlaces]),
         **({"paquete_avisos": args.paquete_avisos_info} if getattr(args, "paquete_avisos_info", None) else {}),
+        **({"valoraciones_riesgo": uno(args.valoraciones_riesgo)} if getattr(args, "valoraciones_riesgo", None)
+           else {}),      # RM2b (D130)
     }
 
 
@@ -274,6 +282,7 @@ def main(argv: list | None = None) -> int:
     _entregables.avisos(perfil)          # ENT1 (D126)
     _registro.leer_opcion(ap, args, perfil)      # EVID2 (D127): antes de crear salidas
     _vconf.leer_opcion(ap, args, perfil)      # VCONF (D128): antes de crear salidas
+    _val.leer_opcion(ap, args, perfil)      # RM2b (D130): antes de crear salidas
     plan_vc = _vconf.de_args(args)
     for archivo in args.estandar_archivo:
         cargar_archivo(archivo)

@@ -253,6 +253,21 @@ def write_md(res: Assessment, outdir: Path) -> Path:
             out.append("")
         else:
             out.append(rs["sin_quick"] + "\n")
+        vs = rs["valoracion"]
+        if vs:      # RM2b (D130)
+            out.append("### " + vs["titulo"] + "\n")
+            for cab_r, filas_r in ((vs["cab"], vs["filas"]), ):
+                out.append("| " + " | ".join(md_escape(str(c)) for c in cab_r) + " |")
+                out.append("|" + "---|" * len(cab_r))
+                out += ["| " + " | ".join(md_escape(str(c)) for c in fila) + " |" for fila in filas_r]
+                out.append("")
+            out.append(vs["frase"] + "\n")
+            for titulo, _grid, (cab_r, filas_r) in vs["mapas"]:
+                out.append("### " + titulo + "\n")
+                out.append("| " + " | ".join(md_escape(str(c)) for c in cab_r) + " |")
+                out.append("|" + "---|" * len(cab_r))
+                out += ["| " + " | ".join(md_escape(str(c)) for c in fila) + " |" for fila in filas_r]
+                out.append("")
 
     # --- madurez por dominio (M7, D84) ---------------------------------- #
     if _ma.hay(res.madurez):

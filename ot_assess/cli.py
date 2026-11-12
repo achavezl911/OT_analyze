@@ -7,6 +7,7 @@ from pathlib import Path
 
 from . import __version__
 from . import confirmacion_vulns as _vconf
+from . import valoraciones_riesgo as _val
 from . import entregables as _entregables
 from . import inventario_normalizado as _in
 from . import inventario_presentado as _ip
@@ -236,6 +237,11 @@ def crear_parser() -> argparse.ArgumentParser:
                          "id_vulnerabilidad) de una corrida anterior que el equipo lleno: traslada por id_vulnerabilidad "
                          "estado, confirmado_por, fecha y motivo, y activa la confirmacion aunque el perfil no tenga "
                          "confirmacion_vulnerabilidades. Un archivo que no sirve termina con codigo 2.")
+    ap.add_argument("--valoraciones-riesgo", metavar="ARCHIVO", dest="valoraciones_riesgo",
+                    help="Un valoraciones_riesgo.csv de una corrida anterior que el equipo lleno: traslada por "
+                         "id_riesgo (o id_hallazgo) la valoracion inherente y objetivo, controles, tratamiento, "
+                         "responsable, fecha_objetivo y justificacion, y activa la valoracion aunque el perfil no "
+                         "tenga riesgo.valoraciones. Un archivo que no sirve termina con codigo 2.")
     ap.add_argument("--catalogo-vulnerabilidades", metavar="ARCHIVO", dest="catalogo_vulnerabilidades",
                     help="Catalogo del analista (CSV o XLSX; columnas fabricante, producto, version_afectada, cve; "
                          "cvss, aviso, remediacion y fuente opcionales) con vulnerabilidades por fabricante, "
@@ -385,6 +391,7 @@ def main(argv: list[str] | None = None) -> int:
     _entregables.avisos(perfil)          # ENT1 (D126)
     _registro.leer_opcion(ap, args, perfil)      # EVID2 (D127): antes de crear salidas
     _vconf.leer_opcion(ap, args, perfil)      # VCONF (D128): antes de crear salidas
+    _val.leer_opcion(ap, args, perfil)      # RM2b (D130): antes de crear salidas
     plan_vc = _vconf.de_args(args)
     for archivo in args.estandar_archivo:
         cargar_archivo(archivo)

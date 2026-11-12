@@ -270,7 +270,7 @@ def dimension_inferida(perfil) -> str:
 
 def _riesgo(d, fallo, objeto) -> dict:
     d = objeto(d, "riesgo", ("modo", "dimensiones_impacto", "dimension_inferida", "escala", "niveles", "elevacion",
-                             "quick_win"))
+                             "quick_win", "valoraciones"))
     out = {}
     if "modo" in d:
         if d["modo"] not in MODOS_RIESGO:
@@ -296,6 +296,11 @@ def _riesgo(d, fallo, objeto) -> dict:
     if any(k in d for k in ("escala", "niveles", "elevacion", "quick_win")):      # RM2 (D129)
         from .riesgo import validar_metodo
         out.update(validar_metodo(d, tuple(out.get("dimensiones_impacto") or DIMENSIONES_IMPACTO), fallo, objeto))
+    if "valoraciones" in d:      # RM2b (D130)
+        from .riesgo import NIVELES_DEF
+        from .valoraciones_riesgo import validar as valoraciones_validas
+        nombres = [n["nombre"] for n in out["niveles"]] if "niveles" in out else [n[0] for n in NIVELES_DEF]
+        out["valoraciones"] = valoraciones_validas(d["valoraciones"], fallo, objeto, nombres)
     return out
 
 

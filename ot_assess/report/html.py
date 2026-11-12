@@ -602,6 +602,22 @@ def write_html(res: Assessment, outdir: Path) -> Path:
             a("</tbody></table>")
         else:
             a(f"<p>{esc(rs['sin_quick'])}</p>")
+        vs = rs["valoracion"]
+        if vs:      # RM2b (D130)
+            a("<h3>" + esc(vs["titulo"]) + "</h3>")
+            a("<table><thead><tr>" + "".join(f"<th>{esc(str(c))}</th>" for c in vs["cab"]) + "</tr></thead><tbody>")
+            for fila in vs["filas"]:
+                a("<tr>" + "".join(f"<td>{esc(str(c))}</td>" for c in fila) + "</tr>")
+            a("</tbody></table>")
+            a(f"<p>{esc(vs['frase'])}</p>")
+            for titulo, (cab_v, filas_v, niv_v), _texto in vs["mapas"]:
+                a("<h3>" + esc(titulo) + "</h3>")
+                a('<table class="mapa-calor"><thead><tr>' + "".join(f"<th>{esc(str(c))}</th>" for c in cab_v)
+                  + "</tr></thead><tbody>")
+                for fila, niv in zip(filas_v, niv_v):
+                    a(f"<tr><th>{esc(fila[0])}</th>"
+                      + "".join(_celda_mapa(rs, n, c) for c, n in zip(fila[1:], niv[1:])) + "</tr>")
+                a("</tbody></table>")
 
     # ---------------- madurez por dominio (M7, D84) ---------------- #
     if _ma.hay(res.madurez):
