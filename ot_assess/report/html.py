@@ -633,6 +633,14 @@ def write_html(res: Assessment, outdir: Path) -> Path:
         a("</tbody></table></div>")
         if ms["radar"]:
             a('<div class="radar">' + _ma.radar_svg(res.madurez) + "</div>")
+        if ms["equivalencia"]:      # MAD2 (D131)
+            eq = ms["equivalencia"]
+            a("<h3>" + esc(eq["titulo"]) + "</h3>")
+            a('<div class="tbl"><table><thead><tr>' + "".join(f"<th>{esc(str(c))}</th>" for c in eq["cab"])
+              + "</tr></thead><tbody>")
+            for fila in eq["filas"]:
+                a("<tr>" + "".join(f"<td>{esc(str(c))}</td>" for c in fila) + "</tr>")
+            a("</tbody></table></div>")
 
     # ---------------- niveles (Tiers) de NIST CSF 2.0 por funcion (CSF2T, D110) ---------------- #
     if _ct.hay(res.csf_tiers):

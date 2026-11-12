@@ -171,6 +171,8 @@ def construir_bloques(res: Assessment) -> list:
         s = _ma.seccion(res.madurez)
         b += [("h1", s["titulo"]), ("nota", s["nota"]), ("p", s["resumen"]),
               ("p", t("Origen del objetivo") + ": " + s["origen_objetivo"]), ("tabla", s["cab"], s["filas"])]
+        if s["equivalencia"]:       # MAD2 (D131)
+            b += [("h2", s["equivalencia"]["titulo"]), ("tabla", s["equivalencia"]["cab"], s["equivalencia"]["filas"])]
 
     if _ct.hay(res.csf_tiers):      # CSF2T (D110)
         s = _ct.seccion(res.csf_tiers)

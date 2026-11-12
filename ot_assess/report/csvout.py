@@ -301,6 +301,8 @@ def nombre_hoja(hoja: str) -> str:
 
 def write_csvs(res: Assessment, outdir: Path) -> None:
     for archivo, _hoja, cabecera, filas in tablas(res):
+        if not archivo:     # tabla solo del XLSX
+            continue
         with open(outdir / archivo, "w", newline="", encoding="utf-8-sig") as fh:
             w = escritor_csv(fh)
             w.writerow(cabecera_t(res, cabecera))

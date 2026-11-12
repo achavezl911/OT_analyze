@@ -897,6 +897,18 @@ valoración), la frase de apetito y un mapa de calor inherente y otro objetivo; 
 La clave opcional `madurez_objetivo` (`{"segmentacion": 3, "parches": 2}`; enteros de 0 a 4; claves `activos`,
 `segmentacion`, `acceso`, `parches`, `monitoreo`, `incidentes`, `suministro`, `riesgo`) fija el nivel objetivo de cada
 dominio de la madurez por dominio (M7); si falta, rige el número de `ml_objetivo` y, si tampoco, 2 propuesto por la herramienta.
+La clave opcional `escala_madurez` (MAD2, D131) trae la escala de madurez del proyecto:
+`{"niveles": [{"valor": 1, "nombre": "Inicial", "descripcion": "..."}, ...], "equivalencia": {"0": 1, "1": 2, "2": 3,
+"3": 4, "4": 5}}`. `niveles`: de 3 a 7, valores enteros consecutivos ascendentes (1 a 5, 0 a 4...), nombres únicos de hasta
+40 caracteres, descripción opcional de hasta 300, sin saltos de línea. `equivalencia` (opcional) lleva cada nivel 0 a 4 de la
+herramienta a un valor de la escala del proyecto (cinco claves, valores de la escala, sin decrecer); por defecto es lineal
+(mínimo + k·(N-1)/4, el .5 sube: 1 a 5 da 1,2,3,4,5). Con la clave, el cuestionario se contesta en la escala del proyecto
+(`madurez cuestionario --perfil PERFIL.json` escribe la plantilla con «valor = nombre: descripción»), el nivel, el
+objetivo y la brecha salen en ella (`madurez_objetivo` se valida contra ella; `ml_objetivo` MLk pasa por la equivalencia, y
+sin ninguno rige la equivalencia del 2; la revisión por contradicción usa la equivalencia del 3). `madurez.csv` agrega
+`nombre_nivel_actual` y `nombre_nivel_objetivo`; las secciones (HTML, Word, Markdown) y el XLSX agregan la tabla
+«Equivalencia de escalas»; `resultado.json` agrega `madurez.escala`. `sitios` avisa si las carpetas usan escalas
+distintas. Sin la clave, nada cambia.
 La clave opcional `csf_tiers_objetivo` (`{"GV": "Repetible", "PR": 3}`; funciones `GV`, `ID`, `PR`, `DE`, `RS`, `RC`; tier 1 a 4
 o su nombre) fija la meta de cada función de los Tiers de NIST CSF 2.0; ver «Niveles (Tiers) de NIST CSF 2.0 por función»
 y la opción `--csf-tiers ARCHIVO`.

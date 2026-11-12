@@ -280,6 +280,13 @@ def write_md(res: Assessment, outdir: Path) -> Path:
         out.append("|" + "---|" * len(ms["cab"]))
         out += ["| " + " | ".join(md_escape(str(c)) for c in fila) + " |" for fila in ms["filas"]]
         out.append("")
+        if ms["equivalencia"]:      # MAD2 (D131)
+            eq = ms["equivalencia"]
+            out.append("### " + eq["titulo"] + "\n")
+            out.append("| " + " | ".join(md_escape(str(c)) for c in eq["cab"]) + " |")
+            out.append("|" + "---|" * len(eq["cab"]))
+            out += ["| " + " | ".join(md_escape(str(c)) for c in fila) + " |" for fila in eq["filas"]]
+            out.append("")
 
     # --- niveles (Tiers) de NIST CSF 2.0 por funcion (CSF2T, D110) ------- #
     if _ct.hay(res.csf_tiers):

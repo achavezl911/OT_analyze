@@ -163,7 +163,19 @@ def _meta(carpeta: Path) -> dict:
     e = j.get("entorno") if isinstance(j.get("entorno"), dict) else {}
     return {"cliente": str(p.get("cliente") or ""), "sitio": str(p.get("sitio") or ""),
             "idioma": str(p.get("idioma") or ""), "version": str(e.get("ot_assess") or ""),
-            "niveles": _niveles_json(j)}
+            "niveles": _niveles_json(j), "escala_madurez": _escala_madurez_json(j)}
+
+
+def _escala_madurez_json(j: dict) -> tuple:
+    """Escala de madurez del proyecto (MAD2, D131) en resultado.json, comparable; () si usa la de la herramienta."""
+    m = j.get("madurez") if isinstance(j.get("madurez"), dict) else {}
+    e = m.get("escala") if isinstance(m.get("escala"), dict) else {}
+    if not e:
+        return ()
+    n = e.get("niveles") if isinstance(e.get("niveles"), list) else []
+    q = e.get("equivalencia") if isinstance(e.get("equivalencia"), dict) else {}
+    return (tuple((str(x.get("valor")), str(x.get("nombre"))) for x in n if isinstance(x, dict)),
+            tuple(sorted((str(k), str(v)) for k, v in q.items())))
 
 
 def _niveles_json(j: dict) -> tuple:
@@ -215,7 +227,7 @@ def leer_sitios(carpetas: list, nombres: dict) -> tuple:
             _a_espanol(datos)
         sitios.append({"sitio": nombre, "carpeta": c.name, "datos": datos, "fuentes": fuentes,
                        "cliente": m["cliente"], "version": m["version"], "idioma": idioma,
-                       "niveles": m["niveles"] or NIVELES})
+                       "niveles": m["niveles"] or NIVELES, "escala_madurez": m["escala_madurez"]})
     clientes = sorted({s["cliente"] for s in sitios if s["cliente"]})
     if len(clientes) > 1:
         avisos.append("las carpetas traen clientes distintos: " + "; ".join(clientes))
@@ -225,6 +237,8 @@ def leer_sitios(carpetas: list, nombres: dict) -> tuple:
     if len({s["niveles"] for s in sitios}) > 1:
         avisos.append("las carpetas usan niveles de riesgo distintos (metodo del proyecto en el perfil): el "
                       "consolidado cuenta cada nivel en su propia columna")
+    if len({s.get("escala_madurez", ()) for s in sitios}) > 1:
+        avisos.append("las carpetas usan escalas de madurez distintas: los promedios no son comparables")
     idiomas = sorted({s["idioma"] for s in sitios})
     if len(idiomas) > 1:
         avisos.append("las carpetas estan en idiomas distintos (" + ", ".join(idiomas) + "): se normalizaron "

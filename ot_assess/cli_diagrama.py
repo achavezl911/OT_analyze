@@ -313,7 +313,7 @@ def main(argv: list | None = None) -> int:
     if args.linea_base and not Path(args.linea_base).is_dir():
         ap.error(f"--linea-base espera una carpeta existente: '{args.linea_base}'")
     from . import madurez as _ma
-    respuestas_madurez = _ma.leer_opcion(ap, args.madurez)
+    respuestas_madurez = _ma.leer_opcion(ap, args.madurez, perfil)
     from . import csf_tiers as _ct
     declarados_tiers = _ct.leer_opcion(ap, args.csf_tiers)
     if args.inventario_manual and not Path(args.inventario_manual).is_file():
