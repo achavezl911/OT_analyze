@@ -226,8 +226,8 @@ class TestSitios(unittest.TestCase):
         self.assertEqual((com["H1"][1], com["H1"][3], com["H1"][4], com["H1"][6]), ("Anomalia", "Alta", 2, "Este; Norte"))
         self.assertEqual(com["H1"][2], "Segmentacion")
         self.assertEqual([s for s in r["avisos"] if "idiomas distintos" in s],
-                         ["las carpetas estan en idiomas distintos (en, es): se normalizaron al idioma del "
-                          "consolidado (los titulos sin traduccion exacta quedan como vienen)"])
+                         [("las carpetas estan en idiomas distintos (en, es): se normalizaron al idioma del "
+                           "consolidado (los titulos sin traduccion exacta quedan como vienen)")])
         sitios = {f[0]: f for f in r["tablas"]["Sitios"]}
         self.assertEqual(dict(zip(st.CAB_SITIOS, sitios["Este"]))["hallazgos_media"], 1)
         # un titulo sin traduccion exacta queda como viene
