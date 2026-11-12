@@ -84,22 +84,23 @@ def id_de(cve: str, clave: str) -> str:
     return "VU-" + hashlib.sha256((str(cve).upper() + "|" + clave).encode("utf-8")).hexdigest()[:10]
 
 
-def clave_plataforma(v: dict) -> str:
-    """ip de la fila; si no mac; si no el nombre del activo; si no 'producto version'."""
+def clave_activo(ips, nombre) -> str:
+    """Clave de un activo del inventario: su menor ip (como texto); si no tiene, su nombre. La usan las dos tablas
+    para que la misma pareja activo + CVE de el mismo id aunque la fila importada no traiga ip (p. ej. Nozomi)."""
+    ips = sorted(str(i).strip() for i in (ips or ()) if str(i).strip())
+    return ips[0] if ips else str(nombre or "").strip()
+
+
+def clave_plataforma(v: dict, activo=None) -> str:
+    """Con activo asociado, clave_activo; si no, ip de la fila; si no mac; si no el nombre; si no 'producto version'."""
+    if activo:
+        k = clave_activo(activo.get("ips"), activo.get("nombre"))
+        if k:
+            return k
     for k in ("ip", "mac", "activo"):
         if str(v.get(k) or "").strip():
             return str(v[k]).strip()
     return (str(v.get("producto") or "") + " " + str(v.get("version") or "")).strip()
-
-
-def ips_plataforma(cruces) -> dict:
-    """{cve: {ip}} de las filas importadas que traen ip."""
-    out: dict = {}
-    for c in cruces or ():
-        ip = str(c["vuln"].get("ip") or "").strip()
-        if ip:
-            out.setdefault(c["vuln"]["cve"].upper(), set()).add(ip)
-    return out
 
 
 # ---- lectura del archivo del equipo ---------------------------------------------------------------------
@@ -193,21 +194,20 @@ class Plan:
     def descartada(self, ident: str) -> bool:
         return self.cfg["descartados"] is not None and self.revision(ident)[0] == self.cfg["descartados"]
 
-    def id_plataforma(self, v: dict) -> str:
-        return id_de(v["cve"], clave_plataforma(v))
+    def id_plataforma(self, v: dict, activo=None) -> str:
+        return id_de(v["cve"], clave_plataforma(v, activo))
 
-    def id_firmware(self, x: dict, ips_plat: dict) -> str:
-        """ip del activo (la que ya trae la plataforma para ese CVE si coincide); si no el nombre; si no modelo y firmware."""
-        ips = [i for i in x.get("ips") or () if i]
-        comunes = ips_plat.get(x["reg"]["cve"].upper(), set())
-        clave = next((i for i in ips if i in comunes), ips[0] if ips else
-                     str(x.get("nombre") or "").strip() or (str(x.get("modelo") or "") + " " + str(x.get("fw") or "")).strip())
+    def id_firmware(self, x: dict) -> str:
+        """clave_activo del activo del inventario (la misma que en la plataforma); si no, modelo y firmware."""
+        clave = (clave_activo(x.get("ips"), x.get("nombre"))
+                 or (str(x.get("modelo") or "") + " " + str(x.get("fw") or "")).strip())
         return id_de(x["reg"]["cve"], clave)
 
-    def filtrar_cruces(self, cruces):
+    def filtrar_cruces(self, cruces, assets=None):
         if not self.excluye or not cruces:
             return cruces
-        return [c for c in cruces if not self.descartada(self.id_plataforma(c["vuln"]))]
+        return [c for c in cruces if not self.descartada(self.id_plataforma(
+            c["vuln"], (assets or {}).get(c["activo"]) if c.get("activo") is not None else None))]
 
     def filtrar_vf(self, vf):
         if not self.excluye or not vf or not vf.get("filas"):
@@ -250,8 +250,8 @@ def preparar(args, cruces, assets, vf) -> None:
     reg: dict = {}
     for c in cruces or ():
         v = c["vuln"]
-        ident = plan.id_plataforma(v)
         a = assets.get(c["activo"]) if c["activo"] is not None else None
+        ident = plan.id_plataforma(v, a)
         nuevo = {"cve": v["cve"], "activo": (a["nombre"] if a else "") or v.get("activo", ""),
                  "ip": v.get("ip", ""), "fuentes": {"plataforma"}, "sev": v["severidad"],
                  "cvss": "" if v["cvss"] is None else v["cvss"], "kev": t(c["kev"]) if c.get("kev") else "",
