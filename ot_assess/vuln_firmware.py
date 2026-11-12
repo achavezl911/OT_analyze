@@ -14,7 +14,6 @@ import re
 import unicodedata
 from pathlib import Path
 
-from . import confirmacion_vulns as _vc
 from . import cvss4
 from .avisos_cisa import (
     _fecha,
@@ -570,7 +569,6 @@ def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=Non
     version_cvss "4" (D114): severidad, orden y umbral por CVSS v4.0 con caida a v3; agrega la columna cvss_decide."""
     v4 = version_cvss == "4"
     plat = _ips_en_plataforma(cruces, assets or {})
-    ips_plat = _vc.ips_plataforma(cruces) if plan else {}
     con_modelo = con_fw = 0
     mejores: dict = {}
     vistos_fuera: set = set()
@@ -631,7 +629,7 @@ def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=Non
         x["sev_int"] = ((cvss4.severidad(ef) if dec == "4.0" else _sev_de_cvss(ef)) if v4 and ef is not None
                         else _sev_de_cvss(r["cvss"]) if r["cvss"] is not None else "")
         if plan:        # VCONF (D128): llena las columnas de revision y agrega el id al final
-            x["id_vuln"] = plan.id_firmware(x, ips_plat)
+            x["id_vuln"] = plan.id_firmware(x)
             est, por, fecha, motivo = plan.revision(x["id_vuln"])
             x["celdas"][-4:] = [plan.mostrar(est), por, fecha, motivo]
             x["celdas"].append(x["id_vuln"])
