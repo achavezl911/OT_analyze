@@ -75,9 +75,9 @@ def _hoja(cabecera, filas, rellenos=None) -> tuple:
     ultima = f"{_col(ncol)}{len(filas) + 1}"
     p = [_CABECERA, f'<worksheet xmlns="{NS_MAIN}" xmlns:r="{NS_R}">',
          f'<dimension ref="A1:{ultima}"/>',
-         '<sheetViews><sheetView workbookViewId="0">'
-         '<pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/>'
-         '</sheetView></sheetViews><cols>']
+         ('<sheetViews><sheetView workbookViewId="0">'
+          '<pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/>'
+          '</sheetView></sheetViews><cols>')]
     for i, a in enumerate(anchos, 1):
         p.append(f'<col min="{i}" max="{i}" width="{min(60, max(10, a + 2))}" customWidth="1"/>')
     p.append("</cols><sheetData>")

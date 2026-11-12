@@ -5,7 +5,6 @@ import contextlib
 import csv
 import io
 import json
-import re
 import shutil
 import sys
 import tempfile
@@ -18,7 +17,16 @@ sys.path.insert(0, str(RAIZ))
 sys.path.insert(0, str(RAIZ / "tests"))
 
 import gen_exports
-from test_riesgo import PLC, T_ANY, T_VULN, WIN, activo, corrida, desde_internet, hallazgo
+from test_riesgo import (
+    PLC,
+    T_ANY,
+    T_VULN,
+    WIN,
+    activo,
+    corrida,
+    desde_internet,
+    hallazgo,
+)
 from test_rm1 import _error, _perfil
 
 from ot_assess import i18n, riesgo
@@ -74,7 +82,7 @@ class ValidacionTest(Base):
         self.malo({"escala": {}}, "indique")
 
     def test_niveles_invalidos(self):
-        n = lambda *d: [{"nombre": f"N{i}", "desde": v} for i, v in enumerate(d)]    # noqa: E731
+        n = lambda *d: [{"nombre": f"N{i}", "desde": v} for i, v in enumerate(d)]
         self.malo({"niveles": n(1, 5, 5)}, "creciente")
         self.malo({"niveles": n(1, 9, 5)}, "creciente")
         self.malo({"niveles": n(2, 5)}, "empezar")
@@ -90,7 +98,7 @@ class ValidacionTest(Base):
         self.assertTrue(_perfil({"riesgo": {"escala": esc, "niveles": n(1, 16)}}))
 
     def test_elevacion_invalida(self):
-        r = lambda c, m="Alto": {"elevacion": [{"condicion": c, "nivel_minimo": m}]}    # noqa: E731
+        r = lambda c, m="Alto": {"elevacion": [{"condicion": c, "nivel_minimo": m}]}
         self.malo(r("internet"), "desconocida")
         self.malo(r("dimension:calidad>=3"), "calidad")
         self.malo(r("dimension:seguridad>=6"), "fuera de la escala")
@@ -110,12 +118,12 @@ class ValidacionTest(Base):
     def test_ajustes_y_zonas_se_validan_contra_la_escala(self):
         hid = riesgo.id_hallazgo("H")
         esc = {"escala": {"probabilidad": ETQ4, "impacto": ETQ6}}
-        aj = lambda k, v: {"ajustes_riesgo": {hid: {k: v, "justificacion": "x"}}}    # noqa: E731
+        aj = lambda k, v: {"ajustes_riesgo": {hid: {k: v, "justificacion": "x"}}}
         self.assertIn("1 a 4", _error({"riesgo": esc, **aj("probabilidad", 5)}))
         self.assertIn("1 a 6", _error({"riesgo": esc, **aj("impacto", 7)}))
         self.assertEqual(_error({"riesgo": esc, **aj("impacto", 6)}), "")
         self.assertEqual(_error({"riesgo": esc, **aj("probabilidad", 4)}), "")
-        zona = lambda v: {"zonas": [{"nombre": "Z", "redes": ["10.0.0.0/24"], "impacto": {"seguridad": v}}]}    # noqa: E731
+        zona = lambda v: {"zonas": [{"nombre": "Z", "redes": ["10.0.0.0/24"], "impacto": {"seguridad": v}}]}
         self.assertIn("1 a 6", _error({"riesgo": esc, **zona(7)}))
         self.assertEqual(_error({"riesgo": esc, **zona(6)}), "")
         self.assertIn("1 a 5", _error(zona(6)))         # sin escala propia, como hoy
@@ -352,7 +360,7 @@ class SinSubclavesTest(Base):
         r1 = _construir({"riesgo": {"niveles": niv, "elevacion": [],
                                     "quick_win": {"niveles": ["Alto", "Muy alto"], "esfuerzo": ["bajo"]}}},
                         hs, act, desde_internet("10.0.0.1"))
-        quitar = lambda f: {k: v for k, v in f.items() if k != "elevacion"}    # noqa: E731
+        quitar = lambda f: {k: v for k, v in f.items() if k != "elevacion"}
         self.assertEqual([quitar(f) for f in r1["filas"]], r0["filas"])
         self.assertEqual(r1["mapa"], r0["mapa"])
         self.assertEqual(len(r1["quick_wins"]), len(r0["quick_wins"]))
@@ -467,3 +475,61 @@ class ReporteTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestSitiosNivelesProyecto(unittest.TestCase):
+    """El consolidado multisitio cuenta los riesgos con los niveles del metodo del proyecto (RM2, D129)."""
+
+    def _carpeta(self, raiz, nombre, niveles, valores):
+        import csv as _csv
+        import json as _json
+        c = raiz / nombre
+        c.mkdir()
+        j = {"perfil": {"cliente": "ACME", "sitio": nombre, "idioma": "es"}, "entorno": {"ot_assess": "0.78.0"}}
+        if niveles:
+            j["riesgos"] = {"metodo": {"niveles": [{"nombre": n, "desde": k + 1} for k, n in enumerate(niveles)]}}
+        (c / "resultado.json").write_text(_json.dumps(j), encoding="utf-8")
+        with open(c / "hallazgos.csv", "w", newline="", encoding="utf-8") as fh:
+            w = _csv.writer(fh)
+            w.writerow(["id", "captura", "severidad", "categoria", "titulo"])
+            w.writerow(["H1", "x", "Alta", "Segmentacion", "T"])
+        with open(c / "riesgos.csv", "w", newline="", encoding="utf-8") as fh:
+            w = _csv.writer(fh)
+            w.writerow(["id_riesgo", "puntuacion", "nivel"])
+            for k, v in enumerate(valores):
+                w.writerow([f"R-{k}", 3, v])
+        return c
+
+    def test_niveles_del_proyecto_y_por_defecto(self):
+        import csv as _csv
+        import tempfile
+        from pathlib import Path as _P
+
+        from ot_assess import sitios as st
+        with tempfile.TemporaryDirectory() as d:
+            raiz = _P(d)
+            a = self._carpeta(raiz, "A", ("Bajo", "Moderado", "Critico"), ["Critico", "Critico", "Moderado"])
+            b = self._carpeta(raiz, "B", (), ["Alto", "Bajo"])
+            r = st.consolidar([a, b])
+            self.assertEqual(r["niveles"], ["Bajo", "Moderado", "Critico", "Medio", "Alto", "Muy alto"])
+            self.assertTrue(any("niveles de riesgo distintos" in x for x in r["avisos"]))
+            st.escribir(raiz / "out", r, "es")
+            with open(raiz / "out" / "sitios.csv", encoding="utf-8-sig") as fh:
+                filas = {f["sitio"]: f for f in _csv.DictReader(fh)}
+            self.assertEqual((filas["A"]["riesgos_critico"], filas["A"]["riesgos_moderado"]), ("2", "1"))
+            self.assertEqual((filas["B"]["riesgos_alto"], filas["B"]["riesgos_bajo"], filas["B"]["riesgos_critico"]),
+                             ("1", "1", "0"))
+
+    def test_sin_metodo_cabecera_de_siempre(self):
+        import tempfile
+        from pathlib import Path as _P
+
+        from ot_assess import sitios as st
+        with tempfile.TemporaryDirectory() as d:
+            raiz = _P(d)
+            a = self._carpeta(raiz, "A", (), ["Alto"])
+            b = self._carpeta(raiz, "B", (), ["Muy alto", "Bajo"])
+            r = st.consolidar([a, b])
+            self.assertEqual(r["niveles"], list(st.NIVELES))
+            self.assertFalse(any("niveles de riesgo distintos" in x for x in r["avisos"]))
+            self.assertEqual(st.cab_sitios(r["niveles"]), st.CAB_SITIOS)

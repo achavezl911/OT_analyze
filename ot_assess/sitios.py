@@ -38,11 +38,18 @@ COLS_RIESGO = [c for c in COL_RIESGO if c in (
     "puntuacion", "nivel", "quick_win", "recomendacion")]
 SI = {"si", "yes", "true", "1", "x"}
 
-CAB_SITIOS = (["sitio", "cliente", "carpeta", "version", "activos", "hallazgos"]
-              + ["hallazgos_" + s.lower() for s in SEVS] + ["riesgos"]
-              + ["riesgos_" + n.lower().replace(" ", "_") for n in NIVELES]
-              + ["madurez_actual_promedio", "madurez_objetivo_promedio", "vulnerabilidades", "kev",
-                 "sesiones_ingenieria", "mbps_p95_max"])
+
+
+def cab_sitios(niveles=NIVELES) -> list:
+    """Cabecera de la hoja Sitios; una columna riesgos_<nivel> por nivel de riesgo (RM2, D129)."""
+    return (["sitio", "cliente", "carpeta", "version", "activos", "hallazgos"]
+            + ["hallazgos_" + s.lower() for s in SEVS] + ["riesgos"]
+            + ["riesgos_" + n.lower().replace(" ", "_") for n in niveles]
+            + ["madurez_actual_promedio", "madurez_objetivo_promedio", "vulnerabilidades", "kev",
+               "sesiones_ingenieria", "mbps_p95_max"])
+
+
+CAB_SITIOS = cab_sitios()
 CAB_COMUNES = ["id", "titulo", "categoria", "severidad_max", "sitios", "porcentaje_sitios", "lista_sitios"]
 CAB_HALLAZGOS = ["sitio", "captura", "id", "severidad", "categoria", "titulo"]
 CAB_RIESGOS = ["sitio"] + COLS_RIESGO
@@ -155,7 +162,16 @@ def _meta(carpeta: Path) -> dict:
     p = j.get("perfil") if isinstance(j.get("perfil"), dict) else {}
     e = j.get("entorno") if isinstance(j.get("entorno"), dict) else {}
     return {"cliente": str(p.get("cliente") or ""), "sitio": str(p.get("sitio") or ""),
-            "idioma": str(p.get("idioma") or ""), "version": str(e.get("ot_assess") or "")}
+            "idioma": str(p.get("idioma") or ""), "version": str(e.get("ot_assess") or ""),
+            "niveles": _niveles_json(j)}
+
+
+def _niveles_json(j: dict) -> tuple:
+    """Nombres de los niveles de riesgo del metodo del proyecto (RM2, D129) en resultado.json; () si no hay."""
+    r = j.get("riesgos") if isinstance(j.get("riesgos"), dict) else {}
+    m = r.get("metodo") if isinstance(r.get("metodo"), dict) else {}
+    n = m.get("niveles") if isinstance(m.get("niveles"), list) else []
+    return tuple(str(x["nombre"]) for x in n if isinstance(x, dict) and x.get("nombre"))
 
 
 def _dominios() -> list:
@@ -198,13 +214,17 @@ def leer_sitios(carpetas: list, nombres: dict) -> tuple:
         if idioma == "en":
             _a_espanol(datos)
         sitios.append({"sitio": nombre, "carpeta": c.name, "datos": datos, "fuentes": fuentes,
-                       "cliente": m["cliente"], "version": m["version"], "idioma": idioma})
+                       "cliente": m["cliente"], "version": m["version"], "idioma": idioma,
+                       "niveles": m["niveles"] or NIVELES})
     clientes = sorted({s["cliente"] for s in sitios if s["cliente"]})
     if len(clientes) > 1:
         avisos.append("las carpetas traen clientes distintos: " + "; ".join(clientes))
     versiones = sorted({s["version"] for s in sitios if s["version"]})
     if len(versiones) > 1:
         avisos.append("las carpetas se generaron con versiones distintas de la herramienta: " + "; ".join(versiones))
+    if len({s["niveles"] for s in sitios}) > 1:
+        avisos.append("las carpetas usan niveles de riesgo distintos (metodo del proyecto en el perfil): el "
+                      "consolidado cuenta cada nivel en su propia columna")
     idiomas = sorted({s["idioma"] for s in sitios})
     if len(idiomas) > 1:
         avisos.append("las carpetas estan en idiomas distintos (" + ", ".join(idiomas) + "): se normalizaron "
@@ -216,8 +236,23 @@ def _sev_max(sevs) -> str:
     return min(sevs, key=lambda s: (SEV_ORDER.get(s, 9), s))
 
 
+def niveles_riesgo(sitios: list) -> list:
+    """Niveles de riesgo del consolidado: los de cada sitio en orden y sin repetir (los cuatro por defecto o los
+    del metodo del proyecto, RM2) y al final cualquier otro valor de 'nivel' que traiga riesgos.csv."""
+    out: list = []
+    for s in sitios:
+        out += [n for n in s.get("niveles") or NIVELES if n not in out]
+    for s in sitios:
+        for x in s["datos"]["riesgos"]:
+            n = _g(x, "nivel")
+            if n and n not in out:
+                out.append(n)
+    return out
+
+
 def _tablas(sitios: list) -> dict:
     nombres = [s["sitio"] for s in sitios]
+    niveles = niveles_riesgo(sitios)
     n = len(sitios)
     # Sitios
     filas_sitios = []
@@ -236,7 +271,7 @@ def _tablas(sitios: list) -> dict:
         p95 = [x for x in (_num(_g(f, "mbps_p95_minuto")) for f in d["salud"]) if x is not None]
         filas_sitios.append(
             [s["sitio"], s["cliente"], s["carpeta"], s["version"], len(d["inventario"]), len(h)]
-            + [h.count(v) for v in SEVS] + [len(d["riesgos"])] + [r.count(v) for v in NIVELES]
+            + [h.count(v) for v in SEVS] + [len(d["riesgos"])] + [r.count(v) for v in niveles]
             + [_fmt(sum(act) / len(act)) if act else "", _fmt(sum(obj) / len(obj)) if obj else "",
                len(d["vulnerabilidades"]), sum(1 for x in d["vulnerabilidades"] if _g(x, "kev").lower() in SI),
                len(d["ingenieria"]), _fmt(max(p95)) if p95 else ""])
@@ -318,7 +353,7 @@ def _tablas(sitios: list) -> dict:
 
 def consolidar(carpetas: list, nombres: dict | None = None) -> dict:
     sitios, avisos = leer_sitios(carpetas, nombres or {})
-    return {"sitios": sitios, "avisos": avisos, "tablas": _tablas(sitios)}
+    return {"sitios": sitios, "avisos": avisos, "tablas": _tablas(sitios), "niveles": niveles_riesgo(sitios)}
 
 
 def idioma_defecto(r: dict) -> str:
@@ -351,6 +386,8 @@ def escribir(out: Path, r: dict, idioma: str | None = None) -> list:
         out.mkdir(parents=True, exist_ok=True)
         archivos, hojas = [], []
         for arch, hoja, cab in SALIDAS:
+            if hoja == "Sitios":
+                cab = cab_sitios(r.get("niveles") or NIVELES)
             cabecera = [str(t(c)) for c in cab]
             filas = [[celda_csv(c) for c in f] for f in _valores(r["tablas"][hoja], cab)]
             if arch:
