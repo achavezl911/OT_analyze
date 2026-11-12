@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 from . import __version__
+from . import confirmacion_vulns as _vconf
 from . import entregables as _entregables
 from . import inventario_normalizado as _in
 from . import inventario_presentado as _ip
@@ -230,6 +231,11 @@ def crear_parser() -> argparse.ArgumentParser:
                          "id_evidencia recolector, planta, metodo, sensibilidad, entregables y nota_equipo, y activa "
                          "el registro aunque el perfil no tenga registro_evidencias. Un archivo que no sirve termina "
                          "con codigo 2.")
+    ap.add_argument("--vulnerabilidades-revision", metavar="ARCHIVO", dest="vulnerabilidades_revision",
+                    help="Un vulnerabilidades_revision.csv (o vulnerabilidades.csv / vulnerabilidades_firmware.csv con "
+                         "id_vulnerabilidad) de una corrida anterior que el equipo lleno: traslada por id_vulnerabilidad "
+                         "estado, confirmado_por, fecha y motivo, y activa la confirmacion aunque el perfil no tenga "
+                         "confirmacion_vulnerabilidades. Un archivo que no sirve termina con codigo 2.")
     ap.add_argument("--catalogo-vulnerabilidades", metavar="ARCHIVO", dest="catalogo_vulnerabilidades",
                     help="Catalogo del analista (CSV o XLSX; columnas fabricante, producto, version_afectada, cve; "
                          "cvss, aviso, remediacion y fuente opcionales) con vulnerabilidades por fabricante, "
@@ -378,6 +384,8 @@ def main(argv: list[str] | None = None) -> int:
     _pa.resolver(ap, args, perfil)       # AVK1 (D124)
     _entregables.avisos(perfil)          # ENT1 (D126)
     _registro.leer_opcion(ap, args, perfil)      # EVID2 (D127): antes de crear salidas
+    _vconf.leer_opcion(ap, args, perfil)      # VCONF (D128): antes de crear salidas
+    plan_vc = _vconf.de_args(args)
     for archivo in args.estandar_archivo:
         cargar_archivo(archivo)
     estandares = elegir(args.estandar)
@@ -594,9 +602,10 @@ def main(argv: list[str] | None = None) -> int:
         if _vu.aviso_sin_activo(cruces, nombre_v):
             print(f"[!] {_vu.aviso_sin_activo(cruces, nombre_v)}")
         extra = Capture(Path(f"vulnerabilidades {nombre_v}"))
-        _vu.agregar_hallazgo(extra, cruces, assets)
+        cruces_h = plan_vc.filtrar_cruces(cruces) if plan_vc else cruces      # VCONF (D128)
+        _vu.agregar_hallazgo(extra, cruces_h, assets)
         if kev:
-            _ac.agregar_hallazgo_kev(extra, cruces, assets, kev)
+            _ac.agregar_hallazgo_kev(extra, cruces_h, assets, kev)
         res.extras.append(extra)
         res.vulns_cruces = cruces
         if _vu.con_entorno(cruces, (perfil or {}).get("criticidad_activos")):
@@ -619,11 +628,12 @@ def main(argv: list[str] | None = None) -> int:
     if indice_vf:        # V1a (D89): despues del inventario normalizado
         res.vuln_firmware = _vf.construir(indice_vf, res.inventario_normalizado, res.vulns_cruces, assets,
                                           kev_cat, avisos, (perfil or {}).get("version_cvss", "3"),
-                                          (perfil or {}).get("criticidad_activos"))
+                                          (perfil or {}).get("criticidad_activos"), plan_vc)
         extra = Capture(Path("vulnerabilidades por firmware"))
-        _vf.agregar_hallazgo(extra, res.vuln_firmware)
+        _vf.agregar_hallazgo(extra, plan_vc.filtrar_vf(res.vuln_firmware) if plan_vc else res.vuln_firmware)
         if extra.findings:
             res.extras.append(extra)
+    _vconf.preparar(args, res.vulns_cruces, assets, res.vuln_firmware)      # VCONF (D128)
     ref, ref_origen = _ob.referencia_de([c for c in caps if not c.error])
     res.obsolescencia = _ob.construir(res.inventario_normalizado, tabla_eos, ref, ref_origen)
     extra = _ob.agregar_hallazgos([f for c in [*res.caps, *res.extras] for f in c.findings], res.obsolescencia)

@@ -385,7 +385,7 @@ def con_entorno(cruces: list, crit) -> bool:
     return bool(crit) and any(_entorno(c["vuln"], crit)[0] != "" for c in cruces)
 
 
-def columnas(cruces: list, crit=None) -> list:
+def columnas(cruces: list, crit=None, plan=None) -> list:
     """COLUMNAS, mas 'epss' al final si el archivo importado la trae (Nozomi) y cvss_v4 y vector_cvss_v4
     junto a cvss si trae CVSS v4.0 (D113); con crit (criticidad_activos) y filas con entorno, las columnas D120."""
     cols = list(COLUMNAS)
@@ -395,10 +395,18 @@ def columnas(cruces: list, crit=None) -> list:
         if con_entorno(cruces, crit):
             from .cvss4_entorno import COLUMNAS as ENT
             cols[i + 2:i + 2] = ENT
-    return cols + (["epss"] if _con_epss(cruces) else [])
+    return cols + (["epss"] if _con_epss(cruces) else []) + (["id_vulnerabilidad", "estado_confirmacion"] if plan else [])
 
 
-def filas_tabla(cruces: list, assets: dict, crit=None) -> list:
+def _confirmacion(plan, v: dict) -> list:
+    """VCONF (D128): id y estado de la fila cuando hay plan de confirmacion."""
+    if not plan:
+        return []
+    ident = plan.id_plataforma(v)
+    return [ident, plan.mostrar(plan.revision(ident)[0])]
+
+
+def filas_tabla(cruces: list, assets: dict, crit=None, plan=None) -> list:
     """Filas de vulnerabilidades.csv: asociadas por activo y CVE; al final las no asociadas."""
     from .avisos_cisa import columnas_kev
     epss = _con_epss(cruces)
@@ -414,7 +422,8 @@ def filas_tabla(cruces: list, assets: dict, crit=None) -> list:
                     *(_entorno(v, crit) if ent else ())] if v4 else []),
                 t(v["estado"]), v["producto"],
                 v["version"], v["fuente"], c["por"], *columnas_kev(c),
-                *(["" if v.get("epss") is None else v["epss"]] if epss else [])]
+                *(["" if v.get("epss") is None else v["epss"]] if epss else []),
+                *_confirmacion(plan, v)]
     asoc = sorted((c for c in cruces if c["activo"] is not None),
                   key=lambda c: (fila(c)[0], c["vuln"]["cve"], str(c["activo"])))
     no = sorted((c for c in cruces if c["activo"] is None),

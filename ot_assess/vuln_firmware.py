@@ -14,6 +14,7 @@ import re
 import unicodedata
 from pathlib import Path
 
+from . import confirmacion_vulns as _vc
 from . import cvss4
 from .avisos_cisa import (
     _fecha,
@@ -563,12 +564,13 @@ def _sev_de(punt, dec: str) -> str:
 
 
 def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=None, version_cvss: str = "3",
-              criticidad=None) -> dict:
+              criticidad=None, plan=None) -> dict:
     """Candidatas por activo y CVE del inventario normalizado `inv` contra el indice.
 
     version_cvss "4" (D114): severidad, orden y umbral por CVSS v4.0 con caida a v3; agrega la columna cvss_decide."""
     v4 = version_cvss == "4"
     plat = _ips_en_plataforma(cruces, assets or {})
+    ips_plat = _vc.ips_plataforma(cruces) if plan else {}
     con_modelo = con_fw = 0
     mejores: dict = {}
     vistos_fuera: set = set()
@@ -626,6 +628,13 @@ def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=Non
                        t(x["coinc"]), t(x["estado"]),
                        "" if kev_cves is None else t("si" if en_kev else "no"),
                        t("si" if x["en_plat"] else "no"), r["remediacion"], r["fuente"], "", "", "", ""]
+        x["sev_int"] = ((cvss4.severidad(ef) if dec == "4.0" else _sev_de_cvss(ef)) if v4 and ef is not None
+                        else _sev_de_cvss(r["cvss"]) if r["cvss"] is not None else "")
+        if plan:        # VCONF (D128): llena las columnas de revision y agrega el id al final
+            x["id_vuln"] = plan.id_firmware(x, ips_plat)
+            est, por, fecha, motivo = plan.revision(x["id_vuln"])
+            x["celdas"][-4:] = [plan.mostrar(est), por, fecha, motivo]
+            x["celdas"].append(x["id_vuln"])
         filas.append(x)
     filas.sort(key=lambda x: (_ORDEN_ESTADO[x["estado"]], _ORDEN_COINC[x["coinc"]], -(x["cvss_ef"] if x["cvss_ef"] is not None else -1),
                               x["nombre"], x["cve"]))
@@ -643,6 +652,8 @@ def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=Non
         cols[i:i] = ENTORNO
         for x, e in zip(filas, ent):
             x["celdas"][i:i] = e
+    if plan:
+        cols.append("id_vulnerabilidad")
     return {"filas": filas, "resumen": resumen, "columnas": cols, "version_cvss": "4" if v4 else "3",
             "entorno": hay_entorno(ent)}
 

@@ -12,6 +12,7 @@ from . import alertas as _al
 from . import avisos_cisa as _ac
 from . import cis_controles as _cis
 from . import conductos_zcr as _zc
+from . import confirmacion_vulns as _vconf
 from . import cvss4_entorno as _ce
 from . import direccionamiento as _dr
 from . import entregables as _entregables
@@ -131,6 +132,10 @@ def crear_parser() -> argparse.ArgumentParser:
                     help="Un registro_evidencias.csv de una corrida anterior que el equipo lleno (como en el analisis "
                          "de capturas): traslada recolector, planta, metodo, sensibilidad, entregables y nota_equipo "
                          "por id_evidencia.")
+    ap.add_argument("--vulnerabilidades-revision", metavar="ARCHIVO", dest="vulnerabilidades_revision",
+                    help="Un vulnerabilidades_revision.csv de una corrida anterior que el equipo lleno (como en el "
+                         "analisis de capturas): traslada estado, confirmado_por, fecha y motivo por id_vulnerabilidad. "
+                         "Un archivo que no sirve termina con codigo 2.")
     ap.add_argument("--catalogo-vulnerabilidades", metavar="ARCHIVO", dest="catalogo_vulnerabilidades",
                     help="Catalogo del analista (CSV o XLSX) con vulnerabilidades por fabricante, producto y "
                          "version afectada (como en el analisis de capturas).")
@@ -268,6 +273,8 @@ def main(argv: list | None = None) -> int:
     _pa.resolver(ap, args, perfil)       # AVK1 (D124)
     _entregables.avisos(perfil)          # ENT1 (D126)
     _registro.leer_opcion(ap, args, perfil)      # EVID2 (D127): antes de crear salidas
+    _vconf.leer_opcion(ap, args, perfil)      # VCONF (D128): antes de crear salidas
+    plan_vc = _vconf.de_args(args)
     for archivo in args.estandar_archivo:
         cargar_archivo(archivo)
     estandares = elegir(args.estandar)
@@ -503,9 +510,10 @@ def main(argv: list | None = None) -> int:
         if _vu.aviso_sin_activo(cruces, nombre_v):
             print(f"[!] {_vu.aviso_sin_activo(cruces, nombre_v)}")
         extra = Capture(Path(f"vulnerabilidades {nombre_v}"))
-        _vu.agregar_hallazgo(extra, cruces, imp.assets)
+        cruces_h = plan_vc.filtrar_cruces(cruces) if plan_vc else cruces      # VCONF (D128)
+        _vu.agregar_hallazgo(extra, cruces_h, imp.assets)
         if kev:
-            _ac.agregar_hallazgo_kev(extra, cruces, imp.assets, kev)
+            _ac.agregar_hallazgo_kev(extra, cruces_h, imp.assets, kev)
         hallazgos += [(extra.name, f) for f in extra.findings]
         vuln_resumen = {**_vu.resumen(cruces, nombre_v), **_ac.resumen_cisa(cruces, kev, avisos)}
         res.vulns_cruces = cruces
@@ -515,8 +523,8 @@ def main(argv: list | None = None) -> int:
             print(f"[i] {_ce.nota()}")
         with open(out / "vulnerabilidades.csv", "w", newline="", encoding="utf-8-sig") as fh:
             w = escritor_csv(fh)
-            w.writerow(_vu.columnas(cruces, crit_decl))
-            w.writerows(_vu.filas_tabla(cruces, imp.assets, crit_decl))
+            w.writerow(_vu.columnas(cruces, crit_decl, plan_vc))
+            w.writerows(_vu.filas_tabla(cruces, imp.assets, crit_decl, plan_vc))
         if avisos and "avisos_ics" in res.vulnerabilidades and _ac.filas_avisos(cruces, imp.assets, (perfil or {}).get("version_cvss", "3")):
             with open(out / "avisos_ics.csv", "w", newline="", encoding="utf-8-sig") as fh:
                 w = escritor_csv(fh)
@@ -544,10 +552,11 @@ def main(argv: list | None = None) -> int:
     if indice_vf:        # V1a (D89): despues del inventario normalizado
         res.vuln_firmware = _vf.construir(indice_vf, res.inventario_normalizado, res.vulns_cruces, imp.assets,
                                           kev_cat, avisos, (perfil or {}).get("version_cvss", "3"),
-                                          (perfil or {}).get("criticidad_activos"))
+                                          (perfil or {}).get("criticidad_activos"), plan_vc)
         extra = Capture(Path("vulnerabilidades por firmware"))
-        _vf.agregar_hallazgo(extra, res.vuln_firmware)
+        _vf.agregar_hallazgo(extra, plan_vc.filtrar_vf(res.vuln_firmware) if plan_vc else res.vuln_firmware)
         hallazgos += [(extra.name, f) for f in extra.findings]
+    _vconf.preparar(args, res.vulns_cruces, imp.assets, res.vuln_firmware)      # VCONF (D128)
     ref, ref_origen = _ob.referencia_de((), (imp.resumen.get("periodo") or {}).get("hasta", ""))
     res.obsolescencia = _ob.construir(res.inventario_normalizado, tabla_eos, ref, ref_origen)
     extra = _ob.agregar_hallazgos([f for _o, f in hallazgos], res.obsolescencia)

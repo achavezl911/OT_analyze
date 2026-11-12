@@ -53,7 +53,7 @@ def cargar(path) -> dict:
                              "equipos_propios", "vlans_esperadas", "ajustes_riesgo", "madurez_objetivo",
                              "csf_tiers_objetivo", "version_cvss", "subcomandos_deshabilitados", "leyenda_salidas",
                              "modelo_evidencia", "riesgo", "avisos_solo_paquete", "iec62351_flujos", "entregables",
-                             "registro_evidencias"))
+                             "registro_evidencias", "confirmacion_vulnerabilidades"))
     if d.get("version") != 1 or isinstance(d.get("version"), bool):
         fallo("'version' es requerida y solo se admite 1.")
     out: dict = {"version": 1, "cliente": texto(d["cliente"], "cliente") if "cliente" in d
@@ -214,6 +214,11 @@ def cargar(path) -> dict:
         from .registro_evidencias import validar as registro_valido
         cat = {e["id"] for e in out["entregables"]["catalogo"]} if "entregables" in out else None
         out["registro_evidencias"] = registro_valido(d["registro_evidencias"], fallo, cat)
+    if "confirmacion_vulnerabilidades" in d:      # VCONF (D128)
+        from .confirmacion_vulns import validar as vconf_valido
+        vconf = vconf_valido(d["confirmacion_vulnerabilidades"], fallo)
+        if vconf:
+            out["confirmacion_vulnerabilidades"] = vconf
     if "modelo_evidencia" in d:     # EVID1 (D122)
         from .inventario_normalizado import modelo_valido
         out["modelo_evidencia"] = modelo_valido(d["modelo_evidencia"], fallo)

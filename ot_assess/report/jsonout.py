@@ -8,6 +8,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from .. import cobertura_captura as _cc
+from .. import confirmacion_vulns as _vconf
 from .. import csf_tiers as _ct
 from .. import direccionamiento as _dr
 from .. import entregables as _en
@@ -92,6 +93,7 @@ def write_json(res: Assessment, outdir: Path) -> None:
     flujos_62351 = _i62351.para_json(res.args)
     ent = _en.para_json(res)       # ENT1 (D126): None sin la clave
     reg = _registro.para_json(res.args)       # EVID2 (D127): None sin la clave ni la opcion
+    vconf = _vconf.para_json(res.args)       # VCONF (D128): None sin la clave ni la opcion
     base = _sr.linea_base_json(res.salud_red)
     if base:       # L1 (D81): artefacto para comparar corridas futuras
         (outdir / _sr.A_BASE_JSON).write_text(json.dumps(base, indent=2, ensure_ascii=False, sort_keys=True),
@@ -113,6 +115,7 @@ def write_json(res: Assessment, outdir: Path) -> None:
                     **({"iec62351_flujos": flujos_62351} if flujos_62351 else {}),
                     **({"entregables": ent} if ent else {}),
                     **({"registro_evidencias": reg} if reg else {}),
+                    **({"confirmacion_vulnerabilidades": vconf} if vconf else {}),
                     "madurez": _ma.para_json(res.madurez),
                     **({"csf_tiers": _ct.para_json(res.csf_tiers)} if _ct.hay(res.csf_tiers) else {}),
                     "tobe": _tb.para_json(res.tobe),

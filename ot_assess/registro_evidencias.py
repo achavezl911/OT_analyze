@@ -50,7 +50,8 @@ OPCIONES = (
     ("paquete_avisos", "paquete_avisos"), ("catalogo_vulnerabilidades", "catalogo_vulnerabilidades"),
     ("alertas", "alertas"), ("tor_relays", "tor_relays"), ("linea_base", "linea_base"),
     ("madurez", "madurez"), ("csf_tiers", "csf_tiers"), ("cis", "cis"), ("cis_mapeo", "cis_mapeo"),
-    ("iec62351_estados", "iec62351_estados"), ("inventario_manual", "manual"),
+    ("iec62351_estados", "iec62351_estados"), ("vulnerabilidades_revision", "vulnerabilidades_revision"),
+    ("inventario_manual", "manual"),
     ("fin_de_soporte", "fin_de_soporte"), ("mapeo", "mapeo"), ("estandar_archivo", "estandar"),
     ("custodia", "custodia"),
 )

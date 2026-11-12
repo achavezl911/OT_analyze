@@ -741,6 +741,24 @@ terminan con código 2 sin escribir salidas. `resultado.json` agrega `registro_e
 sin_recolector, sin_sensibilidad, importadas, ids_no_encontrados). No firma ni cifra; es trazabilidad documental. Sin la
 clave ni la opción no cambia ninguna salida.
 
+**Confirmación de vulnerabilidades (VCONF, D128).** Clave opcional de perfil `confirmacion_vulnerabilidades` (`true` o un
+objeto con `estados` de 2 a 10 textos, por defecto `candidato`, `confirmado`, `descartado`; `inicial`; `descartados`, el
+estado que significa descartada; y `hallazgos`: `todas` o `sin_descartadas`) u opción `--vulnerabilidades-revision
+ARCHIVO.csv` (corrida y `diagrama`; sin la clave usa los estados por defecto). Cada vulnerabilidad recibe un
+`id_vulnerabilidad` estable (`VU-` y 10 hex del sha256 de `CVE|clave del activo`; clave = ip, si no mac, si no nombre, si no
+producto y versión de la fila), el mismo en `vulnerabilidades.csv` y `vulnerabilidades_firmware.csv` para la misma pareja
+activo + CVE. `vulnerabilidades.csv` agrega al final `id_vulnerabilidad` y `estado_confirmacion`; la tabla de firmware llena
+`estado_revision`, `revisado_por`, `fecha` y `comentario` y agrega el id; `vulnerabilidades_revision.csv` (hoja "Revision de
+vulnerabilidades") tiene una fila por id con fuentes, severidad, cvss, kev, aviso, estado, confirmado_por, fecha y motivo:
+es el archivo que el equipo llena y devuelve. `--vulnerabilidades-revision` traslada por id estado, confirmado_por, fecha y
+motivo desde ese archivo (también desde `vulnerabilidades.csv` o `vulnerabilidades_firmware.csv` con el id; coma o punto y
+coma; encabezados en español o inglés; una celda vacía no pisa). Los ids que ya no existen se cuentan y se avisan. Archivo
+inexistente, sin columna `id_vulnerabilidad`, estado fuera de la lista, id repetido con valores distintos o textos de más
+de 200 caracteres terminan con código 2 sin escribir salidas. Con `sin_descartadas` los hallazgos de vulnerabilidades, KEV y
+firmware se arman sin las descartadas; las tablas conservan todas las filas. `resultado.json` agrega
+`confirmacion_vulnerabilidades`. La herramienta no confirma ni descarta nada ni dictamina que un equipo sea vulnerable.
+Sin la clave ni la opción no cambia ninguna salida.
+
 **Avisos de terceros (MITRE ATT&CK).** Copyright 2015-2026, The MITRE Corporation. MITRE ATT&CK and ATT&CK are
 registered trademarks of The MITRE Corporation. The MITRE Corporation (MITRE) hereby grants you a non-exclusive,
 royalty-free license to use ATT&CK(R) for research, development, and commercial purposes. Any copy you make for such

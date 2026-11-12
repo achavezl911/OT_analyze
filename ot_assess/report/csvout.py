@@ -10,6 +10,7 @@ from .. import attack_cobertura as _atc
 from .. import avisos_cisa as _ac
 from .. import cobertura_captura as _cc
 from .. import conductos_zcr as _zc
+from .. import confirmacion_vulns as _vconf
 from .. import csf_tiers as _ct
 from .. import csf_transicion as _cft
 from .. import direccionamiento as _dr
@@ -193,6 +194,7 @@ def tablas(res: Assessment) -> list:
     out.extend(_i62351.tablas(caps))
     out.extend(_i62351.tablas_flujos(res.args))
     out.extend(_registro.tablas(res.args))      # EVID2 (D127)
+    out.extend(_vconf.tablas(res.args))      # VCONF (D128)
 
     out.append(("plan_remediacion.csv", "Plan de remediacion", _re.COLUMNAS, _re.tabla(res)))
     out.extend(_rg.tablas(_rg.de(res)))
@@ -261,8 +263,8 @@ def tablas(res: Assessment) -> list:
 
     if res.vulnerabilidades:
         crit = (getattr(res, "perfil", None) or {}).get("criticidad_activos")
-        out.append(("vulnerabilidades.csv", "Vulnerabilidades", _vu.columnas(res.vulns_cruces, crit),
-                    _vu.filas_tabla(res.vulns_cruces, assets, crit)))
+        out.append(("vulnerabilidades.csv", "Vulnerabilidades", _vu.columnas(res.vulns_cruces, crit, _vconf.de_args(res.args)),
+                    _vu.filas_tabla(res.vulns_cruces, assets, crit, _vconf.de_args(res.args))))
 
     if "avisos_ics" in res.vulnerabilidades:
         filas = _ac.filas_avisos(res.vulns_cruces, assets, (getattr(res, "perfil", None) or {}).get("version_cvss", "3"))
