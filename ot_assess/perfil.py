@@ -52,7 +52,7 @@ def cargar(path) -> dict:
                              "captura", "engagement", "sl_objetivo", "ml_objetivo", "linea_base_nist", "cis_ig", "tsa_sd", "criticidad_activos", "dominios_internos", "zonas",
                              "equipos_propios", "vlans_esperadas", "ajustes_riesgo", "madurez_objetivo",
                              "csf_tiers_objetivo", "version_cvss", "subcomandos_deshabilitados", "leyenda_salidas",
-                             "modelo_evidencia"))
+                             "modelo_evidencia", "riesgo"))
     if d.get("version") != 1 or isinstance(d.get("version"), bool):
         fallo("'version' es requerida y solo se admite 1.")
     out: dict = {"version": 1, "cliente": texto(d["cliente"], "cliente") if "cliente" in d
@@ -135,8 +135,11 @@ def cargar(path) -> dict:
         out["version_cvss"] = version_cvss(d["version_cvss"])
         if out["version_cvss"] is None:
             fallo(f"'version_cvss': {d['version_cvss']!r} no es valido; valores: \"3\" (3.0, 3.1) o \"4\" (4.0).")
+    if "riesgo" in d:       # RM1 (D123)
+        out["riesgo"] = _riesgo(d["riesgo"], fallo, objeto)
     if "zonas" in d:
-        out["zonas"] = _zonas(d["zonas"], out.get("sl_objetivo", {}), fallo, texto, objeto)
+        out["zonas"] = _zonas(d["zonas"], out.get("sl_objetivo", {}), fallo, texto, objeto,
+                              dimensiones_impacto(out))
     if "criticidad_activos" in d:
         c = d["criticidad_activos"]
         if not isinstance(c, dict):
@@ -224,6 +227,51 @@ def deshabilitado(subcomando: str, propuesta=None, perfil_ruta=None):
 DIMENSIONES_IMPACTO = ("seguridad", "ambiente", "produccion", "financiero", "reputacion", "regulatorio")
 
 
+MODOS_RIESGO = ("puntuado", "candidatos")
+MAX_DIMENSIONES = 8
+
+
+def dimensiones_impacto(perfil) -> tuple:
+    """Dimensiones de impacto del proyecto (RM1, D123): las del perfil o las seis de DIMENSIONES_IMPACTO."""
+    return tuple(((perfil or {}).get("riesgo") or {}).get("dimensiones_impacto") or DIMENSIONES_IMPACTO)
+
+
+def dimension_inferida(perfil) -> str:
+    """Dimension de la fila inferida: la del perfil, 'produccion' si esta, o la primera de la lista."""
+    dims = dimensiones_impacto(perfil)
+    elegida = ((perfil or {}).get("riesgo") or {}).get("dimension_inferida")
+    if elegida:
+        return elegida
+    return "produccion" if "produccion" in dims else dims[0]
+
+
+def _riesgo(d, fallo, objeto) -> dict:
+    d = objeto(d, "riesgo", ("modo", "dimensiones_impacto", "dimension_inferida"))
+    out = {}
+    if "modo" in d:
+        if d["modo"] not in MODOS_RIESGO:
+            fallo(f"'riesgo.modo': {d['modo']!r} no es valido; valores: {', '.join(MODOS_RIESGO)}.")
+        out["modo"] = d["modo"]
+    if "dimensiones_impacto" in d:
+        dims = d["dimensiones_impacto"]
+        if not isinstance(dims, list) or not 1 <= len(dims) <= MAX_DIMENSIONES:
+            fallo(f"'riesgo.dimensiones_impacto' debe ser una lista de 1 a {MAX_DIMENSIONES} identificadores.")
+        for x in dims:
+            if not isinstance(x, str) or not re.fullmatch(r"[a-z0-9_]{1,30}", x):
+                fallo(f"riesgo.dimensiones_impacto: {x!r} no es un identificador "
+                      "(minusculas a-z, digitos y _, de 1 a 30 caracteres).")
+        if len(set(dims)) != len(dims):
+            fallo("riesgo.dimensiones_impacto tiene identificadores repetidos.")
+        out["dimensiones_impacto"] = list(dims)
+    if "dimension_inferida" in d:
+        dims = out.get("dimensiones_impacto") or DIMENSIONES_IMPACTO
+        if d["dimension_inferida"] not in dims:
+            fallo(f"'riesgo.dimension_inferida': {d['dimension_inferida']!r} no esta en las dimensiones de impacto "
+                  f"({', '.join(dims)}).")
+        out["dimension_inferida"] = d["dimension_inferida"]
+    return out
+
+
 def _entero_1_5(v, donde: str, fallo) -> int:
     if not isinstance(v, int) or isinstance(v, bool) or not 1 <= v <= 5:
         fallo(f"'{donde}' debe ser un entero de 1 a 5.")
@@ -249,7 +297,7 @@ def _ajustes_riesgo(d, fallo, texto, objeto) -> dict:
     return out
 
 
-def _zonas(lista, sl_objetivo: dict, fallo, texto, objeto) -> list:
+def _zonas(lista, sl_objetivo: dict, fallo, texto, objeto, dims=DIMENSIONES_IMPACTO) -> list:
     """Valida la clave `zonas` (Z1a, D50). La misma red en dos zonas es error; una red dentro de otra
     mas grande de otra zona es valida (gana la mas especifica) y la avisa zonas.avisos_perfil()."""
     if not isinstance(lista, list):
@@ -288,7 +336,7 @@ def _zonas(lista, sl_objetivo: dict, fallo, texto, objeto) -> list:
                 fallo(f"zonas.{nombre}: sl_t {sl} contradice sl_objetivo ({sl_objetivo[nombre]}).")
             nz["sl_t"] = sl
         if "impacto" in z:      # R1 (D83): impacto declarado por dimension
-            imp = objeto(z["impacto"], f"zonas.{nombre}.impacto", DIMENSIONES_IMPACTO)
+            imp = objeto(z["impacto"], f"zonas.{nombre}.impacto", dims)
             if not imp:
                 fallo(f"zonas.{nombre}: 'impacto' no puede estar vacio.")
             nz["impacto"] = {k: _entero_1_5(v, f"zonas.{nombre}.impacto.{k}", fallo) for k, v in imp.items()}

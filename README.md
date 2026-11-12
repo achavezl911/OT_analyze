@@ -747,6 +747,12 @@ La clave opcional `vlans_esperadas` (`[10, 20]`, números de 1 a 4094) lista las
 aparezcan limitan el veredicto de `validar-captura` y de la sección «Validación de la captura».
 La clave opcional `ajustes_riesgo` y el campo `impacto` de cada zona (`{"seguridad": 5, "financiero": 2}`) alimentan el
 registro de riesgos (R1): ver `riesgos.csv` en la tabla de salidas. Los valores son enteros de 1 a 5.
+La clave opcional `riesgo` (RM1, D123) admite `modo` (`"puntuado"`, por defecto, o `"candidatos"`), `dimensiones_impacto`
+(1 a 8 identificadores únicos `[a-z0-9_]{1,30}`; reemplazan a las seis de la herramienta en `zonas[].impacto` y en el
+desempate, y no se traducen) y `dimension_inferida` (por defecto `produccion` si está en la lista; si no, la primera).
+En modo `candidatos` el registro no publica probabilidad, impacto, puntuación, nivel ni quick win: `origen` es `candidato`
+y `motivo_probabilidad` lista los factores observados; el mapa queda en 0 salvo filas que `ajustes_riesgo` puntúe con
+probabilidad e impacto (esas se puntúan como siempre y van primero). Sin la clave todo queda igual.
 La clave opcional `madurez_objetivo` (`{"segmentacion": 3, "parches": 2}`; enteros de 0 a 4; claves `activos`,
 `segmentacion`, `acceso`, `parches`, `monitoreo`, `incidentes`, `suministro`, `riesgo`) fija el nivel objetivo de cada
 dominio de la madurez por dominio (M7); si falta, rige el número de `ml_objetivo` y, si tampoco, 2 propuesto por la herramienta.

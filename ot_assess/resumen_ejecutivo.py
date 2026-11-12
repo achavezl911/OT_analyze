@@ -54,9 +54,10 @@ def datos(res) -> dict:
     hall = agrupar_hallazgos([*res.caps, *res.extras])
     riesgos = []
     for n, r in enumerate(map(_rg._mostrar, _rg.de(res)["filas"][:MAX_RIESGOS]), 1):
+        sin = r["puntuacion"] == ""
         riesgos.append({"n": n, "id": r["id_riesgo"], "titulo": r["titulo"], "severidad": r["severidad"],
-                        "nivel": r["nivel"],
-                        "puntuacion": f"{r['probabilidad']} x {r['impacto']} = {r['puntuacion']}",
+                        "nivel": t("candidato sin puntuar") if sin else r["nivel"],
+                        "puntuacion": "" if sin else f"{r['probabilidad']} x {r['impacto']} = {r['puntuacion']}",
                         "activos": _activos(r), "recomendacion": recortar(r["recomendacion"])})
     return {
         "titulo": t("Resumen ejecutivo"), "proyecto": args.titulo,
@@ -70,7 +71,7 @@ def datos(res) -> dict:
         "severidades": [(t(s), sum(1 for f in hall if f["severidad"] == s))
                         for s in ("Alta", "Media", "Baja")],
         "fases": [(t(f), sum(1 for r in filas if r["fase"] == f)) for f in _rem.FASES],
-        "riesgos": riesgos, "orden": t(ORDEN), "sin_riesgos": t(_rem.SIN_PRIORIZAR), "nota": t(NOTA),
+        "riesgos": riesgos, "orden": t(_rg.FRASE_CANDIDATOS) if _rg.de(res).get("modo") == "candidatos" else t(ORDEN), "sin_riesgos": t(_rem.SIN_PRIORIZAR), "nota": t(NOTA),
     }
 
 
