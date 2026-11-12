@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 from . import __version__
+from . import allowlist_proyecto as _alp
 from . import confirmacion_vulns as _vconf
 from . import entregables as _entregables
 from . import inventario_normalizado as _in
@@ -242,6 +243,12 @@ def crear_parser() -> argparse.ArgumentParser:
                          "id_riesgo (o id_hallazgo) la valoracion inherente y objetivo, controles, tratamiento, "
                          "responsable, fecha_objetivo y justificacion, y activa la valoracion aunque el perfil no "
                          "tenga riesgo.valoraciones. Un archivo que no sirve termina con codigo 2.")
+    ap.add_argument("--allowlist-revision", metavar="ARCHIVO", dest="allowlist_revision",
+                    help="Un allowlist_tobe.csv de una corrida anterior que el equipo lleno: traslada por id_flujo "
+                         "(o zona_origen + zona_destino + servicio) decision_equipo, las columnas del equipo y "
+                         "estado_revision, revisado_por, fecha y comentario; conserva los flujos declarados que no se "
+                         "observaron, y activa la allowlist con vocabulario del proyecto aunque el perfil no tenga "
+                         "allowlist_tobe. Un archivo que no sirve termina con codigo 2.")
     ap.add_argument("--catalogo-vulnerabilidades", metavar="ARCHIVO", dest="catalogo_vulnerabilidades",
                     help="Catalogo del analista (CSV o XLSX; columnas fabricante, producto, version_afectada, cve; "
                          "cvss, aviso, remediacion y fuente opcionales) con vulnerabilidades por fabricante, "
@@ -392,6 +399,7 @@ def main(argv: list[str] | None = None) -> int:
     _registro.leer_opcion(ap, args, perfil)      # EVID2 (D127): antes de crear salidas
     _vconf.leer_opcion(ap, args, perfil)      # VCONF (D128): antes de crear salidas
     _val.leer_opcion(ap, args, perfil)      # RM2b (D130): antes de crear salidas
+    _alp.leer_opcion(ap, args, perfil)      # ALLOW1 (D133): antes de crear salidas
     plan_vc = _vconf.de_args(args)
     for archivo in args.estandar_archivo:
         cargar_archivo(archivo)
@@ -673,6 +681,8 @@ def main(argv: list[str] | None = None) -> int:
                              [f for c in [*res.caps, *res.extras] for f in c.findings], perfil)
     if _tb.aviso(res.tobe):
         print(_tb.aviso(res.tobe))
+    for linea in _alp.combinar(res.tobe, _alp.de_args(args)):      # ALLOW1 (D133)
+        print("[!] " + linea)
     from . import hardening as _hd
     res.hardening = _hd.construir(assets, [f for c in [*res.caps, *res.extras] for f in c.findings],
                                res.inventario_normalizado)   # T1b (D86)

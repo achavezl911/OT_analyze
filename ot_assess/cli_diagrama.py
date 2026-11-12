@@ -9,6 +9,7 @@ from pathlib import Path
 from . import __version__
 from . import acceso_remoto as _ar
 from . import alertas as _al
+from . import allowlist_proyecto as _alp
 from . import avisos_cisa as _ac
 from . import cis_controles as _cis
 from . import conductos_zcr as _zc
@@ -142,6 +143,10 @@ def crear_parser() -> argparse.ArgumentParser:
                          "id_riesgo (o id_hallazgo) la valoracion inherente y objetivo, controles, tratamiento, "
                          "responsable, fecha_objetivo y justificacion, y activa la valoracion aunque el perfil no "
                          "tenga riesgo.valoraciones. Un archivo que no sirve termina con codigo 2.")
+    ap.add_argument("--allowlist-revision", metavar="ARCHIVO", dest="allowlist_revision",
+                    help="Un allowlist_tobe.csv de una corrida anterior que el equipo lleno (como en el analisis de "
+                         "capturas): traslada por id_flujo decision_equipo, las columnas del equipo y la revision. "
+                         "Un archivo que no sirve termina con codigo 2.")
     ap.add_argument("--catalogo-vulnerabilidades", metavar="ARCHIVO", dest="catalogo_vulnerabilidades",
                     help="Catalogo del analista (CSV o XLSX) con vulnerabilidades por fabricante, producto y "
                          "version afectada (como en el analisis de capturas).")
@@ -267,6 +272,8 @@ def _entorno_exportacion(args, imp, fuentes) -> dict:
         **({"paquete_avisos": args.paquete_avisos_info} if getattr(args, "paquete_avisos_info", None) else {}),
         **({"valoraciones_riesgo": uno(args.valoraciones_riesgo)} if getattr(args, "valoraciones_riesgo", None)
            else {}),      # RM2b (D130)
+        **({"allowlist_revision": uno(args.allowlist_revision)} if getattr(args, "allowlist_revision", None)
+           else {}),      # ALLOW1 (D133)
     }
 
 
@@ -283,6 +290,7 @@ def main(argv: list | None = None) -> int:
     _registro.leer_opcion(ap, args, perfil)      # EVID2 (D127): antes de crear salidas
     _vconf.leer_opcion(ap, args, perfil)      # VCONF (D128): antes de crear salidas
     _val.leer_opcion(ap, args, perfil)      # RM2b (D130): antes de crear salidas
+    _alp.leer_opcion(ap, args, perfil)      # ALLOW1 (D133): antes de crear salidas
     plan_vc = _vconf.de_args(args)
     for archivo in args.estandar_archivo:
         cargar_archivo(archivo)
@@ -598,6 +606,8 @@ def main(argv: list | None = None) -> int:
     cis, cis_mapeo = _cis.cargar_con_mapeos(args.cis, args.cis_mapeo) if args.cis else (None, None)
     res.matriz_controles = _mc.construir(imp.assets, zcr, reglas_fw, hallazgos, perfil, cis, cis_mapeo)
     res.tobe = _tb.construir(imp.assets, imp.conduits, zon, zcr, reglas_fw, hallazgos, perfil)    # T1a (D85)
+    for linea in _alp.combinar(res.tobe, _alp.de_args(args)):      # ALLOW1 (D133)
+        print("[!] " + linea)
     if _tb.aviso(res.tobe):
         print(_tb.aviso(res.tobe))
     res.hardening = _hd.construir(imp.assets, hallazgos, res.inventario_normalizado)      # T1b (D86)

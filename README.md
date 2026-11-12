@@ -948,6 +948,22 @@ ambas; solo se dibujan «permitir» (línea continua) y «por DMZ» (discontinua
 máximo son 40 aristas. DMZ: la zona con `"dmz": true` en el perfil o con «DMZ» en el nombre; si hace falta y no hay,
 se propone «DMZ industrial (propuesta)». Es una propuesta a partir de lo observado que valida el cliente, no un diseño
 de ingeniería ni un juicio de cumplimiento. También en `diagrama` y en la clave `tobe` de `resultado.json`.
+**Allowlist con el vocabulario del proyecto (ALLOW1, D133).** Clave de perfil opcional `allowlist_tobe` (objeto; `{}`
+vale) con `decisiones` (las cuatro claves `permitir`, `por DMZ`, `revisar`, `bloquear` hacia etiquetas de 1 a 30
+caracteres, que pueden repetirse: p. ej. Allow / Review / Deny), `decisiones_equipo` (2 a 8 etiquetas válidas para la
+columna `decision_equipo`; por defecto las etiquetas distintas de `decisiones`) y `columnas_equipo` (1 a 10 nombres
+`[a-z0-9_]`; por defecto `funcion`, `frecuencia`, `owner`, `necesidad`; sus cabeceras no se traducen). Con la función
+activa `allowlist_tobe.csv` y su hoja agregan al final `id_flujo` (`FL-` + 8 hex de sha256 de
+`zona_origen|zona_destino|servicio`, estable entre corridas y entre captura y `diagrama`), `decision_proyecto`,
+`decision_equipo`, las columnas del equipo y `observado` (si/no). `--allowlist-revision ARCHIVO` (corrida y `diagrama`)
+devuelve ese archivo llenado (coma o punto y coma, UTF-8 con o sin BOM, cabeceras en español o inglés; llave
+`id_flujo` o, si viene vacía, `zona_origen` + `zona_destino` + `servicio`, para agregar flujos a mano) y traslada
+`decision_equipo`, las columnas del equipo y `estado_revision`, `revisado_por`, `fecha`, `comentario`; sin la clave activa
+la función con los valores por defecto. Código 2 sin salidas: archivo inexistente, sin columna llave, id repetido,
+`decision_equipo` fuera de la lista o texto de más de 500 caracteres. Los flujos del archivo que no se observaron van al
+final con `observado = no` y lo del equipo conservado (no cuentan en la matriz ni en el diagrama). La sección TO-BE
+agrega una frase con los conteos por decisión del proyecto y del equipo, los pendientes y los no observados, y
+`resultado.json` el bloque `tobe.allowlist_proyecto`. La herramienta no infiere función, frecuencia, owner ni necesidad.
 **Hardening por tipo de equipo (T1b, D86).** Cada activo se asigna a uno de seis tipos (controlador, estación, servidor,
 red, seguridad, otro) por su rol inferido o por el tipo que da la plataforma (`ot_assess/data/hardening.json`); sin
 rol, por los puertos que sirve (puertos OT: controlador; DNS, LDAP, bases de datos: servidor; RDP/VNC: estación) y si

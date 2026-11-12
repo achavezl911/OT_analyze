@@ -51,7 +51,7 @@ OPCIONES = (
     ("alertas", "alertas"), ("tor_relays", "tor_relays"), ("linea_base", "linea_base"),
     ("madurez", "madurez"), ("csf_tiers", "csf_tiers"), ("cis", "cis"), ("cis_mapeo", "cis_mapeo"),
     ("iec62351_estados", "iec62351_estados"), ("vulnerabilidades_revision", "vulnerabilidades_revision"),
-    ("valoraciones_riesgo", "valoraciones_riesgo"),
+    ("valoraciones_riesgo", "valoraciones_riesgo"), ("allowlist_revision", "allowlist_revision"),
     ("inventario_manual", "manual"),
     ("fin_de_soporte", "fin_de_soporte"), ("mapeo", "mapeo"), ("estandar_archivo", "estandar"),
     ("custodia", "custodia"),
@@ -59,7 +59,8 @@ OPCIONES = (
 # Clave de entorno que ya trae el sha256 del archivo (no se vuelve a calcular).
 _ENTORNO = {"perfil": "perfil", "reglas_firewall": "reglas_firewall", "vulnerabilidades": "vulnerabilidades",
             "alertas": "alertas", "catalogo_vulnerabilidades": "catalogo_vulnerabilidades", "kev": "kev",
-            "tor_relays": "tor_relays", "valoraciones_riesgo": "valoraciones_riesgo"}
+            "tor_relays": "tor_relays", "valoraciones_riesgo": "valoraciones_riesgo",
+            "allowlist_revision": "allowlist_revision"}
 
 
 # ---- perfil ---------------------------------------------------------------------------------------------

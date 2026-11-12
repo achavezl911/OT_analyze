@@ -374,7 +374,11 @@ def tablas(tobe: dict) -> list:
     """[(archivo, hoja, cabecera, filas)] para el CSV y el XLSX."""
     if not hay(tobe):
         return []
-    return [(ARCHIVO_ALLOW, HOJA_ALLOW, COLUMNAS, filas_tabla(tobe)),
+    cab, filas = COLUMNAS, filas_tabla(tobe)
+    if tobe.get("allowlist_proyecto"):       # ALLOW1 (D133): columnas del proyecto al final
+        from . import allowlist_proyecto as _ap
+        cab, filas = _ap.tabla(tobe, COLUMNAS, filas)
+    return [(ARCHIVO_ALLOW, HOJA_ALLOW, cab, filas),
             (ARCHIVO_MATRIZ, HOJA_MATRIZ, COL_MATRIZ, filas_matriz(tobe))]
 
 
@@ -417,6 +421,9 @@ def resumen_texto(tobe: dict) -> str:
             i=tobe["internos"])
     if any(f["decision"] == D_DMZ for f in tobe["filas"]) and tobe["dmz"]:
         txt += " " + t("DMZ: {z}.", z=_nombre_dmz(tobe))
+    if tobe.get("allowlist_proyecto"):       # ALLOW1 (D133)
+        from . import allowlist_proyecto as _ap
+        txt += " " + _ap.frase(tobe)
     return txt
 
 
@@ -460,8 +467,12 @@ def para_json(tobe: dict) -> dict:
     filas = [dict(zip(COLUMNAS[:11], fila_tabla(f)[:11]), decision=f["decision"],
                   activos_origen=f["activos_origen"], activos_destino=f["activos_destino"],
                   ids_hallazgo=f["ids_hallazgo"]) for f in tobe["filas"]]
-    return {"filas": filas, "matriz": tobe["matriz"], "dmz": tobe["dmz"], "dmz_propuesta": tobe["dmz_propuesta"],
-            "respuestas_probables": tobe["respuestas_probables"], "nota": nota_texto(tobe)}
+    out = {"filas": filas, "matriz": tobe["matriz"], "dmz": tobe["dmz"], "dmz_propuesta": tobe["dmz_propuesta"],
+           "respuestas_probables": tobe["respuestas_probables"], "nota": nota_texto(tobe)}
+    if tobe.get("allowlist_proyecto"):       # ALLOW1 (D133)
+        from . import allowlist_proyecto as _ap
+        out["allowlist_proyecto"] = _ap.para_json(tobe)
+    return out
 
 
 # --------------------------------------------------------------------------- #
