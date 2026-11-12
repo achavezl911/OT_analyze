@@ -52,7 +52,8 @@ def cargar(path) -> dict:
                              "captura", "engagement", "sl_objetivo", "ml_objetivo", "linea_base_nist", "cis_ig", "tsa_sd", "criticidad_activos", "dominios_internos", "zonas",
                              "equipos_propios", "vlans_esperadas", "ajustes_riesgo", "madurez_objetivo",
                              "csf_tiers_objetivo", "version_cvss", "subcomandos_deshabilitados", "leyenda_salidas",
-                             "modelo_evidencia", "riesgo", "avisos_solo_paquete", "iec62351_flujos", "entregables"))
+                             "modelo_evidencia", "riesgo", "avisos_solo_paquete", "iec62351_flujos", "entregables",
+                             "registro_evidencias"))
     if d.get("version") != 1 or isinstance(d.get("version"), bool):
         fallo("'version' es requerida y solo se admite 1.")
     out: dict = {"version": 1, "cliente": texto(d["cliente"], "cliente") if "cliente" in d
@@ -209,6 +210,10 @@ def cargar(path) -> dict:
     if "entregables" in d:      # ENT1 (D126)
         from .entregables import validar as entregables_validos
         out["entregables"] = entregables_validos(d["entregables"], fallo)
+    if "registro_evidencias" in d:      # EVID2 (D127): despues de 'entregables', cuyo catalogo valida los ids
+        from .registro_evidencias import validar as registro_valido
+        cat = {e["id"] for e in out["entregables"]["catalogo"]} if "entregables" in out else None
+        out["registro_evidencias"] = registro_valido(d["registro_evidencias"], fallo, cat)
     if "modelo_evidencia" in d:     # EVID1 (D122)
         from .inventario_normalizado import modelo_valido
         out["modelo_evidencia"] = modelo_valido(d["modelo_evidencia"], fallo)

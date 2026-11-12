@@ -11,6 +11,7 @@ from . import inventario_normalizado as _in
 from . import inventario_presentado as _ip
 from . import obsolescencia as _ob
 from . import paquete_avisos as _pa
+from . import registro_evidencias as _registro
 from .cache_capturas import CacheCapturas
 from .consolidate import build_conduits, merge_assets
 from .detail import analyze_detail
@@ -224,6 +225,11 @@ def crear_parser() -> argparse.ArgumentParser:
                     help="Paquete verificado de avisos ICS y KEV (subcomando paquete-avisos), solo carpeta. Se "
                          "verifica antes de usarlo (codigo 2 si no coincide) y equivale a --avisos-ics y --kev "
                          "con sus archivos; no se combina con ellos. La herramienta no descarga nada.")
+    ap.add_argument("--registro-evidencias", metavar="ARCHIVO", dest="registro_evidencias",
+                    help="Un registro_evidencias.csv de una corrida anterior que el equipo lleno: traslada por "
+                         "id_evidencia recolector, planta, metodo, sensibilidad, entregables y nota_equipo, y activa "
+                         "el registro aunque el perfil no tenga registro_evidencias. Un archivo que no sirve termina "
+                         "con codigo 2.")
     ap.add_argument("--catalogo-vulnerabilidades", metavar="ARCHIVO", dest="catalogo_vulnerabilidades",
                     help="Catalogo del analista (CSV o XLSX; columnas fabricante, producto, version_afectada, cve; "
                          "cvss, aviso, remediacion y fuente opcionales) con vulnerabilidades por fabricante, "
@@ -371,6 +377,7 @@ def main(argv: list[str] | None = None) -> int:
                                        "estandar": "iec62443"})
     _pa.resolver(ap, args, perfil)       # AVK1 (D124)
     _entregables.avisos(perfil)          # ENT1 (D126)
+    _registro.leer_opcion(ap, args, perfil)      # EVID2 (D127): antes de crear salidas
     for archivo in args.estandar_archivo:
         cargar_archivo(archivo)
     estandares = elegir(args.estandar)
@@ -680,6 +687,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"    equipos propios excluidos: {x['equipos']} equipos, {x['paquetes']} paquetes, "
               f"{x['conductos']} conductos, {x['hallazgos']} hallazgos omitidos")
     res.entorno = construir_entorno(run, tshark_bin, caps, args, list(ignorados))
+    _registro.preparar(args, perfil, res.entorno, caps)      # EVID2 (D127)
     cust = res.entorno.get("custodia")
     if cust:
         if cust["cadena"] != "integra":

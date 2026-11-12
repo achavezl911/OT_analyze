@@ -16,6 +16,7 @@ from .. import hardening as _hd
 from .. import iec62351 as _i62351
 from .. import linea_base_aprobada as _lba
 from .. import madurez as _ma
+from .. import registro_evidencias as _registro
 from .. import riesgo as _rg
 from .. import salud_red as _sr
 from .. import sensores as _se
@@ -90,6 +91,7 @@ def write_json(res: Assessment, outdir: Path) -> None:
         })
     flujos_62351 = _i62351.para_json(res.args)
     ent = _en.para_json(res)       # ENT1 (D126): None sin la clave
+    reg = _registro.para_json(res.args)       # EVID2 (D127): None sin la clave ni la opcion
     base = _sr.linea_base_json(res.salud_red)
     if base:       # L1 (D81): artefacto para comparar corridas futuras
         (outdir / _sr.A_BASE_JSON).write_text(json.dumps(base, indent=2, ensure_ascii=False, sort_keys=True),
@@ -110,6 +112,7 @@ def write_json(res: Assessment, outdir: Path) -> None:
                     "riesgos": _rg.para_json(_rg.de(res)),
                     **({"iec62351_flujos": flujos_62351} if flujos_62351 else {}),
                     **({"entregables": ent} if ent else {}),
+                    **({"registro_evidencias": reg} if reg else {}),
                     "madurez": _ma.para_json(res.madurez),
                     **({"csf_tiers": _ct.para_json(res.csf_tiers)} if _ct.hay(res.csf_tiers) else {}),
                     "tobe": _tb.para_json(res.tobe),

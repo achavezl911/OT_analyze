@@ -25,6 +25,7 @@ from . import linea_base as _lb
 from . import matriz_controles as _mc
 from . import obsolescencia as _ob
 from . import paquete_avisos as _pa
+from . import registro_evidencias as _registro
 from . import rutas_ataque as _ra
 from . import rutas_firewall as _rf
 from . import salud_red as _sr
@@ -126,6 +127,10 @@ def crear_parser() -> argparse.ArgumentParser:
     ap.add_argument("--paquete-avisos", metavar="CARPETA", dest="paquete_avisos",
                     help="Paquete verificado de avisos ICS y KEV (subcomando paquete-avisos), solo carpeta; "
                          "como en el analisis de capturas.")
+    ap.add_argument("--registro-evidencias", metavar="ARCHIVO", dest="registro_evidencias",
+                    help="Un registro_evidencias.csv de una corrida anterior que el equipo lleno (como en el analisis "
+                         "de capturas): traslada recolector, planta, metodo, sensibilidad, entregables y nota_equipo "
+                         "por id_evidencia.")
     ap.add_argument("--catalogo-vulnerabilidades", metavar="ARCHIVO", dest="catalogo_vulnerabilidades",
                     help="Catalogo del analista (CSV o XLSX) con vulnerabilidades por fabricante, producto y "
                          "version afectada (como en el analisis de capturas).")
@@ -262,6 +267,7 @@ def main(argv: list | None = None) -> int:
 
     _pa.resolver(ap, args, perfil)       # AVK1 (D124)
     _entregables.avisos(perfil)          # ENT1 (D126)
+    _registro.leer_opcion(ap, args, perfil)      # EVID2 (D127): antes de crear salidas
     for archivo in args.estandar_archivo:
         cargar_archivo(archivo)
     estandares = elegir(args.estandar)
@@ -606,6 +612,7 @@ def main(argv: list | None = None) -> int:
         print(f"    equipos propios excluidos: {x['equipos']} equipos, {x['paquetes']} paquetes, "
               f"{x['conductos']} conductos")
     res.entorno = _entorno_exportacion(args, imp, fuentes)
+    _registro.preparar(args, perfil, res.entorno)      # EVID2 (D127)
     pagina = write_pagina(diagramas, imp, estandares, out, args.titulo, args.cliente, perfil, hallazgos,
                           vuln_resumen, alertas_resumen, rutas, cob, zon, zcr, res.diagrama_zcr)
 

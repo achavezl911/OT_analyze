@@ -716,6 +716,31 @@ transición oficial) y las técnicas ATT&CK revocadas u obsoletas; un id que nin
 se conserva y se cuenta como no reconocido. Solo ids de requisito, sin textos de normas; es trazabilidad documental, no un
 dictamen. Sin la clave no cambia ninguna salida.
 
+**Registro de evidencias (EVID2, D127).** Clave opcional de perfil `registro_evidencias` (`true` o un objeto) u opción
+`--registro-evidencias ARCHIVO.csv` (corrida y `diagrama`): escribe `registro_evidencias.csv` (hoja "Registro de
+evidencias") con una fila por archivo de entrada: `id_evidencia`, `archivo`, `opcion`, `tipo_fuente`, `bytes`, `sha256`,
+`recolector`, `planta`, `metodo`, `sensibilidad`, `clase_evidencia`, `entregables`, `custodia`, `nota_equipo`. Solo nombres
+de archivo, nunca rutas. `id_evidencia` = prefijo (por defecto `EV`) + `-` + 10 primeros hex del sha256: no cambia al mover
+el archivo ni entre corridas. Cada captura es una fila (el sha256 es el que ya calculó la corrida); cualquier otra
+carpeta (p. ej. avisos CSAF) es una fila con sha256 de las líneas `sha256  ruta_relativa\n` ordenadas por ruta y la nota
+"carpeta con N archivos"; `--paquete-avisos` es una fila con el sha256 de su manifiesto; dos entradas con el mismo
+contenido son una fila. La tabla de opciones que se registran es explícita (`OPCIONES` en `registro_evidencias.py`).
+Claves del objeto (todas opcionales; clave desconocida, tipo o límite inválido, sensibilidad fuera de la lista o entregable
+fuera del catálogo de `entregables` -> error de perfil): `prefijo` (1-10 de A-Z a-z 0-9); `valores`
+(`recolector`, `planta`, `metodo`, `sensibilidad`: textos de 1 a 80 caracteres, valor por defecto de todas las filas; si
+no hay `planta` y el perfil trae `sitio`, planta = sitio); `sensibilidades` (1 a 10 textos únicos; si existe, toda
+sensibilidad debe estar en ella); `por_archivo` (0 a 200 objetos `{"patron" (fnmatch sobre el nombre, sin distinguir
+mayúsculas), los cuatro campos y `entregables` (0 a 20 ids)}`: la primera que casa gana y pisa a `valores` campo por
+campo). Lo no declarado sale como "no declarado". `clase_evidencia` sale de `modelo_evidencia.por_fuente` si el perfil lo
+declara (tipos: captura, perfil, firewall, switch, manual, plataforma...); `custodia`, con `--custodia`, el estado de
+cada captura. `--registro-evidencias` trae un `registro_evidencias.csv` anterior que el equipo editó (coma o punto y coma,
+encabezados en español o inglés) y traslada por `id_evidencia` recolector, planta, metodo, sensibilidad, entregables y
+nota_equipo; lo importado pisa al perfil y una celda vacía no pisa. Los ids que ya no existen se cuentan y se avisan.
+Archivo inexistente, sin columna `id_evidencia`, id repetido con valores distintos, sensibilidad o entregable inválidos
+terminan con código 2 sin escribir salidas. `resultado.json` agrega `registro_evidencias` (filas, por_tipo,
+sin_recolector, sin_sensibilidad, importadas, ids_no_encontrados). No firma ni cifra; es trazabilidad documental. Sin la
+clave ni la opción no cambia ninguna salida.
+
 **Avisos de terceros (MITRE ATT&CK).** Copyright 2015-2026, The MITRE Corporation. MITRE ATT&CK and ATT&CK are
 registered trademarks of The MITRE Corporation. The MITRE Corporation (MITRE) hereby grants you a non-exclusive,
 royalty-free license to use ATT&CK(R) for research, development, and commercial purposes. Any copy you make for such

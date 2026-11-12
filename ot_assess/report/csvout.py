@@ -27,6 +27,7 @@ from .. import madurez as _ma
 from .. import matriz_controles as _mc
 from .. import obsolescencia as _ob
 from .. import periodicidad as _pe
+from .. import registro_evidencias as _registro
 from .. import registros_dns as _rd
 from .. import remediacion as _re
 from .. import riesgo as _rg
@@ -191,6 +192,7 @@ def tablas(res: Assessment) -> list:
     out.extend(_cft.tablas([f for c in [*caps, *res.extras] for f in c.findings], estandares))
     out.extend(_i62351.tablas(caps))
     out.extend(_i62351.tablas_flujos(res.args))
+    out.extend(_registro.tablas(res.args))      # EVID2 (D127)
 
     out.append(("plan_remediacion.csv", "Plan de remediacion", _re.COLUMNAS, _re.tabla(res)))
     out.extend(_rg.tablas(_rg.de(res)))
