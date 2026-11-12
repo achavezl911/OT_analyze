@@ -260,6 +260,8 @@ def construir_bloques(res: Assessment) -> list:
     if _mc.hay(res.matriz_controles):
         s = _mc.seccion(res.matriz_controles, res.linea_base)
         b += [("h1", s["titulo"]), ("nota", s["nota"]), ("p", s["resumen"]), ("tabla", *s["tabla"])]
+        if s.get("tabla_zonas"):
+            b += [("tabla", *s["tabla_zonas"])]
     if _sr.hay(res.salud_red):
         s = _sr.seccion(res.salud_red)
         b += [("h1", s["titulo"]), ("nota", s["nota"]), ("p", s["resumen"])]

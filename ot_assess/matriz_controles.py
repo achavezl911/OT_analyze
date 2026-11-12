@@ -31,6 +31,11 @@ LINEAS_BASE = ("baja", "moderada", "alta")
 BASE_DEFECTO = "moderada"
 ORIGEN_BASE_PERFIL = "declarado en el perfil"
 ORIGEN_BASE_PROPUESTA = "propuesto por la herramienta; lo fija el cliente"
+ORIGEN_ZONA_HEREDADA = "heredada del sitio"
+ORIGEN_ZONA_PROPUESTA = "propuesta por la herramienta; lo fija el cliente"
+ARCHIVO_ZONAS, HOJA_ZONAS = "linea_base_nist_zonas.csv", "Linea base NIST por zona"
+COL_ZONAS = ["zona", "linea_base", "origen", "controles", "mejoras", "activos", "brecha", "control_observado",
+             "sin_evidencia", "no_evaluable"]
 M_62443, M_NIST = "ISA/IEC 62443", "NIST SP 800-82r3"
 M_62443_21 = "ISA/IEC 62443-2-1:2024"
 M_CIS = "CIS Controls v8.1"
@@ -123,6 +128,17 @@ def linea_base_nist(perfil: dict | None) -> tuple:
     return BASE_DEFECTO, ORIGEN_BASE_PROPUESTA
 
 
+def _bases_zonas(perfil: dict | None, nivel: str, origen: str) -> list:
+    """Modo por zona (NBZ1): [{zona, linea_base, origen}] si alguna zona del perfil declara `linea_base_nist`;
+    [] si no. Las zonas sin ella heredan la del sitio (declarada o propuesta)."""
+    zonas = (perfil or {}).get("zonas") or []
+    if not any(z.get("linea_base_nist") for z in zonas):
+        return []
+    heredada = ORIGEN_ZONA_HEREDADA if origen == ORIGEN_BASE_PERFIL else ORIGEN_ZONA_PROPUESTA
+    return [{"zona": z["nombre"], "linea_base": z.get("linea_base_nist") or nivel,
+             "origen": ORIGEN_BASE_PERFIL if z.get("linea_base_nist") else heredada} for z in zonas]
+
+
 def _citas(texto: str) -> set:
     return {m.group(1) + (f"({m.group(2)})" if m.group(2) else "") for m in _CTL.finditer(texto or "")}
 
@@ -145,8 +161,9 @@ def contraste_refs() -> list:
     return sorted((c for c in citados if c not in cat), key=_orden)
 
 
-def _hallazgos(findings: list) -> list:
-    """Hallazgos agrupados por (titulo, severidad) que citan algun control NIST."""
+def _hallazgos(findings: list, por_ip: dict | None = None) -> list:
+    """Hallazgos agrupados por (titulo, severidad) que citan algun control NIST. Con `por_ip` (modo por zona,
+    NBZ1) cada grupo lleva las zonas de sus activos y `global` si algun hallazgo no trae activos."""
     grupos: dict = {}
     for f in findings:
         citas = _citas((f.get("referencias") or {}).get(CLAVE_NIST, ""))
@@ -154,6 +171,12 @@ def _hallazgos(findings: list) -> list:
             g = grupos.setdefault((f["titulo"], f["severidad"]), {"titulo": f["titulo"], "sev": f["severidad"],
                                                                   "citas": set()})
             g["citas"] |= citas
+            if por_ip is not None:
+                from .riesgo import _ips_hallazgo
+                ips = _ips_hallazgo(f, por_ip)
+                g.setdefault("zonas", set())
+                g["global"] = g.get("global", False) or not ips
+                g["zonas"] |= {por_ip[ip].get("zona_asignada") or "" for ip in ips} - {""}
     return sorted(grupos.values(), key=lambda g: (g["titulo"], g["sev"]))
 
 
@@ -294,13 +317,14 @@ def construir(assets: dict, zcr: dict, firewall: dict, findings: list, perfil: d
     oficiales de CIS en lugar de las referencias de NIST (D111)."""
     nivel, origen = linea_base_nist(perfil)
     cat = cargar()["controles"]
-    hall = _hallazgos(findings)
+    por_zona = _bases_zonas(perfil, nivel, origen)
+    por_ip = {ip: a for a in assets.values() for ip in a["ips"]} if por_zona else None
+    hall = _hallazgos(findings, por_ip)
     observados = _controles_observados(assets, zcr, firewall, findings)
     fragmentos = [_citas(txt) for txt in ESTANDARES[CLAVE_NIST].refs.values()]
-    filas = []
-    for ident in controles_de(nivel):
+
+    def fila(ident, zona, niv, org_, hs):
         c = cat[ident]
-        hs = [h for h in hall if _cita(ident, h["citas"])]
         ctl = "" if es_mejora(ident) else observados.get(ident, "")
         if hs:
             estado = _lb.E_BRECHA
@@ -312,19 +336,50 @@ def construir(assets: dict, zcr: dict, firewall: dict, findings: list, perfil: d
             estado = _lb.E_NOEVAL
         base = cat.get(base_de(ident), {})
         org = bool(c.get("toda_la_organizacion") or base.get("toda_la_organizacion"))
-        filas.append({
+        r = {
             "id": ident, "familia": c["familia"], "mejora": es_mejora(ident),
             "titulo": c["titulo"] or base.get("titulo", ""),
-            "alcance": ALC_ORG if org else ALC_SITIO, "agregado": c["niveles"][nivel]["agregado"],
+            "alcance": ALC_ORG if org else ALC_SITIO, "agregado": c["niveles"][niv]["agregado"],
             "estado": estado, "control": ctl if estado == _lb.E_CONTROL else "",
             "hallazgos": [h["titulo"] for h in sorted(hs, key=lambda h: (SEV_ORDER.get(h["sev"], 9), h["titulo"]))],
             "playbooks": sorted({p for p in (playbooks.para_titulo(h["titulo"]) for h in hs) if p}),
-            "sev": min((SEV_ORDER.get(h["sev"], 9) for h in hs), default=9)})
-    filas.sort(key=lambda r: (_lb.ESTADOS.index(r["estado"]), r["sev"], _orden(r["id"])))
+            "sev": min((SEV_ORDER.get(h["sev"], 9) for h in hs), default=9)}
+        if por_zona:
+            r.update({"zona": zona, "linea_base": niv, "origen": org_})
+        return r
+
+    filas = []
+    if not por_zona:
+        for ident in controles_de(nivel):
+            filas.append(fila(ident, "", nivel, origen, [h for h in hall if _cita(ident, h["citas"])]))
+    else:
+        incluidos = {z["zona"]: set(controles_de(z["linea_base"])) for z in por_zona}
+        for ident in sorted(set().union(*incluidos.values()), key=_orden):
+            base = cat.get(base_de(ident), {})
+            org = bool(cat[ident].get("toda_la_organizacion") or base.get("toda_la_organizacion"))
+            en = [z for z in por_zona if ident in incluidos[z["zona"]]]
+            hs_sitio = [h for h in hall if _cita(ident, h["citas"])]
+            if org:
+                z = max(en, key=lambda z: LINEAS_BASE.index(z["linea_base"]))
+                filas.append(fila(ident, "", z["linea_base"], z["origen"], hs_sitio))
+                continue
+            for z in en:
+                hs = [h for h in hs_sitio if h["global"] or z["zona"] in h["zonas"]]
+                filas.append(fila(ident, z["zona"], z["linea_base"], z["origen"], hs))
+    filas.sort(key=lambda r: (_lb.ESTADOS.index(r["estado"]), r["sev"], _orden(r["id"]), r.get("zona", "")))
     for i, r in enumerate(filas, 1):
         r["prioridad"] = i
     n_c, n_m = conteo(nivel)
     out = {"nist": {"linea_base": nivel, "origen": origen, "controles": n_c, "mejoras": n_m, "filas": filas}}
+    if por_zona:
+        out["nist"]["por_zona"] = [{"zona": z["zona"], "linea_base": z["linea_base"], "origen": z["origen"],
+                                    "controles": conteo(z["linea_base"])[0], "mejoras": conteo(z["linea_base"])[1],
+                                    "activos": sum(1 for a in assets.values() if a.get("zona_asignada") == z["zona"])}
+                                   for z in por_zona]
+        sitio: dict = {}
+        for r in filas:
+            sitio.setdefault(r["id"], r)
+        filas = list(sitio.values())      # CIS y TSA leen una fila por control (la de mejor estado)
     if cis:
         out["cis"] = _construir_cis(filas, cis, perfil, cis_mapeo)
     if (perfil or {}).get("tsa_sd"):
@@ -371,12 +426,13 @@ def _filas_nist(mc: dict) -> list:
     n = mc["nist"]
     out = []
     for r in sorted(n["filas"], key=lambda r: r["prioridad"]):
-        objetivo = t("linea base {nivel}", nivel=t(n["linea_base"]))
+        objetivo = t("linea base {nivel}", nivel=t(r.get("linea_base", n["linea_base"])))
         if r["agregado"]:
             objetivo += "; " + t("agregado por el overlay OT")
         titulo = r["titulo"] + (" - " + t("mejora") if r["mejora"] else "")
         evid = t(r["control"]) if r["control"] else "; ".join(t(h) for h in r["hallazgos"])
-        out.append([M_NIST, t(r["alcance"]), "", r["id"], titulo, objetivo, t(n["origen"]), t(r["estado"]), evid,
+        out.append([M_NIST, t(r["alcance"]), r.get("zona", ""), r["id"], titulo, objetivo,
+                    t(r.get("origen", n["origen"])), t(r["estado"]), evid,
                     "; ".join(t(h) for h in r["hallazgos"]), "; ".join(r["playbooks"]), r["prioridad"],
                     *_vacias()])
     return out
@@ -509,6 +565,38 @@ def filas_matriz(mc: dict, lb: dict) -> list:
     return _filas_62443(lb) + _filas_2_1(lb) + _filas_nist(mc) + _filas_cis(mc) + _filas_tsa(mc)
 
 
+def por_zona(mc: dict) -> list:
+    """Lineas base NIST por zona (NBZ1); [] si el perfil no declara ninguna."""
+    return mc["nist"].get("por_zona") or []
+
+
+def _texto_zonas(mc: dict) -> str:
+    """'Z1 alta, Z2 moderada (heredada)': la linea base de cada zona y, si no la declara, de donde sale."""
+    partes = []
+    for z in por_zona(mc):
+        marca = {ORIGEN_ZONA_HEREDADA: " " + t("(heredada)"),
+                 ORIGEN_ZONA_PROPUESTA: " " + t("(propuesta)")}.get(z["origen"], "")
+        partes.append(f"{z['zona']} {t(z['linea_base'])}{marca}")
+    return t("Linea base NIST SP 800-82r3 por zona: {z}.", z=", ".join(partes))
+
+
+def filas_zonas(mc: dict) -> list:
+    """Filas de linea_base_nist_zonas.csv: una por zona y una 'organizacion' (conteos de las filas NIST)."""
+    cuenta: dict = collections.defaultdict(collections.Counter)
+    for r in mc["nist"]["filas"]:
+        cuenta[r.get("zona", "")][r["estado"]] += 1
+
+    def conteos(z):
+        c = cuenta[z]
+        return [c[_lb.E_BRECHA], c[_lb.E_CONTROL], c[_lb.E_SIN], c[_lb.E_NOEVAL]]
+    out = [[z["zona"], t(z["linea_base"]), t(z["origen"]), z["controles"], z["mejoras"], z["activos"],
+            *conteos(z["zona"])] for z in por_zona(mc)]
+    org = [r for r in mc["nist"]["filas"] if not r.get("zona")]
+    mej = sum(1 for r in org if r["mejora"])
+    out.append([t(ALC_ORG), "", "", len(org) - mej, mej, "", *conteos("")])
+    return out
+
+
 def _nombre_familia(fam: str) -> str:
     return f"{fam} - {t(cargar()['familias'][fam]['es'])}"
 
@@ -525,10 +613,13 @@ def filas_general(mc: dict) -> list:
     """Una fila por familia de 800-53 para linea_base_general.csv (columnas de linea_base.COL_GEN)."""
     n = mc["nist"]
     out = []
+    zonal = bool(por_zona(mc))
     for fam, c in _cuentas_nist(mc).items():
+        objetivo = t("linea base por zona") if zonal else t("linea base {nivel}", nivel=t(n["linea_base"]))
+        nota = t(NOTA_FAMILIA) + (" " + _texto_zonas(mc) if zonal else "")
         out.append(["NIST SP 800-53", fam, _nombre_familia(fam), "", "", "", c[_lb.E_BRECHA], c[_lb.E_CONTROL],
-                    c[_lb.E_SIN], c[_lb.E_NOEVAL], "", t("linea base {nivel}", nivel=t(n["linea_base"])),
-                    t(n["origen"]), "", "", t(NOTA_FAMILIA)])
+                    c[_lb.E_SIN], c[_lb.E_NOEVAL], "", objetivo,
+                    "" if zonal else t(n["origen"]), "", "", nota])
     return out
 
 
@@ -549,6 +640,8 @@ def tablas(mc: dict, lb: dict) -> list:
     if not general_ok:
         out.append((_lb.ARCHIVO_GEN, _lb.HOJA_GEN, _lb.COL_GEN, filas_general(mc)))
     out.append((ARCHIVO, HOJA, COLUMNAS, filas_matriz(mc, lb)))
+    if por_zona(mc):
+        out.append((ARCHIVO_ZONAS, HOJA_ZONAS, COL_ZONAS, filas_zonas(mc)))
     return out
 
 
@@ -594,6 +687,15 @@ def seccion(mc: dict, lb: dict) -> dict:
                 "del analista en {a}.", nivel=t(n["linea_base"]), origen=t(n["origen"]), c=n["controles"],
                 m=n["mejoras"], a=ARCHIVO)
     nota = t(NOTA)
+    tabla_zonas = None
+    if por_zona(mc):
+        vacias = [z["zona"] for z in por_zona(mc) if not z["activos"]]
+        resumen = _texto_zonas(mc) + " " + t("Controles de alcance organizacion: una fila, en la linea base mas "
+                                             "alta que los incluye. Detalle y columnas de validacion del analista "
+                                             "en {a}; conteos por zona en {z}.", a=ARCHIVO, z=ARCHIVO_ZONAS)
+        if vacias:
+            resumen += " " + t("Zonas declaradas sin activos observados en esta corrida: {z}.", z=", ".join(vacias))
+        tabla_zonas = ([t(c) for c in COL_ZONAS], filas_zonas(mc))
     if mc.get("cis"):
         mp = mc["cis"].get("mapeo")
         if mp:
@@ -603,4 +705,7 @@ def seccion(mc: dict, lb: dict) -> dict:
         else:
             nota += " " + t(NOTA_CIS)
     nota += " " + t(NOTA_TSA) if mc.get("tsa") else ""
-    return {"titulo": t(TITULO), "nota": nota, "resumen": resumen, "tabla": (cab, filas)}
+    out = {"titulo": t(TITULO), "nota": nota, "resumen": resumen, "tabla": (cab, filas)}
+    if tabla_zonas:
+        out["tabla_zonas"] = tabla_zonas
+    return out

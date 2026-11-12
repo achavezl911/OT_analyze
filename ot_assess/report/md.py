@@ -491,6 +491,13 @@ def write_md(res: Assessment, outdir: Path) -> Path:
         for fila in filas:
             out.append("| " + " | ".join(md_escape(str(c)) for c in fila) + " |")
         out.append("")
+        if s.get("tabla_zonas"):
+            cab, filas = s["tabla_zonas"]
+            out.append("| " + " | ".join(cab) + " |")
+            out.append("|" + "---|" * len(cab))
+            for fila in filas:
+                out.append("| " + " | ".join(md_escape(str(c)) for c in fila) + " |")
+            out.append("")
     if _sr.hay(res.salud_red):
         s = _sr.seccion(res.salud_red)
         out.append("### " + s["titulo"] + "\n")

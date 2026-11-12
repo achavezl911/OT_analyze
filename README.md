@@ -1011,6 +1011,15 @@ defecto moderada, propuesta por la herramienta). Estados as-is como en la línea
 columnas (`estado_validado`, `fuente_validacion`, `validado_por`, `revisado_por`, `fecha_validacion`, `comentario`)
 salen vacías para que el analista las llene (entrevista, documento, observación en sitio o evidencia técnica).
 `linea_base_general.csv` suma una fila por familia de SP 800-53. Reglas en D77.
+**Línea base NIST por zona (NBZ1, D132).** SP 800-82r3 categoriza cada sistema por separado: con `linea_base_nist`
+(`"baja"`, `"moderada"` o `"alta"`) dentro de al menos una zona del perfil, la parte NIST de la matriz va por zona. Las
+zonas sin la clave heredan la del sitio (la del perfil o la moderada propuesta) y su origen lo dice. Los controles de
+alcance sitio llevan una fila por zona cuya línea base los incluye (`zona_o_conducto` = la zona); los de alcance
+organización, una sola fila con la línea base más alta que los incluye. La brecha de una zona sale de los hallazgos
+cuyos activos caen en ella (o que no traen activos: aplican a todas). Nuevo `linea_base_nist_zonas.csv` (hoja «Linea
+base NIST por zona»; conteos por zona y una fila «organizacion») y `por_zona` en el bloque `nist` de `resultado.json`.
+La herramienta no deriva la línea base del SL-T ni del impacto: la declara el equipo. Sin la clave en ninguna zona,
+las salidas no cambian.
 **Filas de CIS Controls v8.1 (CIS1, D108).** Con `--cis ARCHIVO` (XLSX oficial de CIS que usted descargó, o un CSV
 con sus columnas `CIS Control`, `CIS Safeguard`, `Asset Class`, `Security Function`, `Title`, `Description`, `IG1`,
 `IG2`, `IG3`; la herramienta no descarga nada), la matriz suma, después de las NIST, una fila por salvaguarda del

@@ -367,6 +367,13 @@ def write_html(res: Assessment, outdir: Path) -> Path:
         for fila in filas:
             a("<tr>" + "".join(f"<td>{esc(str(c))}</td>" for c in fila) + "</tr>")
         a("</tbody></table></div>")
+        if s.get("tabla_zonas"):
+            cab, filas = s["tabla_zonas"]
+            a('<div class="tbl"><table><thead><tr>' + "".join(f"<th>{esc(c)}</th>" for c in cab)
+              + "</tr></thead><tbody>")
+            for fila in filas:
+                a("<tr>" + "".join(f"<td>{esc(str(c))}</td>" for c in fila) + "</tr>")
+            a("</tbody></table></div>")
     if _sr.hay(res.salud_red):
         s = _sr.seccion(res.salud_red)
         a("<h3>" + esc(s["titulo"]) + "</h3>")

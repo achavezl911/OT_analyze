@@ -346,7 +346,7 @@ def _zonas(lista, sl_objetivo: dict, fallo, texto, objeto, dims=DIMENSIONES_IMPA
         fallo("'zonas' debe ser una lista de objetos.")
     out, vistos, redes = [], set(), {}
     for z in lista:
-        z = objeto(z, "zonas", ("nombre", "redes", "descripcion", "sl_t", "inferida", "impacto", "dmz"))
+        z = objeto(z, "zonas", ("nombre", "redes", "descripcion", "sl_t", "inferida", "impacto", "dmz", "linea_base_nist"))
         if "nombre" not in z:
             fallo("cada zona necesita 'nombre'.")
         nombre = texto(z["nombre"], "zonas.nombre").strip()
@@ -387,6 +387,10 @@ def _zonas(lista, sl_objetivo: dict, fallo, texto, objeto, dims=DIMENSIONES_IMPA
             if not isinstance(z["inferida"], bool):
                 fallo(f"zonas.{nombre}: 'inferida' debe ser true o false.")
             nz["inferida"] = z["inferida"]
+        if "linea_base_nist" in z:      # NBZ1 (D132): linea base NIST SP 800-82r3 de la zona
+            if texto(z["linea_base_nist"], f"zonas.{nombre}.linea_base_nist") not in ("baja", "moderada", "alta"):
+                fallo(f"zonas.{nombre}: 'linea_base_nist' '{z['linea_base_nist']}' no es baja, moderada ni alta.")
+            nz["linea_base_nist"] = z["linea_base_nist"]
         if "dmz" in z:      # T1a (D85): la zona es la DMZ industrial del TO-BE
             if not isinstance(z["dmz"], bool):
                 fallo(f"zonas.{nombre}: 'dmz' debe ser true o false.")
