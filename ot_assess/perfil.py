@@ -52,7 +52,7 @@ def cargar(path) -> dict:
                              "captura", "engagement", "sl_objetivo", "ml_objetivo", "linea_base_nist", "cis_ig", "tsa_sd", "criticidad_activos", "dominios_internos", "zonas",
                              "equipos_propios", "vlans_esperadas", "ajustes_riesgo", "madurez_objetivo",
                              "csf_tiers_objetivo", "version_cvss", "subcomandos_deshabilitados", "leyenda_salidas",
-                             "modelo_evidencia", "riesgo"))
+                             "modelo_evidencia", "riesgo", "avisos_solo_paquete"))
     if d.get("version") != 1 or isinstance(d.get("version"), bool):
         fallo("'version' es requerida y solo se admite 1.")
     out: dict = {"version": 1, "cliente": texto(d["cliente"], "cliente") if "cliente" in d
@@ -197,6 +197,10 @@ def cargar(path) -> dict:
         if len(ley) > 200 or "\n" in ley or "\r" in ley:
             fallo("'leyenda_salidas' admite 1 a 200 caracteres sin saltos de linea.")
         out["leyenda_salidas"] = ley
+    if "avisos_solo_paquete" in d:      # AVK1 (D124)
+        if not isinstance(d["avisos_solo_paquete"], bool):
+            fallo("'avisos_solo_paquete' debe ser true o false.")
+        out["avisos_solo_paquete"] = d["avisos_solo_paquete"]
     if "modelo_evidencia" in d:     # EVID1 (D122)
         from .inventario_normalizado import modelo_valido
         out["modelo_evidencia"] = modelo_valido(d["modelo_evidencia"], fallo)

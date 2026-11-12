@@ -9,6 +9,7 @@ from . import __version__
 from . import inventario_normalizado as _in
 from . import inventario_presentado as _ip
 from . import obsolescencia as _ob
+from . import paquete_avisos as _pa
 from .cache_capturas import CacheCapturas
 from .consolidate import build_conduits, merge_assets
 from .detail import analyze_detail
@@ -214,6 +215,10 @@ def crear_parser() -> argparse.ArgumentParser:
                          "se cruzan por CVE exacto con --vulnerabilidades y generan avisos_ics.csv; ademas se "
                          "comparan fabricante, modelo y firmware del inventario con sus productos afectados "
                          "(vulnerabilidades_firmware.csv, candidatos a confirmar).")
+    ap.add_argument("--paquete-avisos", metavar="CARPETA", dest="paquete_avisos",
+                    help="Paquete verificado de avisos ICS y KEV (subcomando paquete-avisos), solo carpeta. Se "
+                         "verifica antes de usarlo (codigo 2 si no coincide) y equivale a --avisos-ics y --kev "
+                         "con sus archivos; no se combina con ellos. La herramienta no descarga nada.")
     ap.add_argument("--catalogo-vulnerabilidades", metavar="ARCHIVO", dest="catalogo_vulnerabilidades",
                     help="Catalogo del analista (CSV o XLSX; columnas fabricante, producto, version_afectada, cve; "
                          "cvss, aviso, remediacion y fuente opcionales) con vulnerabilidades por fabricante, "
@@ -329,6 +334,9 @@ def main(argv: list[str] | None = None) -> int:
     if argv and argv[0] == "empaquetar" and not Path("empaquetar").exists():
         from .cli_entrega import main as main_entrega
         return main_entrega(argv[1:])
+    if argv and argv[0] == "paquete-avisos" and not Path("paquete-avisos").exists():
+        from .cli_paquete_avisos import main as main_paquete_avisos
+        return main_paquete_avisos(argv[1:])
     ap =crear_parser()
     args = ap.parse_args(argv)
     if args.firewall and args.reglas_firewall:
@@ -356,6 +364,7 @@ def main(argv: list[str] | None = None) -> int:
     perfil = aplicar_perfil(ap, args, {"titulo": "Assessment de ciberseguridad OT",
                                        "cliente": "Analisis de trafico de planta",
                                        "estandar": "iec62443"})
+    _pa.resolver(ap, args, perfil)       # AVK1 (D124)
     for archivo in args.estandar_archivo:
         cargar_archivo(archivo)
     estandares = elegir(args.estandar)

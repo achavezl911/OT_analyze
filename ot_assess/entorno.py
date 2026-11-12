@@ -84,6 +84,8 @@ def construir(run, tshark_bin: str, caps: list, args, ignorados: list[str]) -> d
                       "sha256": getattr(args, "sha_capturas", {}).get(c.path) or sha256_archivo(c.path),
                       "legible": not c.error, "muestreada": bool(c.sampled)} for c in caps],
     }
+    if getattr(args, "paquete_avisos_info", None):      # sin --paquete-avisos la salida no cambia (AVK1)
+        out["paquete_avisos"] = args.paquete_avisos_info
     if getattr(args, "custodia", None):      # sin --custodia la salida no cambia en nada (K1)
         from . import custodia
         out["custodia"] = custodia.estado_capturas(args.custodia, [(c["archivo"], c["sha256"]) for c in out["capturas"]])
@@ -98,6 +100,15 @@ def _linea_custodia(e: dict) -> list[tuple[str, str]]:
     cad = t("integra") if c["cadena"] == "integra" else t("rota (linea {n})", n="".join(d for d in c["cadena"] if d.isdigit()))
     return [(t("Cadena de custodia"),
              t("{n} de {m} capturas registradas (huella {h}; cadena {c})", n=n, m=len(c["capturas"]), h=c["huella"], c=cad))]
+
+
+def _linea_paquete(e: dict) -> list[tuple[str, str]]:
+    pa = e.get("paquete_avisos")
+    if not pa:
+        return []
+    return [(t("Paquete de avisos verificado"),
+             t("{h} (creado {c}; KEV {k}; {n} avisos CSAF; verificado)", h=pa["sha256"], c=pa["creado"],
+               k=pa["version_kev"] or t("sin version"), n=pa["avisos_csaf"]))]
 
 
 def lineas(e: dict) -> list[tuple[str, str]]:
@@ -116,7 +127,8 @@ def lineas(e: dict) -> list[tuple[str, str]]:
             *([(t("Lista de relays Tor importada"), f"{tor['archivo']} ({tor['sha256']})")] if tor else []),
             *([(t("Avisos ICS de CISA importados"),
                 t("{a} ({n} JSON leidos, {h})", a=av["archivo"], n=av["json_leidos"], h=av["sha256"]))]
-              if av else [])]
+              if av else []),
+            *_linea_paquete(e)]
     if e.get("modo") == "exportacion":     # sin tshark ni muestreo: solo lo que aplica a exportaciones
         return [
             (t("Perfil del proyecto"), f"{p['archivo']} ({p['sha256']})" if p else t("ninguno")),

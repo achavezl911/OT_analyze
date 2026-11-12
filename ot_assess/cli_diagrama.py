@@ -22,6 +22,7 @@ from . import inventario_normalizado as _in
 from . import linea_base as _lb
 from . import matriz_controles as _mc
 from . import obsolescencia as _ob
+from . import paquete_avisos as _pa
 from . import rutas_ataque as _ra
 from . import rutas_firewall as _rf
 from . import salud_red as _sr
@@ -117,6 +118,9 @@ def crear_parser() -> argparse.ArgumentParser:
                          "CIS sale de este mapeo; no se copia al repo ni a las salidas mas que ids y relacion.")
     ap.add_argument("--avisos-ics", metavar="RUTA", dest="avisos_ics",
                     help="Avisos ICS de CISA en CSAF 2.0: un JSON o una carpeta (como en el analisis de capturas).")
+    ap.add_argument("--paquete-avisos", metavar="CARPETA", dest="paquete_avisos",
+                    help="Paquete verificado de avisos ICS y KEV (subcomando paquete-avisos), solo carpeta; "
+                         "como en el analisis de capturas.")
     ap.add_argument("--catalogo-vulnerabilidades", metavar="ARCHIVO", dest="catalogo_vulnerabilidades",
                     help="Catalogo del analista (CSV o XLSX) con vulnerabilidades por fabricante, producto y "
                          "version afectada (como en el analisis de capturas).")
@@ -239,6 +243,7 @@ def _entorno_exportacion(args, imp, fuentes) -> dict:
         "ot_assess": __version__, "commit": commit_corto(), "tshark": NO_DISPONIBLE,
         "estandares": str(args.estandar), "max_packets": 0, "campos_ignorados": [],
         "capturas": [], "entradas": _arch([*args.activos, *args.enlaces]),
+        **({"paquete_avisos": args.paquete_avisos_info} if getattr(args, "paquete_avisos_info", None) else {}),
     }
 
 
@@ -250,6 +255,7 @@ def main(argv: list | None = None) -> int:
                                        "cliente": "Analisis de inventario de planta",
                                        "estandar": "iec62443"})
 
+    _pa.resolver(ap, args, perfil)       # AVK1 (D124)
     for archivo in args.estandar_archivo:
         cargar_archivo(archivo)
     estandares = elegir(args.estandar)

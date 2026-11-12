@@ -40,6 +40,7 @@ y una política de firewall nueva, construida solo con el tráfico observado, li
 | Vulnerabilidades y alertas | `--vulnerabilidades`, `--kev`, `--avisos-ics`, `--alertas` | Cruce con el inventario y con el catálogo KEV y los avisos ICS de CISA desde archivos locales | Tablas, hallazgos y prioridad |
 | Custodia | `custodia registrar/verificar/exportar` | Registro de cadena de custodia encadenado por hash, con CSV y HTML imprimible con firmas | `custodia.csv`, `custodia.html` |
 | Entrega y auditoría | `empaquetar` / `empaquetar --verificar` | Paquete para el cliente con manifiesto y SHA-256 de entradas y salidas | Carpeta o ZIP verificable |
+| Avisos sin red | `paquete-avisos` / `--paquete-avisos` | Paquete de avisos ICS y KEV de CISA con SHA-256, verificado antes de usarlo en plantas aisladas | Carpeta o ZIP verificable |
 | Datos del cliente | `anonimizar` | Compartir muestras sin datos del cliente (IP, MAC, nombres con mapeo estable) | Copia anonimizada |
 | Proyecto | `--perfil`, `--estandar`, `--idioma es\|en`, `--cache` | Cliente, sitio, marcos exigidos, idioma del entregable; no releer capturas grandes | |
 
@@ -723,6 +724,30 @@ Restricciones de alcance por proyecto (SALP1, D121), ambas opcionales: `subcoman
 saltos de línea, que se imprime tal cual, sin traducir, en una línea propia bajo la clasificación en Word, HTML, Markdown y
 resumen ejecutivo; el Excel no la muestra). Con la primera, `resultado.json` lleva `restricciones` y esos subcomandos
 terminan con código 2 sin escribir nada. Sin las claves todo queda igual.
+Clave opcional `avisos_solo_paquete` (booleano; AVK1, D124): con `true`, la corrida o `diagrama` que reciba `--avisos-ics`
+o `--kev` directos termina con código 2 y exige `--paquete-avisos`. Otro tipo de valor es error de perfil.
+
+### Paquete de avisos ICS y KEV para sitios sin red (`paquete-avisos`)
+
+La herramienta no descarga nada. En un equipo con red se obtienen los avisos CSAF de CISA y el KEV, se arma el paquete,
+se lleva en un medio y en la planta se verifica antes de usarlo:
+
+```bash
+python ot_pcap_assess.py paquete-avisos --avisos-ics ~/cisa/csaf --kev ~/cisa/known_exploited_vulnerabilities.json \
+    -o ~/medio/avisos_2026-11 [--zip]
+python ot_pcap_assess.py paquete-avisos --verificar ~/medio/avisos_2026-11      # carpeta o .zip; 0 intacto, 2 si no
+python ot_pcap_assess.py --paquete-avisos ~/medio/avisos_2026-11 --vulnerabilidades ...   # también en `diagrama`
+```
+
+Al menos una de las dos fuentes. La carpeta de salida debe no existir o estar vacía (si no, código 2 sin escribir). El
+paquete lleva `csaf/` (los JSON que la corrida leería, misma ruta relativa), `kev/` (el catálogo tal cual),
+`manifiesto_avisos.json` (formato `ot_assess.avisos/1`: versión y commit de la herramienta, fecha UTC, ruta, tamaño y
+SHA-256 por archivo; KEV: `catalogVersion`, `dateReleased` y registros; CSAF: archivos, avisos válidos, saltados y fecha
+del aviso más reciente) y `manifiesto_avisos.sha256` (`sha256sum -c`). `--paquete-avisos` (solo carpeta; el ZIP se
+descomprime antes) verifica igual y, si coincide, equivale a `--avisos-ics CARPETA/csaf --kev CARPETA/kev/<archivo>`; si
+no, termina con código 2 antes de escribir. No se combina con `--avisos-ics` ni `--kev`. `resultado.json` (entorno) agrega
+`paquete_avisos` y los reportes lo dicen en una línea. Es evidencia de integridad del medio: no firma ni cifra el paquete
+ni prueba su origen.
 
 Clases de evidencia del proyecto (EVID1, D122), clave opcional `modelo_evidencia`: objeto con `clases` (claves
 `observado`, `importado`, `declarado`, `inferido`, `en conflicto`, `sin dato`) y `por_fuente` (claves: tipo de fuente
