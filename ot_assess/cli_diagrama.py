@@ -13,7 +13,6 @@ from . import avisos_cisa as _ac
 from . import cis_controles as _cis
 from . import conductos_zcr as _zc
 from . import confirmacion_vulns as _vconf
-from . import valoraciones_riesgo as _val
 from . import cvss4_entorno as _ce
 from . import direccionamiento as _dr
 from . import entregables as _entregables
@@ -32,6 +31,7 @@ from . import rutas_ataque as _ra
 from . import rutas_firewall as _rf
 from . import salud_red as _sr
 from . import tobe as _tb
+from . import valoraciones_riesgo as _val
 from . import vuln_firmware as _vf
 from . import vulnerabilidades as _vu
 from . import zonas as _zo

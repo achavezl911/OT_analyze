@@ -14,7 +14,12 @@ import re
 from . import valoraciones_riesgo as _val
 from .catalog import CRIT_ORDER, SEV_ORDER
 from .i18n import t
-from .perfil import DIMENSIONES_IMPACTO, dimension_inferida, dimensiones_impacto, escalas
+from .perfil import (
+    DIMENSIONES_IMPACTO,
+    dimension_inferida,
+    dimensiones_impacto,
+    escalas,
+)
 
 TITULO = "Registro de riesgos y mapa de calor"
 HOJA_REGISTRO = "Registro de riesgos"

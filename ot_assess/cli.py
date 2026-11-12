@@ -7,13 +7,13 @@ from pathlib import Path
 
 from . import __version__
 from . import confirmacion_vulns as _vconf
-from . import valoraciones_riesgo as _val
 from . import entregables as _entregables
 from . import inventario_normalizado as _in
 from . import inventario_presentado as _ip
 from . import obsolescencia as _ob
 from . import paquete_avisos as _pa
 from . import registro_evidencias as _registro
+from . import valoraciones_riesgo as _val
 from .cache_capturas import CacheCapturas
 from .consolidate import build_conduits, merge_assets
 from .detail import analyze_detail
