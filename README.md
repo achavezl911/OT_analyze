@@ -718,6 +718,12 @@ subcomando `diagrama` con `--perfil`, y reemplaza a `--titulo`, `--cliente` y `-
 termina con error). La clave opcional `idioma` (`es` por defecto, o `en`) fija el idioma de los reportes; `--idioma` la reemplaza.
 Limitaciones: `edicion` y `partes`
 de cada marco se registran en el reporte, pero el mapeo de hallazgos aún no las distingue (pendiente, B2).
+Restricciones de alcance por proyecto (SALP1, D121), ambas opcionales: `subcomandos_deshabilitados` (lista con
+`politica-fmc` y/o `solicitud-cambio`; otro valor es error de perfil) y `leyenda_salidas` (texto de 1 a 200 caracteres sin
+saltos de línea, que se imprime tal cual, sin traducir, en una línea propia bajo la clasificación en Word, HTML, Markdown y
+resumen ejecutivo; el Excel no la muestra). Con la primera, `resultado.json` lleva `restricciones` y esos subcomandos
+terminan con código 2 sin escribir nada. Sin las claves todo queda igual.
+
 La clave opcional `criticidad_activos` (`{"10.10.1.20": "Critica"}`; niveles Critica, Alta, Media, Baja; solo IPv4)
 declara la criticidad de un activo para el plan de remediación; sin ella se infiere del rol y el plan lo marca como
 «inferida», a validar por el analista. Con vectores CVSS v4.0, `criticidad_activos` también agrega a `vulnerabilidades.csv` y
@@ -1092,6 +1098,9 @@ Cómo se interpretan los datos:
 
 ### Exportar la política propuesta a Cisco FMC 7.6 (`politica-fmc`)
 
+Si el `resultado.json` de la carpeta de `--propuesta` declara `restricciones.subcomandos_deshabilitados` con `politica-fmc`
+(clave del mismo nombre en el perfil), el subcomando termina con código 2 sin escribir archivos (D121).
+
 Toma `politica_propuesta.csv` y `politica_objetos.csv` (M3a), ya revisados por el analista (puede cambiar `decision`,
 borrar filas o renombrar objetos), y genera la carga para la API REST de FMC. La herramienta **no se conecta a ningún
 FMC**: el analista revisa y ejecuta el script.
@@ -1131,6 +1140,9 @@ Check Point y PAN-OS) se recorta con aviso; si dos chocan al recortar, no se gen
 equipos reales: validar en la versión del cliente (simulación o laboratorio). Decisión: D58.
 
 ### Solicitud de Cambio para el comité (`solicitud-cambio`)
+
+Termina con código 2 sin escribir nada si el `resultado.json` de la carpeta de `--propuesta`, o el `--perfil` dado, declara
+`solicitud-cambio` en `subcomandos_deshabilitados` (D121).
 
 Arma la Solicitud de Cambio (RFC) con los archivos que el analista ya revisó; no se conecta a nada:
 
@@ -1354,6 +1366,9 @@ corrida. Avisa de versiones, perfiles o tipos de corrida distintos y de corridas
 Solo español. Decisión: D62.
 
 ### Consolidado de varios sitios (`sitios`)
+
+El consolidado mezcla sitios: `-o` no puede ser una carpeta de sitio ni quedar dentro de una (código 2 sin escribir nada).
+`consolidado_sitios.json` lleva `uso` («interno; no se entrega a un sitio») y la consola lo repite (D121).
 
 ```bash
 python ot_pcap_assess.py sitios ~/datos/planta_a ~/datos/planta_b ~/datos/planta_c -o ~/datos/programa

@@ -14,6 +14,7 @@ from .catalog import CRIT_ORDER
 from .i18n import t
 
 TEXTOS = ("sitio", "pais", "sector", "responsable", "clasificacion", "titulo")
+DESHABILITABLES = ("politica-fmc", "solicitud-cambio")
 NOTA = ("Datos declarados por el analista. La edicion y las partes de cada marco se registran; "
         "el mapeo de hallazgos aun no distingue ediciones ni partes (pendiente B2).")
 
@@ -50,7 +51,7 @@ def cargar(path) -> dict:
     d = objeto(d, "perfil", ("version", "cliente", *TEXTOS, "idioma", "marcos", "regulacion",
                              "captura", "engagement", "sl_objetivo", "ml_objetivo", "linea_base_nist", "cis_ig", "tsa_sd", "criticidad_activos", "dominios_internos", "zonas",
                              "equipos_propios", "vlans_esperadas", "ajustes_riesgo", "madurez_objetivo",
-                             "csf_tiers_objetivo", "version_cvss"))
+                             "csf_tiers_objetivo", "version_cvss", "subcomandos_deshabilitados", "leyenda_salidas"))
     if d.get("version") != 1 or isinstance(d.get("version"), bool):
         fallo("'version' es requerida y solo se admite 1.")
     out: dict = {"version": 1, "cliente": texto(d["cliente"], "cliente") if "cliente" in d
@@ -181,7 +182,38 @@ def cargar(path) -> dict:
             if not dom:
                 fallo("'dominios_internos' tiene un dominio vacio.")
             out["dominios_internos"].append(dom)
+    if "subcomandos_deshabilitados" in d:      # SALP1 (D121)
+        sd = lista_texto(d["subcomandos_deshabilitados"], "subcomandos_deshabilitados")
+        for x in sd:
+            if x not in DESHABILITABLES:
+                fallo(f"subcomandos_deshabilitados: '{x}' no es uno de {', '.join(DESHABILITABLES)}.")
+        out["subcomandos_deshabilitados"] = sorted(set(sd))
+    if "leyenda_salidas" in d:
+        ley = texto(d["leyenda_salidas"], "leyenda_salidas").strip()
+        if len(ley) > 200 or "\n" in ley or "\r" in ley:
+            fallo("'leyenda_salidas' admite 1 a 200 caracteres sin saltos de linea.")
+        out["leyenda_salidas"] = ley
     return out
+
+
+def deshabilitado(subcomando: str, propuesta=None, perfil_ruta=None):
+    """Mensaje de rechazo si el perfil del proyecto deshabilita `subcomando`, o None.
+
+    Busca resultado.json en la carpeta de `propuesta` y, si hay, el perfil dado; sin ellos, None."""
+    declarado = False
+    if propuesta:
+        rj = Path(propuesta).expanduser().parent / "resultado.json"
+        try:
+            r = json_entrada.cargar(rj.read_text(encoding="utf-8-sig"))
+            lista = (r.get("restricciones") or {}).get("subcomandos_deshabilitados") or []
+            declarado = isinstance(lista, list) and subcomando in lista
+        except (OSError, ValueError, AttributeError):
+            pass
+    if not declarado and perfil_ruta:
+        declarado = subcomando in cargar(perfil_ruta).get("subcomandos_deshabilitados", [])
+    if declarado:
+        return t("{s} deshabilitado por el perfil del proyecto: clave subcomandos_deshabilitados", s=subcomando)
+    return None
 
 
 # Dimensiones de impacto del registro de riesgos (R1, D83), en el orden en que desempata la dimension.
@@ -310,7 +342,8 @@ def etiquetas(p: dict, marcos: dict | None = None) -> list:
         from .standards import ESTANDARES as marcos
     f = [(t("Cliente"), p["cliente"])]
     for k, et in (("sitio", "Sitio"), ("pais", "Pais"), ("sector", "Sector"),
-                  ("responsable", "Responsable"), ("clasificacion", "Clasificacion")):
+                  ("responsable", "Responsable"), ("clasificacion", "Clasificacion"),
+                  ("leyenda_salidas", "Leyenda de salidas")):
         if k in p:
             f.append((t(et), p[k]))
     for m in p["marcos"]:

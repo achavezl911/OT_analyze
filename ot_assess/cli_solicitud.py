@@ -52,6 +52,12 @@ def main(argv=None) -> int:
     args = crear_parser().parse_args(argv)
     cliente = sitio = ""
     try:
+        try:
+            msg = perfil.deshabilitado("solicitud-cambio", args.propuesta, args.perfil)
+        except SystemExit as e:
+            raise sc.ErrorSC(str(e))
+        if msg:
+            raise sc.ErrorSC(msg)
         if args.perfil:
             try:
                 p = perfil.cargar(args.perfil)

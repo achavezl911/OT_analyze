@@ -62,6 +62,7 @@ def datos(res) -> dict:
         "titulo": t("Resumen ejecutivo"), "proyecto": args.titulo,
         "subtitulo": f"{args.cliente} - {datetime.now().astimezone().strftime('%Y-%m-%d')}",
         "clasificacion": (res.perfil or {}).get("clasificacion", ""),
+        "leyenda": (res.perfil or {}).get("leyenda_salidas", ""),
         "alcance": "; ".join(f"{t(k)}: {v}" for k, v in (
             *((("Capturas", len(res.caps)),) if res.caps else ()), ("Activos", len(res.assets)),
             ("Conductos", len(res.conduits)),
@@ -103,6 +104,8 @@ def construir_html(d: dict) -> str:
           f"<p class=\"sub\">{e(d['subtitulo'])}</p>")]
     if d["clasificacion"]:
         h.append(f"<p>{e(t('Clasificacion'))}: {e(d['clasificacion'])}</p>")
+    if d["leyenda"]:
+        h.append(f"<p>{e(t('Leyenda de salidas'))}: {e(d['leyenda'])}</p>")
     h.append(f"<h2>{e(t('Alcance'))}</h2><p>{e(d['alcance'])}</p>")
     h.append(f"<p>{e(_conteos('Hallazgos por severidad', d['severidades']))}</p>")
     h.append(f"<p>{e(_conteos('Hallazgos por fase del plan', d['fases']))}</p>")
@@ -123,6 +126,8 @@ def construir_bloques(d: dict) -> list:
     b = [("titulo", d["titulo"]), ("subtitulo", d["proyecto"]), ("subtitulo", d["subtitulo"])]
     if d["clasificacion"]:
         b.append(("nota", f"{t('Clasificacion')}: {d['clasificacion']}"))
+    if d["leyenda"]:
+        b.append(("nota", f"{t('Leyenda de salidas')}: {d['leyenda']}"))
     b += [("h1", t("Alcance")), ("p", d["alcance"]),
           ("p", _conteos("Hallazgos por severidad", d["severidades"])),
           ("p", _conteos("Hallazgos por fase del plan", d["fases"])),

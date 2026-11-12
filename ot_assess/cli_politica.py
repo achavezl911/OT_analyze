@@ -6,7 +6,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from . import __version__
+from . import __version__, perfil
 from .firewalls import exportar, fmc
 from .permisos import salida_privada
 
@@ -48,6 +48,10 @@ def crear_parser() -> argparse.ArgumentParser:
 @salida_privada
 def main(argv=None) -> int:
     args = crear_parser().parse_args(argv)
+    msg = perfil.deshabilitado("politica-fmc", args.propuesta)
+    if msg:
+        print("[!] No se genero nada: " + msg, file=sys.stderr)
+        return 2
     try:
         prop, objs = fmc.leer_entradas(args.propuesta, args.objetos)
         nombre = args.politica or fmc.nombre_politica_defecto(args.propuesta, datetime.now().strftime("%Y%m%d"))

@@ -7,7 +7,7 @@ from pathlib import Path
 
 from . import __version__
 from . import sitios as st
-from .i18n import IDIOMAS
+from .i18n import IDIOMAS, t
 from .permisos import salida_privada
 
 AYUDA = """
@@ -57,6 +57,13 @@ def main(argv=None) -> int:
     if out.exists() and not out.is_dir():
         print(f"[!] '{args.out}' existe y no es una carpeta.", file=sys.stderr)
         return 2
+    sal = out.resolve()
+    for c in args.carpetas:
+        cr = Path(c).expanduser().resolve()
+        if sal == cr or cr in sal.parents:
+            print("[!] " + t("el consolidado mezcla sitios: escribelo fuera de las carpetas de cada sitio"),
+                  file=sys.stderr)
+            return 2
     try:
         r = st.consolidar(args.carpetas, _nombres(args.nombre, args.carpetas))
     except st.ErrorSitios as e:
@@ -64,6 +71,7 @@ def main(argv=None) -> int:
         return 2
     archivos = st.escribir(out, r, args.idioma)
     print(f"Consolidado: {len(r['sitios'])} sitios, {len(r['tablas']['Hallazgos comunes'])} hallazgos distintos")
+    print(t(st.USO))
     for a in r["avisos"]:
         print(f"[!] {a}")
     print("     " + "\n     ".join(str(out / a) for a in archivos))

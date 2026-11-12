@@ -88,6 +88,8 @@ def construir_bloques(res: Assessment) -> list:
     if res.perfil:
         if res.perfil.get("clasificacion"):
             b.append(("nota", f"{t('Clasificacion')}: {res.perfil['clasificacion']}"))
+        if res.perfil.get("leyenda_salidas"):
+            b.append(("nota", f"{t('Leyenda de salidas')}: {res.perfil['leyenda_salidas']}"))
         b += [("h1", t("Perfil del proyecto")),
               ("tabla", [t("Campo"), t("Valor")], [list(x) for x in _perfil.etiquetas(res.perfil)]),
               ("nota", t(_perfil.NOTA))]

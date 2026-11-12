@@ -249,7 +249,13 @@ class TestSitios(unittest.TestCase):
         self._cli(self.a, self.b, self.c, "-o", out)
         h = hashlib.sha256()
         for n in sorted(p.name for p in out.iterdir() if p.suffix in (".csv", ".json")):
-            h.update(n.encode() + (out / n).read_bytes())
+            b = (out / n).read_bytes()
+            if n == st.JSON:        # SALP1 (D121): "uso" es la unica clave nueva; el resto sigue igual que en main
+                js = json.loads(b)
+                self.assertIn("uso", js)
+                del js["uso"]
+                b = json.dumps(js, indent=2, ensure_ascii=False, sort_keys=True).encode("utf-8")
+            h.update(n.encode() + b)
         self.assertEqual(h.hexdigest(), SHA_SALIDAS_ES)
 
     def test_json_y_fuentes(self):

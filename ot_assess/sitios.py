@@ -22,6 +22,7 @@ from .riesgo import NIVELES
 
 LIBRO = "consolidado_sitios.xlsx"
 JSON = "consolidado_sitios.json"
+USO = "interno (consolida varios sitios; no se entrega a un sitio)"
 SEVS = tuple(SEV_ORDER)
 ARCHIVOS = {
     "hallazgos": ("hallazgos.csv", ("id", "severidad", "categoria", "titulo")),
@@ -360,7 +361,7 @@ def escribir(out: Path, r: dict, idioma: str | None = None) -> list:
                 archivos.append(arch)
             hojas.append((str(t(hoja)), cabecera, filas))
         escribir_xlsx(out / LIBRO, hojas)
-        js = {"avisos": r["avisos"],
+        js = {"uso": str(t(USO)), "avisos": r["avisos"],
               "sitios": [{k: s[k] for k in ("sitio", "cliente", "carpeta", "version")} for s in r["sitios"]],
               "fuentes": [dict(zip(CAB_FUENTES, f)) for f in r["tablas"]["Fuentes"]]}
         (out / JSON).write_text(json.dumps(js, indent=2, ensure_ascii=False, sort_keys=True), encoding="utf-8")

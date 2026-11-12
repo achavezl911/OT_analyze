@@ -92,6 +92,8 @@ def write_json(res: Assessment, outdir: Path) -> None:
                                               encoding="utf-8")
     (outdir / "resultado.json").write_text(
         json.dumps({"entorno": res.entorno, "perfil": res.perfil,
+                    **({"restricciones": {"subcomandos_deshabilitados": res.perfil["subcomandos_deshabilitados"]}}
+                       if (res.perfil or {}).get("subcomandos_deshabilitados") else {}),
                     "firewall": res.firewall,
                     "switches": _switches(res.switches),
                     "vulnerabilidades": res.vulnerabilidades,

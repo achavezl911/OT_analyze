@@ -85,7 +85,7 @@ Marcos: `M` MITRE ATT&CK for ICS, `I` IEC 62443, `C` NERC CIP, `N` NIST 800-82, 
 
 | Clave | Nombre | Filas con referencia | Version de la fuente | Validacion | Aviso de alcance |
 |---|---|---|---|---|---|
-| mitre-ics | MITRE ATT&CK for ICS | 53 | ATT&CK for ICS v20.1 (2026-11-05) | sin revisar | Siempre presente; no se elige. |
+| mitre-ics | MITRE ATT&CK for ICS | 53 | ATT&CK for ICS v20.1 (datos STIX publicados 2026-11-05; ATT&CK v20 vigente desde 2026-10-13) | sin revisar | Siempre presente; no se elige. |
 | iec62443 | IEC 62443 | 83 | IEC 62443-3-3:2013 | sin revisar | Las referencias a IEC 62443 son orientativas. El nivel de seguridad (SL) objetivo de cada zona se define con la evaluacion de riesgo de IEC 62443-3-2, que esta herramienta no realiza. |
 | nerc-cip | NERC CIP | 62 | sin declarar: la version vigente varia por estandar | sin revisar | Las referencias a NERC CIP son orientativas y no constituyen una determinacion de cumplimiento. La aplicabilidad de cada requisito depende de la categorizacion de impacto de los BES Cyber Systems (CIP-002) y de la version vigente del estandar, que no pueden inferirse del trafico ni de un inventario. |
 | nist-800-82 | NIST SP 800-82 / 800-53 | 83 | SP 800-53 Rev. 5; SP 800-82 Rev. 3 | sin revisar | Los controles citados son de NIST SP 800-53 Rev. 5, el catalogo sobre el que NIST SP 800-82 Rev. 3 define la guia para OT. Son orientativos y no equivalen a una evaluacion de cumplimiento. |

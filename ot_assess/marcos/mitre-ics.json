@@ -4,7 +4,7 @@
   "cruce": "",
   "alcance": "",
   "fuente": "MITRE ATT&CK for ICS",
-  "version_fuente": "ATT&CK for ICS v20.1 (2026-11-05)",
+  "version_fuente": "ATT&CK for ICS v20.1 (datos STIX publicados 2026-11-05; ATT&CK v20 vigente desde 2026-10-13)",
   "validacion": {"estado": "sin revisar"},
   "referencias": {
     "bucle fisico entre puertos del switch": "T0814 Denial of Service; T0826 Loss of Availability",
