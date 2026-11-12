@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "decision": "D122",
+  "validacion": {"estado": "sin revisar"},
+  "aviso": "Tabla propia que traduce el estado de cada valor del inventario normalizado a la clase de evidencia del proyecto. Las etiquetas son una propuesta de la herramienta, sin revisar: el modelo de evidencia lo define cada proyecto en la clave modelo_evidencia del perfil.",
+  "clases": {
+    "observado": "OBS",
+    "importado": "OBS",
+    "declarado": "DEC",
+    "inferido": "INF",
+    "sin dato": "N/E",
+    "en conflicto": "DISCREPANCIA"
+  },
+  "por_fuente": {}
+}

@@ -18,7 +18,9 @@ import datetime
 import hashlib
 import ipaddress
 import re
+from pathlib import Path
 
+from . import json_entrada
 from .catalog import CRIT_ORDER
 from .i18n import t
 from .importers import perfiles as pf
@@ -45,6 +47,9 @@ QA = ("validado_por", "revisado_por", "fecha_validacion", "comentario")
 COLUMNAS = (["id"] + [x for c in CAMPOS for x in (c, c + "_fuente", c + "_estado")]
             + ["ultima_observacion", "conflictos", "observado_declarado", *QA])
 COL_PROCEDENCIA = ["id", "campo", "valor", "fuente", "ultima_observacion", "estado"]
+COL_PROCEDENCIA_CLASE = COL_PROCEDENCIA + ["clase"]
+RUTA_MODELO = Path(__file__).parent / "data" / "modelo_evidencia.json"
+CLASES_ESTADO = (*ESTADOS, "sin dato")
 ARCHIVO = "inventario_normalizado.csv"
 ARCHIVO_PROCEDENCIA = "inventario_procedencia.csv"
 HOJA = "Inventario normalizado"
@@ -55,6 +60,76 @@ NOTA = ("Cada valor lleva su fuente, la ultima vez que esa fuente lo vio y su es
         "columnas de validacion estan vacias a proposito: las llena el analista que valida y el que revisa. "
         "Las horas de las capturas son UTC; las de las exportaciones, la hora local de la exportacion.")
 MAX_PROTOS = 12
+_modelo_base: dict = {}
+
+
+def modelo_base() -> dict:
+    """Tabla propia de clases (data/modelo_evidencia.json, sin revisar)."""
+    if not _modelo_base:
+        _modelo_base.update(json_entrada.cargar(RUTA_MODELO.read_text(encoding="utf-8")))
+    return _modelo_base
+
+
+def modelo_valido(d, fallo) -> dict:
+    """Valida la clave de perfil `modelo_evidencia` (EVID1, D122); devuelve {'clases', 'por_fuente'}."""
+    if not isinstance(d, dict):
+        fallo("'modelo_evidencia' debe ser un objeto.")
+    for k in d:
+        if k not in ("clases", "por_fuente"):
+            fallo(f"clave desconocida '{k}' en 'modelo_evidencia'.")
+    out = {}
+    for k, validas in (("clases", CLASES_ESTADO), ("por_fuente", None)):
+        if k not in d:
+            continue
+        if not isinstance(d[k], dict):
+            fallo(f"'modelo_evidencia.{k}' debe ser un objeto.")
+        o = {}
+        for clave, et in d[k].items():
+            if validas is not None and clave not in validas:
+                fallo(f"modelo_evidencia.clases: '{clave}' no es uno de {', '.join(validas)}.")
+            if validas is None:
+                tipo, _s, nombre = clave.partition(":")
+                if tipo.lower() not in RANGO or (_s and not nombre.strip()):
+                    fallo(f"modelo_evidencia.por_fuente: '{clave}' no es un tipo de fuente "
+                          f"({', '.join(RANGO)}) ni 'tipo:nombre'.")
+            if (not isinstance(et, str) or not et.strip() or len(et.strip()) > 20 or "\n" in et or "\r" in et):
+                fallo(f"modelo_evidencia.{k}.{clave}: la etiqueta debe ser un texto de 1 a 20 caracteres "
+                      "sin saltos de linea.")
+            o[clave] = et.strip()
+        out[k] = o
+    return out
+
+
+def modelo_de(perfil) -> dict | None:
+    """Modelo efectivo (tabla por defecto reemplazada clave por clave por el perfil), o None sin la clave."""
+    if "modelo_evidencia" not in (perfil or {}):
+        return None
+    m = perfil["modelo_evidencia"]
+    base = modelo_base()
+    clases = {**base["clases"], **m.get("clases", {})}
+    por_fuente = {**base.get("por_fuente", {}), **m.get("por_fuente", {})}
+    return {"clases": clases, "por_fuente": {k.lower(): v for k, v in por_fuente.items()},
+            "del_perfil": bool(m.get("clases") or m.get("por_fuente"))}
+
+
+def clase_de(modelo: dict, estado: str, fuente: str = "") -> str:
+    """Clase del valor: en conflicto > por_fuente (clave mas larga, luego el tipo) > clases[estado]."""
+    if estado == "en conflicto":
+        return modelo["clases"]["en conflicto"]
+    f = fuente.split(";")[0].strip().lower()
+    mejor = ""
+    for k in modelo["por_fuente"]:
+        if (f == k or f.startswith(k) and (":" in k or f[len(k):len(k) + 1] == ":")) and len(k) > len(mejor):
+            mejor = k
+    return modelo["por_fuente"][mejor] if mejor else modelo["clases"][estado]
+
+
+def columnas(inv: dict) -> list:
+    """COLUMNAS, con X_clase tras cada X_estado si el inventario trae modelo de evidencia."""
+    if not (inv or {}).get("modelo"):
+        return list(COLUMNAS)
+    return (["id"] + [x for c in CAMPOS for x in (c, c + "_fuente", c + "_estado", c + "_clase")]
+            + ["ultima_observacion", "conflictos", "observado_declarado", *QA])
 _RE_MAC = re.compile(r"([0-9a-f]{2}:){5}[0-9a-f]{2}")
 _CLAVES_EVENTO = ("ip", "mac", "src", "dst", "sip", "servidor", "cliente", "origen", "destino", "maestro",
                   "outstation")
@@ -543,6 +618,7 @@ def _campo_descriptivo(campo: str, entradas: list) -> tuple:
 def construir(registros: list, perfil: dict | None = None, con_manual: bool = False,
               propios: Propios | None = None) -> dict:
     """Inventario normalizado: {'filas', 'procedencia', 'resumen'}. `registros` = lo que dieron los adaptadores."""
+    modelo = modelo_de(perfil)
     perfil = perfil or {}
     if propios:
         quedan = []
@@ -554,6 +630,7 @@ def construir(registros: list, perfil: dict | None = None, con_manual: bool = Fa
         registros = quedan
     filas, procedencia = [], []
     por_fuente, por_estado = collections.Counter(), collections.Counter()
+    por_clase = collections.Counter()
     campos_conflicto = activos_conflicto = declarados_no = observados_no = ambos = 0
     for g in _agrupar(registros):
         entradas = list(g["entradas"]) + _perfil_entradas(g, perfil)
@@ -578,9 +655,14 @@ def construir(registros: list, perfil: dict | None = None, con_manual: bool = Fa
                 campos_conflicto += 1
             enconf = campos[c]["estado"] == "en conflicto"
             for _c, v, f, u in sorted(lista, key=lambda x: (_rango(x[2]), x[2], _clave_ip(x[1]))):
-                detalle.append([ident, c, v, f, u, "en conflicto" if enconf and _tipo(f) != "inferido"
-                                else ESTADO_DE[_tipo(f)]])
+                est = "en conflicto" if enconf and _tipo(f) != "inferido" else ESTADO_DE[_tipo(f)]
+                detalle.append([ident, c, v, f, u, est] + ([clase_de(modelo, est, f)] if modelo else []))
+            if modelo:
+                campos[c]["clase"] = clase_de(modelo, campos[c]["estado"], campos[c]["fuente"])
+                por_clase[campos[c]["clase"]] += 1
             por_estado[campos[c]["estado"]] += 1
+        if modelo:
+            por_clase[modelo["clases"]["sin dato"]] += len(CAMPOS) - len(campos)
         fuentes = {f for _c, _v, f, _u in entradas}
         for f in fuentes:
             por_fuente[f] += 1
@@ -611,7 +693,11 @@ def construir(registros: list, perfil: dict | None = None, con_manual: bool = Fa
                "campos_en_conflicto": campos_conflicto, "activos_con_conflicto": activos_conflicto,
                "declarados_no_observados": declarados_no, "observados_no_declarados": observados_no,
                "observados_y_declarados": ambos, "excluidos": propios.resumen() if propios else {}}
-    return {"filas": filas, "procedencia": procedencia, "resumen": resumen}
+    out = {"filas": filas, "procedencia": procedencia, "resumen": resumen}
+    if modelo:
+        resumen["por_clase"] = dict(sorted(por_clase.items()))
+        out["modelo"] = modelo
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -622,12 +708,15 @@ def hay(inv: dict) -> bool:
 
 
 def filas_tabla(inv: dict) -> list:
+    modelo = inv.get("modelo")
     out = []
     for f in inv["filas"]:
         fila = [f["id"]]
         for c in CAMPOS:
             x = f["campos"].get(c)
             fila += [x["valor"], x["fuente"], t(x["estado"])] if x else ["", "", ""]
+            if modelo:
+                fila.append(x["clase"] if x else modelo["clases"]["sin dato"])
         fila += [f["ultima"], " | ".join(f["conflictos"]),
                  t(f["presencia"]) if f["presencia"] else "", "", "", "", ""]
         out.append(fila)
@@ -635,14 +724,15 @@ def filas_tabla(inv: dict) -> list:
 
 
 def filas_procedencia(inv: dict) -> list:
-    return [[i, t(c), v, fu, u, t(e)] for i, c, v, fu, u, e in inv["procedencia"]]
+    return [[i, t(c), v, fu, u, t(e), *cl] for i, c, v, fu, u, e, *cl in inv["procedencia"]]
 
 
 def tablas(inv: dict) -> list:
     if not hay(inv):
         return []
-    return [(ARCHIVO, HOJA, COLUMNAS, filas_tabla(inv)),
-            (ARCHIVO_PROCEDENCIA, HOJA_PROCEDENCIA, COL_PROCEDENCIA, filas_procedencia(inv))]
+    return [(ARCHIVO, HOJA, columnas(inv), filas_tabla(inv)),
+            (ARCHIVO_PROCEDENCIA, HOJA_PROCEDENCIA,
+             COL_PROCEDENCIA_CLASE if inv.get("modelo") else COL_PROCEDENCIA, filas_procedencia(inv))]
 
 
 def seccion(inv: dict) -> dict:
@@ -653,6 +743,8 @@ def seccion(inv: dict) -> dict:
         return t(tipo) + (_s + resto)
     filas = [[t("fuente"), mostrar(f), n] for f, n in r["por_fuente"].items()]
     filas += [[t("estado"), t(e), n] for e, n in r["por_estado"].items()]
+    if "por_clase" in r:
+        filas += [[t("clase de evidencia"), c, n] for c, n in r["por_clase"].items()]
     filas += [[t("control de calidad"), t("campos en conflicto"), r["campos_en_conflicto"]],
               [t("control de calidad"), t("activos con conflicto"), r["activos_con_conflicto"]]]
     if r["con_manual"]:
@@ -671,5 +763,10 @@ def seccion(inv: dict) -> dict:
                            "hallazgos omitidos); no estan en el inventario, los conductos, las zonas, la politica "
                            "propuesta ni la linea base.", e=x["equipos"], p=x["paquetes"], c=x["conductos"],
                            h=x["hallazgos"])
-    return {"titulo": t(TITULO), "nota": t(NOTA), "resumen": resumen,
+    nota = t(NOTA)
+    if inv.get("modelo"):
+        nota += " " + (t("Las clases de evidencia son las del modelo del perfil del proyecto.")
+                       if inv["modelo"]["del_perfil"] else
+                       t("Las clases de evidencia son las de la tabla propia de la herramienta, sin revisar."))
+    return {"titulo": t(TITULO), "nota": nota, "resumen": resumen,
             "tabla": ([t("categoria"), t("elemento"), t("cantidad")], filas)}

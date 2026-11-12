@@ -724,6 +724,15 @@ saltos de línea, que se imprime tal cual, sin traducir, en una línea propia ba
 resumen ejecutivo; el Excel no la muestra). Con la primera, `resultado.json` lleva `restricciones` y esos subcomandos
 terminan con código 2 sin escribir nada. Sin las claves todo queda igual.
 
+Clases de evidencia del proyecto (EVID1, D122), clave opcional `modelo_evidencia`: objeto con `clases` (claves
+`observado`, `importado`, `declarado`, `inferido`, `en conflicto`, `sin dato`) y `por_fuente` (claves: tipo de fuente
+como `manual` o `plataforma`, o `tipo:nombre` como `plataforma:nozomi`; sin distinguir mayúsculas; gana la clave más larga);
+cada valor es una etiqueta de 1 a 20 caracteres sin saltos de línea. `{}` es válido y usa la tabla propia de la
+herramienta (`ot_assess/data/modelo_evidencia.json`: OBS, DEC, INF, N/E y DISCREPANCIA, sin revisar); lo que trae el perfil
+reemplaza clave por clave. Con la clave, el inventario normalizado agrega `X_clase` tras cada `X_estado`, la procedencia
+agrega `clase`, y `resultado.json` y la sección del reporte cuentan campos por clase. Las etiquetas no se traducen. Sin la
+clave todo queda igual.
+
 La clave opcional `criticidad_activos` (`{"10.10.1.20": "Critica"}`; niveles Critica, Alta, Media, Baja; solo IPv4)
 declara la criticidad de un activo para el plan de remediación; sin ella se infiere del rol y el plan lo marca como
 «inferida», a validar por el analista. Con vectores CVSS v4.0, `criticidad_activos` también agrega a `vulnerabilidades.csv` y
