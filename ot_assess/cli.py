@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 from . import __version__
+from . import entregables as _entregables
 from . import inventario_normalizado as _in
 from . import inventario_presentado as _ip
 from . import obsolescencia as _ob
@@ -369,6 +370,7 @@ def main(argv: list[str] | None = None) -> int:
                                        "cliente": "Analisis de trafico de planta",
                                        "estandar": "iec62443"})
     _pa.resolver(ap, args, perfil)       # AVK1 (D124)
+    _entregables.avisos(perfil)          # ENT1 (D126)
     for archivo in args.estandar_archivo:
         cargar_archivo(archivo)
     estandares = elegir(args.estandar)
@@ -697,6 +699,7 @@ def main(argv: list[str] | None = None) -> int:
 
     print("[*] Escribiendo reportes...")
     paths = write_all(res, outdir)
+    _entregables.write_entregables(res, outdir)      # ENT1 (D126): al final, ve todas las salidas
 
     probe = outdir / ".probe"
     if probe.exists():

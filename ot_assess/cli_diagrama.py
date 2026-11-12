@@ -14,6 +14,7 @@ from . import cis_controles as _cis
 from . import conductos_zcr as _zc
 from . import cvss4_entorno as _ce
 from . import direccionamiento as _dr
+from . import entregables as _entregables
 from . import evasion as _ev
 from . import fuentes as _fu
 from . import fuentes_log as _fl
@@ -260,6 +261,7 @@ def main(argv: list | None = None) -> int:
                                        "estandar": "iec62443"})
 
     _pa.resolver(ap, args, perfil)       # AVK1 (D124)
+    _entregables.avisos(perfil)          # ENT1 (D126)
     for archivo in args.estandar_archivo:
         cargar_archivo(archivo)
     estandares = elegir(args.estandar)
@@ -609,9 +611,10 @@ def main(argv: list | None = None) -> int:
 
     with open(out / "hallazgos_importados.csv", "w", newline="", encoding="utf-8-sig") as fh:
         w = escritor_csv(fh)
-        w.writerow(cabecera_hallazgos(estandares))
+        plan_ent = _entregables.plan(perfil)      # ENT1 (D126)
+        w.writerow(cabecera_hallazgos(estandares, plan_ent))
         for o, f in zip(origenes, hallazgos):
-            w.writerow(fila_hallazgo(o, f, estandares))
+            w.writerow(fila_hallazgo(o, f, estandares, plan_ent))
 
     con_nat = any(a.get("nat_nota") for a in imp.assets.values())     # D70: columna solo si hay marcas
     con_so = any(a.get("so") or a.get("protocolos") or a.get("vlans") for a in imp.assets.values())   # D74
@@ -640,6 +643,7 @@ def main(argv: list | None = None) -> int:
     if not args.solo_diagramas:
         print("[*] Escribiendo reportes...")
         paths = write_all(res, out, omitir=("diagramas",))
+        _entregables.write_entregables(res, out)      # ENT1 (D126)
         print(f"     {paths['html']}\n     {paths['md']}")
         for n in ("informe_ot.docx", "reporte_ot.xlsx", "hallazgos.csv", "plan_remediacion.csv"):
             print(f"     {out / n}")

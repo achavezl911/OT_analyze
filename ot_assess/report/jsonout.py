@@ -10,6 +10,7 @@ from pathlib import Path
 from .. import cobertura_captura as _cc
 from .. import csf_tiers as _ct
 from .. import direccionamiento as _dr
+from .. import entregables as _en
 from .. import fuentes_log as _fl
 from .. import hardening as _hd
 from .. import iec62351 as _i62351
@@ -88,6 +89,7 @@ def write_json(res: Assessment, outdir: Path) -> None:
             "hallazgos": c.findings,
         })
     flujos_62351 = _i62351.para_json(res.args)
+    ent = _en.para_json(res)       # ENT1 (D126): None sin la clave
     base = _sr.linea_base_json(res.salud_red)
     if base:       # L1 (D81): artefacto para comparar corridas futuras
         (outdir / _sr.A_BASE_JSON).write_text(json.dumps(base, indent=2, ensure_ascii=False, sort_keys=True),
@@ -107,6 +109,7 @@ def write_json(res: Assessment, outdir: Path) -> None:
                     "cobertura_captura": _cc.para_json(res.cobertura_captura),
                     "riesgos": _rg.para_json(_rg.de(res)),
                     **({"iec62351_flujos": flujos_62351} if flujos_62351 else {}),
+                    **({"entregables": ent} if ent else {}),
                     "madurez": _ma.para_json(res.madurez),
                     **({"csf_tiers": _ct.para_json(res.csf_tiers)} if _ct.hay(res.csf_tiers) else {}),
                     "tobe": _tb.para_json(res.tobe),

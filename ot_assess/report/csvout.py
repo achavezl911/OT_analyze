@@ -13,6 +13,7 @@ from .. import conductos_zcr as _zc
 from .. import csf_tiers as _ct
 from .. import csf_transicion as _cft
 from .. import direccionamiento as _dr
+from .. import entregables as _en
 from .. import evasion as _ev
 from .. import fuentes as _fu
 from .. import fuentes_log as _fl
@@ -60,12 +61,19 @@ COLUMNAS_COBERTURA = ["id", "grupo", "categoria", "texto", "cobertura",
                       "hallazgos_que_lo_citan", "hallazgos_en_esta_corrida"]
 
 
-def cabecera_hallazgos(estandares: list) -> list:
+def cabecera_hallazgos(estandares: list, entregables=None) -> list:
+    """`entregables`: plan de entregables.plan(perfil); con el, agrega la columna al final (ENT1, D126)."""
     return (["id", "captura", "severidad", "categoria", "titulo", "evidencia",
-             "por_que_importa", "recomendacion", "mitre_ics", "mitre_ics_tacticas"] + [e.clave for e in estandares])
+             "por_que_importa", "recomendacion", "mitre_ics", "mitre_ics_tacticas"] + [e.clave for e in estandares]
+            + (["entregables"] if entregables else []))
 
 
-def fila_hallazgo(nombre_origen: str, f: dict, estandares: list) -> list:
+def fila_hallazgo(nombre_origen: str, f: dict, estandares: list, entregables=None) -> list:
+    return fila_base(nombre_origen, f, estandares) + (
+        [_en.texto_hallazgo(entregables, f)] if entregables else [])
+
+
+def fila_base(nombre_origen: str, f: dict, estandares: list) -> list:
     return ([f.get("id") or id_hallazgo(f["titulo"]), nombre_origen, t(f["severidad"]), t(f["categoria"]), t(f["titulo"]), t(f["evidencia"]),
              t(f["por_que_importa"]), t(f["recomendacion"]), f["referencias"].get("mitre-ics", ""),
              _atc.tacticas_de(f["referencias"].get("mitre-ics", ""))]
@@ -78,6 +86,7 @@ def tablas(res: Assessment) -> list:
     estandares = res.estandares or [ESTANDARES["iec62443"]]
     nombres = _rd.nombre_de_ip(res)
     out = []
+    plan_ent = _en.plan(getattr(res, "perfil", None))      # ENT1 (D126): None sin la clave
 
     filas_inv = _ip.filas(res, nombres)          # I3 (D105): una fila por IP para las MAC de enrutamiento
     con_nat = any(a.get("nat_nota") for a in filas_inv)     # D70: columna solo si hay activos marcados
@@ -173,8 +182,8 @@ def tablas(res: Assessment) -> list:
                  for c in caps for i in c.identity]))
 
     out.append(("hallazgos.csv", "Hallazgos",
-                cabecera_hallazgos(estandares),
-                [fila_hallazgo(c.name, f, estandares)
+                cabecera_hallazgos(estandares, plan_ent),
+                [fila_hallazgo(c.name, f, estandares, plan_ent)
                  for c in [*caps, *res.extras]
                  for f in sorted(c.findings, key=lambda x: SEV_ORDER.get(x["severidad"], 9))]))
 
@@ -266,6 +275,8 @@ def tablas(res: Assessment) -> list:
         out.append((f"cobertura_{e.clave}.csv", f"Cobertura {e.clave}", COLUMNAS_COBERTURA,
                     [[f["id"], f["grupo"], f["categoria"], f["texto"], t(f["cobertura"]),
                       ";".join(f["fragmentos"]), f["hallazgos"]] for f in filas]))
+    if plan_ent:
+        out = [(a, h, *_en.agregar_columna(res, a, c, f)) for a, h, c, f in out]
     return out
 
 

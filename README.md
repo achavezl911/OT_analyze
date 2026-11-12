@@ -697,6 +697,25 @@ valores distintos termina con código 2 antes de escribir; un estado vacío cons
 cuentan y se avisan. Los estados no se traducen (son del equipo). `resultado.json` lleva el bloque `iec62351_flujos`. Sin la
 clave ni la opción no cambia ninguna salida. Mapeo propio sin revisar: evidencia observable, no un dictamen.
 
+**Entregables del proyecto (ENT1, D126).** Clave opcional de perfil `entregables`: `{"catalogo": [...], "mapeo": {...}}`.
+`catalogo` lista de 1 a 100 objetos `{"id" (1-20 de A-Z a-z 0-9 . _ -), "nombre" (1-120, sin saltos), "salidas"
+(0 a 50 nombres de archivo, admite comodines como `cobertura_*.csv`)}`; ids únicos. `mapeo`: 1 a 2000 entradas
+`"marco:requisito"` -> lista de 1 a 20 ids del catálogo. `marco` es una de: `iec62443`, `nerc-cip`, `nist-800-82`,
+`nist-csf`, `tsa-sd-1580-82`, `mitre-ics`, `nist-800-53`, `cis`. `requisito` es un id exacto (sin distinguir mayúsculas ni
+espacios repetidos) o un prefijo terminado en `*` (`iec62443:SR 1.*`, `nist-csf:PR.*`, `cis:4.*`; un id con mejora como
+`AC-2(1)` también casa con el prefijo de su base). Un perfil inválido (marco desconocido, entregable fuera del catálogo,
+límites) termina con error de perfil. Con la clave: columna `entregables` al final de `hallazgos.csv` (y su hoja; en
+`diagrama`, también `hallazgos_importados.csv`), de `cobertura_<marco>.csv` y de `matriz_controles.csv` (ids del
+catálogo, en su orden, separados por `; `); `entregables.csv` (id, nombre, requisitos mapeados, conteo de hallazgos, filas
+de cobertura y de matriz, salidas presentes y patrones sin archivo; se escribe al final) y el bloque `entregables` de
+`resultado.json`. Equivalencia de la columna `marco` de la matriz: `ISA/IEC 62443` e `ISA/IEC 62443-2-1:2024` =
+`iec62443`; `NIST SP 800-82r3` = `nist-800-82` y `nist-800-53` (sus ids son controles SP 800-53); `NIST SP 800-53` =
+`nist-800-53`; `CIS Controls v8.1` = `cis`; `CSF 2.0` = `nist-csf`; `TSA SD 1580/82-2022-01E` = `tsa-sd-1580-82`. Se
+excluyen con aviso (consola y `resultado.json`) los ids exactos de CSF 1.1 que no existen en 2.0 (con su sustituto de la
+transición oficial) y las técnicas ATT&CK revocadas u obsoletas; un id que ningún catálogo reconoce (CSF, 62443, ATT&CK)
+se conserva y se cuenta como no reconocido. Solo ids de requisito, sin textos de normas; es trazabilidad documental, no un
+dictamen. Sin la clave no cambia ninguna salida.
+
 **Avisos de terceros (MITRE ATT&CK).** Copyright 2015-2026, The MITRE Corporation. MITRE ATT&CK and ATT&CK are
 registered trademarks of The MITRE Corporation. The MITRE Corporation (MITRE) hereby grants you a non-exclusive,
 royalty-free license to use ATT&CK(R) for research, development, and commercial purposes. Any copy you make for such
