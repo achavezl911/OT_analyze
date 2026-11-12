@@ -63,6 +63,13 @@ from .style import HTML_CSS
 from .validacion import cuerpo as cuerpo_validacion
 
 
+def _celda_mapa(rs: dict, nivel: str, n) -> str:
+    """Celda del mapa de calor: clase mc-* con los niveles por defecto; color en linea con los del proyecto."""
+    if rs["propio"]:
+        return f'<td style="background:#{rs["colores"][nivel]}" title="{esc(nivel)}">{n}</td>'
+    return f'<td class="{_rg.CLASES[nivel]}" title="{esc(t(nivel))}">{n}</td>'
+
+
 def flujos_fw(a, rutas: dict, conductos: list) -> None:
     """Seccion 'Flujos entre interfaces del firewall' (XD-c); tambien la usa la pagina de diagrama."""
     s = _rf.seccion(rutas, conductos)
@@ -580,8 +587,7 @@ def write_html(res: Assessment, outdir: Path) -> Path:
           + "</tr></thead><tbody>")
         for fila, niv in zip(filas, niveles):
             a(f"<tr><th>{esc(fila[0])}</th>"
-              + "".join(f'<td class="{_rg.CLASES[n]}" title="{esc(t(n))}">{c}</td>'
-                        for c, n in zip(fila[1:], niv[1:])) + "</tr>")
+              + "".join(_celda_mapa(rs, n, c) for c, n in zip(fila[1:], niv[1:])) + "</tr>")
         a("</tbody></table>")
         a("<table><thead><tr>" + "".join(f"<th>{esc(str(c))}</th>" for c in rs["cab_top"]) + "</tr></thead><tbody>")
         for fila in rs["top"]:

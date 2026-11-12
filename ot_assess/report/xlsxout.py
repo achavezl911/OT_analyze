@@ -9,11 +9,18 @@ from .csvout import cabecera_t, nombre_hoja, tablas
 from .xlsx import RELLENO, escribir_xlsx
 
 
+def _relleno(m: dict, nivel: str) -> str:
+    """Estilo de la celda: el predefinido para los niveles por defecto; el color RRGGBB para los del proyecto."""
+    if m["propio_niveles"]:
+        return {n: c for n, _, c in m["niveles"]}.get(nivel, "")
+    return RELLENO.get(nivel, "")
+
+
 def write_xlsx(res: Assessment, outdir: Path) -> Path:
     hojas = [(nombre_hoja(hoja), cabecera_t(res, cab), filas) for _, hoja, cab, filas in tablas(res) if hoja]
     r = _rg.de(res)
     if _rg.hay(r):       # R1: el mapa de calor va como cuadricula con color por nivel
         cab, filas, niveles = _rg.cuadricula(r)
         hojas.append((nombre_hoja(_rg.HOJA_MAPA), cab, filas,
-                      [[RELLENO.get(n, "") if n else "" for n in fila] for fila in niveles]))
+                      [[_relleno(r["metodo"], n) if n else "" for n in fila] for fila in niveles]))
     return escribir_xlsx(outdir / "reporte_ot.xlsx", hojas)

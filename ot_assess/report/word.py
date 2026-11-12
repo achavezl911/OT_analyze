@@ -158,7 +158,7 @@ def construir_bloques(res: Assessment) -> list:
     else:
         cab, filas, niveles = s["mapa"]
         b += [("p", s["resumen"]),
-              ("tabla", cab, filas, [[_rg.COLORES.get(n) for n in fila] for fila in niveles]),
+              ("tabla", cab, filas, [[s["colores"].get(n) for n in fila] for fila in niveles]),
               ("tabla", s["cab_top"], s["top"]), ("p", s["nota_quick"])]
         b.append(("tabla", s["cab_quick"], s["quick"]) if s["quick"] else ("p", s["sin_quick"]))
 

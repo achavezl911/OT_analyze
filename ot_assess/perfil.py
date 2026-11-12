@@ -140,7 +140,7 @@ def cargar(path) -> dict:
         out["riesgo"] = _riesgo(d["riesgo"], fallo, objeto)
     if "zonas" in d:
         out["zonas"] = _zonas(d["zonas"], out.get("sl_objetivo", {}), fallo, texto, objeto,
-                              dimensiones_impacto(out))
+                              dimensiones_impacto(out), escalas(out.get("riesgo"))[1])
     if "criticidad_activos" in d:
         c = d["criticidad_activos"]
         if not isinstance(c, dict):
@@ -179,7 +179,8 @@ def cargar(path) -> dict:
             fallo("'vlans_esperadas' debe ser una lista de numeros de VLAN (1 a 4094).")
         out["vlans_esperadas"] = sorted(set(v))
     if "ajustes_riesgo" in d:       # R1 (D83): el analista corrige probabilidad o impacto de un riesgo
-        out["ajustes_riesgo"] = _ajustes_riesgo(d["ajustes_riesgo"], fallo, texto, objeto)
+        out["ajustes_riesgo"] = _ajustes_riesgo(d["ajustes_riesgo"], fallo, texto, objeto,
+                                             escalas(out.get("riesgo")))
     if "dominios_internos" in d:
         out["dominios_internos"] = []
         for x in lista_texto(d["dominios_internos"], "dominios_internos"):
@@ -268,7 +269,8 @@ def dimension_inferida(perfil) -> str:
 
 
 def _riesgo(d, fallo, objeto) -> dict:
-    d = objeto(d, "riesgo", ("modo", "dimensiones_impacto", "dimension_inferida"))
+    d = objeto(d, "riesgo", ("modo", "dimensiones_impacto", "dimension_inferida", "escala", "niveles", "elevacion",
+                             "quick_win"))
     out = {}
     if "modo" in d:
         if d["modo"] not in MODOS_RIESGO:
@@ -291,16 +293,25 @@ def _riesgo(d, fallo, objeto) -> dict:
             fallo(f"'riesgo.dimension_inferida': {d['dimension_inferida']!r} no esta en las dimensiones de impacto "
                   f"({', '.join(dims)}).")
         out["dimension_inferida"] = d["dimension_inferida"]
+    if any(k in d for k in ("escala", "niveles", "elevacion", "quick_win")):      # RM2 (D129)
+        from .riesgo import validar_metodo
+        out.update(validar_metodo(d, tuple(out.get("dimensiones_impacto") or DIMENSIONES_IMPACTO), fallo, objeto))
     return out
 
 
-def _entero_1_5(v, donde: str, fallo) -> int:
-    if not isinstance(v, int) or isinstance(v, bool) or not 1 <= v <= 5:
-        fallo(f"'{donde}' debe ser un entero de 1 a 5.")
+def escalas(riesgo) -> tuple:
+    """(valores de probabilidad, valores de impacto) del metodo del proyecto (RM2, D129); 5 y 5 por defecto."""
+    e = (riesgo or {}).get("escala") or {}
+    return len(e.get("probabilidad") or ()) or 5, len(e.get("impacto") or ()) or 5
+
+
+def _entero_1_5(v, donde: str, fallo, maximo: int = 5) -> int:
+    if not isinstance(v, int) or isinstance(v, bool) or not 1 <= v <= maximo:
+        fallo(f"'{donde}' debe ser un entero de 1 a {maximo}.")
     return v
 
 
-def _ajustes_riesgo(d, fallo, texto, objeto) -> dict:
+def _ajustes_riesgo(d, fallo, texto, objeto, esc=(5, 5)) -> dict:
     if not isinstance(d, dict):
         fallo("'ajustes_riesgo' debe ser un objeto ID de hallazgo -> ajuste.")
     out = {}
@@ -315,11 +326,12 @@ def _ajustes_riesgo(d, fallo, texto, objeto) -> dict:
         out[hid] = {"justificacion": texto(aj["justificacion"], f"ajustes_riesgo.{hid}.justificacion")}
         for k in ("probabilidad", "impacto"):
             if k in aj:
-                out[hid][k] = _entero_1_5(aj[k], f"ajustes_riesgo.{hid}.{k}", fallo)
+                out[hid][k] = _entero_1_5(aj[k], f"ajustes_riesgo.{hid}.{k}", fallo,
+                                          esc[0] if k == "probabilidad" else esc[1])
     return out
 
 
-def _zonas(lista, sl_objetivo: dict, fallo, texto, objeto, dims=DIMENSIONES_IMPACTO) -> list:
+def _zonas(lista, sl_objetivo: dict, fallo, texto, objeto, dims=DIMENSIONES_IMPACTO, maximo: int = 5) -> list:
     """Valida la clave `zonas` (Z1a, D50). La misma red en dos zonas es error; una red dentro de otra
     mas grande de otra zona es valida (gana la mas especifica) y la avisa zonas.avisos_perfil()."""
     if not isinstance(lista, list):
@@ -361,7 +373,8 @@ def _zonas(lista, sl_objetivo: dict, fallo, texto, objeto, dims=DIMENSIONES_IMPA
             imp = objeto(z["impacto"], f"zonas.{nombre}.impacto", dims)
             if not imp:
                 fallo(f"zonas.{nombre}: 'impacto' no puede estar vacio.")
-            nz["impacto"] = {k: _entero_1_5(v, f"zonas.{nombre}.impacto.{k}", fallo) for k, v in imp.items()}
+            nz["impacto"] = {k: _entero_1_5(v, f"zonas.{nombre}.impacto.{k}", fallo, maximo)
+                                for k, v in imp.items()}
         if "inferida" in z:
             if not isinstance(z["inferida"], bool):
                 fallo(f"zonas.{nombre}: 'inferida' debe ser true o false.")

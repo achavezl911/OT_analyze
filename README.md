@@ -855,6 +855,25 @@ desempate, y no se traducen) y `dimension_inferida` (por defecto `produccion` si
 En modo `candidatos` el registro no publica probabilidad, impacto, puntuación, nivel ni quick win: `origen` es `candidato`
 y `motivo_probabilidad` lista los factores observados; el mapa queda en 0 salvo filas que `ajustes_riesgo` puntúe con
 probabilidad e impacto (esas se puntúan como siempre y van primero). Sin la clave todo queda igual.
+`riesgo` admite además el método de riesgo del proyecto (RM2, D129); todas las subclaves son opcionales y sin ellas las
+salidas no cambian:
+- `escala`: `{"probabilidad": [etiquetas], "impacto": [etiquetas]}`, de 3 a 10 textos únicos (1 a 40 caracteres) por eje;
+  la etiqueta k es el valor k. Si N != 5, los valores que infiere la herramienta (1 a 5) se reescalan a 1..N
+  (`1 + redondeo hacia arriba en .5 de (v-1)*(N-1)/4`) y el motivo lo dice; los ajustes del analista y el impacto por zona
+  se validan contra 1..N y no se reescalan. Agrega `probabilidad_etiqueta` e `impacto_etiqueta` a `riesgos.csv` y el mapa
+  usa `k - etiqueta` como encabezados (mapa de N x M celdas).
+- `niveles`: de 2 a 6 objetos `{"nombre", "desde", "color"}` (`desde` creciente, el primero 1 y el último <= P x I;
+  `color` RRGGBB opcional, si falta una paleta de verde a rojo). Un riesgo tiene el nivel de mayor `desde` <= su
+  puntuación. Por defecto: Bajo 1, Medio 5, Alto 10, Muy alto 20. Los nombres del proyecto no se traducen.
+- `elevacion`: hasta 10 reglas `{"condicion": "kev" | "exposicion" | "dimension:<id>>=<n>", "nivel_minimo"}`. Si la
+  condición se cumple el nivel sube al menos a `nivel_minimo`; la puntuación no cambia. `riesgos.csv` agrega la columna
+  `elevacion` con las reglas cuya condición se cumplió (`condicion -> nivel`). `dimension:` mira las zonas de los activos
+  del hallazgo.
+- `quick_win`: `{"niveles": [...], "esfuerzo": ["bajo", "medio", "alto"]}`; por defecto los dos niveles más altos y
+  `bajo`. El reporte dice el criterio efectivo. El nivel que se evalúa es el ya elevado.
+En modo `candidatos` los niveles, la elevación y el quick win se aplican solo a las filas que puntúa el analista.
+`resultado.json` agrega `riesgos.metodo` cuando hay alguna subclave. Los resúmenes de `sitios` siguen usando los cuatro
+niveles por defecto.
 La clave opcional `madurez_objetivo` (`{"segmentacion": 3, "parches": 2}`; enteros de 0 a 4; claves `activos`,
 `segmentacion`, `acceso`, `parches`, `monitoreo`, `incidentes`, `suministro`, `riesgo`) fija el nivel objetivo de cada
 dominio de la madurez por dominio (M7); si falta, rige el número de `ml_objetivo` y, si tampoco, 2 propuesto por la herramienta.

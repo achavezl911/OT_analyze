@@ -93,28 +93,44 @@ def _hoja(cabecera, filas, rellenos=None) -> tuple:
     return "".join(p), (ultima if filas else "")
 
 
-_ESTILOS = (
-    _CABECERA + f'<styleSheet xmlns="{NS_MAIN}">'
-    '<fonts count="2"><font><sz val="11"/><name val="Calibri"/></font>'
-    '<font><b/><sz val="11"/><name val="Calibri"/></font></fonts>'
-    '<fills count="6"><fill><patternFill patternType="none"/></fill>'
-    '<fill><patternFill patternType="gray125"/></fill>'
-    + "".join(f'<fill><patternFill patternType="solid"><fgColor rgb="FF{c}"/><bgColor indexed="64"/></patternFill></fill>'
-              for c in ("92D050", "FFE699", "F4B183", "FF5050")) + '</fills>'
-    '<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>'
-    '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
-    '<cellXfs count="6"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'
-    '<xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/>'
-    + "".join(f'<xf numFmtId="0" fontId="0" fillId="{i}" borderId="0" xfId="0" applyFill="1"/>' for i in range(2, 6))
-    + '</cellXfs>'
-    '</styleSheet>')
+def _estilos(extra=()) -> str:
+    """styles.xml; `extra` = colores RRGGBB adicionales (niveles del proyecto, RM2) con estilos 6, 7, ..."""
+    n = len(extra)
+    return (
+        _CABECERA + f'<styleSheet xmlns="{NS_MAIN}">'
+        '<fonts count="2"><font><sz val="11"/><name val="Calibri"/></font>'
+        '<font><b/><sz val="11"/><name val="Calibri"/></font></fonts>'
+        f'<fills count="{6 + n}"><fill><patternFill patternType="none"/></fill>'
+        '<fill><patternFill patternType="gray125"/></fill>'
+        + "".join(f'<fill><patternFill patternType="solid"><fgColor rgb="FF{c}"/><bgColor indexed="64"/></patternFill></fill>'
+                  for c in ("92D050", "FFE699", "F4B183", "FF5050", *extra)) + '</fills>'
+        '<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>'
+        '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
+        f'<cellXfs count="{6 + n}"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'
+        '<xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/>'
+        + "".join(f'<xf numFmtId="0" fontId="0" fillId="{i}" borderId="0" xfId="0" applyFill="1"/>' for i in range(2, 6 + n))
+        + '</cellXfs>'
+        '</styleSheet>')
+
+
+_ESTILOS = _estilos()
 
 
 def escribir_xlsx(path, hojas):
     """Escribe `hojas` = [(nombre, cabecera, filas[, rellenos])] en `path` y devuelve `path`.
     `rellenos` (opcional) es la matriz de estilos de color de las celdas de `filas` (ver RELLENO)."""
     nombres = _nombres(hojas)
-    partes = [_hoja(list(h[1]), h[2], h[3] if len(h) > 3 else None) for h in hojas]
+    extra: list = []        # colores RRGGBB de los niveles del proyecto (RM2): estilos 6, 7, ...
+
+    def estilo(v):
+        if isinstance(v, str) and len(v) == 6:
+            if v not in extra:
+                extra.append(v)
+            return str(6 + extra.index(v))
+        return v
+
+    partes = [_hoja(list(h[1]), h[2], [[estilo(v) for v in f] for f in h[3]] if len(h) > 3 and h[3] else None)
+              for h in hojas]
     n = len(hojas)
     ct = (_CABECERA + '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
           '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
@@ -139,7 +155,7 @@ def escribir_xlsx(path, hojas):
                         for i in range(1, n + 1))
               + f'<Relationship Id="rId{n + 1}" Type="{NS_R}/styles" Target="styles.xml"/></Relationships>')
     todas = [("[Content_Types].xml", ct), ("_rels/.rels", rels), ("xl/workbook.xml", wb),
-             ("xl/_rels/workbook.xml.rels", wbrels), ("xl/styles.xml", _ESTILOS)]
+             ("xl/_rels/workbook.xml.rels", wbrels), ("xl/styles.xml", _estilos(extra) if extra else _ESTILOS)]
     todas += [(f"xl/worksheets/sheet{i}.xml", x) for i, (x, _) in enumerate(partes, 1)]
     with zipfile.ZipFile(path, "w") as z:
         for nombre, contenido in todas:

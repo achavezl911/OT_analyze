@@ -53,7 +53,8 @@ def datos(res) -> dict:
     filas = _rem.plan(res)
     hall = agrupar_hallazgos([*res.caps, *res.extras])
     riesgos = []
-    for n, r in enumerate(map(_rg._mostrar, _rg.de(res)["filas"][:MAX_RIESGOS]), 1):
+    reg = _rg.de(res)
+    for n, r in enumerate((_rg._mostrar(x, reg.get("metodo")) for x in reg["filas"][:MAX_RIESGOS]), 1):
         sin = r["puntuacion"] == ""
         riesgos.append({"n": n, "id": r["id_riesgo"], "titulo": r["titulo"], "severidad": r["severidad"],
                         "nivel": t("candidato sin puntuar") if sin else r["nivel"],
