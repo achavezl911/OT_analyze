@@ -374,28 +374,44 @@ def _con_v4(cruces: list) -> bool:
     return any(c["vuln"].get("cvss_v4") is not None or c["vuln"].get("vector_cvss_v4") for c in cruces)
 
 
-def columnas(cruces: list) -> list:
+def _entorno(v: dict, crit) -> tuple:
+    """(puntuacion, vector) de entorno CVSS v4.0 (D120) de la fila, o ("", "")."""
+    from .cvss4_entorno import entorno
+    return entorno(v.get("vector_cvss_v4"), v.get("ip"), crit) if crit else ("", "")
+
+
+def con_entorno(cruces: list, crit) -> bool:
+    """True si el perfil declara criticidad y alguna fila obtiene puntuacion de entorno (D120)."""
+    return bool(crit) and any(_entorno(c["vuln"], crit)[0] != "" for c in cruces)
+
+
+def columnas(cruces: list, crit=None) -> list:
     """COLUMNAS, mas 'epss' al final si el archivo importado la trae (Nozomi) y cvss_v4 y vector_cvss_v4
-    junto a cvss si trae CVSS v4.0 (D113)."""
+    junto a cvss si trae CVSS v4.0 (D113); con crit (criticidad_activos) y filas con entorno, las columnas D120."""
     cols = list(COLUMNAS)
     if _con_v4(cruces):
         i = cols.index("cvss") + 1
         cols[i:i] = ["cvss_v4", "vector_cvss_v4"]
+        if con_entorno(cruces, crit):
+            from .cvss4_entorno import COLUMNAS as ENT
+            cols[i + 2:i + 2] = ENT
     return cols + (["epss"] if _con_epss(cruces) else [])
 
 
-def filas_tabla(cruces: list, assets: dict) -> list:
+def filas_tabla(cruces: list, assets: dict, crit=None) -> list:
     """Filas de vulnerabilidades.csv: asociadas por activo y CVE; al final las no asociadas."""
     from .avisos_cisa import columnas_kev
     epss = _con_epss(cruces)
     v4 = _con_v4(cruces)
+    ent = v4 and con_entorno(cruces, crit)
 
     def fila(c):
         v = c["vuln"]
         a = assets.get(c["activo"]) if c["activo"] is not None else None
         return [a["nombre"] if a else "", v["ip"], v["cve"], t(v["severidad"]),
                 "" if v["cvss"] is None else v["cvss"],
-                *(["" if v.get("cvss_v4") is None else v["cvss_v4"], v.get("vector_cvss_v4") or ""] if v4 else []),
+                *(["" if v.get("cvss_v4") is None else v["cvss_v4"], v.get("vector_cvss_v4") or "",
+                    *(_entorno(v, crit) if ent else ())] if v4 else []),
                 t(v["estado"]), v["producto"],
                 v["version"], v["fuente"], c["por"], *columnas_kev(c),
                 *(["" if v.get("epss") is None else v["epss"]] if epss else [])]

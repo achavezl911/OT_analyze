@@ -12,6 +12,7 @@ from . import alertas as _al
 from . import avisos_cisa as _ac
 from . import cis_controles as _cis
 from . import conductos_zcr as _zc
+from . import cvss4_entorno as _ce
 from . import direccionamiento as _dr
 from . import evasion as _ev
 from . import fuentes as _fu
@@ -489,10 +490,13 @@ def main(argv: list | None = None) -> int:
         vuln_resumen = {**_vu.resumen(cruces, nombre_v), **_ac.resumen_cisa(cruces, kev, avisos)}
         res.vulns_cruces = cruces
         res.vulnerabilidades = vuln_resumen
+        crit_decl = (perfil or {}).get("criticidad_activos")
+        if _vu.con_entorno(cruces, crit_decl):
+            print(f"[i] {_ce.nota()}")
         with open(out / "vulnerabilidades.csv", "w", newline="", encoding="utf-8-sig") as fh:
             w = escritor_csv(fh)
-            w.writerow(_vu.columnas(cruces))
-            w.writerows(_vu.filas_tabla(cruces, imp.assets))
+            w.writerow(_vu.columnas(cruces, crit_decl))
+            w.writerows(_vu.filas_tabla(cruces, imp.assets, crit_decl))
         if avisos and "avisos_ics" in res.vulnerabilidades and _ac.filas_avisos(cruces, imp.assets, (perfil or {}).get("version_cvss", "3")):
             with open(out / "avisos_ics.csv", "w", newline="", encoding="utf-8-sig") as fh:
                 w = escritor_csv(fh)
@@ -519,7 +523,8 @@ def main(argv: list | None = None) -> int:
     res.inventario_normalizado = _in.construir([*registros, *manual], perfil, bool(args.inventario_manual), propios)
     if indice_vf:        # V1a (D89): despues del inventario normalizado
         res.vuln_firmware = _vf.construir(indice_vf, res.inventario_normalizado, res.vulns_cruces, imp.assets,
-                                          kev_cat, avisos, (perfil or {}).get("version_cvss", "3"))
+                                          kev_cat, avisos, (perfil or {}).get("version_cvss", "3"),
+                                          (perfil or {}).get("criticidad_activos"))
         extra = Capture(Path("vulnerabilidades por firmware"))
         _vf.agregar_hallazgo(extra, res.vuln_firmware)
         hallazgos += [(extra.name, f) for f in extra.findings]

@@ -1,0 +1,12 @@
+{
+ "marco": "CVSS v4.0, metricas de entorno Security Requirements (CR, IR, AR)",
+ "fuente": "FIRST CVSS v4.0, metricas de entorno Security Requirements",
+ "validacion": "sin revisar",
+ "regla": "Criticidad declarada del activo en el perfil -> el mismo nivel para CR, IR y AR (no hay criterio del cliente para separarlas).",
+ "niveles": {
+  "Critica": {"CR": "H", "IR": "H", "AR": "H"},
+  "Alta": {"CR": "H", "IR": "H", "AR": "H"},
+  "Media": {"CR": "M", "IR": "M", "AR": "M"},
+  "Baja": {"CR": "L", "IR": "L", "AR": "L"}
+ }
+}

@@ -24,6 +24,10 @@ from .avisos_cisa import (
     cvss4_de_vulnerabilidad,
     detalle_vulnerabilidad,
 )
+from .cvss4_entorno import COLUMNAS as ENTORNO
+from .cvss4_entorno import NOTA as NOTA_ENTORNO
+from .cvss4_entorno import entorno
+from .cvss4_entorno import hay as hay_entorno
 from .i18n import t
 from .importers.lector import leer_tabla
 from .rules.base import finding
@@ -558,7 +562,8 @@ def _sev_de(punt, dec: str) -> str:
     return t(cvss4.severidad(punt) if dec == "4.0" else _sev_de_cvss(punt))
 
 
-def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=None, version_cvss: str = "3") -> dict:
+def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=None, version_cvss: str = "3",
+              criticidad=None) -> dict:
     """Candidatas por activo y CVE del inventario normalizado `inv` contra el indice.
 
     version_cvss "4" (D114): severidad, orden y umbral por CVSS v4.0 con caida a v3; agrega la columna cvss_decide."""
@@ -632,7 +637,14 @@ def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=Non
                "revision_mas_reciente": av["ultimo"] if av else ind.ultimo, "kev": bool(kev)}
     cols = [*COLUMNAS[:COLUMNAS.index("vector_cvss_v4") + 1], *(["cvss_decide"] if v4 else []),
             *COLUMNAS[COLUMNAS.index("vector_cvss_v4") + 1:]]
-    return {"filas": filas, "resumen": resumen, "columnas": cols, "version_cvss": "4" if v4 else "3"}
+    ent = [entorno(x["reg"].get("vector_cvss_v4"), x["ips"], criticidad) for x in filas] if criticidad else []
+    if hay_entorno(ent):        # D120: informativo, despues de vector_cvss_v4
+        i = cols.index("vector_cvss_v4") + 1
+        cols[i:i] = ENTORNO
+        for x, e in zip(filas, ent):
+            x["celdas"][i:i] = e
+    return {"filas": filas, "resumen": resumen, "columnas": cols, "version_cvss": "4" if v4 else "3",
+            "entorno": hay_entorno(ent)}
 
 
 # ---------------------------------------------------------------------------
@@ -715,7 +727,8 @@ def seccion(vf: dict) -> dict:
             f[ic] = "" if x["cvss_ef"] is None else x["cvss_ef"]
     mas = len(vf["filas"]) - len(filas)
     vacio = "" if r["activos_con_fabricante_y_modelo"] else t(TEXTO_VACIO)
-    return {"titulo": t(TITULO), "nota": t(NOTA) + (" " + t(NOTA_V4) if v4 else ""), "resumen": _texto_resumen(r),
+    return {"titulo": t(TITULO), "nota": t(NOTA) + (" " + t(NOTA_V4) if v4 else "")
+            + (" " + t(NOTA_ENTORNO) if vf.get("entorno") else ""), "resumen": _texto_resumen(r),
             "tabla": ([t(c) for c in CAB_SECCION], filas),
             "mas": t("Se muestran {n} filas; {m} mas estan en vulnerabilidades_firmware.csv.",
                      n=len(filas), m=mas) if mas > 0 else "",

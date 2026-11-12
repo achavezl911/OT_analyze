@@ -545,6 +545,7 @@ def main(argv: list[str] | None = None) -> int:
         _ra.agregar_hallazgos(extra, res.rutas_ataque)
         res.extras.append(extra)
     from . import avisos_cisa as _ac
+    from . import cvss4_entorno as _ce
     from . import vuln_firmware as _vf  # V1a (D89)
     vulns = cruces = None
     inferidos, fuente_cpe = None, ""
@@ -574,6 +575,8 @@ def main(argv: list[str] | None = None) -> int:
             _ac.agregar_hallazgo_kev(extra, cruces, assets, kev)
         res.extras.append(extra)
         res.vulns_cruces = cruces
+        if _vu.con_entorno(cruces, (perfil or {}).get("criticidad_activos")):
+            print(f"[i] {_ce.nota()}")
         res.vulnerabilidades = {**_vu.resumen(cruces, nombre_v), **_ac.resumen_cisa(cruces, kev, avisos)}
     else:
         _ac.preparar(args, None)
@@ -591,7 +594,8 @@ def main(argv: list[str] | None = None) -> int:
     res.inventario_normalizado = _in.construir([*registros, *manual], perfil, bool(args.inventario_manual), propios)
     if indice_vf:        # V1a (D89): despues del inventario normalizado
         res.vuln_firmware = _vf.construir(indice_vf, res.inventario_normalizado, res.vulns_cruces, assets,
-                                          kev_cat, avisos, (perfil or {}).get("version_cvss", "3"))
+                                          kev_cat, avisos, (perfil or {}).get("version_cvss", "3"),
+                                          (perfil or {}).get("criticidad_activos"))
         extra = Capture(Path("vulnerabilidades por firmware"))
         _vf.agregar_hallazgo(extra, res.vuln_firmware)
         if extra.findings:

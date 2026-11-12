@@ -689,7 +689,7 @@ purposes is authorized provided that you reproduce MITRE's copyright designation
 **Avisos de terceros (calculadora CVSS v4.0).** `ot_assess/cvss4.py` es un port a Python de la calculadora oficial de
 FIRST (repo FIRSTdotorg/cvss-v4-calculator: `cvss_score.js`, `cvss_lookup.js`, `max_composed.js`, `max_severity.js`,
 `metrics.js`). Se usa para puntuar vectores CVSS v4.0 (columnas `cvss_v4` de `vulnerabilidades_firmware.csv` y
-`vulnerabilidades.csv`, `cvss_v4_max` de `avisos_ics.csv`); solo decide severidad y orden con `version_cvss: "4"` en el perfil. Licencia BSD-2-Clause:
+`vulnerabilidades.csv`, `cvss_v4_max` de `avisos_ics.csv`); solo decide severidad y orden con `version_cvss: "4"` en el perfil; la puntuación de entorno por criticidad declarada (CR/IR/AR) es informativa (D120, ver `criticidad_activos`). Licencia BSD-2-Clause:
 
 > Copyright (c) 2023 FIRST.ORG, Inc., Red Hat, and contributors
 >
@@ -720,7 +720,11 @@ Limitaciones: `edicion` y `partes`
 de cada marco se registran en el reporte, pero el mapeo de hallazgos aún no las distingue (pendiente, B2).
 La clave opcional `criticidad_activos` (`{"10.10.1.20": "Critica"}`; niveles Critica, Alta, Media, Baja; solo IPv4)
 declara la criticidad de un activo para el plan de remediación; sin ella se infiere del rol y el plan lo marca como
-«inferida», a validar por el analista.
+«inferida», a validar por el analista. Con vectores CVSS v4.0, `criticidad_activos` también agrega a `vulnerabilidades.csv` y
+`vulnerabilidades_firmware.csv` (y a sus hojas) las columnas `cvss_v4_entorno` y `vector_cvss_v4_entorno` (D120): el vector de la
+fila con CR, IR y AR (Security Requirements) tomados del nivel (Crítica y Alta: H; Media: M; Baja: L; con varias IP, la más
+crítica) y su puntuación. Es informativa, con una tabla sin revisar (`marcos/cvss4_requisitos.json`), y no cambia severidad,
+estado, hallazgos, riesgo ni priorización; sin criticidad o sin filas v4 de esas IP las salidas no cambian.
 La clave opcional `dominios_internos` (`["planta.example"]`) lista dominios propios del cliente: el análisis DNS los
 trata como internos (además de `local`, `lan`, `internal`, `intranet`, `corp` y `home.arpa`), así que no salen en el
 hallazgo de resolución de dominios de Internet y el ámbito de `dns_registros.csv` los marca como internos.

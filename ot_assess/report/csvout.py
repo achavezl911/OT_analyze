@@ -248,8 +248,9 @@ def tablas(res: Assessment) -> list:
         out.append(("firewall_matriz.csv", "FW matriz", _rf.COL_MATRIZ, _rf.filas_matriz(res.rutas)))
 
     if res.vulnerabilidades:
-        out.append(("vulnerabilidades.csv", "Vulnerabilidades", _vu.columnas(res.vulns_cruces),
-                    _vu.filas_tabla(res.vulns_cruces, assets)))
+        crit = (getattr(res, "perfil", None) or {}).get("criticidad_activos")
+        out.append(("vulnerabilidades.csv", "Vulnerabilidades", _vu.columnas(res.vulns_cruces, crit),
+                    _vu.filas_tabla(res.vulns_cruces, assets, crit)))
 
     if "avisos_ics" in res.vulnerabilidades:
         filas = _ac.filas_avisos(res.vulns_cruces, assets, (getattr(res, "perfil", None) or {}).get("version_cvss", "3"))

@@ -31,7 +31,8 @@ INTERNOS = {
     "i18n.py": 2,                       # catalogos de idioma del paquete
     "attack_ics.py": 1,                 # catalogo ATT&CK for ICS del paquete (D112)
     "csf_transicion.py": 1,             # catalogo de transicion CSF 1.1 a 2.0 del paquete (D116)
-    "tsa_hallazgos.py": 1,              # medidas tecnicas de la TSA SD 1580/82 del paquete (D118)
+    "cvss4_entorno.py": 1,              # tabla CR/IR/AR de CVSS v4.0 del paquete (D120)
+    "tsa_hallazgos.py": 1,             # medidas tecnicas de la TSA SD 1580/82 del paquete (D118)
     "iec62351.py": 1,                  # tabla de protocolos de IEC 62351 del paquete (D117)
     "evasion.py": 1,                # data/ del paquete
     "obsolescencia.py": 1,              # fin_soporte_so.json del paquete
