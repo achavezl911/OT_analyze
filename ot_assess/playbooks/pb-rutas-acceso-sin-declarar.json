@@ -1,0 +1,54 @@
+{
+  "id": "pb-rutas-acceso-sin-declarar",
+  "hallazgo": "Rutas de acceso a OT usadas sin declarar",
+  "objetivo": "Que cada ruta de acceso a OT observada tenga dueno, autorizacion y vigencia declarados, o se cierre.",
+  "prioridad_ot": "Cerrar una ruta de acceso sin saber quien la usa puede dejar sin soporte a un equipo critico o cortar la operacion remota de una planta; primero se identifica el uso y se acuerda la via autorizada, y el cierre se hace en ventana.",
+  "pasos": [
+    "Revisar en el inventario de rutas de acceso cada ruta usada sin declarar: zona de origen y de destino, servicio, activos, dias de uso y si el firewall la permite.",
+    "Identificar con el dueno del proceso y con TI quien usa cada ruta (personal propio, proveedor o integrador), para que y desde cuando.",
+    "Pedir la autorizacion del acceso (contrato, orden de servicio o aprobacion del area duena); sin ella, tratar la ruta como acceso no autorizado con el procedimiento del cliente.",
+    "Para el acceso legitimo, declararlo en el perfil con via, proveedor, quien autoriza y vigencia, y llevarlo a la via centralizada de acceso remoto en la DMZ, con MFA y registro de sesiones.",
+    "Cerrar en el firewall las rutas sin autorizacion, en la ventana acordada con operacion y con respaldo de la politica.",
+    "Repetir la captura o la exportacion en la misma ventana y volver a generar el inventario de rutas para confirmar el cambio."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "Ubicar la regla actual que permite cada ruta (columna regla del inventario) y acotarla por origen, destino y servicio.",
+      "Aplicar el cambio en ventana y con respaldo de la politica; verificar la sintaxis en la documentacion del fabricante para la version instalada."
+    ],
+    "FortiGate": [
+      "Ubicar la politica que permite cada ruta y acotarla por interfaz, direccion de origen y de destino y servicio.",
+      "Aplicar el cambio en ventana y con respaldo de la configuracion; verificar la sintaxis en la documentacion del fabricante para la version instalada."
+    ],
+    "Claroty xDome": [
+      "Filtrar las comunicaciones del servicio entre las dos zonas y confirmar los activos y las fechas de uso.",
+      "Crear una alerta para comunicaciones nuevas de ese servicio hacia la zona de destino."
+    ]
+  },
+  "verificacion": [
+    "Volver a generar el inventario de rutas con el perfil actualizado y confirmar que no quedan rutas usadas sin declarar.",
+    "Confirmar con el proveedor y con el dueno del proceso que el acceso autorizado funciona por la via declarada."
+  ],
+  "reversion": [
+    "Deshabilitar la regla de bloqueo nueva (sin borrarla) si se pierde un acceso autorizado que no se habia identificado.",
+    "Restaurar el respaldo de la politica del firewall en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar los cierres solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y dejar registro.",
+    "Acordar con el proveedor una via de soporte alternativa antes de cerrar el acceso a un equipo critico.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ciberseguridad OT y TI, con el dueno del proceso y el proveedor",
+  "referencias": [
+    "MITRE ICS T0822",
+    "IEC 62443 SR 1.13",
+    "IEC 62443 SR 5.2",
+    "NERC CIP-005 R2",
+    "NERC CIP-005 R1",
+    "NIST 800-82 AC-17",
+    "NIST 800-82 SC-7",
+    "NIST CSF PR.AA-05",
+    "NIST CSF PR.IR-01"
+  ]
+}

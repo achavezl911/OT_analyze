@@ -1,0 +1,47 @@
+{
+  "id": "pb-fin-de-venta",
+  "hallazgo": "Equipos en fin de venta con soporte vigente",
+  "objetivo": "Asegurar repuestos y planear el reemplazo de los equipos que el fabricante ya no vende, mientras todavia tienen soporte.",
+  "prioridad_ot": "Sin repuestos, la falla de un equipo descontinuado puede detener el proceso hasta conseguir un reemplazo compatible; planear mientras hay soporte evita migrar a las prisas.",
+  "pasos": [
+    "Listar los equipos del reporte de obsolescencia en fin de venta con soporte vigente, su funcion, su criticidad y la fecha de fin de soporte.",
+    "Confirmar con el fabricante las fechas de fin de venta y de fin de soporte, porque la tabla de fechas la mantiene el analista y puede estar desactualizada.",
+    "Revisar el inventario de repuestos y comprar los que falten mientras el fabricante o el distribuidor todavia los ofrezca.",
+    "Pedir al fabricante el modelo de reemplazo compatible, la ruta de migracion y los tiempos de entrega.",
+    "Incluir los equipos en el plan de reemplazo con fecha, presupuesto y ventana de parada acordados con operacion antes del fin de soporte."
+  ],
+  "por_plataforma": {
+    "Claroty xDome": [
+      "Filtrar los activos del modelo afectado y exportar la lista para validarla con operacion.",
+      "Anotar en cada activo la fecha de fin de venta y la de fin de soporte para darles seguimiento."
+    ],
+    "PLC / RTU (generico)": [
+      "Respaldar el programa y la configuracion del controlador antes de cualquier migracion y conservar una copia fuera de linea.",
+      "Pedir al fabricante la guia de migracion del programa al modelo de reemplazo y probarla en un equipo de laboratorio."
+    ]
+  },
+  "verificacion": [
+    "Reimportar el inventario con la tabla de fechas actualizada y confirmar el estado de cada equipo.",
+    "Confirmar con el dueno del proceso que hay repuestos suficientes y un plan de reemplazo con fecha."
+  ],
+  "reversion": [
+    "Conservar el equipo anterior y su respaldo hasta que el reemplazo opere estable en la ventana de mantenimiento.",
+    "Volver al equipo anterior si el reemplazo afecta el control, segun el procedimiento de cambios del cliente."
+  ],
+  "precauciones": [
+    "Aplicar el reemplazo solo dentro de la ventana acordada con operacion; fuera de ella, solo planear y dejar registro.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla.",
+    "No reemplazar un equipo de control sin la validacion del proveedor."
+  ],
+  "esfuerzo_estimado": "medio",
+  "responsable": "Ingenieria de control y mantenimiento, con el proveedor del equipo",
+  "referencias": [
+    "MITRE ICS T0866",
+    "NERC CIP-007 R2",
+    "NERC CIP-010 R1",
+    "NIST 800-82 SA-22",
+    "NIST 800-82 SI-2",
+    "NIST CSF PR.PS-02",
+    "NIST CSF PR.PS-03"
+  ]
+}
