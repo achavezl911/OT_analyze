@@ -210,10 +210,13 @@ def combinar(tobe: dict, plan) -> list:
     if plan is None:
         return []
     if not tobe.get("filas"):
-        if plan.previos:
-            return [t("--allowlist-revision: sin comunicacion observada entre zonas no se escribe la allowlist; "
-                      "{n} flujos del archivo no se trasladan.", n=len(plan.previos))]
-        return []
+        if not plan.previos:
+            return []
+        # sin flujos observados entre zonas: la allowlist lleva solo los del archivo (no observados) para no perderlos
+        tobe["allowlist_proyecto"] = {"cfg": plan.cfg, "previos": plan.previos,
+                                      "no_observados": list(plan.previos.items())}
+        return [t("--allowlist-revision: sin comunicacion observada entre zonas; la allowlist lleva solo los {n} "
+                  "flujos del archivo, como no observados.", n=len(plan.previos))]
     vistos = {id_flujo(f["zona_origen"], f["zona_destino"], f["servicio"]) for f in tobe["filas"]}
     sobran = [(k, r) for k, r in plan.previos.items() if k not in vistos]
     tobe["allowlist_proyecto"] = {"cfg": plan.cfg, "previos": plan.previos, "no_observados": sobran}

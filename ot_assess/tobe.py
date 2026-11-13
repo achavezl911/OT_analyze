@@ -373,6 +373,9 @@ def filas_matriz(tobe: dict) -> list:
 def tablas(tobe: dict) -> list:
     """[(archivo, hoja, cabecera, filas)] para el CSV y el XLSX."""
     if not hay(tobe):
+        if tobe and tobe.get("allowlist_proyecto"):     # ALLOW1 (D133): solo los flujos declarados por el equipo
+            from . import allowlist_proyecto as _ap
+            return [(ARCHIVO_ALLOW, HOJA_ALLOW, *_ap.tabla(tobe, COLUMNAS, []))]
         return []
     cab, filas = COLUMNAS, filas_tabla(tobe)
     if tobe.get("allowlist_proyecto"):       # ALLOW1 (D133): columnas del proyecto al final

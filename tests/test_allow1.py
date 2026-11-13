@@ -316,3 +316,22 @@ class SalidasTest(Base):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SinFlujosObservadosTest(unittest.TestCase):
+    def test_la_allowlist_lleva_solo_los_flujos_del_archivo(self):
+        ident = ap.id_flujo("A", "B", "tcp/502")
+        reg = {"zona_origen": "A", "zona_destino": "B", "servicio": "tcp/502", "decision_equipo": "permitir",
+               "funcion": "respaldo mensual", "frecuencia": "", "owner": "", "necesidad": "",
+               "estado_revision": "", "revisado_por": "", "fecha": "", "comentario": ""}
+        tobe = tb._vacio(0)
+        avisos = ap.combinar(tobe, ap.Plan(ap.defecto(), {ident: reg}))
+        self.assertEqual(len(avisos), 1)
+        tablas = tb.tablas(tobe)
+        self.assertEqual([x[0] for x in tablas], [tb.ARCHIVO_ALLOW])
+        cab, filas = tablas[0][2], tablas[0][3]
+        self.assertEqual(len(filas), 1)
+        fila = dict(zip([str(c) for c in cab], filas[0]))
+        self.assertEqual((fila["id_flujo"], fila["zona_origen"], fila["funcion"], fila["observado"]),
+                         (ident, "A", "respaldo mensual", "no"))
+        self.assertEqual(tb.tablas(tb._vacio(0)), [])
