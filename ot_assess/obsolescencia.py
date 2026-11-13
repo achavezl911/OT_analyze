@@ -251,8 +251,11 @@ def validar(d, fallo, objeto) -> dict:
         if not isinstance(c, dict):
             fallo("'obsolescencia.clases' debe ser un objeto estado -> etiqueta.")
         validos = (*ESTADOS, F_VENTA) if out.get("fin_de_venta") else ESTADOS
+        pronto = _txt_pronto(out.get("meses_proximo", MESES))     # con 18 meses tambien vale su propio texto
         out["clases"] = {}
         for k, v in c.items():
+            if k == pronto:
+                k = F_PRONTO
             if k not in validos:
                 fallo(f"obsolescencia.clases: estado desconocido '{k}' (validos: {', '.join(validos)}).")
             if not isinstance(v, str) or not 1 <= len(v.strip()) <= 40:
@@ -357,8 +360,10 @@ def hay(rep: dict) -> bool:
 def tablas(rep: dict) -> list:
     if not hay(rep):
         return []
-    filas = [[_t_estado(x) if i == COLUMNAS.index("estado") else x for i, x in enumerate(f["celdas"])]
-             for f in rep["filas"]]
+    propias = (rep.get("config") or {}).get("propias", ())
+    i_est, i_clase = COLUMNAS.index("estado"), len(COLUMNAS)     # la clase sin etiqueta propia es el estado
+    filas = [[_t_estado(x) if i == i_est or (i == i_clase and x not in propias) else x
+              for i, x in enumerate(f["celdas"])] for f in rep["filas"]]
     cols = COLUMNAS
     if "config" in rep:
         cols = COLUMNAS + ["clase_proyecto"] + (["fecha_fin_venta"] if rep["config"]["fin_de_venta"] else [])

@@ -63,6 +63,15 @@ class ValidacionTest(unittest.TestCase):
         self.assertEqual(p["obsolescencia"], {"meses_proximo": 6, "clases": {ob.F_VENCIDO: "Obsoleto"}})
 
 
+    def test_clase_con_el_texto_de_sus_meses(self):
+        from test_rm1 import _perfil
+        p = _perfil({"obsolescencia": {"meses_proximo": 18,
+                                       "clases": {"fin de soporte en 18 meses o menos": "Cercano"}}})
+        self.assertEqual(p["obsolescencia"]["clases"], {ob.F_PRONTO: "Cercano"})
+        self.assertIn("obsolescencia", _error({"obsolescencia": {
+            "meses_proximo": 6, "clases": {"fin de soporte en 18 meses o menos": "Cercano"}}}))
+
+
 class UmbralTest(unittest.TestCase):
     def test_bordes_seis_doce_y_dieciocho_meses(self):
         for meses, dentro, fuera in ((6, "2027-05-07", "2027-05-08"), (12, "2027-11-07", "2027-11-08"),
@@ -156,6 +165,15 @@ class ClasesTest(unittest.TestCase):
         filas = ob.seccion(rep)["tabla"][1]
         self.assertIn(["clase del proyecto", "Obsoleto", 1], filas)
         self.assertIn(["clase del proyecto", ob.F_VIGENTE, 0], filas)
+
+    def test_ingles_traduce_la_clase_sin_etiqueta_propia(self):
+        i18n.usar("en")
+        self.addCleanup(i18n.usar, "es")
+        rep = _rep({"fin_de_venta": True}, [("2020-01-01", "")])
+        fila = ob.tablas(rep)[0][3][0]
+        i_est = ob.COLUMNAS.index("estado")
+        self.assertNotEqual(fila[i_est], ob.F_VENCIDO)
+        self.assertEqual(fila[len(ob.COLUMNAS)], fila[i_est])
 
     def test_ingles_no_traduce_las_etiquetas_del_proyecto(self):
         i18n.usar("en")

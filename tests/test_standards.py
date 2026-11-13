@@ -46,6 +46,7 @@ def titulos_de_las_reglas() -> list:
     from ot_assess.obsolescencia import (  # reporte de obsolescencia (I1b)
         TIT_FUERA_REP,
         TIT_PROXIMO,
+        TIT_VENTA,  # fin de venta con soporte vigente (OBS2, D135)
     )
     from ot_assess.salud_red import (
         TIT_INTERFAZ,  # interfaces de switch saturadas (L1, D81)
@@ -59,7 +60,7 @@ def titulos_de_las_reglas() -> list:
     from ot_assess.vulnerabilidades import (
         TITULO,  # hallazgo de una fuente que no es captura (E1b)
     )
-    return out + list(shg.TITULOS) + [TIT_INTERFAZ,TIT_FUERA_REP, TIT_PROXIMO, TITULO, TITULO_KEV, TIT_VF, TITULO_ALERTAS, hg.TIT_ANY, hg.TIT_CONFIA, hg.TIT_SOMBRA, hg.TIT_RETORNO,
+    return out + list(shg.TITULOS) + [TIT_INTERFAZ,TIT_FUERA_REP, TIT_PROXIMO, TIT_VENTA, TITULO, TITULO_KEV, TIT_VF, TITULO_ALERTAS, hg.TIT_ANY, hg.TIT_CONFIA, hg.TIT_SOMBRA, hg.TIT_RETORNO,
                   hg.TIT_DENEGADO, hg.TIT_RUTAS, TIT_SIN_COBERTURA, zc.TIT_SIN_FW, zc.TIT_RIESGO, zc.TIT_SALTA, ra.TIT,
                   rac.TIT_SIN_DECLARAR, rac.TIT_VENCIDA]
 
