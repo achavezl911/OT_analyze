@@ -1,0 +1,45 @@
+{
+  "id": "pb-rutas-acceso-vencidas",
+  "hallazgo": "Rutas de acceso a OT declaradas con vigencia vencida",
+  "objetivo": "Renovar o retirar las autorizaciones de acceso a OT cuya vigencia ya paso.",
+  "prioridad_ot": "Una autorizacion vencida que sigue abierta deja un acceso sin dueno vigente; retirarla sin avisar puede dejar al proveedor sin poder dar soporte en una falla, por eso primero se confirma si el acceso aun se necesita.",
+  "pasos": [
+    "Listar en el inventario de rutas de acceso las rutas declaradas con la marca de vigencia vencida, con su proveedor, quien autoriza y si hubo uso observado.",
+    "Preguntar a quien autoriza si el acceso aun se necesita y por cuanto tiempo.",
+    "Si se necesita, renovar la autorizacion por escrito y actualizar la vigencia en el perfil.",
+    "Si no se necesita, retirar el acceso: cerrar la regla del firewall, deshabilitar las cuentas del proveedor y quitar la ruta declarada del perfil.",
+    "Revisar los registros de acceso posteriores a la fecha de vigencia y aclarar con el proveedor cualquier uso en ese periodo."
+  ],
+  "por_plataforma": {
+    "Windows / Active Directory": [
+      "Deshabilitar (sin borrar) las cuentas del proveedor ligadas al acceso retirado.",
+      "Revisar en el registro de eventos los inicios de sesion de esas cuentas despues de la fecha de vigencia."
+    ],
+    "Cisco FTD (FMC)": [
+      "Ubicar la regla que permite la ruta y deshabilitarla o acotarla segun la decision.",
+      "Aplicar el cambio en ventana y con respaldo de la politica; verificar la sintaxis en la documentacion del fabricante para la version instalada."
+    ]
+  },
+  "verificacion": [
+    "Volver a generar el inventario de rutas con el perfil actualizado y confirmar que no quedan rutas declaradas vencidas.",
+    "Confirmar con el dueno del proceso que las rutas renovadas tienen autorizacion escrita vigente."
+  ],
+  "reversion": [
+    "Rehabilitar la cuenta o la regla deshabilitada si el retiro deja sin soporte a un equipo critico, con la aprobacion de quien autoriza.",
+    "Restaurar el respaldo de la politica del firewall en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar los retiros solo dentro de la ventana acordada con operacion; fuera de ella, solo dejar registro de la decision.",
+    "Avisar al proveedor antes de retirar un acceso que usa para dar soporte.",
+    "Probar primero en laboratorio o en un equipo no critico y respaldar la configuracion antes de cambiarla."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ciberseguridad OT, con quien autoriza el acceso y el dueno del proceso",
+  "referencias": [
+    "MITRE ICS T0822",
+    "IEC 62443 SR 1.13",
+    "NERC CIP-005 R2",
+    "NIST 800-82 AC-17",
+    "NIST CSF PR.AA-05"
+  ]
+}
