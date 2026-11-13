@@ -189,11 +189,11 @@ class CliTest(unittest.TestCase):
         with open(out / mc.ARCHIVO_ZONAS, encoding="utf-8-sig") as fh:
             tabla = list(csv.DictReader(fh))
         self.assertEqual(list(tabla[0]), mc.COL_ZONAS)
-        self.assertEqual([t["zona"] for t in tabla], ["Alta", "Vacia", "organizacion"])
+        self.assertEqual([t["zona"] for t in tabla], ["Alta", "Vacia", mc.ZONA_OTRAS, "organizacion"])
         self.assertEqual(tabla[1]["activos"], "0")
         with open(out / mc.ARCHIVO, encoding="utf-8-sig") as fh:
             filas = [f for f in csv.DictReader(fh) if f["marco"] == mc.M_NIST]
-        self.assertEqual({f["zona_o_conducto"] for f in filas}, {"", "Alta", "Vacia"})
+        self.assertEqual({f["zona_o_conducto"] for f in filas}, {"", "Alta", "Vacia", mc.ZONA_OTRAS})
         with zipfile.ZipFile(out / "reporte_ot.xlsx") as zf:
             self.assertIn("Linea base NIST por zona", zf.read("xl/workbook.xml").decode("utf-8"))
         for n in ("reporte_ot.html", "reporte_ot.md"):
@@ -202,7 +202,7 @@ class CliTest(unittest.TestCase):
             self.assertIn("organizacion", txt)
         self.assertTrue((out / "informe_ot.docx").exists())
         d = json.loads((out / "resultado.json").read_text(encoding="utf-8"))
-        self.assertEqual([x["zona"] for x in d["matriz_controles"]["nist"]["por_zona"]], ["Alta", "Vacia"])
+        self.assertEqual([x["zona"] for x in d["matriz_controles"]["nist"]["por_zona"]], ["Alta", "Vacia", mc.ZONA_OTRAS])
 
         sin = self._correr("sin", [{"nombre": "Alta", "redes": ["10.0.0.0/32"]},
                                    {"nombre": "Vacia", "redes": ["10.9.0.0/24"]}])
@@ -220,9 +220,31 @@ class CliTest(unittest.TestCase):
                            {"entregables": ent})
         with open(out / mc.ARCHIVO, encoding="utf-8-sig") as fh:
             sc7 = [f for f in csv.DictReader(fh) if f["marco"] == mc.M_NIST and f["id"] == "SC-7"]
-        self.assertEqual(sorted(f["zona_o_conducto"] for f in sc7), ["Alta", "Baja"])
+        self.assertEqual(sorted(f["zona_o_conducto"] for f in sc7), sorted(["Alta", "Baja", mc.ZONA_OTRAS]))
         self.assertEqual({f["entregables"] for f in sc7}, {"D-01"})
 
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FueraDeZonasTest(unittest.TestCase):
+    """Activos en zonas que el perfil no declara (subred, VLAN, plataforma): su evidencia no se pierde."""
+
+    def test_hallazgo_en_zona_no_declarada_va_a_la_fila_otras(self):
+        activos = dict(ACTIVOS, c={"ips": ["10.9.9.9"], "zona_asignada": "Subred 10.9.9.0/24"},
+                       d={"ips": ["8.8.8.8"], "zona_asignada": "Internet"})
+        n = mc.construir(activos, {}, {}, [_hall("SC-7", ["10.9.9.9"])], {"zonas": ZONAS})["nist"]
+        f = _filas(n, "SC-7")
+        self.assertEqual(sorted(f), sorted(["Z1", "Z2", "Z3", mc.ZONA_OTRAS]))
+        self.assertEqual(f[mc.ZONA_OTRAS]["estado"], lb.E_BRECHA)
+        self.assertNotEqual(f["Z1"]["estado"], lb.E_BRECHA)
+        otras = next(z for z in n["por_zona"] if z["zona"] == mc.ZONA_OTRAS)
+        self.assertEqual((otras["activos"], otras["linea_base"]), (1, "moderada"))
+
+    def test_solo_internet_aplica_a_todas_y_sin_otras_no_hay_fila(self):
+        activos = dict(ACTIVOS, d={"ips": ["8.8.8.8"], "zona_asignada": "Internet"})
+        n = mc.construir(activos, {}, {}, [_hall("SC-7", ["8.8.8.8"])], {"zonas": ZONAS})["nist"]
+        f = _filas(n, "SC-7")
+        self.assertEqual(sorted(f), ["Z1", "Z2", "Z3"])
+        self.assertTrue(all(x["estado"] == lb.E_BRECHA for x in f.values()))
