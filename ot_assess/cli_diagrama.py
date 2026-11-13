@@ -664,8 +664,12 @@ def main(argv: list | None = None) -> int:
               f"{x['conductos']} conductos")
     res.entorno = _entorno_exportacion(args, imp, fuentes)
     from . import manifiesto as _mf
-    res.manifiesto = _mf.construir(perfil, {}, [], list(zip(      # MANIF1 (D139): rutas y SHA-256 alineados
-        [r for r in [*args.activos, *args.enlaces] if Path(r).is_file()], [e["sha256"] for e in res.entorno["entradas"]])))
+    _ent = list(zip([r for r in [*args.activos, *args.enlaces] if Path(r).is_file()],      # MANIF1 (D139): rutas y
+                    [e["sha256"] for e in res.entorno["entradas"]]))                       # SHA-256 alineados
+    for _k in ("vulnerabilidades", "alertas"):      # tambien son exportes de la plataforma
+        if getattr(args, _k, None) and res.entorno.get(_k):
+            _ent.append((getattr(args, _k), res.entorno[_k]["sha256"]))
+    res.manifiesto = _mf.construir(perfil, {}, [], _ent)
     for linea in _mf.avisos(res.manifiesto):
         print(linea)
     _registro.preparar(args, perfil, res.entorno)      # EVID2 (D127)

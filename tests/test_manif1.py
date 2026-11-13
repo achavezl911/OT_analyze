@@ -468,7 +468,7 @@ class DiagramaTest(unittest.TestCase):
         i18n.usar("es")
         self.addCleanup(i18n.usar, "es")
 
-    def correr(self, man=None, **extra):
+    def correr(self, man=None, argumentos=(), **extra):
         type(self).n += 1
         p = self.tmp / f"perfil{self.n}.json"
         cfg = {"version": 1, "cliente": "ACME", "marcos": [{"clave": "iec62443"}], **extra}
@@ -479,7 +479,7 @@ class DiagramaTest(unittest.TestCase):
         sal = io.StringIO()
         with contextlib.redirect_stdout(sal), contextlib.redirect_stderr(io.StringIO()):
             self.assertEqual(main_diagrama(["--activos", str(self.inv), "--enlaces", str(self.com), "--formato",
-                                            "xdome", "-o", str(out), "--perfil", str(p)]), 0)
+                                            "xdome", "-o", str(out), "--perfil", str(p), *argumentos]), 0)
         self.consola = sal.getvalue()
         i18n.usar("es")
         return out
@@ -514,6 +514,17 @@ class DiagramaTest(unittest.TestCase):
                 texto = ps[0].read_text(encoding="utf-8")
                 self.assertIn(mf.TITULO, texto, n)
                 self.assertIn("el punto " + f["dataset_id"] + " no ve red de campo", texto, n)
+
+    def test_exportes_de_vulnerabilidades_entran_en_el_dataset(self):
+        vul = self.tmp / "vul.csv"
+        vul.write_text("ip,cve,severidad,cvss,estado,producto,version,fuente\n"
+                       "10.10.2.20,CVE-2099-0001,High,7.5,open,Firmware,1.0,Escaner\n", encoding="utf-8")
+        man = {"sitios": ["S1"], "datasets": [{"sitio": "S1", "archivos": ["inv.csv", "com.csv", "vul.csv"],
+                                               "inicio_utc": "2026-03-01T00:00:00Z", "fin_utc": "2026-03-02T00:00:00Z"}]}
+        f = _csv(self.correr(man, ["--vulnerabilidades", str(vul)]) / mf.ARCHIVO)[0]
+        self.assertEqual((f["estado"], f["archivos_n"]), ("con datos", "3"))
+        self.assertIn("vul.csv:" + hashlib.sha256(vul.read_bytes()).hexdigest(), f["sha256"].split(";"))
+        self.assertNotIn("faltan archivos", self.consola)
 
     def test_sin_la_clave_nada_cambia(self):
         sin, con = self.correr(None), self.correr(self.MAN)
