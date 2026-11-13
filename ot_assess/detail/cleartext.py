@@ -2,7 +2,8 @@
 
 SEC1 (D138): el registro NUNCA lleva el valor del secreto (comunidad SNMP, Authorization, argumento de FTP
 USER/PASS, texto de Telnet). Se guarda el hecho: tipo, origen, destino, puerto, trama, fecha UTC y datos no
-secretos (version SNMP, esquema HTTP, comando FTP, largo del valor)."""
+secretos (version SNMP, esquema HTTP, comando FTP). Tampoco el largo del valor: revelaria el largo de la
+contrasena."""
 from __future__ import annotations
 
 import datetime
@@ -44,17 +45,16 @@ def texto_claro(rc: RowCtx) -> None:
     comm = g(row, idx, "snmp.community")
     if comm:
         ver = g(row, idx, "snmp.msgVersion")
-        anota("SNMP community", f"version={ver or '?'} largo={len(comm)}")
+        anota("SNMP community", f"version={ver or '?'}")
     auth = g(row, idx, "http.authorization")
     if auth:
-        anota("HTTP Authorization", f"esquema={_esquema_http(auth)} largo={len(auth)}")
+        anota("HTTP Authorization", f"esquema={_esquema_http(auth)}")
     ftpc = g(row, idx, "ftp.request.command")
     if ftpc and ftpc.upper() in ("USER", "PASS"):
-        anota(f"FTP {ftpc.upper()}",
-              f"comando={ftpc.upper()} largo={len(g(row, idx, 'ftp.request.arg'))}")
+        anota(f"FTP {ftpc.upper()}", f"comando={ftpc.upper()}")
     tel = g(row, idx, "telnet.data")
     if tel:
-        anota("Telnet", f"largo={len(tel.replace(chr(13), '').replace(chr(10), ''))}")
+        anota("Telnet", "")
     for fld, label in (("tftp.source_file", "TFTP lectura"),
                        ("tftp.destination_file", "TFTP escritura")):
         v = g(row, idx, fld)

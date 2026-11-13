@@ -1686,7 +1686,7 @@ lo arma y termina con código 3; `--sin-escaneo-secretos` lo arma igual y deja l
 Ninguna salida lleva el valor de un secreto. Para lo que viaja en claro en una captura (comunidad SNMP, encabezado
 HTTP `Authorization`, argumento de FTP `USER`/`PASS`, texto de Telnet), `texto_claro` de `resultado.json` guarda solo el
 hecho: tipo, origen (`ip`), destino (`dst`), puerto, trama, `fecha_utc` y datos no secretos (versión SNMP, esquema
-`Basic`/`Bearer`, comando FTP, largo del valor). El hallazgo "Credenciales o administracion en texto claro" no cambia.
+`Basic`/`Bearer`, comando FTP), ni siquiera el largo del valor. El hallazgo "Credenciales o administracion en texto claro" no cambia.
 Aplica siempre, sin clave de perfil. Los nombres de archivo TFTP y el `dominio\usuario` de NTLM no son secretos y se
 conservan.
 

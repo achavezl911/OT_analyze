@@ -118,7 +118,7 @@ class RedaccionColectorTest(unittest.TestCase):
         self.assertIn("esquema=Bearer", e["detalle"])
         (e,) = self._correr(**{"ftp.request.command": "pass", "ftp.request.arg": "abcd"})
         self.assertIn("comando=PASS", e["detalle"])
-        self.assertIn("largo=4", e["detalle"])
+        self.assertEqual(e["detalle"], "comando=PASS")      # sin el largo: revelaria el de la contrasena
         (e,) = self._correr(**{"tftp.source_file": "config.bin"})
         self.assertEqual(e["detalle"], "config.bin")
 
