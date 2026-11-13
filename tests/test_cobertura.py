@@ -79,10 +79,10 @@ class ClasificacionTest(unittest.TestCase):
         filas = cb.clasificar(cb.cargar("iec62443"), st.ESTANDARES["iec62443"])
         r = cb.resumen(filas)
         self.assertEqual([sum(s[k] for s in r.values()) for k in ("total", cb.DIRECTA, cb.APOYO, cb.NO_EVID)],
-                         [51, 18, 0, 33])                     # SR 1.2 y SR 1.5 (SW1b); SR 2.11 por la hora (T10c); SR 7.2 (L1)
+                         [51, 19, 0, 32])                     # SR 1.2 y SR 1.5 (SW1b); SR 2.11 por la hora (T10c); SR 7.2 (L1); SR 6.1 (FWLOG)
         directas = {f["id"] for f in filas if f["cobertura"] == cb.DIRECTA}
         self.assertEqual(directas, {"SR 1.1", "SR 1.2", "SR 1.5", "SR 1.13", "SR 2.1", "SR 2.11", "SR 2.8", "SR 3.1", "SR 4.1", "SR 4.3", "SR 5.1", "SR 5.2",
-                                    "SR 6.2", "SR 7.1", "SR 7.2", "SR 7.6", "SR 7.7", "SR 7.8"})
+                                    "SR 6.1", "SR 6.2", "SR 7.1", "SR 7.2", "SR 7.6", "SR 7.7", "SR 7.8"})
         f = {f["id"]: f for f in filas}["SR 5.2"]
         self.assertEqual((f["grupo"], f["categoria"]), ("FR5", "Flujo de datos restringido (RDF)"))
         self.assertEqual(self.por_id["PR.IR-01"]["grupo"], "PR")
