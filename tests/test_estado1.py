@@ -88,6 +88,14 @@ def _perfil_json(tmp, extra):
 # Perfil
 # --------------------------------------------------------------------------- #
 
+def _sin_campos_de_juicio(archivo: str, lineas: list) -> list:
+    """Filas que la copia conserva: en la procedencia (columna campo) no van las de un campo de juicio."""
+    if archivo != "inventario_procedencia.csv" or not lineas:
+        return lineas
+    k = lineas[0].index("campo")
+    return [lineas[0]] + [f for f in lineas[1:] if not f[k].lower().startswith(("criticidad", "riesgo"))]
+
+
 class PerfilTest(unittest.TestCase):
     def test_valido_y_por_omision(self):
         from test_rm1 import _perfil
@@ -371,7 +379,7 @@ class CapturaTest(unittest.TestCase):
         self.assertEqual(copias, sorted(n for n in se.SALIDAS if (o / n).is_file() and n in copias))
         nombres = {x.lower() for n in se.JUICIO for x in (n, i18n.t(n))}
         for n in copias:
-            origen, copia = _lineas(o / n), _lineas(carpeta / n)
+            origen, copia = _sin_campos_de_juicio(n, _lineas(o / n)), _lineas(carpeta / n)
             self.assertEqual(len(origen), len(copia), n)
             cab = _csv(carpeta / n)
             for c in (cab[0].keys() if cab else _celdas(carpeta / n)):
@@ -553,7 +561,7 @@ class DiagramaTest(unittest.TestCase):
         self.assertTrue(copias)
         self.assertIn("manifiesto.csv", copias)
         for n in copias:
-            self.assertEqual(len(_lineas(o / n)), len(_lineas(o / "estado" / n)), n)
+            self.assertEqual(len(_sin_campos_de_juicio(n, _lineas(o / n))), len(_lineas(o / "estado" / n)), n)
             for c in _celdas(o / "estado" / n):
                 for p in PALABRAS:
                     self.assertNotIn(p, c.lower(), f"{n}: {c}")
