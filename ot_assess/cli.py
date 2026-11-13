@@ -737,6 +737,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"    equipos propios excluidos: {x['equipos']} equipos, {x['paquetes']} paquetes, "
               f"{x['conductos']} conductos, {x['hallazgos']} hallazgos omitidos")
     res.entorno = construir_entorno(run, tshark_bin, caps, args, list(ignorados))
+    from . import manifiesto as _mf
+    res.manifiesto = _mf.construir(perfil, res.cobertura_captura,      # MANIF1 (D139)
+                                   [(c.path, e["sha256"]) for c, e in zip(caps, res.entorno["capturas"])], [])
+    for linea in _mf.avisos(res.manifiesto):
+        print(linea)
     _registro.preparar(args, perfil, res.entorno, caps)      # EVID2 (D127)
     cust = res.entorno.get("custodia")
     if cust:

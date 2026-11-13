@@ -663,6 +663,11 @@ def main(argv: list | None = None) -> int:
         print(f"    equipos propios excluidos: {x['equipos']} equipos, {x['paquetes']} paquetes, "
               f"{x['conductos']} conductos")
     res.entorno = _entorno_exportacion(args, imp, fuentes)
+    from . import manifiesto as _mf
+    res.manifiesto = _mf.construir(perfil, {}, [], list(zip(      # MANIF1 (D139): rutas y SHA-256 alineados
+        [r for r in [*args.activos, *args.enlaces] if Path(r).is_file()], [e["sha256"] for e in res.entorno["entradas"]])))
+    for linea in _mf.avisos(res.manifiesto):
+        print(linea)
     _registro.preparar(args, perfil, res.entorno)      # EVID2 (D127)
     pagina = write_pagina(diagramas, imp, estandares, out, args.titulo, args.cliente, perfil, hallazgos,
                           vuln_resumen, alertas_resumen, rutas, cob, zon, zcr, res.diagrama_zcr)

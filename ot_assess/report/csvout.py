@@ -25,6 +25,7 @@ from .. import inventario_normalizado as _in
 from .. import inventario_presentado as _ip
 from .. import linea_base_aprobada as _lba
 from .. import madurez as _ma
+from .. import manifiesto as _mf
 from .. import matriz_controles as _mc
 from .. import obsolescencia as _ob
 from .. import periodicidad as _pe
@@ -173,6 +174,7 @@ def tablas(res: Assessment) -> list:
     out.extend(_tb.tablas(res.tobe, ids_tz))
     out.extend(_rac.tablas(res.rutas_acceso))
     out.extend(_rr.tablas(res.registro_red))
+    out.extend(_mf.tablas(res.manifiesto))      # MANIF1 (D139)
     out.extend(_hd.tablas(res.hardening))
     out.extend(_fl.tablas(res.fuentes_log))
     out.extend(_dr.tablas(res.direccionamiento))

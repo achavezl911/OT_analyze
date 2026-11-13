@@ -23,6 +23,7 @@ from .. import inventario_presentado as _ip
 from .. import linea_base as _lb
 from .. import linea_base_aprobada as _lba
 from .. import madurez as _ma
+from .. import manifiesto as _mf
 from .. import matriz_controles as _mc
 from .. import obsolescencia as _ob
 from .. import perfil as _perfil
@@ -310,6 +311,30 @@ def write_html(res: Assessment, outdir: Path) -> Path:
         a("</tbody></table></div>")
         if s["mas"]:
             a(f'<p>{esc(s["mas"])}</p>')
+    if _mf.hay(res.manifiesto):       # MANIF1 (D139)
+        s = _mf.seccion(res.manifiesto)
+        a("<h3>" + esc(s["titulo"]) + "</h3>")
+        a(f'<div class="nota">{esc(s["nota"])}</div>')
+        a(f'<p>{esc(s["resumen"])}</p>')
+        a('<div class="tbl"><table><thead><tr>' + "".join(f"<th>{esc(c)}</th>" for c in s["cab"])
+          + "</tr></thead><tbody>")
+        for fila in s["filas"]:
+            a("<tr>" + "".join(f"<td>{esc(str(c))}</td>" for c in fila) + "</tr>")
+        a("</tbody></table></div>")
+        if s["mas"]:
+            a(f'<p>{esc(s["mas"])}</p>')
+        if s["plan"]:
+            p = s["plan"]
+            a("<h4>" + esc(p["titulo"]) + "</h4>")
+            a(f'<p>{esc(p["resumen"])}</p>')
+            a('<div class="tbl"><table><thead><tr>' + "".join(f"<th>{esc(c)}</th>" for c in p["cab"])
+              + "</tr></thead><tbody>")
+            for fila in p["filas"]:
+                a("<tr>" + "".join(f"<td>{esc(str(c))}</td>" for c in fila) + "</tr>")
+            a("</tbody></table></div>")
+            for texto in [p["mas"], *p["muestras"]]:
+                if texto:
+                    a(f"<p>{esc(texto)}</p>")
     if _hd.hay(res.hardening):       # T1b (D86)
         s = _hd.seccion(res.hardening)
         a("<h3>" + esc(s["titulo"]) + "</h3>")
@@ -459,6 +484,8 @@ def write_html(res: Assessment, outdir: Path) -> Path:
         "Cada renglon es una relacion de comunicacion observada: "
         "un origen, un destino y un servicio. La criticidad combina el tipo de "
         "servicio, si cruza zonas y si transporta operaciones de escritura.")) + "</p>")
+    for texto in _mf.nota_no_ve(res.manifiesto):      # MANIF1 (D139)
+        a(f'<div class="nota">{esc(texto)}</div>')
     for d in res.diagrams:
         a(f"<h3>{esc(d.titulo)}</h3>")
         a(f'<p class="lead">{esc(d.descripcion)}</p>')

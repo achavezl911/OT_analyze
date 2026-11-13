@@ -1019,6 +1019,25 @@ registros lleguen ni dictamina cumplimiento; del firewall no lee su configuraci�
 Sin la clave no cambia ninguna salida de una corrida; solo cambian las tablas estáticas de `docs/CATALOGO.md`, que
 salen del mapeo de hallazgos a requisitos (IEC 62443 SR 2.8 y SR 6.1, NIST 800-82 AU-2/AU-6/AU-12, CSF
 DE.CM-01/PR.PS-04, CIP-007 R4; MITRE ICS sin referencia): requisitos de IEC 62443 con regla 18 a 19.
+**Manifiesto por dataset y plan de captura (MANIF1, D139).** Clave de perfil opcional `manifiesto` (objeto): `sitios`
+(obligatoria, 1 a 200 códigos de 1 a 40 caracteres `A-Za-z0-9_-`), `zona_presentacion` (`etiqueta` y `desfase`
+`+HH:MM`/`-HH:MM` entre -12:00 y +14:00, fijo, sin horario de verano; solo agrega columnas locales), `procesado_por`,
+`datasets` (1 a 500) y `plan`. Un dataset lleva `sitio` (de la lista), `punto` (nombre del punto de la validación de la
+captura: la carpeta, o el archivo si está solo) o `archivos` (modo `diagrama`: 1 a 200 nombres sin ruta), `id` (1 a 64
+de `A-Za-z0-9._-`, único), `sensor`, `punto_captura`, `fuentes_espejadas`, `no_ve`, `perdidas_declaradas` (los
+contadores del SPAN o del agregador que copie el analista), `inicio_utc` y `fin_utc` (ISO 8601 con `Z` u offset;
+obligatorios en `diagrama` para tener ventana). El `plan` lleva `dias_por_punto` (0.5 a 60), `puntos` (`sitio`,
+`punto`) y `muestras` (`nombre`, `sitios`, `total` mayor o igual que los sitios). Sin `id`, el `dataset_id` es `DS-` y
+12 hex del SHA-256 de los sha256 de sus archivos ordenados: mismos archivos, mismo id, en cualquier carpeta u orden.
+`manifiesto.csv` y la hoja «Manifiesto» traen una fila por dataset (ventana UTC medida por la validación de la captura o
+declarada, `origen_ventana`, días, huecos, `perdida_tcp_pct`, `perdidas_pcapng`, `archivos_n`, `sha256` como
+`archivo:sha256` separados por `;`, `version`, `estado`) y `manifiesto_<dataset_id>.json` uno por dataset con cada
+archivo, su sha256 y sus bytes. `plan_captura.csv` y la hoja «Plan de captura» dan el estado por punto (completo,
+parcial, pendiente, no planeado) y «muestra X: capturados N de M (planeados K)». Sección «Manifiesto de datos» en
+HTML/Word/Markdown, bloque `manifiesto` de `resultado.json` y, si un dataset con datos declara `no_ve`, la nota
+«Ausencia de un flujo no es inexistencia» en la matriz de comunicaciones. Un dataset que no está en la corrida queda
+«sin datos en esta corrida» con aviso (el perfil se comparte entre corridas). Es estado, no riesgo: sin hallazgos ni
+dictamen de cumplimiento. Sin la clave no cambia ninguna salida.
 **Hardening por tipo de equipo (T1b, D86).** Cada activo se asigna a uno de seis tipos (controlador, estación, servidor,
 red, seguridad, otro) por su rol inferido o por el tipo que da la plataforma (`ot_assess/data/hardening.json`); sin
 rol, por los puertos que sirve (puertos OT: controlador; DNS, LDAP, bases de datos: servidor; RDP/VNC: estación) y si

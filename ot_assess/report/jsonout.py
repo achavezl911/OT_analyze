@@ -17,6 +17,7 @@ from .. import hardening as _hd
 from .. import iec62351 as _i62351
 from .. import linea_base_aprobada as _lba
 from .. import madurez as _ma
+from .. import manifiesto as _mf
 from .. import registro_evidencias as _registro
 from .. import registro_red as _rr
 from .. import riesgo as _rg
@@ -138,6 +139,7 @@ def write_json(res: Assessment, outdir: Path) -> None:
                     **({"csf_tiers": _ct.para_json(res.csf_tiers)} if _ct.hay(res.csf_tiers) else {}),
                     "tobe": _tb.para_json(res.tobe),
                     **({"registro_red": _rr.para_json(res.registro_red)} if _rr.hay(res.registro_red) else {}),
+                    **({"manifiesto": _mf.para_json(res.manifiesto)} if _mf.hay(res.manifiesto) else {}),
                     **({"rutas_acceso": _rac.para_json(res.rutas_acceso)} if _rac.hay(res.rutas_acceso) else {}),
                     "hardening": _hd.para_json(res.hardening),
                     "fuentes_log": _fl.para_json(res.fuentes_log),
@@ -149,3 +151,6 @@ def write_json(res: Assessment, outdir: Path) -> None:
                     "cobertura": {e.clave: resum for e, _f, resum in de_corrida(res)},
                     "capturas": data}, indent=2, ensure_ascii=False, default=_a_json), encoding="utf-8"
     )
+    for f in _mf.filas_json(res.manifiesto):      # MANIF1 (D139): un JSON por dataset, con el SHA-256 de cada archivo
+        (outdir / f"manifiesto_{f['dataset_id']}.json").write_text(
+            json.dumps(f, indent=2, ensure_ascii=False), encoding="utf-8")

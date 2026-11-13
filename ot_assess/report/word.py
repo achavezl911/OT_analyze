@@ -22,6 +22,7 @@ from .. import inventario_presentado as _ip
 from .. import linea_base as _lb
 from .. import linea_base_aprobada as _lba
 from .. import madurez as _ma
+from .. import manifiesto as _mf
 from .. import matriz_controles as _mc
 from .. import obsolescencia as _ob
 from .. import perfil as _perfil
@@ -236,6 +237,15 @@ def construir_bloques(res: Assessment) -> list:
         b += [("h1", s["titulo"]), ("nota", s["nota"]), ("p", s["resumen"]), ("tabla", s["cab"], s["filas"])]
         if s["mas"]:
             b.append(("p", s["mas"]))
+    if _mf.hay(res.manifiesto):       # MANIF1 (D139)
+        s = _mf.seccion(res.manifiesto)
+        b += [("h1", s["titulo"]), ("nota", s["nota"]), ("p", s["resumen"]), ("tabla", s["cab"], s["filas"])]
+        if s["mas"]:
+            b.append(("p", s["mas"]))
+        if s["plan"]:
+            p = s["plan"]
+            b += [("p", p["titulo"]), ("p", p["resumen"]), ("tabla", p["cab"], p["filas"])]
+            b += [("p", texto) for texto in [p["mas"], *p["muestras"]] if texto]
     if _hd.hay(res.hardening):       # T1b (D86)
         s = _hd.seccion(res.hardening)
         b += [("h1", s["titulo"]), ("nota", s["nota"]), ("p", s["resumen"]), ("tabla", s["cab_tipos"], s["tipos"])]
@@ -300,6 +310,7 @@ def construir_bloques(res: Assessment) -> list:
     i = cab.index("cruza_zona")
     filas = sorted(filas, key=lambda f: f[i] != "si")  # estable: conserva el orden dentro de cada grupo
     b.append(("h1", t("Matriz de comunicaciones")))
+    b += [("nota", texto) for texto in _mf.nota_no_ve(res.manifiesto)]      # MANIF1 (D139)
     _recortada(cabecera_t(res, cab), filas, args.max_rows, b)
 
     if res.diagrams:

@@ -22,6 +22,7 @@ from .. import inventario_presentado as _ip
 from .. import linea_base as _lb
 from .. import linea_base_aprobada as _lba
 from .. import madurez as _ma
+from .. import manifiesto as _mf
 from .. import matriz_controles as _mc
 from .. import obsolescencia as _ob
 from .. import perfil as _perfil
@@ -433,6 +434,30 @@ def write_md(res: Assessment, outdir: Path) -> Path:
         out.append("")
         if s["mas"]:
             out.append(s["mas"] + "\n")
+    if _mf.hay(res.manifiesto):       # MANIF1 (D139)
+        s = _mf.seccion(res.manifiesto)
+        out.append("### " + s["titulo"] + "\n")
+        out.append("> " + s["nota"] + "\n")
+        out.append(s["resumen"] + "\n")
+        out.append("| " + " | ".join(md_escape(str(c)) for c in s["cab"]) + " |")
+        out.append("|" + "---|" * len(s["cab"]))
+        for fila in s["filas"]:
+            out.append("| " + " | ".join(md_escape(str(c)) for c in fila) + " |")
+        out.append("")
+        if s["mas"]:
+            out.append(s["mas"] + "\n")
+        if s["plan"]:
+            p = s["plan"]
+            out.append("#### " + p["titulo"] + "\n")
+            out.append(p["resumen"] + "\n")
+            out.append("| " + " | ".join(md_escape(str(c)) for c in p["cab"]) + " |")
+            out.append("|" + "---|" * len(p["cab"]))
+            for fila in p["filas"]:
+                out.append("| " + " | ".join(md_escape(str(c)) for c in fila) + " |")
+            out.append("")
+            for texto in [p["mas"], *p["muestras"]]:
+                if texto:
+                    out.append(texto + "\n")
     if _hd.hay(res.hardening):       # T1b (D86)
         s = _hd.seccion(res.hardening)
         out.append("### " + s["titulo"] + "\n")
@@ -582,6 +607,8 @@ def write_md(res: Assessment, outdir: Path) -> Path:
     out.append(t("Cada renglon es una relacion origen -> destino -> servicio. La "
                  "criticidad combina el tipo de servicio, si cruza zonas y si "
                  "transporta operaciones de escritura al proceso.") + "\n")
+    for texto in _mf.nota_no_ve(res.manifiesto):      # MANIF1 (D139)
+        out.append("> " + texto + "\n")
     for d in res.diagrams:
         out.append(f"### {d.titulo}\n")
         out.append(f"{d.descripcion}\n")
