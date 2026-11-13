@@ -520,6 +520,52 @@ class CapturaTest(unittest.TestCase):
         self.assertIn("not declared", {f["expected_policy"] for f in _csv(o / "matriz_segmentacion.csv")})
 
 
+MAC_R = "02:00:00:d1:00:09"
+IPS_R = ("10.10.1.20", "10.10.1.21", "10.20.1.90", "10.30.1.60", "10.30.1.61")      # Corp (IT), Planta, Borde (dmz)
+
+
+class EnrutadorTest(unittest.TestCase):
+    """Captura detras de un enrutador: las IP de varias zonas llegan con una sola MAC y merge_assets las junta en un
+    activo cuya zona es la de una sola de ellas. El dominio, los ids y la matriz van por IP (como el inventario
+    presentado, D105), no por la zona del activo agrupado."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = Path(tempfile.mkdtemp())
+        pq = []
+        for i, ip in enumerate(IPS_R):
+            pq += [_tcp(MAC_R, MAC_B, ip, IP_B, 41000 + i, 502, T1 + i), _tcp(MAC_B, MAC_R, IP_B, ip, 502, 41000 + i, T1 + i)]
+        escribir(pq, cls.tmp / "pR" / "r1.pcap")
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    @LEE_CAPTURAS
+    def test_dominio_y_matriz_por_ip_detras_de_un_enrutador(self):
+        i18n.usar("es")
+        self.addCleanup(i18n.usar, "es")
+        p = self.tmp / "perfil.json"
+        p.write_text(json.dumps({"version": 1, "cliente": "ACME", "marcos": [{"clave": "iec62443"}], **PERFIL_CAP,
+                                 "campos_minimos": {}}), encoding="utf-8")
+        out = self.tmp / "out"
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(main_completo([str(self.tmp / "pR"), "-o", str(out), "--perfil", str(p)]), 0)
+        inv = {f["ips"]: f for f in _csv(out / "inventario_normalizado.csv")}
+        self.assertTrue(all(ip in inv for ip in IPS_R))                 # el inventario ya parte la MAC por IP
+        self.assertEqual([inv[ip]["dominio"] for ip in ("10.10.1.20", "10.30.1.60", "10.30.1.61")], ["IT", "DMZ", "DMZ"])
+        com = {f["origen_ip"]: f for f in _csv(out / "comunicaciones.csv") if f["destino_ip"] == IP_B}
+        self.assertEqual((com["10.30.1.60"]["origen_dominio"], com["10.10.1.20"]["origen_dominio"]), ("DMZ", "IT"))
+        self.assertEqual(com["10.30.1.60"]["origen_id"], inv["10.30.1.60"]["id"])
+        mat = {(f["zona_origen"], f["zona_destino"]): f for f in _csv(out / "matriz_segmentacion.csv")}
+        # sin saludo TCP, cada respuesta de B es su propio conducto: cada par sale tambien de vuelta
+        self.assertEqual({k: mat[k]["conductos"] for k in (("Corp", "Planta"), ("Borde", "Planta"), ("Planta", "Corp"),
+                                                          ("Planta", "Borde"), ("Planta", "Planta"))},
+                         {("Corp", "Planta"): "2", ("Borde", "Planta"): "2", ("Planta", "Corp"): "2",
+                          ("Planta", "Borde"): "2", ("Planta", "Planta"): "2"})
+        self.assertEqual(mat[("Corp", "Borde")]["observado"], "no")
+
+
 def _lineas(path):
     with open(path, newline="", encoding="utf-8-sig") as fh:
         return list(csv.reader(fh))

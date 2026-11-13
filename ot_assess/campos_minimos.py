@@ -252,6 +252,23 @@ def _clave_ip(txt: str) -> tuple:
         return 1, 0, txt
 
 
+def _por_ip(res) -> dict:
+    """{ip: activo}. En captura, la MAC de un enrutador junta en un activo todas las IP que llegan por el (D74); su zona
+    y su nivel no son los de cada IP. Esa MAC se parte en una fila por IP con su propia zona, origen y nivel, como en
+    el inventario presentado (I3, D105); los demas activos van tal cual."""
+    activos = list(res.assets.values())
+    caps = [c for c in (getattr(res, "caps", None) or ()) if not c.error]
+    if caps:
+        from . import inventario_presentado as _ipr
+        if any(_ipr._ips_partidas(a, caps) for a in activos):
+            activos = _ipr.filas(res)
+    por_ip: dict = {}
+    for a in activos:
+        for ip in a["ips"]:
+            por_ip.setdefault(ip, a)
+    return por_ip
+
+
 def calcular(res) -> dict:
     """{'tablas': {archivo: (columnas, filas)}, 'matriz': filas, 'json': {...}}; filas ya traducidas."""
     perfil = res.perfil or {}
@@ -259,10 +276,7 @@ def calcular(res) -> dict:
     sitio = cfg.get("sitio") or perfil.get("sitio", "")
     as_of = _as_of(res, cfg)
     assets, conductos = res.assets, res.conduits
-    por_ip: dict = {}
-    for a in assets.values():
-        for ip in a["ips"]:
-            por_ip.setdefault(ip, a)
+    por_ip = _por_ip(res)
     dom_ip: dict = {}
 
     def dominio(ip):
@@ -322,7 +336,7 @@ def calcular(res) -> dict:
     duenos = sorted(((ipaddress.ip_network(x["red"]), x["dueno"]) for x in cfg.get("duenos", ())),
                     key=lambda x: -x[0].prefixlen)
     parseadas = []
-    for ip, a in por_ip.items():
+    for ip in por_ip:
         try:
             parseadas.append((ipaddress.ip_address(ip), ip))
         except ValueError:
@@ -370,14 +384,17 @@ def _matriz(res, por_ip: dict, cfg: dict) -> tuple:
             zonas.append((z["nombre"], "perfil"))
             nombres.add(z["nombre"])
     ip_de = _zc._ip_de(res.assets)
+    origen: dict = {}       # zona -> origen, para mostrar las zonas que solo aparecen en los conductos
 
     def zona_de(ip):
         a = por_ip.get(ip)
         if a is not None and a.get("zona_asignada"):
+            origen.setdefault(a["zona_asignada"], a.get("origen_zona") or "sin zona")
             return a["zona_asignada"]
         x = _zc._ip(ip)
         if x is not None and not (x.is_private or x.is_loopback or x.is_link_local or x.is_multicast
                                   or x.is_reserved or x.is_unspecified):
+            origen.setdefault(_zc.INTERNET, "internet")
             return _zc.INTERNET
         return None
 
@@ -392,7 +409,7 @@ def _matriz(res, por_ip: dict, cfg: dict) -> tuple:
         p["bytes"] += k["bytes"]
         for z in (zo, zd):
             if z not in nombres:
-                zonas.append((z, "internet" if z == _zc.INTERNET else "sin zona"))
+                zonas.append((z, origen.get(z, "sin zona")))
                 nombres.add(z)
     if not zonas:
         return [], 0
