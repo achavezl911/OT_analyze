@@ -35,6 +35,7 @@ def titulos_de_las_reglas() -> list:
     for f in sorted(glob.glob(str(RAIZ / "ot_assess" / "rules" / "*.py"))):
         out += re.findall(r'finding\(\s*cap,\s*"[^"]+",\s*"([^"]+)"', Path(f).read_text(encoding="utf-8"))
     from ot_assess import conductos_zcr as zc  # conductos entre zonas (Z1b)
+    from ot_assess import rutas_acceso as rac  # rutas de acceso a OT (RUTA1, D134)
     from ot_assess import rutas_ataque as ra  # rutas de ataque (A1)
     from ot_assess.alertas import TITULO as TITULO_ALERTAS  # idem (E2b)
     from ot_assess.avisos_cisa import TITULO_KEV  # catalogo KEV de CISA (T6)
@@ -59,7 +60,8 @@ def titulos_de_las_reglas() -> list:
         TITULO,  # hallazgo de una fuente que no es captura (E1b)
     )
     return out + list(shg.TITULOS) + [TIT_INTERFAZ,TIT_FUERA_REP, TIT_PROXIMO, TITULO, TITULO_KEV, TIT_VF, TITULO_ALERTAS, hg.TIT_ANY, hg.TIT_CONFIA, hg.TIT_SOMBRA, hg.TIT_RETORNO,
-                  hg.TIT_DENEGADO, hg.TIT_RUTAS, TIT_SIN_COBERTURA, zc.TIT_SIN_FW, zc.TIT_RIESGO, zc.TIT_SALTA, ra.TIT]
+                  hg.TIT_DENEGADO, hg.TIT_RUTAS, TIT_SIN_COBERTURA, zc.TIT_SIN_FW, zc.TIT_RIESGO, zc.TIT_SALTA, ra.TIT,
+                  rac.TIT_SIN_DECLARAR, rac.TIT_VENCIDA]
 
 
 class MatrizTest(unittest.TestCase):
