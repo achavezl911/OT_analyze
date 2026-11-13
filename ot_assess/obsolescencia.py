@@ -10,6 +10,7 @@ import datetime
 import json
 import re
 from pathlib import Path
+from urllib.parse import urlparse
 
 from .i18n import t, unir
 from .importers import perfiles as pf
@@ -21,6 +22,8 @@ from .rules.base import finding
 F_VENCIDO, F_PRONTO, F_VIGENTE = "fuera de soporte", "fin de soporte en 12 meses o menos", "con soporte"
 F_SIN_DATO, F_SIN_VERSION = "sin dato de soporte", "sin datos de version"
 F_VENTA = "fin de venta (con soporte)"          # OBS2 (D135): solo con la clave de perfil fin_de_venta
+F_SIN_FUENTE = "sin fuente oficial"             # ESTADO1 (D140): solo con obsolescencia.exigir_url
+SUFIJO_SIN_URL = " (sin URL oficial)"
 ESTADOS = (F_VENCIDO, F_PRONTO, F_VIGENTE, F_SIN_DATO, F_SIN_VERSION)
 MESES = 12
 _RE_PRONTO = re.compile(r"^fin de soporte en (\d+) meses o menos$")
@@ -50,6 +53,8 @@ ALIAS = {
     "fuente": ["fuente", "source", "referencia", "url"],
 }
 SUFIJOS = {"INC", "CORP", "CORPORATION", "AG", "GMBH", "LTD", "LLC", "SA", "CO", "SE", "LIMITED", "COMPANY"}
+_RE_URL = re.compile(r"https?://[^\s,;)>\]\"']+", re.IGNORECASE)
+_RE_DOMINIO = re.compile(r"^[a-z0-9.-]+$")
 _RE_VER = re.compile(r"\d+(?:\.\d+)*")
 _RE_COND = re.compile(r"^(<=|>=|<|>|=)\s*v?(\d+(?:\.\d+)*)$", re.IGNORECASE)
 _DIR_DATOS = Path(__file__).parent / "data"
@@ -226,6 +231,18 @@ def _tit_proximo(meses: int) -> str:
     return TIT_PROXIMO if meses == MESES else f"Equipos con fin de soporte en los proximos {meses} meses"
 
 
+def _url_oficial(fuente: str, dominios=()) -> bool:
+    """ESTADO1 (D140): la fuente trae una URL http(s) (y, con `dominios`, de uno de ellos o de un subdominio)."""
+    for u in _RE_URL.findall(str(fuente or "")):
+        try:
+            host = (urlparse(u).hostname or "").lower().rstrip(".")
+        except ValueError:
+            continue
+        if host and (not dominios or any(host == d or host.endswith("." + d) for d in dominios)):
+            return True
+    return False
+
+
 def _t_estado(e: str) -> str:
     m = _RE_PRONTO.match(e)
     if m and int(m.group(1)) != MESES:
@@ -235,7 +252,8 @@ def _t_estado(e: str) -> str:
 
 def validar(d, fallo, objeto) -> dict:
     """Clave de perfil `obsolescencia` (OBS2, D135): meses_proximo, fin_de_venta y clases."""
-    d = objeto(d, "obsolescencia", ("meses_proximo", "fin_de_venta", "clases"))
+    d = objeto(d, "obsolescencia", ("meses_proximo", "fin_de_venta", "clases", "exigir_url",
+                                   "dominios_oficiales"))
     out: dict = {}
     if "meses_proximo" in d:
         m = d["meses_proximo"]
@@ -246,11 +264,29 @@ def validar(d, fallo, objeto) -> dict:
         if not isinstance(d["fin_de_venta"], bool):
             fallo("'obsolescencia.fin_de_venta' debe ser true o false.")
         out["fin_de_venta"] = d["fin_de_venta"]
+    if "exigir_url" in d:       # ESTADO1 (D140)
+        if not isinstance(d["exigir_url"], bool):
+            fallo("'obsolescencia.exigir_url' debe ser true o false.")
+        out["exigir_url"] = d["exigir_url"]
+    if "dominios_oficiales" in d:
+        dom = d["dominios_oficiales"]
+        if not out.get("exigir_url"):
+            fallo("'obsolescencia.dominios_oficiales' solo se admite junto con 'exigir_url': true.")
+        if not isinstance(dom, list) or not 1 <= len(dom) <= 100:
+            fallo("'obsolescencia.dominios_oficiales' debe ser una lista de 1 a 100 dominios.")
+        for x in dom:
+            if (not isinstance(x, str) or not 3 <= len(x) <= 253 or not _RE_DOMINIO.match(x) or "." not in x
+                    or x.startswith((".", "-")) or x.endswith((".", "-")) or ".." in x):
+                fallo(f"obsolescencia.dominios_oficiales: '{x}' no es un dominio valido (3 a 253 de a-z, 0-9, "
+                      "punto y guion, con al menos un punto, sin esquema).")
+        out["dominios_oficiales"] = list(dict.fromkeys(dom))
     if "clases" in d:
         c = d["clases"]
         if not isinstance(c, dict):
             fallo("'obsolescencia.clases' debe ser un objeto estado -> etiqueta.")
         validos = (*ESTADOS, F_VENTA) if out.get("fin_de_venta") else ESTADOS
+        if out.get("exigir_url"):
+            validos = (*validos, F_SIN_FUENTE)
         pronto = _txt_pronto(out.get("meses_proximo", MESES))     # con 18 meses tambien vale su propio texto
         out["clases"] = {}
         for k, v in c.items():
@@ -271,6 +307,8 @@ def construir(inv: dict, analista=(), referencia=None, origen_ref: str = "", con
     meses = (cfg or {}).get("meses_proximo", MESES)
     con_venta = bool((cfg or {}).get("fin_de_venta"))
     clases = (cfg or {}).get("clases", {})
+    exigir = bool((cfg or {}).get("exigir_url"))
+    dominios = (cfg or {}).get("dominios_oficiales", ())
     pronto = _txt_pronto(meses)
     origen_ref = origen_ref or "fecha de la corrida"
     base, filas = integrada(), []
@@ -302,6 +340,10 @@ def construir(inv: dict, analista=(), referencia=None, origen_ref: str = "", con
             if ev is None:
                 salidas.append((texto, "", "", F_SIN_VERSION, "", "", f["fuente"], ""))
                 continue
+            if exigir and not _url_oficial(f["fuente"], dominios):      # ESTADO1 (D140): sin fecha ni reemplazo
+                fte_sin = f["fuente"] + (f" ({f['nota']})" if f["nota"] else "") + SUFIJO_SIN_URL
+                salidas.append((texto, "", "", F_SIN_FUENTE, "", "", fte_sin, ""))
+                continue
             est, dias = _estado(f["fin"], ref, meses, f["venta"], con_venta)
             if est == F_PRONTO:
                 est = pronto
@@ -321,6 +363,8 @@ def construir(inv: dict, analista=(), referencia=None, origen_ref: str = "", con
     estados = [pronto if e == F_PRONTO else e for e in ESTADOS]
     if con_venta:
         estados.insert(3, F_VENTA)
+    if exigir:
+        estados.append(F_SIN_FUENTE)
     cuenta = {e: sum(1 for f in filas if f["estado"] == e) for e in estados}
     resumen = {"filas": len(filas), "activos": len({f["id"] for f in filas}), "por_estado": cuenta,
                "referencia": ref.isoformat(), "referencia_origen": origen_ref, "filas_analista": len(analista)}

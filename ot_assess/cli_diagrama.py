@@ -712,6 +712,9 @@ def main(argv: list | None = None) -> int:
         print("[*] Escribiendo reportes...")
         paths = write_all(res, out, omitir=("diagramas",))
         _entregables.write_entregables(res, out)      # ENT1 (D126)
+        from . import solo_estado as _se_estado
+        from .report.jsonout import agregar_bloque
+        agregar_bloque(out, "solo_estado", _se_estado.escribir(res, out))      # ESTADO1 (D140): relee las salidas
         print(f"     {paths['html']}\n     {paths['md']}")
         for n in ("informe_ot.docx", "reporte_ot.xlsx", "hallazgos.csv", "plan_remediacion.csv"):
             print(f"     {out / n}")

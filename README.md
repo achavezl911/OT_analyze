@@ -1038,6 +1038,23 @@ HTML/Word/Markdown, bloque `manifiesto` de `resultado.json` y, si un dataset con
 «Ausencia de un flujo no es inexistencia» en la matriz de comunicaciones. Un dataset que no está en la corrida queda
 «sin datos en esta corrida» con aviso (el perfil se comparte entre corridas). Es estado, no riesgo: sin hallazgos ni
 dictamen de cumplimiento. Sin la clave no cambia ninguna salida.
+**Salidas de solo estado y candidatos a hallazgo (ESTADO1, D140).** Clave de perfil opcional `solo_estado` (objeto;
+`{}` vale) para proyectos que piden entregar inventario, topología, flujos y segmentación sin hallazgos, recomendaciones
+ni lenguaje de riesgo: `carpeta` (1 a 40 de `A-Za-z0-9_-`, por omisión `estado`), `salidas` (1 a 50 nombres de la lista
+cerrada de tablas de estado, por omisión todas) y `entregable_destino` (texto de 1 a 100). Al final de la corrida,
+releyendo los CSV ya escritos, copia a `<salida>/<carpeta>/` cada tabla de la lista que exista sin las columnas de
+juicio (`severidad`, `riesgo`, `recomendacion`, `propuesta`, `brechas`, `sl_t`, `origen_sl_t`, `marcas`, `etiquetas`,
+`avisos`, `observaciones`, `ids_hallazgo`, `hallazgos`, `playbook(s)`, `prioridad`, `decision`, `regla_sugerida`,
+`quick_win` y las que empiezan por `criticidad` o `riesgo`) y arma `estado.xlsx` con una hoja por tabla. Las salidas
+completas no cambian. `candidatos_hallazgo.csv` (en la carpeta principal, archivo interno) trae una fila por hallazgo
+en el orden de `hallazgos.csv` con `fuente`, `confianza` (`observado en trafico`, `segun configuracion`, `segun
+plataforma`, `inferido por version`, `derivado`), la evidencia (retenida si contiene un posible secreto), `dataset_id`
+(con `manifiesto`), `entregable_destino` (de `entregables` o del perfil) y cuatro columnas vacías para la revisión.
+Bloque `solo_estado` de `resultado.json`. En `obsolescencia`, `exigir_url` (`true`) solo usa una fecha de fin de soporte
+o de venta si la fila de la tabla trae una URL http(s) en su fuente; si no, el estado es `sin fuente oficial` (sin
+fecha, días ni reemplazo; no genera hallazgo) y la tabla integrada de SO queda así. `dominios_oficiales` (solo con
+`exigir_url`; 1 a 100 dominios en minúsculas) exige además que el host de la URL sea uno de ellos o un subdominio. La
+herramienta no consulta la URL ni verifica que exista. Sin las claves no cambia ninguna salida.
 **Hardening por tipo de equipo (T1b, D86).** Cada activo se asigna a uno de seis tipos (controlador, estación, servidor,
 red, seguridad, otro) por su rol inferido o por el tipo que da la plataforma (`ot_assess/data/hardening.json`); sin
 rol, por los puertos que sirve (puertos OT: controlador; DNS, LDAP, bases de datos: servidor; RDP/VNC: estación) y si

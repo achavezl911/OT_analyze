@@ -15,6 +15,7 @@ from .. import entregables as _en
 from .. import fuentes_log as _fl
 from .. import hardening as _hd
 from .. import iec62351 as _i62351
+from .. import json_entrada as _json_entrada
 from .. import linea_base_aprobada as _lba
 from .. import madurez as _ma
 from .. import manifiesto as _mf
@@ -38,6 +39,16 @@ def _slots(tipo) -> list:
         s = c.__dict__.get("__slots__", ())
         out.extend(x for x in ((s,) if isinstance(s, str) else s) if not x.startswith("__"))
     return out
+
+
+def agregar_bloque(outdir: Path, clave: str, bloque) -> None:
+    """Agrega un bloque a resultado.json ya escrito (ESTADO1, D140: la copia de solo estado se arma al final)."""
+    ruta = Path(outdir) / "resultado.json"
+    if bloque is None or not ruta.is_file():
+        return
+    datos = _json_entrada.cargar(ruta.read_text(encoding="utf-8"))
+    datos[clave] = bloque
+    ruta.write_text(json.dumps(datos, indent=2, ensure_ascii=False, default=_a_json), encoding="utf-8")
 
 
 def _a_json(o):

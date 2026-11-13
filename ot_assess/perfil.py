@@ -54,7 +54,7 @@ def cargar(path) -> dict:
                              "escala_madurez", "csf_tiers_objetivo", "version_cvss", "subcomandos_deshabilitados", "leyenda_salidas",
                              "modelo_evidencia", "riesgo", "avisos_solo_paquete", "iec62351_flujos", "entregables",
                              "registro_evidencias", "confirmacion_vulnerabilidades", "allowlist_tobe", "rutas_acceso", "obsolescencia",
-                             "trazabilidad", "registro_red", "manifiesto"))
+                             "trazabilidad", "registro_red", "manifiesto", "solo_estado"))
     if d.get("version") != 1 or isinstance(d.get("version"), bool):
         fallo("'version' es requerida y solo se admite 1.")
     out: dict = {"version": 1, "cliente": texto(d["cliente"], "cliente") if "cliente" in d
@@ -158,6 +158,9 @@ def cargar(path) -> dict:
     if "manifiesto" in d:           # MANIF1 (D139)
         from .manifiesto import validar as manifiesto_valida
         out["manifiesto"] = manifiesto_valida(d["manifiesto"], fallo, objeto)
+    if "solo_estado" in d:          # ESTADO1 (D140)
+        from .solo_estado import validar as solo_estado_valida
+        out["solo_estado"] = solo_estado_valida(d["solo_estado"], fallo, objeto)
     if "riesgo" in d:       # RM1 (D123)
         out["riesgo"] = _riesgo(d["riesgo"], fallo, objeto)
     if "zonas" in d:

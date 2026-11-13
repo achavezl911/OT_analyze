@@ -763,6 +763,9 @@ def main(argv: list[str] | None = None) -> int:
     print("[*] Escribiendo reportes...")
     paths = write_all(res, outdir)
     _entregables.write_entregables(res, outdir)      # ENT1 (D126): al final, ve todas las salidas
+    from . import solo_estado as _se_estado
+    from .report.jsonout import agregar_bloque
+    agregar_bloque(outdir, "solo_estado", _se_estado.escribir(res, outdir))      # ESTADO1 (D140): relee las salidas
 
     probe = outdir / ".probe"
     if probe.exists():
