@@ -992,9 +992,9 @@ ninguna salida.
 `REC-` + 8 hex del sha256 del texto de la recomendación en español (igual en los dos idiomas; dos hallazgos con la misma
 recomendación comparten id) como columna `id_recomendacion` al final de `hallazgos.csv` (y `hallazgos_importados.csv`) y
 de `plan_remediacion.csv`; `id_vulnerabilidad` al final de `vulnerabilidades.csv` y `vulnerabilidades_firmware.csv`
-(el mismo id de VCONF, sin duplicar la columna si también está esa clave); `id_flujo` al final de `conductos_zcr.csv` y
-`allowlist_tobe.csv` (el mismo de ALLOW1, con los nombres de zona sin traducir; en `conductos_zcr.csv` el servicio es
-el texto de la columna `servicios`). Además `trazabilidad.csv` y la hoja «Trazabilidad» encadenan activo (`A-`),
+(el mismo id de VCONF, sin duplicar la columna si también está esa clave); `id_flujo` al final de
+`allowlist_tobe.csv` (el mismo de ALLOW1, con los nombres de zona sin traducir; cada flujo dice su conducto en
+`id_conducto_zcr`, y `conductos_zcr.csv` no cambia). Además `trazabilidad.csv` y la hoja «Trazabilidad» encadenan activo (`A-`),
 evidencia (`EV-` del registro cuyo archivo coincide con el origen del hallazgo; sin registro, los nombres de origen),
 hallazgo, riesgo (`R-`), controles de los marcos elegidos, recomendación, playbook, entregables (ENT1), `FL-` de los
 conductos TO-BE que citan el hallazgo y `VU-` de las vulnerabilidades del activo (solo en hallazgos de categoría

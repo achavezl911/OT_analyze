@@ -430,8 +430,7 @@ def main(argv: list | None = None) -> int:
     tablas_fw += [(a, c, f) for a, _h, c, f in _sw.tablas(switches)]
     tablas_fw += [(a, cabecera_t(res, c), f) for a, _h, c, f in _ie.tablas_flujos(args)]      # E62351F (D125)
     if _zc.hay(zcr):
-        ids_tz = "trazabilidad" in (perfil or {})      # IDS1 (D136)
-        tablas_fw.append((_zc.ARCHIVO, _zc.columnas(ids_tz), _zc.filas_tabla(zcr, ids_tz)))
+        tablas_fw.append((_zc.ARCHIVO, _zc.COLUMNAS, _zc.filas_tabla(zcr)))
     tablas_fw += [(a, c, f) for a, _h, c, f in _ra.tablas(ra)]
     if res.acceso_remoto:
         tablas_fw.append((_ar.ARCHIVO, _ar.COLUMNAS, _ar.filas(res)))

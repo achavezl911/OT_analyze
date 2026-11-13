@@ -168,7 +168,7 @@ def tablas(res: Assessment) -> list:
     if _zo.hay(res.zonas):
         out.append(("zonas.csv", _zo.TITULO, _zo.COLUMNAS, _zo.filas_tabla(_zo.presentada(res.zonas, filas_inv))))
     if _zc.hay(res.zcr):
-        out.append((_zc.ARCHIVO, _zc.HOJA, _zc.columnas(ids_tz), _zc.filas_tabla(res.zcr, ids_tz)))
+        out.append((_zc.ARCHIVO, _zc.HOJA, _zc.COLUMNAS, _zc.filas_tabla(res.zcr)))
     out.extend(_tb.tablas(res.tobe, ids_tz))
     out.extend(_rac.tablas(res.rutas_acceso))
     out.extend(_hd.tablas(res.hardening))

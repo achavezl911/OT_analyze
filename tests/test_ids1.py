@@ -303,15 +303,15 @@ class DiagramaVulnTest(test_vconf.Base):
 
 
 class DiagramaFlujoTest(test_allow1.Base):
-    def test_id_flujo_en_zcr_y_allowlist_sin_allow1(self):
+    def test_id_flujo_en_allowlist_y_enlace_con_conductos(self):
         o = self.correr("--perfil", self.perfil(trazabilidad={}))
         filas = _leer(o / "allowlist_tobe.csv")
         self.assertEqual(list(filas[0])[-1], "id_flujo")
         for f in filas:
             self.assertEqual(f["id_flujo"], ap.id_flujo(f["zona_origen"], f["zona_destino"], f["servicio"]))
         zcr = _leer(o / "conductos_zcr.csv")
-        self.assertEqual(list(zcr[0])[-1], "id_flujo")
-        self.assertTrue(all(f["id_flujo"].startswith("FL-") for f in zcr))
+        self.assertNotIn("id_flujo", zcr[0])        # un conducto agrupa servicios: lo enlaza id_conducto_zcr
+        self.assertTrue({f["id_conducto_zcr"] for f in filas} - {""} <= {z["id"] for z in zcr})
         ids_tr = {i for f in _leer(o / "trazabilidad.csv") for i in f["ids_flujo"].split("; ") if i}
         self.assertTrue(ids_tr <= {f["id_flujo"] for f in filas})
 
