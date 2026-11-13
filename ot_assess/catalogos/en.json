@@ -3758,6 +3758,7 @@
     "ids": "ids",
     "ids_flujo": "flow_ids",
     "ids_hallazgo": "finding_ids",
+    "ids_sin_registro": "rule_ids_without_logging",
     "ids_vulnerabilidad": "vulnerability_ids",
     "if_destino": "destination_if",
     "if_origen": "source_if",
