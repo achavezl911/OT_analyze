@@ -70,6 +70,7 @@
     "perdida de comunicacion": "DE.CM-01 (monitoreo de redes); DE.AE-02 (analisis de eventos adversos)",
     "sondeo irregular": "DE.CM-01 (monitoreo de redes)",
     "herramienta de acceso remoto de terceros": "PR.AA-05 (permisos de acceso); PR.IR-01 (proteccion de redes)",
+    "rutas de acceso a ot": "PR.AA-05 (permisos de acceso); PR.IR-01 (proteccion de redes)",
     "escritor de control que aparece": "PR.AA-05 (permisos y autorizaciones); DE.CM-01 (monitoreo de redes); DE.AE-02 (analisis de eventos adversos)",
     "segmentos sin cobertura de las fuentes": "DE.CM-01 (monitoreo de redes)",
     "opc ua sin seguridad": "PR.DS-02 (datos en transito protegidos)",

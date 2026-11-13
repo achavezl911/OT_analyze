@@ -28,6 +28,7 @@ from . import matriz_controles as _mc
 from . import obsolescencia as _ob
 from . import paquete_avisos as _pa
 from . import registro_evidencias as _registro
+from . import rutas_acceso as _rac
 from . import rutas_ataque as _ra
 from . import rutas_firewall as _rf
 from . import salud_red as _sr
@@ -610,6 +611,16 @@ def main(argv: list | None = None) -> int:
         print("[!] " + linea)
     if _tb.aviso(res.tobe):
         print(_tb.aviso(res.tobe))
+    res.rutas_acceso = _rac.construir(imp.assets, imp.conduits, zcr, reglas_fw, perfil,
+                                      res.acceso_remoto or ())       # RUTA1 (D134)
+    if _rac.hay(res.rutas_acceso):
+        extra = Capture(Path("rutas de acceso a OT"))
+        _rac.agregar_hallazgos(extra, res.rutas_acceso)
+        if extra.findings:
+            pares = sorted([*zip(origenes, hallazgos), *((extra.name, f) for f in extra.findings)],
+                           key=lambda x: SEV_ORDER.get(x[1]["severidad"], 9))
+            origenes, hallazgos = [o for o, _f in pares], [f for _o, f in pares]
+            res.extras.append(extra)
     res.hardening = _hd.construir(imp.assets, hallazgos, res.inventario_normalizado)      # T1b (D86)
     res.fuentes_log = _fl.construir(imp.assets, imp.conduits, hallazgos, res.inventario_normalizado,
                                     res.firewall)    # G1a (D87)

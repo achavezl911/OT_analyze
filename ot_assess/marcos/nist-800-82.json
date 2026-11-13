@@ -70,6 +70,7 @@
     "perdida de comunicacion": "SI-4 (monitoreo del sistema)",
     "sondeo irregular": "SI-4 (monitoreo del sistema)",
     "herramienta de acceso remoto de terceros": "AC-17 (acceso remoto); SC-7 (proteccion de limites)",
+    "rutas de acceso a ot": "AC-17 (acceso remoto); SC-7 (proteccion de limites)",
     "escritor de control que aparece": "AC-3 (aplicacion de acceso); AC-4 (control de flujo de informacion); SI-4 (monitoreo del sistema)",
     "segmentos sin cobertura de las fuentes": "SI-4 (monitoreo del sistema)",
     "opc ua sin seguridad": "SC-8 (confidencialidad e integridad en transmision); SC-13 (proteccion criptografica)",

@@ -29,6 +29,7 @@ from .. import playbooks as _pb
 from .. import registros_dns as _rd
 from .. import remediacion as _rem
 from .. import riesgo as _rg
+from .. import rutas_acceso as _rac
 from .. import rutas_ataque as _ra
 from .. import rutas_firewall as _rf
 from .. import salud_red as _sr
@@ -223,6 +224,11 @@ def construir_bloques(res: Assessment) -> list:
         b += [("h1", s["titulo"]), ("p", s["texto"])]
         if s["nota"]:
             b.append(("nota", s["nota"]))
+    if _rac.hay(res.rutas_acceso):       # RUTA1 (D134)
+        s = _rac.seccion(res.rutas_acceso)
+        b += [("h1", s["titulo"]), ("nota", s["nota"]), ("p", s["resumen"]), ("tabla", s["cab"], s["filas"])]
+        if s["mas"]:
+            b.append(("p", s["mas"]))
     if _hd.hay(res.hardening):       # T1b (D86)
         s = _hd.seccion(res.hardening)
         b += [("h1", s["titulo"]), ("nota", s["nota"]), ("p", s["resumen"]), ("tabla", s["cab_tipos"], s["tipos"])]

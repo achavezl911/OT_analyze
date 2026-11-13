@@ -19,6 +19,7 @@ from .. import linea_base_aprobada as _lba
 from .. import madurez as _ma
 from .. import registro_evidencias as _registro
 from .. import riesgo as _rg
+from .. import rutas_acceso as _rac
 from .. import salud_red as _sr
 from .. import sensores as _se
 from .. import tobe as _tb
@@ -119,6 +120,7 @@ def write_json(res: Assessment, outdir: Path) -> None:
                     "madurez": _ma.para_json(res.madurez),
                     **({"csf_tiers": _ct.para_json(res.csf_tiers)} if _ct.hay(res.csf_tiers) else {}),
                     "tobe": _tb.para_json(res.tobe),
+                    **({"rutas_acceso": _rac.para_json(res.rutas_acceso)} if _rac.hay(res.rutas_acceso) else {}),
                     "hardening": _hd.para_json(res.hardening),
                     "fuentes_log": _fl.para_json(res.fuentes_log),
                     "vuln_firmware": _vf.para_json(res.vuln_firmware),

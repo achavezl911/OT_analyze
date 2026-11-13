@@ -70,6 +70,7 @@
     "perdida de comunicacion": "T0827 Loss of Control; T0826 Loss of Availability",
     "sondeo irregular": "T0801 Monitor Process State",
     "herramienta de acceso remoto de terceros": "T0822 External Remote Services",
+    "rutas de acceso a ot": "T0822 External Remote Services",
     "escritor de control que aparece": "T1692.001 Unauthorized Message: Command Message; T0836 Modify Parameter",
     "segmentos sin cobertura de las fuentes": "",
     "opc ua sin seguridad": "T0830 Adversary-in-the-Middle; T0842 Network Sniffing",

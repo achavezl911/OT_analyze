@@ -30,6 +30,7 @@ from .. import playbooks as _pb
 from .. import registros_dns as _rd
 from .. import remediacion as _rem
 from .. import riesgo as _rg
+from .. import rutas_acceso as _rac
 from .. import rutas_ataque as _ra
 from .. import rutas_firewall as _rf
 from .. import salud_red as _sr
@@ -283,6 +284,18 @@ def write_html(res: Assessment, outdir: Path) -> Path:
         a(f'<p>{esc(s["texto"])}</p>')
         if s["nota"]:
             a(f'<div class="nota">{esc(s["nota"])}</div>')
+    if _rac.hay(res.rutas_acceso):       # RUTA1 (D134)
+        s = _rac.seccion(res.rutas_acceso)
+        a("<h3>" + esc(s["titulo"]) + "</h3>")
+        a(f'<div class="nota">{esc(s["nota"])}</div>')
+        a(f'<p>{esc(s["resumen"])}</p>')
+        a('<div class="tbl"><table><thead><tr>' + "".join(f"<th>{esc(c)}</th>" for c in s["cab"])
+          + "</tr></thead><tbody>")
+        for fila in s["filas"]:
+            a("<tr>" + "".join(f"<td>{esc(str(c))}</td>" for c in fila) + "</tr>")
+        a("</tbody></table></div>")
+        if s["mas"]:
+            a(f'<p>{esc(s["mas"])}</p>')
     if _hd.hay(res.hardening):       # T1b (D86)
         s = _hd.seccion(res.hardening)
         a("<h3>" + esc(s["titulo"]) + "</h3>")

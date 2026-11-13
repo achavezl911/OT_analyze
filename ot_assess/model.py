@@ -111,6 +111,7 @@ class Assessment:
     vuln_firmware: dict = field(default_factory=dict)   # vuln_firmware.construir (V1a, D89): candidatas por firmware
     fuentes_log: dict = field(default_factory=dict)     # fuentes_log.construir (G1a, D87): fuentes y colectores de log
     diagrama_zcr: Any = None                  # diagram.diagrama_zcr; se escribe aparte de `diagrams`
+    rutas_acceso: dict = field(default_factory=dict)    # rutas_acceso.construir (RUTA1, D134); {} sin la clave de perfil
     diagrama_tobe: Any = None                 # diagram.diagrama_tobe; tambien aparte de `diagrams`
     extras: list =field(default_factory=list)       # Capture que solo aportan hallazgos (no son capturas)
     vulnerabilidades: dict = field(default_factory=dict)   # vulnerabilidades.resumen; vacio sin la opcion

@@ -964,6 +964,19 @@ la función con los valores por defecto. Código 2 sin salidas: archivo inexiste
 final con `observado = no` y lo del equipo conservado (no cuentan en la matriz ni en el diagrama). La sección TO-BE
 agrega una frase con los conteos por decisión del proyecto y del equipo, los pendientes y los no observados, y
 `resultado.json` el bloque `tobe.allowlist_proyecto`. La herramienta no infiere función, frecuencia, owner ni necesidad.
+**Rutas de acceso a OT (RUTA1, D134).** Clave de perfil opcional `rutas_acceso` (objeto; `{}` vale) que cruza lo usado
+(conductos de acceso remoto o administración entre zonas o desde Internet, más las herramientas de terceros de T8), lo
+configurado (si el firewall cargado permitió algún conducto: `si` con la regla, `no` si solo hubo denegados, `sin
+firewall`) y lo declarado por el cliente. Subclaves: `servicios` (1 a 50 `tcp/22` o `udp/500`; por defecto los de
+acceso remoto y administración de los cruces del firewall) y `declaradas` (0 a 200 rutas `{id, origen, destino,
+servicio}` con `origen` y `destino` como nombre de zona, CIDR o IP, `servicio` `tcp/3389` o `*`, y opcionales `via`,
+`proveedor`, `autorizado_por` y `vigencia` AAAA-MM-DD; textos de hasta 200 caracteres). Una ruta usada coincide con una
+declarada si todos sus activos de origen y de destino caen en la zona o red declarada y el servicio es el mismo o `*`.
+Clasificación: `declarada y usada`, `declarada sin uso observado` y `usada sin declarar`; una vigencia anterior a la
+fecha de la corrida agrega `vigencia vencida`. Salidas: `rutas_acceso.csv` y hoja «Rutas de acceso», sección en
+HTML/Word/Markdown, bloque `rutas_acceso` de `resultado.json` y dos hallazgos (Media: usadas sin declarar; Baja:
+vigencia vencida). Es evidencia de lo observado, no cumplimiento; no lista reglas del firewall sin tráfico. También en
+`diagrama` (sin firewall, `configurada` queda `sin firewall`). Sin la clave no cambia ninguna salida.
 **Hardening por tipo de equipo (T1b, D86).** Cada activo se asigna a uno de seis tipos (controlador, estación, servidor,
 red, seguridad, otro) por su rol inferido o por el tipo que da la plataforma (`ot_assess/data/hardening.json`); sin
 rol, por los puertos que sirve (puertos OT: controlador; DNS, LDAP, bases de datos: servidor; RDP/VNC: estación) y si

@@ -70,6 +70,7 @@
     "perdida de comunicacion": "CIP-015 (monitoreo interno de red)",
     "sondeo irregular": "CIP-015 (monitoreo interno de red)",
     "herramienta de acceso remoto de terceros": "CIP-005 R2 (acceso remoto interactivo); CIP-005 R1 (perimetro de seguridad electronica)",
+    "rutas de acceso a ot": "CIP-005 R2 (acceso remoto interactivo); CIP-005 R1 (perimetro de seguridad electronica)",
     "escritor de control que aparece": "CIP-005 R1 (permisos de acceso entrantes y salientes); CIP-007 R5 (control de acceso); CIP-015 (monitoreo interno de red)",
     "segmentos sin cobertura de las fuentes": "CIP-015 (monitoreo interno de red)",
     "opc ua sin seguridad": "CIP-005 R2 (acceso remoto interactivo cifrado); CIP-011 R1 (proteccion de la informacion)",

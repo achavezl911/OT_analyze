@@ -70,6 +70,7 @@
     "perdida de comunicacion": "SR 6.2 Monitoreo continuo; SR 7.1 Proteccion contra denegacion de servicio",
     "sondeo irregular": "SR 6.2 Monitoreo continuo",
     "herramienta de acceso remoto de terceros": "SR 1.13 Acceso desde redes no confiables; SR 5.2 Proteccion del limite de zona",
+    "rutas de acceso a ot": "SR 1.13 Acceso desde redes no confiables; SR 5.2 Proteccion del limite de zona",
     "escritor de control que aparece": "SR 2.1 Aplicacion de autorizacion; SR 5.2 Proteccion del limite de zona; SR 6.2 Monitoreo continuo",
     "segmentos sin cobertura de las fuentes": "SR 6.2 Monitoreo continuo",
     "opc ua sin seguridad": "SR 3.1 Integridad de las comunicaciones; SR 4.1 Confidencialidad de la informacion; SR 4.3 Uso de criptografia",

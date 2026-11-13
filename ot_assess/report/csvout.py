@@ -32,6 +32,7 @@ from .. import registro_evidencias as _registro
 from .. import registros_dns as _rd
 from .. import remediacion as _re
 from .. import riesgo as _rg
+from .. import rutas_acceso as _rac
 from .. import rutas_ataque as _ra
 from .. import rutas_firewall as _rf
 from .. import salud_red as _sr
@@ -165,6 +166,7 @@ def tablas(res: Assessment) -> list:
     if _zc.hay(res.zcr):
         out.append((_zc.ARCHIVO, _zc.HOJA, _zc.COLUMNAS, _zc.filas_tabla(res.zcr)))
     out.extend(_tb.tablas(res.tobe))
+    out.extend(_rac.tablas(res.rutas_acceso))
     out.extend(_hd.tablas(res.hardening))
     out.extend(_fl.tablas(res.fuentes_log))
     out.extend(_dr.tablas(res.direccionamiento))

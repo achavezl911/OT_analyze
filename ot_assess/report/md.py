@@ -29,6 +29,7 @@ from .. import playbooks as _pb
 from .. import registros_dns as _rd
 from .. import remediacion as _rem
 from .. import riesgo as _rg
+from .. import rutas_acceso as _rac
 from .. import rutas_ataque as _ra
 from .. import rutas_firewall as _rf
 from .. import salud_red as _sr
@@ -406,6 +407,18 @@ def write_md(res: Assessment, outdir: Path) -> Path:
         out.append(s["texto"] + "\n")
         if s["nota"]:
             out.append("> " + s["nota"] + "\n")
+    if _rac.hay(res.rutas_acceso):       # RUTA1 (D134)
+        s = _rac.seccion(res.rutas_acceso)
+        out.append("### " + s["titulo"] + "\n")
+        out.append("> " + s["nota"] + "\n")
+        out.append(s["resumen"] + "\n")
+        out.append("| " + " | ".join(md_escape(str(c)) for c in s["cab"]) + " |")
+        out.append("|" + "---|" * len(s["cab"]))
+        for fila in s["filas"]:
+            out.append("| " + " | ".join(md_escape(str(c)) for c in fila) + " |")
+        out.append("")
+        if s["mas"]:
+            out.append(s["mas"] + "\n")
     if _hd.hay(res.hardening):       # T1b (D86)
         s = _hd.seccion(res.hardening)
         out.append("### " + s["titulo"] + "\n")

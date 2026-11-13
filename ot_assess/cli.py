@@ -683,6 +683,14 @@ def main(argv: list[str] | None = None) -> int:
         print(_tb.aviso(res.tobe))
     for linea in _alp.combinar(res.tobe, _alp.de_args(args)):      # ALLOW1 (D133)
         print("[!] " + linea)
+    from . import acceso_remoto as _arm
+    from . import rutas_acceso as _rac
+    res.rutas_acceso = _rac.construir(assets, conduits, res.zcr, res.firewall, perfil,
+                                      _arm.indicadores(res))       # RUTA1 (D134)
+    if _rac.hay(res.rutas_acceso):
+        extra = Capture(Path("rutas de acceso a OT"))
+        _rac.agregar_hallazgos(extra, res.rutas_acceso)
+        res.extras.append(extra)
     from . import hardening as _hd
     res.hardening = _hd.construir(assets, [f for c in [*res.caps, *res.extras] for f in c.findings],
                                res.inventario_normalizado)   # T1b (D86)
