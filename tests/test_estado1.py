@@ -455,10 +455,14 @@ class CapturaTest(unittest.TestCase):
         self.assertTrue({f["confidence"] for f in filas} <= {"observed in traffic", "per configuration", "derived",
                                                               "per platform", "inferred from version"})
         i18n.usar("en")
-        nombres = {x.lower() for n in se.JUICIO for x in (n, i18n.t(n))}
+        por_archivo = {p.name: se._nombres_juicio(p.name) for p in (o / "estado").glob("*.csv")}
         i18n.usar("es")
-        self.assertIn("severity", nombres)
+        self.assertTrue(por_archivo and all("severity" in n for n in por_archivo.values()))
+        cob = o / "estado" / "cobertura_captura.csv"
+        if cob.is_file():      # "huecos" tambien es "gaps" en ingles, como "brechas": aqui es estado y se queda
+            self.assertIn("gaps", _lineas(cob)[0])
         for p in (o / "estado").glob("*.csv"):
+            nombres = por_archivo[p.name]
             cab = _csv(p)
             for c in (cab[0].keys() if cab else _celdas(p)):
                 self.assertNotIn(c.lower(), nombres, p.name)
@@ -477,6 +481,40 @@ class CapturaTest(unittest.TestCase):
             self.assertFalse(any(se.es_juicio(c, {j.lower() for j in se.JUICIO}) for c in quedan), x["archivo"])
             self.assertEqual(len(quedan) + len(x["columnas_quitadas"]), len(_lineas(o / x["archivo"])[0]))
         self.assertTrue(quitadas, "ninguna copia quito columnas de juicio")
+
+
+class AmbiguedadTest(unittest.TestCase):
+    def setUp(self):
+        self.addCleanup(i18n.usar, "es")
+
+    def test_cada_traduccion_ambigua_esta_acotada_por_archivo(self):
+        en = json.loads((RAIZ / "ot_assess" / "catalogos" / "en.json").read_text(encoding="utf-8"))["en"]
+        columna = re.compile(r"^[a-z0-9_]+$")
+        for n in se.JUICIO:
+            tr = en.get(n, n).lower()
+            otras = [k for k, v in en.items() if isinstance(v, str) and v.lower() == tr and columna.match(k)
+                     and k != n and k not in se.JUICIO]
+            if otras:
+                self.assertIn(n, se.JUICIO_SOLO_EN, f"{n} -> {tr} tambien traduce {otras}")
+
+    def test_gaps_solo_es_juicio_en_conductos(self):
+        i18n.usar("en")
+        self.assertTrue(se.es_juicio("gaps", se._nombres_juicio("conductos_zcr.csv")))
+        for a in ("cobertura_captura.csv", "manifiesto.csv"):
+            self.assertFalse(se.es_juicio("gaps", se._nombres_juicio(a)), a)
+        self.assertTrue(se.es_juicio("severity", se._nombres_juicio("cobertura_captura.csv")))
+
+    def test_procedencia_sin_filas_de_campos_de_juicio(self):
+        d = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, d, True)
+        (d / "inventario_procedencia.csv").write_text(
+            "id,campo,valor,fuente,ultima_observacion,estado\nA-1,ip,10.0.0.1,captura,,verificado\n"
+            "A-1,criticidad,alta,perfil,,declarado\nA-1,criticidad_fuente,perfil,perfil,,declarado\n",
+            encoding="utf-8-sig")
+        copias = se._copiar(d, d / "estado", ["inventario_procedencia.csv"])
+        self.assertEqual([f[1] for f in copias[0][2]], ["ip"])
+        self.assertEqual(_lineas(d / "estado" / "inventario_procedencia.csv")[1:], [["A-1", "ip", "10.0.0.1", "captura",
+                                                                                    "", "verificado"]])
 
 
 class DiagramaTest(unittest.TestCase):

@@ -38,6 +38,10 @@ JUICIO = ("severidad", "riesgo", "recomendacion", "propuesta", "brechas", "sl_t"
           "etiquetas", "avisos", "observaciones", "ids_hallazgo", "hallazgos", "playbook", "playbooks", "prioridad",
           "decision", "regla_sugerida", "quick_win")
 PREFIJOS_JUICIO = ("criticidad", "riesgo")
+# Nombres de juicio cuya traduccion coincide con la de una columna de estado ("brechas" y "huecos" son "gaps" en
+# ingles): su nombre traducido solo cuenta como juicio en estos archivos.
+JUICIO_SOLO_EN = {"brechas": ("conductos_zcr.csv",)}
+CAMPO = "campo"      # tablas de procedencia: una fila por campo; las de un campo de juicio no se copian
 
 COLUMNAS_CAND = ["id_hallazgo", "categoria", "titulo", "severidad", "fuente", "confianza", "evidencia", "activos",
                  "dataset_id", "entregable_destino", "estado_revision", "revisado_por", "fecha", "comentario"]
@@ -86,8 +90,12 @@ def validar(v, fallo, objeto) -> dict:
 # Copia de solo estado
 # --------------------------------------------------------------------------- #
 
-def _nombres_juicio() -> set:
-    return {x.lower() for n in JUICIO for x in (n, t(n))}
+def _nombres_juicio(archivo: str = "") -> set:
+    """Nombres internos y traducidos de las columnas de juicio; un nombre traducido ambiguo (JUICIO_SOLO_EN) solo en
+    sus archivos."""
+    out = {n.lower() for n in JUICIO}
+    out |= {t(n).lower() for n in JUICIO if n not in JUICIO_SOLO_EN or archivo in JUICIO_SOLO_EN[n]}
+    return out
 
 
 def es_juicio(cabecera: str, nombres: set) -> bool:
@@ -106,9 +114,9 @@ def _leer(path: Path):
 
 def _copiar(outdir: Path, destino: Path, salidas) -> list:
     """Escribe en `destino` las copias filtradas y devuelve [(archivo, cabecera, filas, quitadas)]."""
-    nombres = _nombres_juicio()
     out = []
     for archivo in salidas:
+        nombres = _nombres_juicio(archivo)
         origen = outdir / archivo
         if not origen.is_file():
             continue
@@ -125,6 +133,9 @@ def _copiar(outdir: Path, destino: Path, salidas) -> list:
         quitadas = [h for h in cab if es_juicio(h, nombres)]
         cuerpo = [[f[i] if i < len(f) else "" for i in quedan] for f in filas[1:]]
         cab2 = [cab[i] for i in quedan]
+        campo = [k for k, h in enumerate(cab2) if h.strip().lower() in {CAMPO, t(CAMPO).lower()}]
+        if campo:
+            cuerpo = [f for f in cuerpo if not es_juicio(f[campo[0]], nombres)]
         destino.mkdir(parents=True, exist_ok=True)
         with open(destino / archivo, "w", newline="", encoding="utf-8-sig") as fh:
             w = csv.writer(fh)

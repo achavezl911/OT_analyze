@@ -1045,7 +1045,9 @@ cerrada de tablas de estado, por omisión todas) y `entregable_destino` (texto d
 releyendo los CSV ya escritos, copia a `<salida>/<carpeta>/` cada tabla de la lista que exista sin las columnas de
 juicio (`severidad`, `riesgo`, `recomendacion`, `propuesta`, `brechas`, `sl_t`, `origen_sl_t`, `marcas`, `etiquetas`,
 `avisos`, `observaciones`, `ids_hallazgo`, `hallazgos`, `playbook(s)`, `prioridad`, `decision`, `regla_sugerida`,
-`quick_win` y las que empiezan por `criticidad` o `riesgo`) y arma `estado.xlsx` con una hoja por tabla. Las salidas
+`quick_win` y las que empiezan por `criticidad` o `riesgo`; en ingles `gaps` solo en `conductos_zcr.csv`, porque en
+las demas es `huecos`), sin las filas de procedencia de un campo de juicio, y arma `estado.xlsx` con una hoja por
+tabla. Las salidas
 completas no cambian. `candidatos_hallazgo.csv` (en la carpeta principal, archivo interno) trae una fila por hallazgo
 en el orden de `hallazgos.csv` con `fuente`, `confianza` (`observado en trafico`, `segun configuracion`, `segun
 plataforma`, `inferido por version`, `derivado`), la evidencia (retenida si contiene un posible secreto), `dataset_id`
