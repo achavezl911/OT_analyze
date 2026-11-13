@@ -54,7 +54,7 @@ def cargar(path) -> dict:
                              "escala_madurez", "csf_tiers_objetivo", "version_cvss", "subcomandos_deshabilitados", "leyenda_salidas",
                              "modelo_evidencia", "riesgo", "avisos_solo_paquete", "iec62351_flujos", "entregables",
                              "registro_evidencias", "confirmacion_vulnerabilidades", "allowlist_tobe", "rutas_acceso", "obsolescencia",
-                             "trazabilidad", "registro_red", "manifiesto", "solo_estado"))
+                             "trazabilidad", "registro_red", "manifiesto", "solo_estado", "campos_minimos"))
     if d.get("version") != 1 or isinstance(d.get("version"), bool):
         fallo("'version' es requerida y solo se admite 1.")
     out: dict = {"version": 1, "cliente": texto(d["cliente"], "cliente") if "cliente" in d
@@ -166,6 +166,12 @@ def cargar(path) -> dict:
     if "zonas" in d:
         out["zonas"] = _zonas(d["zonas"], out.get("sl_objetivo", {}), fallo, texto, objeto,
                               dimensiones_impacto(out), escalas(out.get("riesgo"))[1])
+    if "campos_minimos" in d:       # CAMPOS1 (D141): despues de las zonas (la politica esperada las cita)
+        from .campos_minimos import validar as campos_valida
+        out["campos_minimos"] = campos_valida(d["campos_minimos"], fallo, objeto, out.get("zonas", ()))
+    else:
+        for z in out.get("zonas", ()):
+            z.pop("dominio", None)
     if "criticidad_activos" in d:
         c = d["criticidad_activos"]
         if not isinstance(c, dict):
@@ -368,7 +374,7 @@ def _zonas(lista, sl_objetivo: dict, fallo, texto, objeto, dims=DIMENSIONES_IMPA
         fallo("'zonas' debe ser una lista de objetos.")
     out, vistos, redes = [], set(), {}
     for z in lista:
-        z = objeto(z, "zonas", ("nombre", "redes", "descripcion", "sl_t", "inferida", "impacto", "dmz", "linea_base_nist"))
+        z = objeto(z, "zonas", ("nombre", "redes", "descripcion", "sl_t", "inferida", "impacto", "dmz", "linea_base_nist", "dominio"))
         if "nombre" not in z:
             fallo("cada zona necesita 'nombre'.")
         nombre = texto(z["nombre"], "zonas.nombre").strip()
@@ -417,6 +423,10 @@ def _zonas(lista, sl_objetivo: dict, fallo, texto, objeto, dims=DIMENSIONES_IMPA
             if not isinstance(z["dmz"], bool):
                 fallo(f"zonas.{nombre}: 'dmz' debe ser true o false.")
             nz["dmz"] = z["dmz"]
+        if "dominio" in z:      # CAMPOS1 (D141): IT, OT o DMZ; solo se conserva con la clave campos_minimos
+            if z["dominio"] not in ("IT", "OT", "DMZ"):
+                fallo(f"zonas.{nombre}: 'dominio' debe ser IT, OT o DMZ.")
+            nz["dominio"] = z["dominio"]
         out.append(nz)
     return out
 

@@ -8,6 +8,7 @@ from .. import acceso_remoto as _ar
 from .. import alertas as _al
 from .. import attack_cobertura as _atc
 from .. import avisos_cisa as _ac
+from .. import campos_minimos as _cm
 from .. import cobertura_captura as _cc
 from .. import conductos_zcr as _zc
 from .. import confirmacion_vulns as _vconf
@@ -290,6 +291,7 @@ def tablas(res: Assessment) -> list:
         out.append((f"cobertura_{e.clave}.csv", f"Cobertura {e.clave}", COLUMNAS_COBERTURA,
                     [[f["id"], f["grupo"], f["categoria"], f["texto"], t(f["cobertura"]),
                       ";".join(f["fragmentos"]), f["hallazgos"]] for f in filas]))
+    out = _cm.ampliar(res, out)      # CAMPOS1 (D141): columnas al final y matriz de segmentacion; sin la clave, igual
     if plan_ent:
         out = [(a, h, *_en.agregar_columna(res, a, c, f)) for a, h, c, f in out]
     return out

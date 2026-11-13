@@ -7,6 +7,7 @@ import json
 from dataclasses import asdict
 from pathlib import Path
 
+from .. import campos_minimos as _cm
 from .. import cobertura_captura as _cc
 from .. import confirmacion_vulns as _vconf
 from .. import csf_tiers as _ct
@@ -151,6 +152,7 @@ def write_json(res: Assessment, outdir: Path) -> None:
                     "tobe": _tb.para_json(res.tobe),
                     **({"registro_red": _rr.para_json(res.registro_red)} if _rr.hay(res.registro_red) else {}),
                     **({"manifiesto": _mf.para_json(res.manifiesto)} if _mf.hay(res.manifiesto) else {}),
+                    **({"campos_minimos": _cm.para_json(res)} if _cm.activa(res) else {}),      # CAMPOS1 (D141)
                     **({"rutas_acceso": _rac.para_json(res.rutas_acceso)} if _rac.hay(res.rutas_acceso) else {}),
                     "hardening": _hd.para_json(res.hardening),
                     "fuentes_log": _fl.para_json(res.fuentes_log),

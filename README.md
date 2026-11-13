@@ -1057,6 +1057,29 @@ o de venta si la fila de la tabla trae una URL http(s) en su fuente; si no, el e
 fecha, días ni reemplazo; no genera hallazgo) y la tabla integrada de SO queda así. `dominios_oficiales` (solo con
 `exigir_url`; 1 a 100 dominios en minúsculas) exige además que el host de la URL sea uno de ellos o un subdominio. La
 herramienta no consulta la URL ni verifica que exista. Sin las claves no cambia ninguna salida.
+
+**Campos mínimos por salida (CAMPOS1, D141).** Clave de perfil opcional `campos_minimos` (objeto; `{}` vale) para
+proyectos que fijan un formato mínimo por entregable. Subclaves, todas opcionales: `sitio` (código de 1 a 40 de
+`A-Za-z0-9_-`; si falta, el `sitio` del perfil o vacío), `as_of` (fecha ISO 8601 con `Z` u offset, se guarda en UTC; si
+falta: en captura el último paquete de la corrida, en `diagrama` la hora de la corrida en UTC), `duenos` (0 a 500
+`{red, dueno}`; la subred toma el dueño de la red declarada más específica que la contiene, o `PENDIENTE`; una red repetida
+es error) y `politica_esperada` (0 a 2500 `{origen, destino, politica}` con zonas del perfil o `*`; la regla exacta gana a
+la de `*`, y entre comodines gana `origen/*`, luego `*/destino`, luego `*/*`; un par repetido es error). Cada zona de
+`zonas` admite `dominio` (`IT`, `OT` o `DMZ`). Con la clave se agregan columnas AL FINAL (las posiciones de hoy no
+cambian): `inventario_normalizado.csv` (`sitio`, `dominio`, `primera_vez_visto`, `ultima_vez_visto`, `as_of`),
+`comunicaciones.csv` (`origen_id`, `destino_id`, `primera_vez_visto`, `ultima_vez_visto`, `dataset_id`, `origen_dominio`,
+`destino_dominio`, `cruza_it_ot`), `direccionamiento_ip.csv` (`sitio`, `dominio`, `dueno`) y `fuentes_log.csv` (`destinos`
+`ip:puerto`, `volumen_bytes`, `volumen_paquetes` de los conductos del activo hacia syslog, trampas SNMP, NetFlow e
+IPFIX), más `matriz_segmentacion.csv` (hoja «Matriz de segmentacion»): una fila por par ordenado de zonas con
+`observado`, `servicios`, `conductos`, `bytes` y `politica_esperada` (`sin declarar` si no hay regla; con más de 100
+zonas solo los pares observados o con regla exacta, con un aviso). Primera y última vez salen de los `first`/`last` de
+los flujos de las capturas (en `diagrama`, la última actividad que trae el exporte, si la trae; la primera queda vacía);
+`dataset_id` exige `manifiesto`. Dominio de un activo: el `dominio` de su zona, `DMZ` si la zona es `dmz`, por nivel
+Purdue (4 y 5 IT, 3.5 DMZ, 0 a 3 OT) o `sin dato`; de una subred: el de la zona que la contiene, si no el de sus activos
+(`mixto` si difieren). `cruza_it_ot` es `si` con un lado IT y el otro OT. Bloque `campos_minimos` de `resultado.json`
+(sitio, `as_of`, conteos y tablas que cambiaron); sin hallazgos nuevos: es formato, no riesgo. Con `solo_estado`, la matriz
+entra en la copia de estado. Sin la clave no cambia ninguna salida, tampoco con `dominio` en las zonas.
+
 **Hardening por tipo de equipo (T1b, D86).** Cada activo se asigna a uno de seis tipos (controlador, estación, servidor,
 red, seguridad, otro) por su rol inferido o por el tipo que da la plataforma (`ot_assess/data/hardening.json`); sin
 rol, por los puertos que sirve (puertos OT: controlador; DNS, LDAP, bases de datos: servidor; RDP/VNC: estación) y si

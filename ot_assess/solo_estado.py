@@ -33,7 +33,7 @@ SALIDAS = tuple(n + ".csv" for n in (
     "dns_servidores", "dns_resoluciones", "direccionamiento_ip", "zonas", "conductos_zcr", "cobertura_captura",
     "cobertura_zonas", "switch_puertos", "switch_vlans", "switch_span", "firewall_interfaces", "firewall_rutas",
     "firewall_matriz", "firewall_reglas", "firewall_nat", "registro_red", "manifiesto", "plan_captura", "salud_red",
-    "tcp_conductos"))
+    "tcp_conductos", "matriz_segmentacion"))
 JUICIO = ("severidad", "riesgo", "recomendacion", "propuesta", "brechas", "sl_t", "origen_sl_t", "marcas",
           "etiquetas", "avisos", "observaciones", "ids_hallazgo", "hallazgos", "playbook", "playbooks", "prioridad",
           "decision", "regla_sugerida", "quick_win")
