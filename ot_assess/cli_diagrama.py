@@ -28,6 +28,7 @@ from . import matriz_controles as _mc
 from . import obsolescencia as _ob
 from . import paquete_avisos as _pa
 from . import registro_evidencias as _registro
+from . import registro_red as _rr
 from . import rutas_acceso as _rac
 from . import rutas_ataque as _ra
 from . import rutas_firewall as _rf
@@ -583,6 +584,13 @@ def main(argv: list | None = None) -> int:
     extra = _ob.agregar_hallazgos([f for _o, f in hallazgos], res.obsolescencia)
     if extra:
         hallazgos += [(extra.name, f) for f in extra.findings]
+    res.registro_red = _rr.construir(res.firewall, res.switches, perfil)      # FWLOG (D137)
+    if _rr.aviso(res.registro_red):
+        print(_rr.aviso(res.registro_red))
+    if _rr.hay(res.registro_red):
+        extra = Capture(Path("registro en firewalls y switches"))
+        _rr.agregar_hallazgos(extra, res.registro_red)
+        hallazgos += [(extra.name, f) for f in extra.findings]
     if args.linea_base:      # LB1 (D82)
         from . import linea_base_aprobada as _lba
         from .rules.linea_base_aprobada import agregar_hallazgos as _hl_lba
@@ -627,6 +635,7 @@ def main(argv: list | None = None) -> int:
     res.hardening = _hd.construir(imp.assets, hallazgos, res.inventario_normalizado)      # T1b (D86)
     res.fuentes_log = _fl.construir(imp.assets, imp.conduits, hallazgos, res.inventario_normalizado,
                                     res.firewall)    # G1a (D87)
+    _rr.completar(res.registro_red, res.fuentes_log)      # FWLOG (D137): con los colectores de G1a
     res.direccionamiento = _dr.construir(imp.assets, zon, switches, res.inventario_normalizado, hallazgos)   # G1b (D88)
     res.diagrama_tobe = diagrama_tobe(res.tobe, Opciones(
         estandar=estandares[0], titulo=args.titulo, cliente=args.cliente,

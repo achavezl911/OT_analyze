@@ -1,0 +1,41 @@
+{
+  "id": "pb-firewall-reglas-sin-registro",
+  "hallazgo": "Reglas de firewall que permiten trafico sin registro",
+  "objetivo": "Activar el registro de las reglas que permiten trafico para que el firewall deje huella de lo que cruza entre zonas y se pueda reconstruir un incidente.",
+  "prioridad_ot": "Activar el registro aumenta la carga del equipo y el volumen de eventos: en un firewall con poco margen puede degradar el rendimiento y afectar trafico de control; se hace por etapas y con operacion enterada.",
+  "pasos": [
+    "Listar las reglas que permiten trafico sin registro y separar las que cruzan hacia zonas de control de las que no.",
+    "Confirmar con el dueno del proceso que reglas son de limpieza o de trafico muy frecuente que se documentan como excepcion.",
+    "Verificar la capacidad del firewall y del colector para el volumen adicional de eventos antes de activar el registro.",
+    "Activar el registro al final de la conexion, empezando por las reglas que cruzan hacia zonas de control.",
+    "Confirmar que el firewall envia los eventos al colector del proyecto y que se reciben.",
+    "Documentar las reglas que se dejan sin registro y el motivo."
+  ],
+  "por_plataforma": {
+    "Cisco FTD (FMC)": [
+      "En la regla de la politica de control de acceso, habilitar el registro al final de la conexion y enviarlo al servidor de syslog o al FMC (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Desplegar la politica en la ventana acordada y vigilar la carga del equipo."
+    ],
+    "FortiGate": [
+      "En cada politica, ajustar el registro de trafico (logtraffic) para que registre las sesiones permitidas (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Confirmar el destino de los registros y el espacio disponible."
+    ]
+  },
+  "verificacion": [
+    "Reimportar la configuracion con la herramienta y confirmar que las reglas ya no aparecen en el hallazgo.",
+    "Comprobar en el colector que llegan eventos de las reglas modificadas."
+  ],
+  "reversion": [
+    "Volver a desactivar el registro de la regla si degrada el rendimiento y registrar el motivo.",
+    "Restaurar el respaldo de la politica en la ventana de mantenimiento, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un firewall no critico y respaldar la configuracion antes de cambiarla.",
+    "Avisar al dueno del proceso: el registro adicional puede llenar el almacenamiento local o saturar el colector.",
+    "No activar el registro de todas las reglas a la vez en un equipo con poca capacidad."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Administracion de firewall",
+  "referencias": ["IEC 62443 SR 2.8", "IEC 62443 SR 6.1", "NIST 800-82 AU-2", "NIST 800-82 AU-12", "NIST 800-82 AU-6", "NIST CSF DE.CM-01", "NIST CSF PR.PS-04", "NERC CIP-007 R4"]
+}

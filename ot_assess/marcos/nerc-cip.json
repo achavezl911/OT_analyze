@@ -48,6 +48,8 @@
     "vulnerabilidades conocidas": "CIP-007 R2 (gestion de parches); CIP-010 R3 (evaluacion de vulnerabilidades)",
     "vulnerabilidades explotadas activamente": "CIP-007 R2 (gestion de parches); CIP-010 R3 (evaluacion de vulnerabilidades)",
     "alertas de seguridad registradas": "CIP-007 R4 (monitoreo de eventos de seguridad); CIP-015 (monitoreo interno de red)",
+    "permiten trafico sin registro": "CIP-007 R4 (monitoreo de eventos de seguridad)",
+    "switches sin envio de registros a un colector": "CIP-007 R4 (monitoreo de eventos de seguridad)",
     "permiten cualquier origen hacia cualquier destino": "CIP-005 R1 (perimetro de seguridad electronica); CIP-007 R1 (puertos y servicios)",
     "confian trafico sin inspeccion": "CIP-005 R1 (perimetro de seguridad electronica); CIP-007 R1 (puertos y servicios)",
     "sombreadas o sin uso": "CIP-005 R1 (perimetro de seguridad electronica); CIP-007 R1 (puertos y servicios)",

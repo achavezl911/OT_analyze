@@ -1,0 +1,37 @@
+{
+  "id": "pb-switch-sin-syslog",
+  "hallazgo": "Switches sin envio de registros a un colector",
+  "objetivo": "Hacer que cada switch envie sus registros a un colector del proyecto, para conservar los eventos de acceso, de cambios y de enlaces fuera del equipo.",
+  "prioridad_ot": "Agregar un destino de syslog no interrumpe el reenvio, pero un nivel de envio muy detallado puede cargar el switch y la red de gestion; se elige con quien opera el colector.",
+  "pasos": [
+    "Confirmar con el cliente cual es el colector de syslog o SIEM del proyecto y por que VLAN o red de gestion se alcanza.",
+    "Verificar que el switch alcanza al colector: ruta, firewall y VLAN de gestion, y que el colector acepta ese origen.",
+    "Configurar el destino de syslog en el switch y un nivel que incluya cambios de configuracion y eventos de seguridad.",
+    "Confirmar que el colector recibe los mensajes del switch y que la hora del switch esta sincronizada.",
+    "Declarar el colector en el perfil del proyecto y repetir el analisis.",
+    "Dejar registro del colector, el nivel de envio y la fecha del cambio."
+  ],
+  "por_plataforma": {
+    "Switch Cisco IOS/IOS-XE": [
+      "Configurar el destino con logging host y el nivel con logging trap (verificar la sintaxis en la documentacion del fabricante para la version instalada).",
+      "Revisar show logging para confirmar el destino y el nivel configurados (verificar la sintaxis en la documentacion del fabricante para la version instalada)."
+    ]
+  },
+  "verificacion": [
+    "Volver a leer la configuracion con la herramienta y confirmar que el switch ya no aparece en el hallazgo.",
+    "Comprobar en el colector que llegan mensajes del switch."
+  ],
+  "reversion": [
+    "Quitar el destino de syslog nuevo si el colector no responde o el volumen satura la red de gestion.",
+    "Restaurar el respaldo de la configuracion del switch si el cambio afecta la gestion, con acceso por consola o fuera de banda."
+  ],
+  "precauciones": [
+    "Aplicar el cambio solo dentro de la ventana acordada con operacion; fuera de ella, solo observar y registrar.",
+    "Probar primero en laboratorio o en un switch no critico y respaldar la configuracion antes de cambiarla.",
+    "Avisar al dueno del proceso y a quien opera el colector antes de abrir el flujo de syslog.",
+    "El syslog suele viajar sin cifrar: enviarlo solo por la red de gestion."
+  ],
+  "esfuerzo_estimado": "bajo",
+  "responsable": "Ingenieria de redes",
+  "referencias": ["IEC 62443 SR 2.8", "IEC 62443 SR 6.1", "NIST 800-82 AU-2", "NIST 800-82 AU-12", "NIST CSF DE.CM-01", "NIST CSF PR.PS-04", "NERC CIP-007 R4"]
+}

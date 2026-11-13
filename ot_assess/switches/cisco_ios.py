@@ -27,6 +27,8 @@ from .modelo import (
     Svi,
     Switch,
     Vecino,
+    destino_syslog,
+    nivel_syslog,
 )
 
 FABRICANTE = "Cisco IOS/IOS-XE"
@@ -40,7 +42,8 @@ _ABREV = {"gi": "gigabitethernet", "gig": "gigabitethernet", "te": "tengigabitet
           "tw": "twogigabitethernet", "fo": "fortygigabitethernet", "hu": "hundredgige",
           "eth": "ethernet", "et": "ethernet", "vl": "vlan", "lo": "loopback"}
 
-_RE_ANSI = re.compile(r"\x1b\[[0-9;?]*[A-Za-z]")
+_RE_IP = re.compile(r"(?:\d{1,3}(?:\.\d{1,3}){3}|[0-9A-Fa-f]*:[0-9A-Fa-f:.]*)")
+_RE_ANSI =re.compile(r"\x1b\[[0-9;?]*[A-Za-z]")
 _RE_MORE = re.compile(r"(?:<-+\s*More\s*-+>|-+\s*More\s*-+)\s*")
 _RE_PROMPT = re.compile(r"^(?P<host>[\w.\-]*)(?:\([^)]*\))?[#>]\s*(?P<cmd>.*)$")
 _RE_IF = re.compile(r"^([A-Za-z][A-Za-z\-]*?)\s*(\d[\d/.:]*)$")
@@ -368,6 +371,8 @@ class _Lector:
             sw.udld = True
         elif re.match(r"^ntp\s+(server|peer)\s+\S", s, re.I):
             sw.ntp_servidores += 1                      # solo el conteo: ni la IP ni la llave
+        elif re.match(r"^(no\s+)?logging\s", s, re.I):
+            self.syslog(s)
         elif re.fullmatch(r"ip\s+dhcp\s+snooping", s, re.I):
             sw.dhcp_snooping = True
         elif re.fullmatch(r"no\s+ip\s+dhcp\s+snooping", s, re.I):
@@ -380,6 +385,37 @@ class _Lector:
             m = re.match(r"^ip\s+arp\s+inspection\s+vlan\s+([\d,\-\s]+)$", s, re.I)
             if m:
                 sw.dai_vlans = sorted(set(sw.dai_vlans) | set(rango_vlans(m.group(1))))
+
+    def syslog(self, s: str) -> None:
+        """Destinos de syslog (`logging host X`, `logging X` con una IP) y nivel (`logging trap N`). Solo el
+        destino y el nivel: del resto de la linea (puerto, VRF, transporte, llaves) no se copia nada."""
+        sw = self.sw
+        quita = bool(re.match(r"^no\s", s, re.I))
+        w = s.split()[1 if quita else 0:]
+        if len(w) < 2:
+            return
+        if w[1].lower() == "trap" and not quita:
+            sw.syslog_nivel = nivel_syslog(w[2]) if len(w) > 2 else sw.syslog_nivel
+            return
+        resto = w[1:]
+        if resto[0].lower() == "host":
+            resto = resto[1:]
+            host = True
+        else:
+            host = False
+        if resto and resto[0].lower() == "ipv6":
+            resto = resto[1:]
+        if len(resto) >= 2 and resto[0].lower() == "vrf":
+            resto = resto[2:]
+        if not resto:
+            return
+        d = destino_syslog(resto[0])
+        if not d or not (host or _RE_IP.fullmatch(d)):      # `logging <palabra>` sin host: solo si es una IP
+            return
+        if quita:
+            sw.syslog_destinos = [x for x in sw.syslog_destinos if x != d]
+        elif d not in sw.syslog_destinos:
+            sw.syslog_destinos.append(d)
 
     def credencial_global(self, s: str) -> None:
         m = _RE_USER.match(s)

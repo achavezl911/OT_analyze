@@ -54,7 +54,7 @@ def cargar(path) -> dict:
                              "escala_madurez", "csf_tiers_objetivo", "version_cvss", "subcomandos_deshabilitados", "leyenda_salidas",
                              "modelo_evidencia", "riesgo", "avisos_solo_paquete", "iec62351_flujos", "entregables",
                              "registro_evidencias", "confirmacion_vulnerabilidades", "allowlist_tobe", "rutas_acceso", "obsolescencia",
-                             "trazabilidad"))
+                             "trazabilidad", "registro_red"))
     if d.get("version") != 1 or isinstance(d.get("version"), bool):
         fallo("'version' es requerida y solo se admite 1.")
     out: dict = {"version": 1, "cliente": texto(d["cliente"], "cliente") if "cliente" in d
@@ -152,6 +152,9 @@ def cargar(path) -> dict:
     if "trazabilidad" in d:         # IDS1 (D136)
         from .trazabilidad import validar as traza_valida
         out["trazabilidad"] = traza_valida(d["trazabilidad"], fallo)
+    if "registro_red" in d:         # FWLOG (D137)
+        from .registro_red import validar as registro_valida
+        out["registro_red"] = registro_valida(d["registro_red"], fallo, objeto)
     if "riesgo" in d:       # RM1 (D123)
         out["riesgo"] = _riesgo(d["riesgo"], fallo, objeto)
     if "zonas" in d:

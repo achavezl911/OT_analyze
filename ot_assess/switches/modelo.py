@@ -5,7 +5,22 @@ de las credenciales solo se conserva un conteo por tipo (`credenciales`).
 """
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
+
+_RE_DESTINO = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:\-]{0,252}")
+NIVELES_SYSLOG = ("emergencies", "alerts", "critical", "errors", "warnings", "notifications", "informational",
+                  "debugging", "emergency", "alert", "error", "warning", "notice", "info", "debug",
+                  "0", "1", "2", "3", "4", "5", "6", "7")
+
+
+def destino_syslog(tok: str) -> str:
+    """El destino si el token parece una IP o un nombre de equipo; si no, vacio. Nunca copia el resto de la linea."""
+    return tok if _RE_DESTINO.fullmatch(tok) else ""
+
+
+def nivel_syslog(tok: str) -> str:
+    return tok.lower() if tok.lower() in NIVELES_SYSLOG else ""
 
 
 @dataclass
@@ -130,7 +145,9 @@ class Switch:
     log_sin_sincronizar: int = 0                      # ... de ellas con "*" delante (hora no autoritativa)
     log_sincronia_perdida: int = 0                    # ... con "." delante (sincronizada pero se perdio)
     ntp_servidores: int = 0                           # lineas `ntp server|peer` de la configuracion (conteo)
-    macflap_total: int = 0                           # mensajes de MAC flapping en el log
+    syslog_destinos: list = field(default_factory=list)   # destinos de syslog de la configuracion (IP o nombre; nunca llaves)
+    syslog_nivel: str = ""                            # nivel de `logging trap` (IOS) o severidades por destino (AOS-CX)
+    macflap_total: int = 0                          # mensajes de MAC flapping en el log
     errdisable: list = field(default_factory=list)    # [(puerto, motivo, veces)]
     contadores: list = field(default_factory=list)    # [Contador]
     leyo: list = field(default_factory=list)          # salidas de estado leidas: stp | logging | interfaces | espejo (AOS-CX)

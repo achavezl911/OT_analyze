@@ -48,6 +48,8 @@
     "vulnerabilidades conocidas": "ID.RA-01 (vulnerabilidades identificadas); PR.PS-02 (software mantenido o retirado segun riesgo)",
     "vulnerabilidades explotadas activamente": "ID.RA-01 (vulnerabilidades identificadas); PR.PS-02 (software mantenido o retirado segun riesgo)",
     "alertas de seguridad registradas": "DE.CM-01 (monitoreo de redes); DE.AE-02 (analisis de eventos)",
+    "permiten trafico sin registro": "DE.CM-01 (monitoreo de redes); PR.PS-04 (generacion de registros)",
+    "switches sin envio de registros a un colector": "DE.CM-01 (monitoreo de redes); PR.PS-04 (generacion de registros)",
     "permiten cualquier origen hacia cualquier destino": "PR.IR-01 (redes protegidas contra acceso logico no autorizado)",
     "confian trafico sin inspeccion": "PR.IR-01 (redes protegidas contra acceso logico no autorizado)",
     "sombreadas o sin uso": "PR.IR-01 (redes protegidas contra acceso logico no autorizado)",

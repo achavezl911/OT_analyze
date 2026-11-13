@@ -48,6 +48,8 @@
     "vulnerabilidades conocidas": "RA-5 (analisis de vulnerabilidades); SI-2 (correccion de fallas)",
     "vulnerabilidades explotadas activamente": "RA-5 (analisis de vulnerabilidades); SI-2 (correccion de fallas)",
     "alertas de seguridad registradas": "SI-4 (monitoreo del sistema); AU-6 (revision de registros de auditoria)",
+    "permiten trafico sin registro": "AU-2 (eventos auditables); AU-12 (generacion de registros de auditoria); AU-6 (revision de registros de auditoria)",
+    "switches sin envio de registros a un colector": "AU-2 (eventos auditables); AU-12 (generacion de registros de auditoria); AU-6 (revision de registros de auditoria)",
     "permiten cualquier origen hacia cualquier destino": "SC-7 (proteccion de limites); CM-7 (minima funcionalidad)",
     "confian trafico sin inspeccion": "SC-7 (proteccion de limites); CM-7 (minima funcionalidad)",
     "sombreadas o sin uso": "SC-7 (proteccion de limites); CM-7 (minima funcionalidad)",

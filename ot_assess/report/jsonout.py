@@ -18,6 +18,7 @@ from .. import iec62351 as _i62351
 from .. import linea_base_aprobada as _lba
 from .. import madurez as _ma
 from .. import registro_evidencias as _registro
+from .. import registro_red as _rr
 from .. import riesgo as _rg
 from .. import rutas_acceso as _rac
 from .. import salud_red as _sr
@@ -52,6 +53,19 @@ def _a_json(o):
         except TypeError:
             return sorted(o, key=str)
     return str(o)
+
+
+def _sin_registro(fw: dict) -> dict:
+    """El firewall sin las marcas internas de las reglas que usa registro_red (FWLOG, D137)."""
+    def quita(d):
+        return dict(d, reglas=[{k: v for k, v in r.items() if k not in ("registro", "defecto")}
+                               for r in d["reglas"]]) if d.get("reglas") else d
+    if not fw:
+        return fw
+    out = quita(fw)
+    if fw.get("firewalls"):
+        out["firewalls"] = [dict(x, datos=quita(x["datos"])) for x in fw["firewalls"]]
+    return out
 
 
 def _switches(sw: dict) -> dict:
@@ -105,7 +119,7 @@ def write_json(res: Assessment, outdir: Path) -> None:
         json.dumps({"entorno": res.entorno, "perfil": res.perfil,
                     **({"restricciones": {"subcomandos_deshabilitados": res.perfil["subcomandos_deshabilitados"]}}
                        if (res.perfil or {}).get("subcomandos_deshabilitados") else {}),
-                    "firewall": res.firewall,
+                    "firewall": _sin_registro(res.firewall),
                     "switches": _switches(res.switches),
                     "vulnerabilidades": res.vulnerabilidades,
                     "alertas": res.alertas,
@@ -123,6 +137,7 @@ def write_json(res: Assessment, outdir: Path) -> None:
                     "madurez": _ma.para_json(res.madurez),
                     **({"csf_tiers": _ct.para_json(res.csf_tiers)} if _ct.hay(res.csf_tiers) else {}),
                     "tobe": _tb.para_json(res.tobe),
+                    **({"registro_red": _rr.para_json(res.registro_red)} if _rr.hay(res.registro_red) else {}),
                     **({"rutas_acceso": _rac.para_json(res.rutas_acceso)} if _rac.hay(res.rutas_acceso) else {}),
                     "hardening": _hd.para_json(res.hardening),
                     "fuentes_log": _fl.para_json(res.fuentes_log),

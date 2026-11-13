@@ -1001,6 +1001,24 @@ conductos TO-BE que citan el hallazgo y `VU-` de las vulnerabilidades del activo
 Vulnerabilidades). Sección corta en HTML/Word/Markdown (conteos y nota) y bloque `trazabilidad` en `resultado.json`.
 Es trazabilidad documental, no una determinación de cumplimiento. También en `diagrama`. Sin la clave no cambia
 ninguna salida.
+**Registro de eventos en firewalls y switches (FWLOG, D137).** Clave de perfil opcional `registro_red` (objeto; `{}`
+vale): `colectores` (0 a 50 IP o CIDR de los colectores de syslog o SIEM del cliente) y `excluir_reglas` (0 a 500 ids o
+nombres de regla, de 1 a 100 caracteres, que no se cuentan: p. ej. reglas de limpieza documentadas). Lee de la política
+ya leída si cada regla activa que permite tráfico registra (`Regla.registro`: FTD `log`/`event-log`, FortiGate
+`logtraffic`, Palo Alto `log-end`, Check Point `track`; la regla de defecto y las excluidas no cuentan) y, de los
+switches, los destinos de syslog (Cisco IOS/IOS-XE `logging host <ip>` y `logging <ip>`, nivel de `logging trap`;
+AOS-CX `logging <ip>` con su `severity`; solo destino y nivel, nunca llaves ni el resto de la línea). `registro_red.csv`
+y la hoja «Registro de red» traen una fila por equipo: `destinos_syslog`, `nivel_syslog`, `destino_declarado`
+(algún destino cae en `colectores`; `sin colectores declarados` si no hay; `sin dato` si no se cargó la configuración del
+switch), `reglas_que_permiten`, `reglas_sin_registro`, `ids_sin_registro` (las 20 primeras) y `colector_observado` (la IP
+de un destino o de un colector declarado aparece como colector en las fuentes de log G1a). Sección en HTML/Word/Markdown
+y bloque `registro_red` de `resultado.json`. Dos hallazgos: Media «Reglas de firewall que permiten trafico sin
+registro» y Baja «Switches sin envio de registros a un colector» (switch con configuración y sin destino, o con
+destinos y `colectores` declarados sin ninguno de ellos). Es evidencia de la configuración cargada: no prueba que los
+registros lleguen ni dictamina cumplimiento; del firewall no lee su configuración de logging. También en `diagrama`.
+Sin la clave no cambia ninguna salida de una corrida; solo cambian las tablas estáticas de `docs/CATALOGO.md`, que
+salen del mapeo de hallazgos a requisitos (IEC 62443 SR 2.8 y SR 6.1, NIST 800-82 AU-2/AU-6/AU-12, CSF
+DE.CM-01/PR.PS-04, CIP-007 R4; MITRE ICS sin referencia): requisitos de IEC 62443 con regla 18 a 19.
 **Hardening por tipo de equipo (T1b, D86).** Cada activo se asigna a uno de seis tipos (controlador, estación, servidor,
 red, seguridad, otro) por su rol inferido o por el tipo que da la plataforma (`ot_assess/data/hardening.json`); sin
 rol, por los puertos que sirve (puertos OT: controlador; DNS, LDAP, bases de datos: servidor; RDP/VNC: estación) y si

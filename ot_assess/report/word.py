@@ -26,6 +26,7 @@ from .. import matriz_controles as _mc
 from .. import obsolescencia as _ob
 from .. import perfil as _perfil
 from .. import playbooks as _pb
+from .. import registro_red as _rr
 from .. import registros_dns as _rd
 from .. import remediacion as _rem
 from .. import riesgo as _rg
@@ -227,6 +228,11 @@ def construir_bloques(res: Assessment) -> list:
             b.append(("nota", s["nota"]))
     if _rac.hay(res.rutas_acceso):       # RUTA1 (D134)
         s = _rac.seccion(res.rutas_acceso)
+        b += [("h1", s["titulo"]), ("nota", s["nota"]), ("p", s["resumen"]), ("tabla", s["cab"], s["filas"])]
+        if s["mas"]:
+            b.append(("p", s["mas"]))
+    if _rr.hay(res.registro_red):       # FWLOG (D137)
+        s = _rr.seccion(res.registro_red)
         b += [("h1", s["titulo"]), ("nota", s["nota"]), ("p", s["resumen"]), ("tabla", s["cab"], s["filas"])]
         if s["mas"]:
             b.append(("p", s["mas"]))

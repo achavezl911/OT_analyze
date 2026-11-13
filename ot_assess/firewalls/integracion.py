@@ -305,7 +305,10 @@ def contrastar(fw, conductos: list, archivo: str, avisos: list, assets=None, for
     marcas = _hg.marcar(evaluadas, usos, cuenta["con_contadores"])
     pistas = _hg.avisos_retorno(evaluadas, marcas)
     rutas_estado = _hg.estado_rutas(fw, destinos)
+    ftd = [r for r in evaluadas if r.acl.startswith(_ACL_FTD)]
+    ultima = ftd[-1] if ftd else None
     reglas = [{
+        "registro": r.registro, "defecto": _hg._es_defecto(r, ultima),     # FWLOG (D137); no van a resultado.json
         "id": r.id, "nombre": r.nombre, "politica": r.politica, "seccion": r.seccion, "accion": r.accion,
         "interfaces_origen": ";".join(r.zonas_origen), "interfaces_destino": ";".join(r.zonas_destino),
         "origen": _redes(r.origen), "destino": _redes(r.destino), "servicios": _servicios(r),

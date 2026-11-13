@@ -16,7 +16,19 @@ import re
 from pathlib import Path
 
 from .cisco_ios import mac_norm, rango_vlans
-from .modelo import CambioStp, Contador, Puerto, SesionSpan, Svi, Switch, Vecino
+from .modelo import (
+    CambioStp,
+    Contador,
+    Puerto,
+    SesionSpan,
+    Svi,
+    Switch,
+    Vecino,
+    destino_syslog,
+    nivel_syslog,
+)
+
+_RE_IP = re.compile(r"(?:\d{1,3}(?:\.\d{1,3}){3}|[0-9A-Fa-f]*:[0-9A-Fa-f:.]*)")
 
 MAX_PLATAFORMA = 80
 _RE_ANSI = re.compile(r"\x1b\[[0-9;?]*[A-Za-z]")
@@ -488,6 +500,20 @@ class _Lector:
         for cab, subs in bloques:
             self._cfg_bloque(cab, subs)
 
+    def _syslog(self, p, w):
+        """`logging <ip|nombre> [...] [severity <nivel>]`: solo destino y severidad; el resto de la linea
+        (puerto, VRF, transporte, certificados) no se copia. `logging facility ...` y similares no son destinos."""
+        d = destino_syslog(p[1])
+        if not d or not (_RE_IP.fullmatch(d) or "." in d):
+            return
+        if d not in self.sw.syslog_destinos:
+            self.sw.syslog_destinos.append(d)
+        if "severity" in w[:-1]:
+            n = nivel_syslog(w[w.index("severity") + 1])
+            niveles = [x for x in self.sw.syslog_nivel.split("; ") if x]
+            if n and n not in niveles:
+                self.sw.syslog_nivel = "; ".join(niveles + [n])
+
     def _cfg_bloque(self, cab, subs):
         sw = self.sw
         p = cab.split()
@@ -504,6 +530,8 @@ class _Lector:
                 self._contar("snmp_rw")
         elif w[:2] == ["ntp", "server"]:
             sw.ntp_servidores += 1
+        elif w[0] == "logging" and len(p) >= 2:
+            self._syslog(p, w)
         elif w[:4] == ["aaa", "authentication", "login", "default"]:
             if any(x == "group" and w[i + 1] != "local" for i, x in enumerate(w[:-1])):
                 sw.aaa_modelo = True

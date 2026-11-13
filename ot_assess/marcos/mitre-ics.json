@@ -48,6 +48,8 @@
     "vulnerabilidades conocidas": "T0866 Exploitation of Remote Services",
     "vulnerabilidades explotadas activamente": "T0866 Exploitation of Remote Services",
     "alertas de seguridad registradas": "",
+    "permiten trafico sin registro": "",
+    "switches sin envio de registros a un colector": "",
     "permiten cualquier origen hacia cualquier destino": "",
     "confian trafico sin inspeccion": "",
     "sombreadas o sin uso": "",

@@ -656,6 +656,15 @@ def main(argv: list[str] | None = None) -> int:
     extra = _ob.agregar_hallazgos([f for c in [*res.caps, *res.extras] for f in c.findings], res.obsolescencia)
     if extra:
         res.extras.append(extra)
+    from . import registro_red as _rr
+    res.registro_red = _rr.construir(res.firewall, res.switches, perfil)      # FWLOG (D137)
+    if _rr.aviso(res.registro_red):
+        print(_rr.aviso(res.registro_red))
+    if _rr.hay(res.registro_red):
+        extra = Capture(Path("registro en firewalls y switches"))
+        _rr.agregar_hallazgos(extra, res.registro_red)
+        if extra.findings:
+            res.extras.append(extra)
     if args.linea_base:      # LB1 (D82): antes de la linea base 62443 y del plan para que ya cuenten
         from . import linea_base_aprobada as _lba
         from .rules.linea_base_aprobada import agregar_hallazgos as _hl_lba
@@ -699,6 +708,7 @@ def main(argv: list[str] | None = None) -> int:
     from . import fuentes_log as _fl
     res.fuentes_log = _fl.construir(assets, conduits, [f for c in [*res.caps, *res.extras] for f in c.findings],
                                     res.inventario_normalizado, res.firewall)     # G1a (D87)
+    _rr.completar(res.registro_red, res.fuentes_log)      # FWLOG (D137): con los colectores de G1a
     from . import direccionamiento as _dr
     res.direccionamiento = _dr.construir(assets, res.zonas, res.switches, res.inventario_normalizado,
                                          [f for c in [*res.caps, *res.extras] for f in c.findings])   # G1b (D88)

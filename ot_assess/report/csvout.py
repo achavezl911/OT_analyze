@@ -29,6 +29,7 @@ from .. import matriz_controles as _mc
 from .. import obsolescencia as _ob
 from .. import periodicidad as _pe
 from .. import registro_evidencias as _registro
+from .. import registro_red as _rr
 from .. import registros_dns as _rd
 from .. import remediacion as _re
 from .. import riesgo as _rg
@@ -171,6 +172,7 @@ def tablas(res: Assessment) -> list:
         out.append((_zc.ARCHIVO, _zc.HOJA, _zc.COLUMNAS, _zc.filas_tabla(res.zcr)))
     out.extend(_tb.tablas(res.tobe, ids_tz))
     out.extend(_rac.tablas(res.rutas_acceso))
+    out.extend(_rr.tablas(res.registro_red))
     out.extend(_hd.tablas(res.hardening))
     out.extend(_fl.tablas(res.fuentes_log))
     out.extend(_dr.tablas(res.direccionamiento))
