@@ -527,7 +527,7 @@ def main(argv: list | None = None) -> int:
         if _vu.aviso_sin_activo(cruces, nombre_v):
             print(f"[!] {_vu.aviso_sin_activo(cruces, nombre_v)}")
         extra = Capture(Path(f"vulnerabilidades {nombre_v}"))
-        cruces_h = plan_vc.filtrar_cruces(cruces) if plan_vc else cruces      # VCONF (D128)
+        cruces_h = plan_vc.filtrar_cruces(cruces, imp.assets) if plan_vc else cruces      # VCONF (D128)
         _vu.agregar_hallazgo(extra, cruces_h, imp.assets)
         if kev:
             _ac.agregar_hallazgo_kev(extra, cruces_h, imp.assets, kev)
