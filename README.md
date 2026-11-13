@@ -1677,6 +1677,31 @@ excluido con el motivo. Los textos pierden la ruta absoluta del equipo (`compara
 cifrado: quien cambie archivos y manifiesto a la vez no se detecta sin un hash guardado aparte. Es evidencia técnica,
 no dictamen de cumplimiento. Decisión: D64.
 
+`empaquetar` escanea antes de armar el paquete lo que va a entrar (ver el apartado siguiente): con coincidencias no
+lo arma y termina con código 3; `--sin-escaneo-secretos` lo arma igual y deja la clave `escaneo_secretos` en
+`manifiesto.json` con el aviso de que se omitió.
+
+### Secretos en las salidas (`revisar-secretos`, SEC1)
+
+Ninguna salida lleva el valor de un secreto. Para lo que viaja en claro en una captura (comunidad SNMP, encabezado
+HTTP `Authorization`, argumento de FTP `USER`/`PASS`, texto de Telnet), `texto_claro` de `resultado.json` guarda solo el
+hecho: tipo, origen (`ip`), destino (`dst`), puerto, trama, `fecha_utc` y datos no secretos (versión SNMP, esquema
+`Basic`/`Bearer`, comando FTP, largo del valor). El hallazgo "Credenciales o administracion en texto claro" no cambia.
+Aplica siempre, sin clave de perfil. Los nombres de archivo TFTP y el `dominio\usuario` de NTLM no son secretos y se
+conservan.
+
+```bash
+python ot_pcap_assess.py revisar-secretos ~/salidas/cliente_2026-11
+```
+
+Recorre csv, json, md, html, txt, svg, drawio y el XML dentro de xlsx y docx. Por coincidencia imprime archivo, lugar
+(línea o parte del documento) y tipo, con el valor enmascarado (2 primeros caracteres y `***`); nunca el valor completo.
+Código 0 sin coincidencias, 3 con coincidencias, 2 si la carpeta no existe. Busca: comunidad SNMP, `Authorization`
+Basic/Bearer, `password`/`passwd`/`pwd`/`secret` con valor, `password 7`/`key 7` y `secret 5/8/9` de Cisco, hashes
+crypt (`$1$`, `$5$`, `$6$`, `$8$`, `$9$`, `$y$`), PSK, llaves TACACS/RADIUS, tokens JWT, `Cookie`/`Set-Cookie`, llaves
+privadas PEM y llaves de acceso `AKIA`. Es una búsqueda por patrones: sin coincidencias no prueba que no haya secretos.
+Decisión: D138.
+
 ## Estructura del código
 
 ```

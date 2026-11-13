@@ -5,8 +5,9 @@ import argparse
 import sys
 from pathlib import Path
 
-from . import __version__
+from . import __version__, cli_secretos
 from . import entrega as ent
+from .i18n import t
 from .permisos import salida_privada
 
 AYUDA = """
@@ -37,6 +38,9 @@ def crear_parser() -> argparse.ArgumentParser:
     ap.add_argument("--titulo", default="", metavar="TEXTO", help="Titulo del paquete (va en el manifiesto).")
     ap.add_argument("--cache", metavar="CARPETA",
                     help="Carpeta de cache de E6 (--cache del analisis) si esta dentro de una salida: se excluye.")
+    ap.add_argument("--sin-escaneo-secretos", action="store_true",
+                    help="Arma el paquete sin buscar secretos (queda una linea en el manifiesto). Por defecto, con "
+                         "coincidencias no se arma el paquete y el codigo es 3.")
     ap.add_argument("--verificar", metavar="CARPETA_O_ZIP",
                     help="Comprueba un paquete: modificados, faltantes y sobrantes. Codigo 0 si coincide, 1 si no.")
     ap.add_argument("--version", action="version", version=f"ot_assess {__version__}")
@@ -78,7 +82,8 @@ def main(argv=None) -> int:
     cache = Path(args.cache).expanduser() if args.cache else None
     try:
         contenidos, man, omitidos, avisos = ent.construir(
-            args.carpetas, args.excluir, args.titulo, fecha, cache)
+            args.carpetas, args.excluir, args.titulo, fecha, cache,
+            escanear_secretos=not args.sin_escaneo_secretos)
         out = Path(args.out).expanduser()
         if args.zip:
             destino = out if out.suffix.lower() == ".zip" else out.with_name(out.name + ".zip")
@@ -86,6 +91,11 @@ def main(argv=None) -> int:
         else:
             destino = out
             ent.escribir_carpeta(destino, contenidos)
+    except ent.SecretosEnPaquete as e:
+        cli_secretos.imprimir(e.coincidencias)
+        print(t("[!] No se genero el paquete: {n} coincidencias de secretos. Limpia las salidas o usa "
+                "--sin-escaneo-secretos.", n=len(e.coincidencias)), file=sys.stderr)
+        return 3
     except ent.ErrorEntrega as e:
         print(f"[!] No se genero el paquete: {e}", file=sys.stderr)
         return 2

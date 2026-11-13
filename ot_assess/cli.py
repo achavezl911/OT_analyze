@@ -364,6 +364,9 @@ def main(argv: list[str] | None = None) -> int:
     if argv and argv[0] == "empaquetar" and not Path("empaquetar").exists():
         from .cli_entrega import main as main_entrega
         return main_entrega(argv[1:])
+    if argv and argv[0] == "revisar-secretos" and not Path("revisar-secretos").exists():
+        from .cli_secretos import main as main_secretos
+        return main_secretos(argv[1:])
     if argv and argv[0] == "paquete-avisos" and not Path("paquete-avisos").exists():
         from .cli_paquete_avisos import main as main_paquete_avisos
         return main_paquete_avisos(argv[1:])

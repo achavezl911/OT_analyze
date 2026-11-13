@@ -16,7 +16,7 @@ import re
 import zipfile
 from pathlib import Path, PurePosixPath
 
-from . import __version__, json_entrada
+from . import __version__, json_entrada, secretos
 from .entorno import commit_corto
 
 FORMATO = "ot_assess.entrega/1"
@@ -45,6 +45,14 @@ manifiesto a la vez no se detecta sin una firma o un hash guardado aparte) y no 
 
 class ErrorEntrega(Exception):
     pass
+
+
+class SecretosEnPaquete(ErrorEntrega):
+    """SEC1 (D138): el escaneo de secretos encontro coincidencias; no se arma el paquete."""
+
+    def __init__(self, coincidencias: list):
+        super().__init__(f"{len(coincidencias)} coincidencias de secretos")
+        self.coincidencias = coincidencias
 
 
 # ---- exclusiones --------------------------------------------------------------------------------------
@@ -331,7 +339,8 @@ def lineas_sha256(filas: list) -> str:
     return "".join(f"{h}  {r}\n" for r, h in sorted(filas))
 
 
-def construir(carpetas: list, excluir: list, titulo: str, fecha: str, cache_dir: Path | None = None):
+def construir(carpetas: list, excluir: list, titulo: str, fecha: str, cache_dir: Path | None = None,
+              escanear_secretos: bool = True):
     """-> (contenidos {ruta: bytes}, manifiesto dict, omitidos [(carpeta, relativa, motivo)], avisos).
 
     Todo se arma en memoria con rutas relativas; escribir() lo baja a disco o a ZIP."""
@@ -369,6 +378,10 @@ def construir(carpetas: list, excluir: list, titulo: str, fecha: str, cache_dir:
     for dest, datos in contenidos.items():
         if _texto_con_ruta(datos, rutas_origen):
             raise ErrorEntrega(f"{dest}: contiene una ruta absoluta del equipo y no se pudo limpiar.")
+    if escanear_secretos:
+        hallados = secretos.escanear_contenidos(contenidos)
+        if hallados:
+            raise SecretosEnPaquete(hallados)
     cl = sorted(clientes)
     manifiesto = {
         "formato": FORMATO,
@@ -379,6 +392,8 @@ def construir(carpetas: list, excluir: list, titulo: str, fecha: str, cache_dir:
         "sitio": cl[0][1] if len(cl) == 1 else "",
         "carpetas": carp_man,
     }
+    if not escanear_secretos:
+        manifiesto["escaneo_secretos"] = "omitido (--sin-escaneo-secretos): no se buscaron secretos en este paquete"
     if len(cl) > 1:
         avisos.append("las carpetas traen clientes o sitios distintos: el manifiesto no declara uno")
     mj = (json.dumps(manifiesto, indent=2, ensure_ascii=False, sort_keys=False) + "\n").encode("utf-8")
