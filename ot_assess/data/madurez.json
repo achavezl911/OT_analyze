@@ -115,7 +115,7 @@
       "redundancia de puerta de enlace", "puertos de acceso habilitados sin uso",
       "actividad de ingenieria sobre controladores", "operaciones de escritura o control",
       "no se observaron escrituras", "escritor de control que aparece", "dnp3 con reinicio", "modbus fc8",
-      "opc ua sin seguridad"
+      "opc ua sin seguridad", "rutas de acceso a ot"
     ],
     "parches": [
       "fuera de soporte", "fin de soporte", "vulnerabilidades conocidas", "vulnerabilidades explotadas",
