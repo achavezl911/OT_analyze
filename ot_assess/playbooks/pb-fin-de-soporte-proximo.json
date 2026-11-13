@@ -1,6 +1,6 @@
 {
   "id": "pb-fin-de-soporte-proximo",
-  "hallazgo": "Equipos con fin de soporte en los proximos 12 meses",
+  "hallazgo": "Equipos con fin de soporte en los proximos",
   "objetivo": "Planear con tiempo el reemplazo o la extension de soporte de los equipos cuyo fabricante dejara de darles soporte en menos de un ano.",
   "prioridad_ot": "Reemplazar un equipo de control a las prisas obliga a una parada no planeada; esperar a la fecha sin plan deja el equipo sin parches y sin repuestos.",
   "pasos": [

@@ -275,5 +275,13 @@ class ExtremoAExtremoTest(unittest.TestCase):
         self.assertEqual(sorted(i18n.FALTANTES), [])
 
 
+class PlaybookTest(unittest.TestCase):
+    def test_playbook_con_cualquier_umbral_y_de_fin_de_venta(self):
+        from ot_assess import playbooks
+        for meses in (6, 12, 18):
+            self.assertEqual(playbooks.para_titulo(ob._tit_proximo(meses)), "pb-fin-de-soporte-proximo")
+        self.assertEqual(playbooks.para_titulo(ob.TIT_VENTA), "pb-fin-de-venta")
+
+
 if __name__ == "__main__":
     unittest.main()
