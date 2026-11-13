@@ -53,7 +53,7 @@ def cargar(path) -> dict:
                              "equipos_propios", "vlans_esperadas", "ajustes_riesgo", "madurez_objetivo",
                              "escala_madurez", "csf_tiers_objetivo", "version_cvss", "subcomandos_deshabilitados", "leyenda_salidas",
                              "modelo_evidencia", "riesgo", "avisos_solo_paquete", "iec62351_flujos", "entregables",
-                             "registro_evidencias", "confirmacion_vulnerabilidades", "allowlist_tobe", "rutas_acceso"))
+                             "registro_evidencias", "confirmacion_vulnerabilidades", "allowlist_tobe", "rutas_acceso", "obsolescencia"))
     if d.get("version") != 1 or isinstance(d.get("version"), bool):
         fallo("'version' es requerida y solo se admite 1.")
     out: dict = {"version": 1, "cliente": texto(d["cliente"], "cliente") if "cliente" in d
@@ -145,6 +145,9 @@ def cargar(path) -> dict:
     if "rutas_acceso" in d:         # RUTA1 (D134)
         from .rutas_acceso import validar as rutas_valida
         out["rutas_acceso"] = rutas_valida(d["rutas_acceso"], fallo, objeto)
+    if "obsolescencia" in d:        # OBS2 (D135)
+        from .obsolescencia import validar as obs_valida
+        out["obsolescencia"] = obs_valida(d["obsolescencia"], fallo, objeto)
     if "riesgo" in d:       # RM1 (D123)
         out["riesgo"] = _riesgo(d["riesgo"], fallo, objeto)
     if "zonas" in d:

@@ -576,7 +576,8 @@ def main(argv: list | None = None) -> int:
         hallazgos += [(extra.name, f) for f in extra.findings]
     _vconf.preparar(args, res.vulns_cruces, imp.assets, res.vuln_firmware)      # VCONF (D128)
     ref, ref_origen = _ob.referencia_de((), (imp.resumen.get("periodo") or {}).get("hasta", ""))
-    res.obsolescencia = _ob.construir(res.inventario_normalizado, tabla_eos, ref, ref_origen)
+    res.obsolescencia = _ob.construir(res.inventario_normalizado, tabla_eos, ref, ref_origen,
+                                   (perfil or {}).get("obsolescencia"))
     extra = _ob.agregar_hallazgos([f for _o, f in hallazgos], res.obsolescencia)
     if extra:
         hallazgos += [(extra.name, f) for f in extra.findings]

@@ -17,6 +17,7 @@
     "gestion sin cifrar": "SR 4.1 Confidencialidad de la informacion; SR 1.13 Acceso desde redes no confiables",
     "fuera de soporte": "IEC 62443-2-3 (gestion de parches)",
     "fin de soporte": "IEC 62443-2-3 (gestion de parches)",
+    "fin de venta": "IEC 62443-2-3 (gestion de parches)",
     "firmware expuesta": "SR 7.7 Funcionalidad minima; SR 7.8 Inventario de componentes del sistema de control",
     "apipa": "SR 7.6 Ajustes de configuracion de red y seguridad",
     "ip publicas": "SR 5.2 Proteccion del limite de zona; SR 1.13 Acceso desde redes no confiables",

@@ -20,9 +20,13 @@ from .rules.base import finding
 
 F_VENCIDO, F_PRONTO, F_VIGENTE = "fuera de soporte", "fin de soporte en 12 meses o menos", "con soporte"
 F_SIN_DATO, F_SIN_VERSION = "sin dato de soporte", "sin datos de version"
+F_VENTA = "fin de venta (con soporte)"          # OBS2 (D135): solo con la clave de perfil fin_de_venta
 ESTADOS = (F_VENCIDO, F_PRONTO, F_VIGENTE, F_SIN_DATO, F_SIN_VERSION)
+MESES = 12
+_RE_PRONTO = re.compile(r"^fin de soporte en (\d+) meses o menos$")
 TIT_FUERA = "Software o sistema operativo fuera de soporte"
 TIT_FUERA_REP = "Activos fuera de soporte segun el reporte de obsolescencia"
+TIT_VENTA = "Equipos en fin de venta con soporte vigente"
 TIT_PROXIMO = "Equipos con fin de soporte en los proximos 12 meses"
 ARCHIVO, HOJA = "obsolescencia.csv", "Obsolescencia"
 TITULO = "Obsolescencia de activos"
@@ -191,18 +195,80 @@ def _en_un_ano(d: datetime.date) -> datetime.date:
         return d.replace(year=d.year + 1, day=28)
 
 
-def _estado(fin, ref):
+def _mas_meses(d: datetime.date, n: int) -> datetime.date:
+    """`d` mas `n` meses; si el dia no existe en el mes destino, el ultimo dia de ese mes (29 de febrero)."""
+    m = d.month - 1 + n
+    y, mes = d.year + m // 12, m % 12 + 1
+    sig = datetime.date(y + mes // 12, mes % 12 + 1, 1)
+    return d.replace(year=y, month=mes, day=min(d.day, (sig - datetime.timedelta(days=1)).day))
+
+
+def _estado(fin, ref, meses=MESES, venta="", con_venta=False):
     if fin is None:
         return F_SIN_DATO, ""
     dias = (fin - ref).days
     if fin < ref:
         return F_VENCIDO, dias
-    return (F_PRONTO if fin <= _en_un_ano(ref) else F_VIGENTE), dias
+    if fin <= (_en_un_ano(ref) if meses == MESES else _mas_meses(ref, meses)):
+        return F_PRONTO, dias
+    if con_venta:
+        v = _fecha(venta)
+        if v is not None and v < ref:
+            return F_VENTA, dias
+    return F_VIGENTE, dias
 
 
-def construir(inv: dict, analista=(), referencia=None, origen_ref: str = "") -> dict:
+def _txt_pronto(meses: int) -> str:
+    return F_PRONTO if meses == MESES else f"fin de soporte en {meses} meses o menos"
+
+
+def _tit_proximo(meses: int) -> str:
+    return TIT_PROXIMO if meses == MESES else f"Equipos con fin de soporte en los proximos {meses} meses"
+
+
+def _t_estado(e: str) -> str:
+    m = _RE_PRONTO.match(e)
+    if m and int(m.group(1)) != MESES:
+        return t("fin de soporte en {n} meses o menos", n=m.group(1))
+    return t(e)
+
+
+def validar(d, fallo, objeto) -> dict:
+    """Clave de perfil `obsolescencia` (OBS2, D135): meses_proximo, fin_de_venta y clases."""
+    d = objeto(d, "obsolescencia", ("meses_proximo", "fin_de_venta", "clases"))
+    out: dict = {}
+    if "meses_proximo" in d:
+        m = d["meses_proximo"]
+        if not isinstance(m, int) or isinstance(m, bool) or not 1 <= m <= 60:
+            fallo("'obsolescencia.meses_proximo' debe ser un entero de 1 a 60.")
+        out["meses_proximo"] = m
+    if "fin_de_venta" in d:
+        if not isinstance(d["fin_de_venta"], bool):
+            fallo("'obsolescencia.fin_de_venta' debe ser true o false.")
+        out["fin_de_venta"] = d["fin_de_venta"]
+    if "clases" in d:
+        c = d["clases"]
+        if not isinstance(c, dict):
+            fallo("'obsolescencia.clases' debe ser un objeto estado -> etiqueta.")
+        validos = (*ESTADOS, F_VENTA) if out.get("fin_de_venta") else ESTADOS
+        out["clases"] = {}
+        for k, v in c.items():
+            if k not in validos:
+                fallo(f"obsolescencia.clases: estado desconocido '{k}' (validos: {', '.join(validos)}).")
+            if not isinstance(v, str) or not 1 <= len(v.strip()) <= 40:
+                fallo(f"obsolescencia.clases.{k}: la etiqueta debe ser un texto de 1 a 40 caracteres.")
+            out["clases"][k] = v.strip()
+    return out
+
+
+def construir(inv: dict, analista=(), referencia=None, origen_ref: str = "", config=None) -> dict:
     """Reporte de obsolescencia sobre el inventario normalizado `inv` (I1a). `referencia`: fecha de corte."""
     ref = referencia or datetime.date.today()
+    cfg = config
+    meses = (cfg or {}).get("meses_proximo", MESES)
+    con_venta = bool((cfg or {}).get("fin_de_venta"))
+    clases = (cfg or {}).get("clases", {})
+    pronto = _txt_pronto(meses)
     origen_ref = origen_ref or "fecha de la corrida"
     base, filas = integrada(), []
     for fila in (inv or {}).get("filas", ()):
@@ -231,25 +297,43 @@ def construir(inv: dict, analista=(), referencia=None, origen_ref: str = "") -> 
             if ev is False:
                 continue                                  # la version del activo queda fuera de la fila
             if ev is None:
-                salidas.append((texto, "", "", F_SIN_VERSION, "", "", f["fuente"]))
+                salidas.append((texto, "", "", F_SIN_VERSION, "", "", f["fuente"], ""))
                 continue
-            est, dias = _estado(f["fin"], ref)
+            est, dias = _estado(f["fin"], ref, meses, f["venta"], con_venta)
+            if est == F_PRONTO:
+                est = pronto
             fuente = f["fuente"] + (f" ({f['nota']})" if f["nota"] else "")
-            salidas.append((texto, f["fin"].isoformat() if f["fin"] else "", dias, est, f["reemplazo"], "", fuente))
+            salidas.append((texto, f["fin"].isoformat() if f["fin"] else "", dias, est, f["reemplazo"], "", fuente,
+                            f["venta"]))
         if not salidas:
-            salidas.append(("", "", "", F_SIN_DATO if ver_conocida else F_SIN_VERSION, "", "", ""))
-        for prod, fin, dias, est, reemplazo, _x, fuente in salidas:
+            salidas.append(("", "", "", F_SIN_DATO if ver_conocida else F_SIN_VERSION, "", "", "", ""))
+        for prod, fin, dias, est, reemplazo, _x, fuente, venta in salidas:
+            extra = [] if cfg is None else [clases.get(_canon(est), est)] + ([venta] if con_venta else [])
             filas.append({"id": fila["id"], "celdas": comunes + [prod, ref.isoformat(), fin, dias, est, reemplazo,
-                                                                  fuente, "", "", ""],
+                                                                  fuente, "", "", ""] + extra,
                           "estado": est, "dias": dias if isinstance(dias, int) else None,
                           "zona": val("zona"), "criticidad": val("criticidad"), "purdue": val("nivel_purdue"),
                           "nombre": val("nombre") or val("ips"), "ips": [i for i in val("ips").split(";") if i],
-                          "producto": prod, "fin": fin, "fuente": fuente})
-    cuenta = {e: sum(1 for f in filas if f["estado"] == e) for e in ESTADOS}
-    return {"filas": filas, "referencia": ref.isoformat(), "referencia_origen": origen_ref,
-            "resumen": {"filas": len(filas), "activos": len({f["id"] for f in filas}), "por_estado": cuenta,
-                        "referencia": ref.isoformat(), "referencia_origen": origen_ref,
-                        "filas_analista": len(analista)}}
+                          "producto": prod, "fin": fin, "fuente": fuente, "venta": venta})
+    estados = [pronto if e == F_PRONTO else e for e in ESTADOS]
+    if con_venta:
+        estados.insert(3, F_VENTA)
+    cuenta = {e: sum(1 for f in filas if f["estado"] == e) for e in estados}
+    resumen = {"filas": len(filas), "activos": len({f["id"] for f in filas}), "por_estado": cuenta,
+               "referencia": ref.isoformat(), "referencia_origen": origen_ref, "filas_analista": len(analista)}
+    rep = {"filas": filas, "referencia": ref.isoformat(), "referencia_origen": origen_ref, "resumen": resumen}
+    if cfg is not None:
+        por_clase: dict = {}
+        for e, n in cuenta.items():
+            por_clase[clases.get(_canon(e), e)] = por_clase.get(clases.get(_canon(e), e), 0) + n
+        resumen["meses_proximo"], resumen["clases"] = meses, por_clase
+        rep["config"] = {"meses_proximo": meses, "fin_de_venta": con_venta, "propias": sorted(set(clases.values()))}
+    return rep
+
+
+def _canon(estado: str) -> str:
+    """Nombre del estado en la herramienta (con 12 meses) para buscarlo en las clases del proyecto."""
+    return F_PRONTO if _RE_PRONTO.match(estado) else estado
 
 
 def referencia_de(caps=(), periodo_hasta: str = "") -> tuple:
@@ -273,8 +357,12 @@ def hay(rep: dict) -> bool:
 def tablas(rep: dict) -> list:
     if not hay(rep):
         return []
-    filas = [[t(x) if i == COLUMNAS.index("estado") else x for i, x in enumerate(f["celdas"])] for f in rep["filas"]]
-    return [(ARCHIVO, HOJA, COLUMNAS, filas)]
+    filas = [[_t_estado(x) if i == COLUMNAS.index("estado") else x for i, x in enumerate(f["celdas"])]
+             for f in rep["filas"]]
+    cols = COLUMNAS
+    if "config" in rep:
+        cols = COLUMNAS + ["clase_proyecto"] + (["fecha_fin_venta"] if rep["config"]["fin_de_venta"] else [])
+    return [(ARCHIVO, HOJA, cols, filas)]
 
 
 def _crit(valor: str) -> str:
@@ -287,7 +375,11 @@ def _orden_crit(f: dict) -> int:
 
 def seccion(rep: dict) -> dict:
     por = rep["resumen"]["por_estado"]
-    filas = [[t("estado"), t(e), n] for e, n in por.items()]
+    filas = [[t("estado"), _t_estado(e), n] for e, n in por.items()]
+    if "config" in rep:
+        propias = rep["config"]["propias"]
+        filas += [[t("clase del proyecto"), e if e in propias else _t_estado(e), n]
+                  for e, n in rep["resumen"]["clases"].items()]
     zonas: dict = {}
     for f in rep["filas"]:
         if f["estado"] == F_VENCIDO:
@@ -318,12 +410,20 @@ def _lineas(filas: list) -> list:
               fuente=f["fuente"] or t("tabla del analista")) for f in filas]
 
 
+def _lineas_venta(filas: list) -> list:
+    return [t("- {activo} ({ips}): {prod} - fin de venta {venta}; fin de soporte {fin} | fuente: {fuente}",
+              activo=f["nombre"], ips=";".join(f["ips"]), prod=f["producto"], venta=f["venta"], fin=f["fin"],
+              fuente=f["fuente"] or t("tabla del analista")) for f in filas]
+
+
 def agregar_hallazgos(hallazgos: list, rep: dict):
     """`hallazgos`: dicts de hallazgo ya generados (se modifican). Devuelve un Capture extra con los nuevos o None."""
     if not hay(rep):
         return None
     vencidos = [f for f in rep["filas"] if f["estado"] == F_VENCIDO]
-    pronto = [f for f in rep["filas"] if f["estado"] == F_PRONTO]
+    meses = (rep.get("config") or {}).get("meses_proximo", MESES)
+    pronto = [f for f in rep["filas"] if f["estado"] == _txt_pronto(meses)]
+    venta = [f for f in rep["filas"] if f["estado"] == F_VENTA]
     ref = t("Segun el reporte de obsolescencia (fecha de referencia {ref}):", ref=rep["referencia"])
     extra = Capture(Path("reporte de obsolescencia"))
     if vencidos:
@@ -342,9 +442,15 @@ def agregar_hallazgos(hallazgos: list, rep: dict):
                     "Levantar plan de reemplazo o compensar con aislamiento de red y control de acceso estricto "
                     "mientras se reemplaza.", categoria="Obsolescencia", activos=ips)
     if pronto:
-        finding(extra, "Baja", TIT_PROXIMO, unir("\n", [ref, *_lineas(pronto)]),
+        finding(extra, "Baja", _tit_proximo(meses), unir("\n", [ref, *_lineas(pronto)]),
                 "Planear el reemplazo con anticipacion evita llegar a la fecha sin presupuesto ni ventana de "
                 "parada acordada con operacion.",
                 "Incluir estos equipos en el plan de reemplazo y pedir al fabricante la ruta de migracion y los "
                 "tiempos de entrega.", categoria="Obsolescencia", activos=[i for f in pronto for i in f["ips"]])
+    if venta:
+        finding(extra, "Baja", TIT_VENTA, unir("\n", [ref, *_lineas_venta(venta)]),
+                "Un equipo descontinuado por el fabricante sigue con soporte, pero ya no se puede comprar como "
+                "repuesto ni ampliar; conviene tener repuestos y un plan de reemplazo antes del fin de soporte.",
+                "Incluir estos equipos en el plan de reemplazo y asegurar repuestos hasta la fecha de fin de "
+                "soporte.", categoria="Obsolescencia", activos=[i for f in venta for i in f["ips"]])
     return extra if extra.findings else None

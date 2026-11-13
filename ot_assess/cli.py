@@ -650,7 +650,8 @@ def main(argv: list[str] | None = None) -> int:
             res.extras.append(extra)
     _vconf.preparar(args, res.vulns_cruces, assets, res.vuln_firmware)      # VCONF (D128)
     ref, ref_origen = _ob.referencia_de([c for c in caps if not c.error])
-    res.obsolescencia = _ob.construir(res.inventario_normalizado, tabla_eos, ref, ref_origen)
+    res.obsolescencia = _ob.construir(res.inventario_normalizado, tabla_eos, ref, ref_origen,
+                                   (perfil or {}).get("obsolescencia"))
     extra = _ob.agregar_hallazgos([f for c in [*res.caps, *res.extras] for f in c.findings], res.obsolescencia)
     if extra:
         res.extras.append(extra)

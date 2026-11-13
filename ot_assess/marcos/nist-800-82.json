@@ -17,6 +17,7 @@
     "gestion sin cifrar": "SC-8 (proteccion de la transmision); CM-7",
     "fuera de soporte": "SA-22 (componentes sin soporte); SI-2 (correccion de fallas)",
     "fin de soporte": "SA-22 (componentes sin soporte); SI-2 (correccion de fallas)",
+    "fin de venta": "SA-22 (componentes sin soporte); SI-2 (correccion de fallas)",
     "firmware expuesta": "CM-8 (inventario de componentes); RA-5 (analisis de vulnerabilidades)",
     "apipa": "CM-6 (ajustes de configuracion); CM-8 (inventario de componentes)",
     "ip publicas": "SC-7 (proteccion de frontera); AC-4 (control de flujo de informacion)",

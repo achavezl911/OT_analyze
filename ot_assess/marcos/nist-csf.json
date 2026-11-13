@@ -17,6 +17,7 @@
     "gestion sin cifrar": "PR.DS-02 (datos en transito); PR.PS-01 (gestion de configuracion)",
     "fuera de soporte": "PR.PS-02 (software mantenido o retirado segun riesgo); PR.PS-03 (hardware mantenido o retirado segun riesgo); ID.RA-01 (vulnerabilidades identificadas)",
     "fin de soporte": "PR.PS-02 (software mantenido o retirado segun riesgo); PR.PS-03 (hardware mantenido o retirado segun riesgo)",
+    "fin de venta": "PR.PS-02 (software mantenido o retirado segun riesgo); PR.PS-03 (hardware mantenido o retirado segun riesgo)",
     "firmware expuesta": "ID.AM-01 (inventario de hardware); ID.RA-01 (vulnerabilidades identificadas)",
     "apipa": "PR.PS-01 (gestion de configuracion)",
     "ip publicas": "PR.IR-01 (redes protegidas de acceso logico no autorizado)",

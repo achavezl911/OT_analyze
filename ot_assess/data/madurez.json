@@ -118,7 +118,7 @@
       "opc ua sin seguridad", "rutas de acceso a ot"
     ],
     "parches": [
-      "fuera de soporte", "fin de soporte", "vulnerabilidades conocidas", "vulnerabilidades explotadas",
+      "fuera de soporte", "fin de soporte", "fin de venta", "vulnerabilidades conocidas", "vulnerabilidades explotadas",
       "tls obsoleto"
     ],
     "monitoreo": [

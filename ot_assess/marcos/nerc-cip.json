@@ -17,6 +17,7 @@
     "gestion sin cifrar": "CIP-007 R1 (puertos y servicios); CIP-005 R2 (si es acceso remoto interactivo)",
     "fuera de soporte": "CIP-007 R2 (gestion de parches); CIP-010 R1 (linea base de configuracion)",
     "fin de soporte": "CIP-007 R2 (gestion de parches); CIP-010 R1 (linea base de configuracion)",
+    "fin de venta": "CIP-007 R2 (gestion de parches); CIP-010 R1 (linea base de configuracion)",
     "firmware expuesta": "CIP-010 R1 (linea base); CIP-010 R3 (evaluacion de vulnerabilidades)",
     "apipa": "CIP-010 R1 (linea base de configuracion)",
     "ip publicas": "CIP-005 R1 (ESP y puntos de acceso electronico)",

@@ -977,6 +977,15 @@ fecha de la corrida agrega `vigencia vencida`. Salidas: `rutas_acceso.csv` y hoj
 HTML/Word/Markdown, bloque `rutas_acceso` de `resultado.json` y dos hallazgos (Media: usadas sin declarar; Baja:
 vigencia vencida). Es evidencia de lo observado, no cumplimiento; no lista reglas del firewall sin tráfico. También en
 `diagrama` (sin firewall, `configurada` queda `sin firewall`). Sin la clave no cambia ninguna salida.
+**Clases de obsolescencia del proyecto (OBS2, D135).** Clave de perfil opcional `obsolescencia` (objeto; `{}` vale):
+`meses_proximo` (1 a 60, por defecto 12) fija el umbral de «fin de soporte en N meses o menos» y del hallazgo
+«Equipos con fin de soporte en los proximos N meses»; `fin_de_venta` (true/false) agrega el estado «fin de venta (con
+soporte)» (soporte fuera del umbral y fecha de fin de venta de la tabla del analista ya pasada) y el hallazgo Baja
+«Equipos en fin de venta con soporte vigente»; `clases` asigna una etiqueta del proyecto (1 a 40 caracteres, pueden
+repetirse y suman) a cada estado. `obsolescencia.csv` agrega `clase_proyecto` (y `fecha_fin_venta`), la sección
+agrega el conteo por clase y `resultado.json` trae `clases` y `meses_proximo`. Con un umbral distinto de 12 el
+playbook y el tema de hardening de ese hallazgo (que buscan el título con 12) no se enlazan. Sin la clave no cambia
+ninguna salida.
 **Hardening por tipo de equipo (T1b, D86).** Cada activo se asigna a uno de seis tipos (controlador, estación, servidor,
 red, seguridad, otro) por su rol inferido o por el tipo que da la plataforma (`ot_assess/data/hardening.json`); sin
 rol, por los puertos que sirve (puertos OT: controlador; DNS, LDAP, bases de datos: servidor; RDP/VNC: estación) y si
