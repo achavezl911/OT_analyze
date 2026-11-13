@@ -352,6 +352,8 @@ class SalidasTest(unittest.TestCase):
         with open(o / rr.ARCHIVO, encoding="utf-8-sig", newline="") as fh:
             filas = list(csv.DictReader(fh))
         self.assertIn("rules_without_logging", filas[0])
+        self.assertEqual(list(filas[0]), [i18n.t(c) for c in rr.COLUMNAS])
+        self.assertNotIn("ids_sin_registro", filas[0])
         self.assertEqual(filas[1]["declared_destination"], "no collectors declared")
         self.assertTrue(any("Firewall rules that allow traffic without logging" in x for x in self.titulos(o)))
 
