@@ -33,6 +33,8 @@ ORIGEN_BASE_PERFIL = "declarado en el perfil"
 ORIGEN_BASE_PROPUESTA = "propuesto por la herramienta; lo fija el cliente"
 ORIGEN_ZONA_HEREDADA = "heredada del sitio"
 ORIGEN_ZONA_PROPUESTA = "propuesta por la herramienta; lo fija el cliente"
+ZONA_OTRAS = "fuera de las zonas del perfil"      # activos en zonas no declaradas (subred, VLAN, plataforma)
+ZONA_INTERNET = "Internet"
 ARCHIVO_ZONAS, HOJA_ZONAS = "linea_base_nist_zonas.csv", "Linea base NIST por zona"
 COL_ZONAS = ["zona", "linea_base", "origen", "controles", "mejoras", "activos", "brecha", "control_observado",
              "sin_evidencia", "no_evaluable"]
@@ -161,7 +163,18 @@ def contraste_refs() -> list:
     return sorted((c for c in citados if c not in cat), key=_orden)
 
 
-def _hallazgos(findings: list, por_ip: dict | None = None) -> list:
+def _zona_de(zona: str, declaradas: set) -> str:
+    """Zona de la matriz para la zona asignada de un activo: la declarada, ZONA_OTRAS o '' (Internet o sin)."""
+    if zona in declaradas:
+        return zona
+    return ZONA_OTRAS if zona and zona != ZONA_INTERNET else ""
+
+
+def _nz(zona: str) -> str:
+    return t(zona) if zona == ZONA_OTRAS else zona
+
+
+def _hallazgos(findings: list, por_ip: dict | None = None, declaradas: set = frozenset()) -> list:
     """Hallazgos agrupados por (titulo, severidad) que citan algun control NIST. Con `por_ip` (modo por zona,
     NBZ1) cada grupo lleva las zonas de sus activos y `global` si algun hallazgo no trae activos."""
     grupos: dict = {}
@@ -174,9 +187,10 @@ def _hallazgos(findings: list, por_ip: dict | None = None) -> list:
             if por_ip is not None:
                 from .riesgo import _ips_hallazgo
                 ips = _ips_hallazgo(f, por_ip)
+                zonas = {_zona_de(por_ip[ip].get("zona_asignada") or "", declaradas) for ip in ips} - {""}
                 g.setdefault("zonas", set())
-                g["global"] = g.get("global", False) or not ips
-                g["zonas"] |= {por_ip[ip].get("zona_asignada") or "" for ip in ips} - {""}
+                g["global"] = g.get("global", False) or not zonas     # sin activos, o solo Internet
+                g["zonas"] |= zonas
     return sorted(grupos.values(), key=lambda g: (g["titulo"], g["sev"]))
 
 
@@ -319,7 +333,11 @@ def construir(assets: dict, zcr: dict, firewall: dict, findings: list, perfil: d
     cat = cargar()["controles"]
     por_zona = _bases_zonas(perfil, nivel, origen)
     por_ip = {ip: a for a in assets.values() for ip in a["ips"]} if por_zona else None
-    hall = _hallazgos(findings, por_ip)
+    declaradas = {z["zona"] for z in por_zona}
+    if por_zona and any(_zona_de(a.get("zona_asignada") or "", declaradas) == ZONA_OTRAS for a in assets.values()):
+        por_zona.append({"zona": ZONA_OTRAS, "linea_base": nivel,
+                         "origen": ORIGEN_ZONA_HEREDADA if origen == ORIGEN_BASE_PERFIL else ORIGEN_ZONA_PROPUESTA})
+    hall = _hallazgos(findings, por_ip, declaradas)
     observados = _controles_observados(assets, zcr, firewall, findings)
     fragmentos = [_citas(txt) for txt in ESTANDARES[CLAVE_NIST].refs.values()]
 
@@ -374,7 +392,8 @@ def construir(assets: dict, zcr: dict, firewall: dict, findings: list, perfil: d
     if por_zona:
         out["nist"]["por_zona"] = [{"zona": z["zona"], "linea_base": z["linea_base"], "origen": z["origen"],
                                     "controles": conteo(z["linea_base"])[0], "mejoras": conteo(z["linea_base"])[1],
-                                    "activos": sum(1 for a in assets.values() if a.get("zona_asignada") == z["zona"])}
+                                    "activos": sum(1 for a in assets.values()
+                                                   if _zona_de(a.get("zona_asignada") or "", declaradas) == z["zona"])}
                                    for z in por_zona]
         sitio: dict = {}
         for r in filas:
@@ -431,7 +450,7 @@ def _filas_nist(mc: dict) -> list:
             objetivo += "; " + t("agregado por el overlay OT")
         titulo = r["titulo"] + (" - " + t("mejora") if r["mejora"] else "")
         evid = t(r["control"]) if r["control"] else "; ".join(t(h) for h in r["hallazgos"])
-        out.append([M_NIST, t(r["alcance"]), r.get("zona", ""), r["id"], titulo, objetivo,
+        out.append([M_NIST, t(r["alcance"]), _nz(r.get("zona", "")), r["id"], titulo, objetivo,
                     t(r.get("origen", n["origen"])), t(r["estado"]), evid,
                     "; ".join(t(h) for h in r["hallazgos"]), "; ".join(r["playbooks"]), r["prioridad"],
                     *_vacias()])
@@ -576,7 +595,7 @@ def _texto_zonas(mc: dict) -> str:
     for z in por_zona(mc):
         marca = {ORIGEN_ZONA_HEREDADA: " " + t("(heredada)"),
                  ORIGEN_ZONA_PROPUESTA: " " + t("(propuesta)")}.get(z["origen"], "")
-        partes.append(f"{z['zona']} {t(z['linea_base'])}{marca}")
+        partes.append(f"{_nz(z['zona'])} {t(z['linea_base'])}{marca}")
     return t("Linea base NIST SP 800-82r3 por zona: {z}.", z=", ".join(partes))
 
 
@@ -589,7 +608,7 @@ def filas_zonas(mc: dict) -> list:
     def conteos(z):
         c = cuenta[z]
         return [c[_lb.E_BRECHA], c[_lb.E_CONTROL], c[_lb.E_SIN], c[_lb.E_NOEVAL]]
-    out = [[z["zona"], t(z["linea_base"]), t(z["origen"]), z["controles"], z["mejoras"], z["activos"],
+    out = [[_nz(z["zona"]), t(z["linea_base"]), t(z["origen"]), z["controles"], z["mejoras"], z["activos"],
             *conteos(z["zona"])] for z in por_zona(mc)]
     org = [r for r in mc["nist"]["filas"] if not r.get("zona")]
     mej = sum(1 for r in org if r["mejora"])
@@ -689,7 +708,7 @@ def seccion(mc: dict, lb: dict) -> dict:
     nota = t(NOTA)
     tabla_zonas = None
     if por_zona(mc):
-        vacias = [z["zona"] for z in por_zona(mc) if not z["activos"]]
+        vacias = [_nz(z["zona"]) for z in por_zona(mc) if not z["activos"]]
         resumen = _texto_zonas(mc) + " " + t("Controles de alcance organizacion: una fila, en la linea base mas "
                                              "alta que los incluye. Detalle y columnas de validacion del analista "
                                              "en {a}; conteos por zona en {z}.", a=ARCHIVO, z=ARCHIVO_ZONAS)

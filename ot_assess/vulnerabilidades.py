@@ -398,11 +398,11 @@ def columnas(cruces: list, crit=None, plan=None) -> list:
     return cols + (["epss"] if _con_epss(cruces) else []) + (["id_vulnerabilidad", "estado_confirmacion"] if plan else [])
 
 
-def _confirmacion(plan, v: dict) -> list:
+def _confirmacion(plan, v: dict, activo=None) -> list:
     """VCONF (D128): id y estado de la fila cuando hay plan de confirmacion."""
     if not plan:
         return []
-    ident = plan.id_plataforma(v)
+    ident = plan.id_plataforma(v, activo)
     return [ident, plan.mostrar(plan.revision(ident)[0])]
 
 
@@ -423,7 +423,7 @@ def filas_tabla(cruces: list, assets: dict, crit=None, plan=None) -> list:
                 t(v["estado"]), v["producto"],
                 v["version"], v["fuente"], c["por"], *columnas_kev(c),
                 *(["" if v.get("epss") is None else v["epss"]] if epss else []),
-                *_confirmacion(plan, v)]
+                *_confirmacion(plan, v, a)]
     asoc = sorted((c for c in cruces if c["activo"] is not None),
                   key=lambda c: (fila(c)[0], c["vuln"]["cve"], str(c["activo"])))
     no = sorted((c for c in cruces if c["activo"] is None),
