@@ -38,6 +38,7 @@ from .. import rutas_firewall as _rf
 from .. import salud_red as _sr
 from .. import sensores as _se
 from .. import tobe as _tb
+from .. import trazabilidad as _tz
 from .. import vuln_firmware as _vf
 from .. import vulnerabilidades as _vu
 from .. import zonas as _zo
@@ -64,16 +65,18 @@ COLUMNAS_COBERTURA = ["id", "grupo", "categoria", "texto", "cobertura",
                       "hallazgos_que_lo_citan", "hallazgos_en_esta_corrida"]
 
 
-def cabecera_hallazgos(estandares: list, entregables=None) -> list:
-    """`entregables`: plan de entregables.plan(perfil); con el, agrega la columna al final (ENT1, D126)."""
+def cabecera_hallazgos(estandares: list, entregables=None, ids: bool = False) -> list:
+    """`entregables`: plan de entregables.plan(perfil); con el, agrega la columna al final (ENT1, D126).
+    `ids`: clave de perfil 'trazabilidad'; agrega id_recomendacion despues (IDS1, D136)."""
     return (["id", "captura", "severidad", "categoria", "titulo", "evidencia",
              "por_que_importa", "recomendacion", "mitre_ics", "mitre_ics_tacticas"] + [e.clave for e in estandares]
-            + (["entregables"] if entregables else []))
+            + (["entregables"] if entregables else []) + ([_tz.COL_REC] if ids else []))
 
 
-def fila_hallazgo(nombre_origen: str, f: dict, estandares: list, entregables=None) -> list:
+def fila_hallazgo(nombre_origen: str, f: dict, estandares: list, entregables=None, ids: bool = False) -> list:
     return fila_base(nombre_origen, f, estandares) + (
-        [_en.texto_hallazgo(entregables, f)] if entregables else [])
+        [_en.texto_hallazgo(entregables, f)] if entregables else []) + (
+        [_tz.id_recomendacion(f["recomendacion"])] if ids else [])
 
 
 def fila_base(nombre_origen: str, f: dict, estandares: list) -> list:
@@ -90,6 +93,7 @@ def tablas(res: Assessment) -> list:
     nombres = _rd.nombre_de_ip(res)
     out = []
     plan_ent = _en.plan(getattr(res, "perfil", None))      # ENT1 (D126): None sin la clave
+    ids_tz = _tz.activa(getattr(res, "perfil", None))      # IDS1 (D136)
 
     filas_inv = _ip.filas(res, nombres)          # I3 (D105): una fila por IP para las MAC de enrutamiento
     con_nat = any(a.get("nat_nota") for a in filas_inv)     # D70: columna solo si hay activos marcados
@@ -164,8 +168,8 @@ def tablas(res: Assessment) -> list:
     if _zo.hay(res.zonas):
         out.append(("zonas.csv", _zo.TITULO, _zo.COLUMNAS, _zo.filas_tabla(_zo.presentada(res.zonas, filas_inv))))
     if _zc.hay(res.zcr):
-        out.append((_zc.ARCHIVO, _zc.HOJA, _zc.COLUMNAS, _zc.filas_tabla(res.zcr)))
-    out.extend(_tb.tablas(res.tobe))
+        out.append((_zc.ARCHIVO, _zc.HOJA, _zc.columnas(ids_tz), _zc.filas_tabla(res.zcr, ids_tz)))
+    out.extend(_tb.tablas(res.tobe, ids_tz))
     out.extend(_rac.tablas(res.rutas_acceso))
     out.extend(_hd.tablas(res.hardening))
     out.extend(_fl.tablas(res.fuentes_log))
@@ -186,8 +190,8 @@ def tablas(res: Assessment) -> list:
                  for c in caps for i in c.identity]))
 
     out.append(("hallazgos.csv", "Hallazgos",
-                cabecera_hallazgos(estandares, plan_ent),
-                [fila_hallazgo(c.name, f, estandares, plan_ent)
+                cabecera_hallazgos(estandares, plan_ent, ids_tz),
+                [fila_hallazgo(c.name, f, estandares, plan_ent, ids_tz)
                  for c in [*caps, *res.extras]
                  for f in sorted(c.findings, key=lambda x: SEV_ORDER.get(x["severidad"], 9))]))
 
@@ -198,7 +202,8 @@ def tablas(res: Assessment) -> list:
     out.extend(_registro.tablas(res.args))      # EVID2 (D127)
     out.extend(_vconf.tablas(res.args))      # VCONF (D128)
 
-    out.append(("plan_remediacion.csv", "Plan de remediacion", _re.COLUMNAS, _re.tabla(res)))
+    out.append(("plan_remediacion.csv", "Plan de remediacion", _re.columnas(res), _re.tabla(res)))
+    out.extend(_tz.tablas(res))      # IDS1 (D136)
     out.extend(_rg.tablas(_rg.de(res)))
     out.extend(_ma.tablas(res.madurez))
     out.extend(_ct.tablas(res.csf_tiers))
@@ -265,8 +270,8 @@ def tablas(res: Assessment) -> list:
 
     if res.vulnerabilidades:
         crit = (getattr(res, "perfil", None) or {}).get("criticidad_activos")
-        out.append(("vulnerabilidades.csv", "Vulnerabilidades", _vu.columnas(res.vulns_cruces, crit, _vconf.de_args(res.args)),
-                    _vu.filas_tabla(res.vulns_cruces, assets, crit, _vconf.de_args(res.args))))
+        out.append(("vulnerabilidades.csv", "Vulnerabilidades", _vu.columnas(res.vulns_cruces, crit, _vconf.de_args(res.args), ids_tz),
+                    _vu.filas_tabla(res.vulns_cruces, assets, crit, _vconf.de_args(res.args), ids_tz)))
 
     if "avisos_ics" in res.vulnerabilidades:
         filas = _ac.filas_avisos(res.vulns_cruces, assets, (getattr(res, "perfil", None) or {}).get("version_cvss", "3"))

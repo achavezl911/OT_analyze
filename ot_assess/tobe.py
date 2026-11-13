@@ -370,8 +370,9 @@ def filas_matriz(tobe: dict) -> list:
             for m in tobe["matriz"]]
 
 
-def tablas(tobe: dict) -> list:
-    """[(archivo, hoja, cabecera, filas)] para el CSV y el XLSX."""
+def tablas(tobe: dict, ids: bool = False) -> list:
+    """[(archivo, hoja, cabecera, filas)] para el CSV y el XLSX. `ids` (IDS1, D136): id_flujo al final de la
+    allowlist si ALLOW1 no lo agrego ya (es el mismo id)."""
     if not hay(tobe):
         if tobe and tobe.get("allowlist_proyecto"):     # ALLOW1 (D133): solo los flujos declarados por el equipo
             from . import allowlist_proyecto as _ap
@@ -381,6 +382,11 @@ def tablas(tobe: dict) -> list:
     if tobe.get("allowlist_proyecto"):       # ALLOW1 (D133): columnas del proyecto al final
         from . import allowlist_proyecto as _ap
         cab, filas = _ap.tabla(tobe, COLUMNAS, filas)
+    elif ids:
+        from .allowlist_proyecto import COL_ID, id_flujo
+        cab = [*cab, COL_ID]
+        filas = [[*fila, id_flujo(f["zona_origen"], f["zona_destino"], f["servicio"])]
+                 for fila, f in zip(filas, tobe["filas"])]
     return [(ARCHIVO_ALLOW, HOJA_ALLOW, cab, filas),
             (ARCHIVO_MATRIZ, HOJA_MATRIZ, COL_MATRIZ, filas_matriz(tobe))]
 

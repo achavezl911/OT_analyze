@@ -36,6 +36,7 @@ from .. import rutas_firewall as _rf
 from .. import salud_red as _sr
 from .. import sensores as _se
 from .. import tobe as _tb
+from .. import trazabilidad as _tz
 from .. import vuln_firmware as _vf
 from .. import vulnerabilidades as _vuln
 from .. import zonas as _zo
@@ -411,6 +412,11 @@ def write_html(res: Assessment, outdir: Path) -> Path:
             for fila in filas:
                 a("<tr>" + "".join(f"<td>{esc(str(c))}</td>" for c in fila) + "</tr>")
             a("</tbody></table></div>")
+    if _tz.hay(res):
+        s = _tz.seccion(res)
+        a("<h3>" + esc(s["titulo"]) + "</h3>")
+        a(f'<div class="nota">{esc(s["nota"])}</div>')
+        a(f'<p>{esc(s["resumen"])}</p>')
     if _lba.hay(res.linea_base_aprobada):
         s = _lba.seccion(res.linea_base_aprobada)
         a("<h3>" + esc(s["titulo"]) + "</h3>")

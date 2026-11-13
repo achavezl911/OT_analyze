@@ -35,6 +35,7 @@ from .. import rutas_firewall as _rf
 from .. import salud_red as _sr
 from .. import sensores as _se
 from .. import tobe as _tb
+from .. import trazabilidad as _tz
 from .. import vuln_firmware as _vf
 from .. import vulnerabilidades as _vuln
 from .. import zonas as _zo
@@ -278,6 +279,9 @@ def construir_bloques(res: Assessment) -> list:
         b += [("h1", s["titulo"]), ("nota", s["nota"]), ("p", s["resumen"])]
         for titulo, cab, filas in s["tablas"]:
             b += [("p", titulo), ("tabla", cab, filas)]
+    if _tz.hay(res):
+        s = _tz.seccion(res)
+        b += [("h1", s["titulo"]), ("nota", s["nota"]), ("p", s["resumen"])]
     if _lba.hay(res.linea_base_aprobada):
         s = _lba.seccion(res.linea_base_aprobada)
         b +=[("h1", s["titulo"]), ("nota", s["nota"]), ("p", s["resumen"])]

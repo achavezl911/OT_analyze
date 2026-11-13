@@ -385,7 +385,7 @@ def con_entorno(cruces: list, crit) -> bool:
     return bool(crit) and any(_entorno(c["vuln"], crit)[0] != "" for c in cruces)
 
 
-def columnas(cruces: list, crit=None, plan=None) -> list:
+def columnas(cruces: list, crit=None, plan=None, ids: bool = False) -> list:
     """COLUMNAS, mas 'epss' al final si el archivo importado la trae (Nozomi) y cvss_v4 y vector_cvss_v4
     junto a cvss si trae CVSS v4.0 (D113); con crit (criticidad_activos) y filas con entorno, las columnas D120."""
     cols = list(COLUMNAS)
@@ -395,18 +395,24 @@ def columnas(cruces: list, crit=None, plan=None) -> list:
         if con_entorno(cruces, crit):
             from .cvss4_entorno import COLUMNAS as ENT
             cols[i + 2:i + 2] = ENT
-    return cols + (["epss"] if _con_epss(cruces) else []) + (["id_vulnerabilidad", "estado_confirmacion"] if plan else [])
+    return (cols + (["epss"] if _con_epss(cruces) else [])
+            + (["id_vulnerabilidad", "estado_confirmacion"] if plan else [])
+            + (["id_vulnerabilidad"] if ids and not plan else []))      # IDS1 (D136)
 
 
-def _confirmacion(plan, v: dict, activo=None) -> list:
-    """VCONF (D128): id y estado de la fila cuando hay plan de confirmacion."""
+def _confirmacion(plan, v: dict, activo=None, ids: bool = False) -> list:
+    """VCONF (D128): id y estado de la fila cuando hay plan de confirmacion. Con `ids` (IDS1, D136) y sin plan,
+    solo el id (el mismo que daria VCONF)."""
     if not plan:
+        if ids:
+            from .confirmacion_vulns import clave_plataforma, id_de
+            return [id_de(v["cve"], clave_plataforma(v, activo))]
         return []
     ident = plan.id_plataforma(v, activo)
     return [ident, plan.mostrar(plan.revision(ident)[0])]
 
 
-def filas_tabla(cruces: list, assets: dict, crit=None, plan=None) -> list:
+def filas_tabla(cruces: list, assets: dict, crit=None, plan=None, ids: bool = False) -> list:
     """Filas de vulnerabilidades.csv: asociadas por activo y CVE; al final las no asociadas."""
     from .avisos_cisa import columnas_kev
     epss = _con_epss(cruces)
@@ -423,7 +429,7 @@ def filas_tabla(cruces: list, assets: dict, crit=None, plan=None) -> list:
                 t(v["estado"]), v["producto"],
                 v["version"], v["fuente"], c["por"], *columnas_kev(c),
                 *(["" if v.get("epss") is None else v["epss"]] if epss else []),
-                *_confirmacion(plan, v, a)]
+                *_confirmacion(plan, v, a, ids)]
     asoc = sorted((c for c in cruces if c["activo"] is not None),
                   key=lambda c: (fila(c)[0], c["vuln"]["cve"], str(c["activo"])))
     no = sorted((c for c in cruces if c["activo"] is None),

@@ -643,7 +643,8 @@ def main(argv: list[str] | None = None) -> int:
     if indice_vf:        # V1a (D89): despues del inventario normalizado
         res.vuln_firmware = _vf.construir(indice_vf, res.inventario_normalizado, res.vulns_cruces, assets,
                                           kev_cat, avisos, (perfil or {}).get("version_cvss", "3"),
-                                          (perfil or {}).get("criticidad_activos"), plan_vc)
+                                          (perfil or {}).get("criticidad_activos"), plan_vc,
+                                          "trazabilidad" in (perfil or {}))      # IDS1 (D136)
         extra = Capture(Path("vulnerabilidades por firmware"))
         _vf.agregar_hallazgo(extra, plan_vc.filtrar_vf(res.vuln_firmware) if plan_vc else res.vuln_firmware)
         if extra.findings:

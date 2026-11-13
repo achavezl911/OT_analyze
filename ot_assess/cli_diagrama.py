@@ -430,7 +430,8 @@ def main(argv: list | None = None) -> int:
     tablas_fw += [(a, c, f) for a, _h, c, f in _sw.tablas(switches)]
     tablas_fw += [(a, cabecera_t(res, c), f) for a, _h, c, f in _ie.tablas_flujos(args)]      # E62351F (D125)
     if _zc.hay(zcr):
-        tablas_fw.append((_zc.ARCHIVO, _zc.COLUMNAS, _zc.filas_tabla(zcr)))
+        ids_tz = "trazabilidad" in (perfil or {})      # IDS1 (D136)
+        tablas_fw.append((_zc.ARCHIVO, _zc.columnas(ids_tz), _zc.filas_tabla(zcr, ids_tz)))
     tablas_fw += [(a, c, f) for a, _h, c, f in _ra.tablas(ra)]
     if res.acceso_remoto:
         tablas_fw.append((_ar.ARCHIVO, _ar.COLUMNAS, _ar.filas(res)))
@@ -541,8 +542,9 @@ def main(argv: list | None = None) -> int:
             print(f"[i] {_ce.nota()}")
         with open(out / "vulnerabilidades.csv", "w", newline="", encoding="utf-8-sig") as fh:
             w = escritor_csv(fh)
-            w.writerow(_vu.columnas(cruces, crit_decl, plan_vc))
-            w.writerows(_vu.filas_tabla(cruces, imp.assets, crit_decl, plan_vc))
+            ids_tz = "trazabilidad" in (perfil or {})      # IDS1 (D136)
+            w.writerow(_vu.columnas(cruces, crit_decl, plan_vc, ids_tz))
+            w.writerows(_vu.filas_tabla(cruces, imp.assets, crit_decl, plan_vc, ids_tz))
         if avisos and "avisos_ics" in res.vulnerabilidades and _ac.filas_avisos(cruces, imp.assets, (perfil or {}).get("version_cvss", "3")):
             with open(out / "avisos_ics.csv", "w", newline="", encoding="utf-8-sig") as fh:
                 w = escritor_csv(fh)
@@ -570,7 +572,8 @@ def main(argv: list | None = None) -> int:
     if indice_vf:        # V1a (D89): despues del inventario normalizado
         res.vuln_firmware = _vf.construir(indice_vf, res.inventario_normalizado, res.vulns_cruces, imp.assets,
                                           kev_cat, avisos, (perfil or {}).get("version_cvss", "3"),
-                                          (perfil or {}).get("criticidad_activos"), plan_vc)
+                                          (perfil or {}).get("criticidad_activos"), plan_vc,
+                                          "trazabilidad" in (perfil or {}))      # IDS1 (D136)
         extra = Capture(Path("vulnerabilidades por firmware"))
         _vf.agregar_hallazgo(extra, plan_vc.filtrar_vf(res.vuln_firmware) if plan_vc else res.vuln_firmware)
         hallazgos += [(extra.name, f) for f in extra.findings]
@@ -659,9 +662,10 @@ def main(argv: list | None = None) -> int:
     with open(out / "hallazgos_importados.csv", "w", newline="", encoding="utf-8-sig") as fh:
         w = escritor_csv(fh)
         plan_ent = _entregables.plan(perfil)      # ENT1 (D126)
-        w.writerow(cabecera_hallazgos(estandares, plan_ent))
+        ids_tz = "trazabilidad" in (perfil or {})      # IDS1 (D136)
+        w.writerow(cabecera_hallazgos(estandares, plan_ent, ids_tz))
         for o, f in zip(origenes, hallazgos):
-            w.writerow(fila_hallazgo(o, f, estandares, plan_ent))
+            w.writerow(fila_hallazgo(o, f, estandares, plan_ent, ids_tz))
 
     con_nat = any(a.get("nat_nota") for a in imp.assets.values())     # D70: columna solo si hay marcas
     con_so = any(a.get("so") or a.get("protocolos") or a.get("vlans") for a in imp.assets.values())   # D74

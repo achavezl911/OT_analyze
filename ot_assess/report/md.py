@@ -35,6 +35,7 @@ from .. import rutas_firewall as _rf
 from .. import salud_red as _sr
 from .. import sensores as _se
 from .. import tobe as _tb
+from .. import trazabilidad as _tz
 from .. import vuln_firmware as _vf
 from .. import vulnerabilidades as _vuln
 from .. import zonas as _zo
@@ -535,6 +536,11 @@ def write_md(res: Assessment, outdir: Path) -> Path:
             for fila in filas:
                 out.append("| " + " | ".join(md_escape(str(c)) for c in fila) + " |")
             out.append("")
+    if _tz.hay(res):
+        s = _tz.seccion(res)
+        out.append("### " + s["titulo"] + "\n")
+        out.append("> " + s["nota"] + "\n")
+        out.append(s["resumen"] + "\n")
     if _lba.hay(res.linea_base_aprobada):
         s = _lba.seccion(res.linea_base_aprobada)
         out.append("### " + s["titulo"] + "\n")

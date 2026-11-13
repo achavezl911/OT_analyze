@@ -986,6 +986,21 @@ repetirse y suman) a cada estado. `obsolescencia.csv` agrega `clase_proyecto` (y
 agrega el conteo por clase y `resultado.json` trae `clases` y `meses_proximo`. Con un umbral distinto de 12 el
 playbook y el tema de hardening de ese hallazgo (que buscan el título con 12) no se enlazan. Sin la clave no cambia
 ninguna salida.
+**Ids estables y trazabilidad (IDS1, D136).** Clave de perfil opcional `trazabilidad` (objeto; `{}` vale):
+`por_activo` (true por defecto: una fila por hallazgo y activo; false: una por hallazgo con los activos juntos) y
+`max_filas` (100 a 100000, por defecto 20000; al pasarlo se corta y se avisa en consola y en el json). Agrega el id
+`REC-` + 8 hex del sha256 del texto de la recomendación en español (igual en los dos idiomas; dos hallazgos con la misma
+recomendación comparten id) como columna `id_recomendacion` al final de `hallazgos.csv` (y `hallazgos_importados.csv`) y
+de `plan_remediacion.csv`; `id_vulnerabilidad` al final de `vulnerabilidades.csv` y `vulnerabilidades_firmware.csv`
+(el mismo id de VCONF, sin duplicar la columna si también está esa clave); `id_flujo` al final de `conductos_zcr.csv` y
+`allowlist_tobe.csv` (el mismo de ALLOW1, con los nombres de zona sin traducir; en `conductos_zcr.csv` el servicio es
+el texto de la columna `servicios`). Además `trazabilidad.csv` y la hoja «Trazabilidad» encadenan activo (`A-`),
+evidencia (`EV-` del registro cuyo archivo coincide con el origen del hallazgo; sin registro, los nombres de origen),
+hallazgo, riesgo (`R-`), controles de los marcos elegidos, recomendación, playbook, entregables (ENT1), `FL-` de los
+conductos TO-BE que citan el hallazgo y `VU-` de las vulnerabilidades del activo (solo en hallazgos de categoría
+Vulnerabilidades). Sección corta en HTML/Word/Markdown (conteos y nota) y bloque `trazabilidad` en `resultado.json`.
+Es trazabilidad documental, no una determinación de cumplimiento. También en `diagrama`. Sin la clave no cambia
+ninguna salida.
 **Hardening por tipo de equipo (T1b, D86).** Cada activo se asigna a uno de seis tipos (controlador, estación, servidor,
 red, seguridad, otro) por su rol inferido o por el tipo que da la plataforma (`ot_assess/data/hardening.json`); sin
 rol, por los puertos que sirve (puertos OT: controlador; DNS, LDAP, bases de datos: servidor; RDP/VNC: estación) y si

@@ -7,6 +7,7 @@ from __future__ import annotations
 import re
 
 from . import playbooks
+from . import trazabilidad as _tz
 from .catalog import CRIT_ORDER, SEV_ORDER
 from .i18n import t
 
@@ -109,8 +110,16 @@ def _mostrar(r: dict) -> dict:
                                            "criticidad", "origen_criticidad")})
 
 
+def columnas(res) -> list:
+    """COLUMNAS, mas id_recomendacion al final con la clave de perfil 'trazabilidad' (IDS1, D136)."""
+    return COLUMNAS + ([_tz.COL_REC] if _tz.activa(res.perfil) else [])
+
+
 def tabla(res) -> list:
-    return [[r.get(c, "") for c in COLUMNAS] for r in map(_mostrar, plan(res))]
+    ids = _tz.activa(res.perfil)
+    filas = plan(res)
+    return [[r.get(c, "") for c in COLUMNAS] + ([_tz.id_recomendacion(o["recomendacion"])] if ids else [])
+            for r, o in zip(map(_mostrar, filas), filas)]
 
 
 FASES = ("Inmediato", "Corto plazo", "Mediano plazo")

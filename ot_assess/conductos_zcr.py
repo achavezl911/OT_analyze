@@ -303,8 +303,20 @@ def fila_tabla(f: dict) -> list:
             f"{f['sl_a'] or '-'} / {f['sl_b'] or '-'}" if f["sl_a"] or f["sl_b"] else "", _texto_brechas(f)]
 
 
-def filas_tabla(zcr: dict) -> list:
-    return [fila_tabla(f) for f in zcr["filas"]]
+def columnas(ids: bool = False) -> list:
+    """COLUMNAS, mas id_flujo al final con la clave de perfil 'trazabilidad' (IDS1, D136)."""
+    return COLUMNAS + (["id_flujo"] if ids else [])
+
+
+def filas_tabla(zcr: dict, ids: bool = False) -> list:
+    """Con `ids`, id_flujo de allowlist_proyecto.id_flujo(zona_a, zona_b, servicios) con los nombres de zona sin
+    traducir (el id no cambia con el idioma) y los servicios como salen en la columna."""
+    from .allowlist_proyecto import id_flujo
+    if not ids:
+        return [fila_tabla(f) for f in zcr["filas"]]
+    i = COLUMNAS.index("servicios")
+    return [[*fila, id_flujo(f["zona_a"], f["zona_b"], fila[i])]
+            for f, fila in ((f, fila_tabla(f)) for f in zcr["filas"])]
 
 
 def tabla_reporte(zcr: dict, n: int = MAX_TABLA) -> tuple:

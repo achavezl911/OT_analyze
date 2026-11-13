@@ -563,9 +563,10 @@ def _sev_de(punt, dec: str) -> str:
 
 
 def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=None, version_cvss: str = "3",
-              criticidad=None, plan=None) -> dict:
+              criticidad=None, plan=None, con_ids: bool = False) -> dict:
     """Candidatas por activo y CVE del inventario normalizado `inv` contra el indice.
 
+    con_ids (IDS1, D136): agrega la columna id_vulnerabilidad aunque no haya plan de confirmacion.
     version_cvss "4" (D114): severidad, orden y umbral por CVSS v4.0 con caida a v3; agrega la columna cvss_decide."""
     v4 = version_cvss == "4"
     plat = _ips_en_plataforma(cruces, assets or {})
@@ -633,6 +634,10 @@ def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=Non
             est, por, fecha, motivo = plan.revision(x["id_vuln"])
             x["celdas"][-4:] = [plan.mostrar(est), por, fecha, motivo]
             x["celdas"].append(x["id_vuln"])
+        elif con_ids:   # IDS1 (D136): solo el id, el mismo que daria VCONF
+            from .confirmacion_vulns import Plan
+            x["id_vuln"] = Plan({}, {}).id_firmware(x)
+            x["celdas"].append(x["id_vuln"])
         filas.append(x)
     filas.sort(key=lambda x: (_ORDEN_ESTADO[x["estado"]], _ORDEN_COINC[x["coinc"]], -(x["cvss_ef"] if x["cvss_ef"] is not None else -1),
                               x["nombre"], x["cve"]))
@@ -650,7 +655,7 @@ def construir(ind: Indice, inv: dict, cruces=None, assets=None, kev=None, av=Non
         cols[i:i] = ENTORNO
         for x, e in zip(filas, ent):
             x["celdas"][i:i] = e
-    if plan:
+    if plan or con_ids:
         cols.append("id_vulnerabilidad")
     return {"filas": filas, "resumen": resumen, "columnas": cols, "version_cvss": "4" if v4 else "3",
             "entorno": hay_entorno(ent)}
